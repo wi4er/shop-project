@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  admin:
+    container_name: shop-project-admin
+    image: node:lts
+    ports:
+      - "4200:4200"
+    working_dir: /app
+    command: npm start
+    volumes:
+      - "./admin:/app"
+
