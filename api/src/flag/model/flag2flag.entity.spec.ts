@@ -16,41 +16,30 @@ describe('Flag entity', () => {
   describe('Flag with flag', () => {
     test('Should add item with flag', async () => {
       const repo = source.getRepository(FlagEntity);
-      const active = await Object.assign(new FlagEntity(), {id: 'ACTIVE', label: 'active flag'}).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'CHILD'}).save();
 
-      const item = new FlagEntity();
-      item.id = 'ITEM';
-      item.label = 'Some item';
-      item.flag = [
-        await Object.assign(new Flag2flagEntity(), {flag: 'ACTIVE'}).save(),
-      ];
-      await item.save();
+      await Object.assign(new Flag2flagEntity(), {flag, parent}).save();
 
-      const list = await repo.findOne({
-        where: {id: 'ITEM'},
-        loadRelationIds: true,
-        // relations: {flag: true},
+      const item = await repo.findOne({
+        where: {id: 'ACTIVE'},
+        relations: {flag: {flag: true}},
       });
 
-      // console.log(list)
-
-      // expect(list.flag[0]['id']).toBe(1);
+      expect(item.id).toBe('ACTIVE');
+      expect(item.flag[0].id).toBe(1);
+      expect(item.flag[0].flag.id).toBe('CHILD');
     });
 
     test('Shouldn`t create flag with duplicate flag', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE', label: 'active'}).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'CHILD'}).save();
 
-      const flag = await Object.assign(new FlagEntity(), {
-        id: 'FLAG',
-        label: 'active',
-        flag: [
-          await Object.assign(new Flag2flagEntity(), {flag: 'ACTIVE'}).save(),
-          await Object.assign(new Flag2flagEntity(), {flag: 'ACTIVE'}).save(),
-          await Object.assign(new Flag2flagEntity(), {flag: 'ACTIVE'}).save(),
-        ],
-      });
+      await Object.assign(new Flag2flagEntity(), {flag, parent}).save();
 
-      await expect(flag.save()).rejects.toThrow();
+      await expect(
+        Object.assign(new Flag2flagEntity(), {flag, parent}).save()
+      ).rejects.toThrow();
     });
   });
 });

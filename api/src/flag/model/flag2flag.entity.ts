@@ -8,10 +8,13 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { FlagEntity } from './flag.entity';
+import { CommonFlagEntity } from '../../common/model/common-flag.entity';
 
 @Entity('flag2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class Flag2flagEntity extends BaseEntity {
+export class Flag2flagEntity
+  extends BaseEntity
+  implements CommonFlagEntity<FlagEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

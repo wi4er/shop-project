@@ -1,9 +1,9 @@
-import { DataSource } from "typeorm/data-source/DataSource";
-import { createConnection } from "typeorm";
-import { createConnectionOptions } from "../../createConnectionOptions";
-import { FlagEntity } from "./flag.entity";
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../createConnectionOptions';
+import { FlagEntity } from './flag.entity';
 
-describe("Flag entity", () => {
+describe('Flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -27,6 +27,11 @@ describe("Flag entity", () => {
       const list = await repo.find();
 
       expect(list).toHaveLength(1);
+      expect(list[0].id).toBe('ACTIVE');
+      expect(list[0].created_at).toBeDefined();
+      expect(list[0].updated_at).toBeDefined();
+      expect(list[0].deleted_at).toBeNull();
+      expect(list[0].version).toBe(1);
     });
   });
 });

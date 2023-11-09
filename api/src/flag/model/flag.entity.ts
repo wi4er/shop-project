@@ -10,9 +10,13 @@ import {
 } from "typeorm";
 import { Flag2stringEntity } from "./flag2string.entity";
 import { Flag2flagEntity } from "./flag2flag.entity";
+import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with-flag.entity';
 
 @Entity('flag')
-export class FlagEntity extends BaseEntity {
+export class FlagEntity
+  extends BaseEntity
+  implements WithStringEntity<FlagEntity>, WithFlagEntity<FlagEntity> {
 
   @PrimaryColumn({
     type: "varchar",
@@ -31,11 +35,6 @@ export class FlagEntity extends BaseEntity {
 
   @VersionColumn()
   version: number;
-
-  @Column({
-    nullable: true,
-  })
-  label: string;
 
   @OneToMany(
     type => Flag2stringEntity,

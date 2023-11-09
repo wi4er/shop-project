@@ -13,7 +13,9 @@ import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { LangEntity } from '../../lang/model/lang.entity';
 
 @Entity('flag2string')
-export class Flag2stringEntity extends BaseEntity implements CommonStringEntity<FlagEntity> {
+export class Flag2stringEntity
+  extends BaseEntity
+  implements CommonStringEntity<FlagEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
