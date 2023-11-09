@@ -23,6 +23,28 @@ describe('Block2flag entity', () => {
 
       expect(list).toHaveLength(0);
     });
+
+    test('Should create block flag', async () => {
+      const parent = await new BlockEntity().save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const inst = await Object.assign(new Block2flagEntity(), {flag, parent}).save();
+
+      expect(inst.id).toBe(1);
+    });
+
+    test('Shouldn`t create without flag', async () => {
+      const parent = await new BlockEntity().save();
+      const inst = Object.assign(new Block2flagEntity(), {parent});
+
+      await expect(inst.save()).rejects.toThrow('flagId');
+    });
+
+    test('Shouldn`t create without parent', async () => {
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const inst = Object.assign(new Block2flagEntity(), {flag});
+
+      await expect(inst.save()).rejects.toThrow('parentId');
+    });
   });
 
   describe('Block with flags', () => {

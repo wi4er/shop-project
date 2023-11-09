@@ -14,6 +14,7 @@ import { Section2stringEntity } from './section2string.entity';
 import { Section2flagEntity } from './section2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
+import { Section2pointEntity } from './section2point.entity';
 
 @Entity('content-section')
 export class SectionEntity
@@ -80,9 +81,9 @@ export class SectionEntity
   element: Element2sectionEntity[];
 
   @OneToMany(
-    type => Element2pointEntity,
+    type => Section2pointEntity,
     point => point.parent,
   )
-  point: Element2pointEntity[];
+  point: Section2pointEntity[];
 
 }

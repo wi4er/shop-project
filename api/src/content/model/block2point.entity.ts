@@ -8,14 +8,14 @@ import {
 } from 'typeorm';
 import { PointEntity } from '../../directory/model/point.entity';
 import { PropertyEntity } from '../../property/model/property.entity';
-import { SectionEntity } from './section.entity';
 import { CommonPointEntity } from '../../common/model/common-point.entity';
+import { BlockEntity } from './block.entity';
 
-@Entity('content-section2point')
+@Entity('content-block2point')
 @Index(['point', 'property', 'parent'], {unique: true})
-export class Section2pointEntity
+export class Block2pointEntity
   extends BaseEntity
-  implements CommonPointEntity<SectionEntity> {
+  implements CommonPointEntity<BlockEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -42,14 +42,14 @@ export class Section2pointEntity
   point: PointEntity;
 
   @ManyToOne(
-    () => SectionEntity,
-    element => element.point,
+    () => BlockEntity,
+    block => block.point,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: SectionEntity;
+  parent: BlockEntity;
 
   @ManyToOne(
     () => PropertyEntity,

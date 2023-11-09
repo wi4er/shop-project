@@ -14,11 +14,12 @@ import { Element2pointEntity } from './element2point.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Element2flagEntity } from './element2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
+import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('content-element')
 export class ElementEntity
   extends BaseEntity
-  implements WithStringEntity<ElementEntity>, WithFlagEntity<ElementEntity> {
+  implements WithStringEntity<ElementEntity>, WithFlagEntity<ElementEntity>, WithPointEntity<ElementEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

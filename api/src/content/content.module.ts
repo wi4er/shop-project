@@ -24,6 +24,7 @@ import { BlockService } from './service/block/block.service';
 import { BlockPermissionEntity } from './model/block-permission.entity';
 import { UserEntity } from '../user/model/user.entity';
 import { UserGroupEntity } from '../user/model/user-group.entity';
+import { Block2pointEntity } from './model/block2point.entity';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { UserGroupEntity } from '../user/model/user-group.entity';
       ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity,
       Element2flagEntity,
       SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity,
-      BlockEntity, Block2stringEntity, Block2flagEntity, BlockPermissionEntity,
+      BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity,
       UserEntity, UserGroupEntity,
       PropertyEntity,
       LangEntity,

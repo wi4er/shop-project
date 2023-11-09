@@ -42,6 +42,7 @@ import { Section2flagEntity } from './content/model/section2flag.entity';
 import { Block2flagEntity } from './content/model/block2flag.entity';
 import { Property2flagEntity } from './property/model/property2flag.entity';
 import { BlockPermissionEntity } from './content/model/block-permission.entity';
+import { Block2pointEntity } from './content/model/block2point.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -52,7 +53,7 @@ export function createConnectionOptions(): DataSourceOptions {
     password: process.env.DB_USER_PASSWORD || 'example',
     database: process.env.DB_DATABASE || 'postgres',
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: [
       UserEntity, User2stringEntity, User2flagEntity, User2pointEntity, User2userEntity, User2descriptionEntity,
       User2userContactEntity, User2userGroupEntity,
@@ -65,7 +66,7 @@ export function createConnectionOptions(): DataSourceOptions {
       LangEntity, Lang2stringEntity, Lang2flagEntity,
       ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity, Element2flagEntity,
       SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity,
-      BlockEntity, Block2stringEntity, Block2flagEntity, BlockPermissionEntity,
+      BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity,
     ],
     subscribers: [],
     migrations: [],

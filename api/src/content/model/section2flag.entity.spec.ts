@@ -26,9 +26,9 @@ describe('Section2Flag entity', () => {
 
     test('Should get list', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), { block }).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new Section2flagEntity(), { parent, flag }).save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new Section2flagEntity(), {parent, flag}).save();
 
       const repo = source.getRepository(Section2flagEntity);
       const list = await repo.find();
@@ -36,17 +36,41 @@ describe('Section2Flag entity', () => {
       expect(list).toHaveLength(1);
       expect(list[0].id).toBe(1);
     });
+
+    test('Should create section flag', async () => {
+      const block = await new BlockEntity().save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const inst = await Object.assign(new Section2flagEntity(), {flag, parent}).save();
+
+      expect(inst.id).toBe(1);
+    });
+
+    test('Shouldn`t create without flag', async () => {
+      const block = await new BlockEntity().save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const inst = Object.assign(new Section2flagEntity(), {parent});
+
+      await expect(inst.save()).rejects.toThrow('flagId');
+    });
+
+    test('Shouldn`t create without parent', async () => {
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const inst = Object.assign(new Section2flagEntity(), {flag});
+
+      await expect(inst.save()).rejects.toThrow('parentId');
+    });
   });
 
   describe('Section with flags', () => {
     test('Shouldn`t have duplicate flag', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), { block }).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      await Object.assign(new Section2flagEntity(), { parent, flag }).save();
+      await Object.assign(new Section2flagEntity(), {parent, flag}).save();
       await expect(
-        Object.assign(new Section2flagEntity(), { parent, flag }).save()
+        Object.assign(new Section2flagEntity(), {parent, flag}).save(),
       ).rejects.toThrow();
     });
   });

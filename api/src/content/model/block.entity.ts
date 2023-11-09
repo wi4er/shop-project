@@ -14,11 +14,13 @@ import { Block2flagEntity } from './block2flag.entity';
 import { BlockPermissionEntity } from './block-permission.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
+import { Block2pointEntity } from './block2point.entity';
+import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('content-block')
 export class BlockEntity
   extends BaseEntity
-  implements WithFlagEntity<BlockEntity>, WithStringEntity<BlockEntity> {
+  implements WithFlagEntity<BlockEntity>, WithStringEntity<BlockEntity>, WithPointEntity<BlockEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -65,4 +67,9 @@ export class BlockEntity
   )
   flag: Block2flagEntity[];
 
+  @OneToMany(
+    type => Block2pointEntity,
+    point => point.parent,
+  )
+  point: Block2pointEntity[];
 }
