@@ -1,9 +1,9 @@
-import { DataSource } from "typeorm/data-source/DataSource";
-import { createConnection } from "typeorm";
-import { createConnectionOptions } from "../../createConnectionOptions";
-import { DirectoryEntity } from "./directory.entity";
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../createConnectionOptions';
+import { DirectoryEntity } from './directory.entity';
 
-describe("Directory entity", () => {
+describe('Directory entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -57,10 +57,10 @@ describe("Directory entity", () => {
     });
 
     test('Should get single element', async () => {
-      await Object.assign(new DirectoryEntity(), { id: 'NAME' }).save();
+      await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
 
       const repo = source.getRepository(DirectoryEntity);
-      const item = await repo.findOne({ where: { id: 'NAME' } });
+      const item = await repo.findOne({where: {id: 'NAME'}});
 
       expect(item.id).toBe('NAME');
     });

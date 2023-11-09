@@ -25,7 +25,6 @@ describe('ValueFlag entity', () => {
       const inst = new Point2flagEntity();
       inst.parent = parent;
       inst.flag = flag;
-
       await inst.save();
 
       expect(inst.id).toBe(1);
@@ -35,6 +34,21 @@ describe('ValueFlag entity', () => {
       expect(inst.version).toBe(1);
       expect(inst.flag.id).toBe('ACTIVE');
       expect(inst.parent.id).toBe('London');
+    });
+
+    test('Shouldn`t create without flag', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const parent = await Object.assign(new PointEntity(), {id: 'London', directory}).save();
+      const inst = Object.assign(new Point2flagEntity(), {parent});
+
+      await expect(inst.save()).rejects.toThrow('flagId');
+    });
+
+    test('Shouldn`t create without parent', async () => {
+      const flag = await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
+      const inst = Object.assign(new Point2flagEntity(), {flag});
+
+      await expect(inst.save()).rejects.toThrow('parentId');
     });
   });
 });

@@ -11,12 +11,14 @@ import { PointEntity } from './point.entity';
 import { Directory2flagEntity } from './directory2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
+import { Directory2pointEntity } from './directory2point.entity';
+import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('directory')
 @Check('not_empty_id', '"id" > \'\'')
 export class DirectoryEntity
   extends BaseEntity
-  implements WithFlagEntity<DirectoryEntity>, WithStringEntity<DirectoryEntity> {
+  implements WithFlagEntity<DirectoryEntity>, WithStringEntity<DirectoryEntity>, WithPointEntity<DirectoryEntity> {
 
   @PrimaryColumn({
     type: 'varchar',
@@ -46,14 +48,20 @@ export class DirectoryEntity
 
   @OneToMany(
     type => PointEntity,
-    value => value.directory,
+    point => point.directory,
   )
-  point: PointEntity[];
+  child: PointEntity[];
 
   @OneToMany(
     type => Directory2flagEntity,
     string => string.parent,
   )
   flag: Directory2flagEntity[];
+
+  @OneToMany(
+    type => Directory2pointEntity,
+    point => point.parent,
+  )
+  point: Directory2pointEntity[];
 
 }

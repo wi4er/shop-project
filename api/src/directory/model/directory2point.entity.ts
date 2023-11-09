@@ -2,19 +2,21 @@ import {
   BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, Index, ManyToOne,
+  Entity,
+  Index, ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { FlagEntity } from '../../flag/model/flag.entity';
+import { CommonPointEntity } from '../../common/model/common-point.entity';
+import { PointEntity } from './point.entity';
+import { PropertyEntity } from '../../property/model/property.entity';
 import { DirectoryEntity } from './directory.entity';
-import { CommonFlagEntity } from '../../common/model/common-flag.entity';
 
-@Entity('directory2flag')
-@Index(['parent', 'flag'], {unique: true})
-export class Directory2flagEntity
+@Entity('directory2point')
+@Index(['point', 'property', 'parent'], {unique: true})
+export class Directory2pointEntity
   extends BaseEntity
-  implements CommonFlagEntity<DirectoryEntity> {
+  implements CommonPointEntity<DirectoryEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,14 +28,23 @@ export class Directory2flagEntity
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date | null;
+  deleted_at: Date;
 
   @VersionColumn()
   version: number;
 
   @ManyToOne(
+    () => PointEntity,
+    {
+      onDelete: 'CASCADE',
+      nullable: false,
+    },
+  )
+  point: PointEntity;
+
+  @ManyToOne(
     () => DirectoryEntity,
-    directory => directory.flag,
+    directory => directory.point,
     {
       onDelete: 'CASCADE',
       nullable: false,
@@ -42,12 +53,12 @@ export class Directory2flagEntity
   parent: DirectoryEntity;
 
   @ManyToOne(
-    () => FlagEntity,
+    () => PropertyEntity,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  flag: FlagEntity;
+  property: PropertyEntity;
 
 }

@@ -13,21 +13,24 @@ import { DirectoryController } from './controller/directory/directory.controller
 import { PointController } from './controller/point/point.controller';
 import { DirectoryService } from './service/directory/directory.service';
 import { PointService } from './service/point/point.service';
+import { Directory2pointEntity } from './model/directory2point.entity';
+import { Point2pointEntity } from './model/point2point.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      DirectoryEntity, Directory2stringEntity, Directory2flagEntity,
-      PointEntity, Point2stringEntity, Point2flagEntity,
+      DirectoryEntity, Directory2stringEntity, Directory2flagEntity, Directory2pointEntity,
+      PointEntity, Point2stringEntity, Point2flagEntity, Point2pointEntity,
       PropertyEntity,
       LangEntity,
       FlagEntity,
-    ])
+    ]),
   ],
   providers: [
     DirectoryService,
-    PointService
+    PointService,
   ],
-  controllers: [DirectoryController, PointController]
+  controllers: [DirectoryController, PointController],
 })
-export class DirectoryModule {}
+export class DirectoryModule {
+}

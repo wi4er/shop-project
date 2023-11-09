@@ -43,6 +43,8 @@ import { Block2flagEntity } from './content/model/block2flag.entity';
 import { Property2flagEntity } from './property/model/property2flag.entity';
 import { BlockPermissionEntity } from './content/model/block-permission.entity';
 import { Block2pointEntity } from './content/model/block2point.entity';
+import { Directory2pointEntity } from './directory/model/directory2point.entity';
+import { Point2pointEntity } from './directory/model/point2point.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -60,8 +62,8 @@ export function createConnectionOptions(): DataSourceOptions {
       UserContactEntity, UserContact2stringEntity, UserContact2flagEntity,
       UserGroupEntity, UserGroup2stringEntity, UserGroup2flagEntity,
       PropertyEntity, Property2stringEntity, Property2flagEntity,
-      DirectoryEntity, Directory2stringEntity, Directory2flagEntity,
-      PointEntity, Point2stringEntity, Point2flagEntity,
+      DirectoryEntity, Directory2stringEntity, Directory2flagEntity, Directory2pointEntity,
+      PointEntity, Point2stringEntity, Point2flagEntity, Point2pointEntity,
       FlagEntity, Flag2stringEntity, Flag2flagEntity,
       LangEntity, Lang2stringEntity, Lang2flagEntity,
       ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity, Element2flagEntity,
