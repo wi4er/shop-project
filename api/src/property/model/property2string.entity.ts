@@ -12,7 +12,9 @@ import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 
 @Entity('property2string')
-export class Property2stringEntity extends BaseEntity implements CommonStringEntity<PropertyEntity> {
+export class Property2stringEntity
+  extends BaseEntity
+  implements CommonStringEntity<PropertyEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,15 +35,6 @@ export class Property2stringEntity extends BaseEntity implements CommonStringEnt
   string: string;
 
   @ManyToOne(
-    () => LangEntity,
-    {
-      onDelete: 'CASCADE',
-      nullable: true,
-    },
-  )
-  lang?: LangEntity;
-
-  @ManyToOne(
     () => PropertyEntity,
     property => property.string,
     {
@@ -59,5 +52,14 @@ export class Property2stringEntity extends BaseEntity implements CommonStringEnt
     },
   )
   property: PropertyEntity;
+
+  @ManyToOne(
+    () => LangEntity,
+    {
+      onDelete: 'CASCADE',
+      nullable: true,
+    },
+  )
+  lang?: LangEntity | null;
 
 }

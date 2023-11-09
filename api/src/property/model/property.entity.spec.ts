@@ -1,9 +1,9 @@
-import { DataSource } from "typeorm/data-source/DataSource";
-import { createConnection } from "typeorm";
-import { PropertyEntity } from "./property.entity";
-import { createConnectionOptions } from "../../createConnectionOptions";
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { PropertyEntity } from './property.entity';
+import { createConnectionOptions } from '../../createConnectionOptions';
 
-describe("Property entity", () => {
+describe('Property entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -43,6 +43,7 @@ describe("Property entity", () => {
       const list = await repo.find();
 
       expect(list).toHaveLength(1);
+      expect(list[0].id).toBe('NAME');
     });
   });
 });

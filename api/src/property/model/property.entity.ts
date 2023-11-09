@@ -38,7 +38,7 @@ export class PropertyEntity extends BaseEntity
 
   @OneToMany(
     type => Property2stringEntity,
-    propertyProperty => propertyProperty.parent,
+    property => property.parent,
   )
   string: Property2stringEntity[];
 

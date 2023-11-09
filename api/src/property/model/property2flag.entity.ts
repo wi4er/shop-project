@@ -12,7 +12,9 @@ import { CommonFlagEntity } from '../../common/model/common-flag.entity';
 
 @Entity('property2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class Property2flagEntity extends BaseEntity implements CommonFlagEntity<PropertyEntity> {
+export class Property2flagEntity
+  extends BaseEntity
+  implements CommonFlagEntity<PropertyEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
