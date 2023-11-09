@@ -1,0 +1,17 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+footer {
+  background-color: #125699;
+  color: white;
+}
+
+mat-drawer-container {
+  flex: 1;
+  background-color: lemonchiffon;
+}
+
+mat-drawer {
+  padding-right: 16px;
+}

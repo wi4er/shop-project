@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "bun --hot ."
+  },
+  "dependencies": {
+    "botfather": "^3.8.0"
+  }
+}

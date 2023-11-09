@@ -1,13 +1,40 @@
-version: "3.8"
+version: "2.2"
 
 services:
+  postgres:
+    image: postgres:16.0
+    container_name: shop-project-db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d/
+      - ./data/postgres:/var/lib/postgresql/data
+
   admin:
     container_name: shop-project-admin
-    image: node:lts
+    image: node:20.9
+    restart: always
     ports:
-      - "4200:4200"
+      - "4201:4200"
     working_dir: /app
     command: npm start
     volumes:
       - "./admin:/app"
+
+  api:
+    container_name: shop-project-api
+    image: node:20.9
+    restart: always
+    links:
+      - postgres
+    ports:
+      - "3001:3000"
+    working_dir: /app
+    command: npm start
+    volumes:
+      - "./api:/app"
 
