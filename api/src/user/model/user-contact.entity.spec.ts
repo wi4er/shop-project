@@ -31,7 +31,7 @@ describe('Contact entity', () => {
       const inst = new UserContactEntity();
       inst.type = UserContactType.EMAIL;
 
-      await expect(inst.save()).rejects.toThrow();
+      await expect(inst.save()).rejects.toThrow('id');
     });
 
     test('Shouldn`t create with blank id', async () => {
@@ -39,15 +39,19 @@ describe('Contact entity', () => {
       inst.id = '';
       inst.type = UserContactType.EMAIL;
 
-      await expect(inst.save()).rejects.toThrow();
+      await expect(inst.save()).rejects.toThrow('not_empty_id');
     });
 
     test('Shouldn`t create with wrong contact', async () => {
-      const inst = new UserContactEntity();
-      inst.id = 'mail';
-      inst['type'] = 'SOME' as UserContactType;
+      const inst = Object.assign(
+        new UserContactEntity(),
+        {
+          id: 'mail',
+          type: 'SOME',
+        }
+      );
 
-      await expect(inst.save()).rejects.toThrow();
+      await expect(inst.save()).rejects.toThrow('type');
     });
 
     test('Shouldn`t create without type', async () => {

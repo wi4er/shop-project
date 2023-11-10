@@ -2,12 +2,10 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { PropertyEntity } from '../../property/model/property.entity';
-import { BlockEntity } from '../../content/model/block.entity';
-import { SectionEntity } from '../../content/model/section.entity';
-import { UserGroup2stringEntity } from './user-group2string.entity';
-import { UserGroupEntity } from './user-group.entity';
+import { UserContact2stringEntity } from './user-contact2string.entity';
+import { UserContactEntity, UserContactType } from './user-contact.entity';
 
-describe('UserGroup2string entity', () => {
+describe('Contact2string entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -17,9 +15,9 @@ describe('UserGroup2string entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('UserGroup2string fields', () => {
+  describe('Contact2string fields', () => {
     test('Should get empty list', async () => {
-      const repo = source.getRepository(UserGroup2stringEntity);
+      const repo = source.getRepository(UserContact2stringEntity);
       const list = await repo.find();
 
       expect(list).toHaveLength(0);
@@ -28,36 +26,39 @@ describe('UserGroup2string entity', () => {
     test('Shouldn`t create without parent', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
-      await expect(Object.assign(
-        new UserGroup2stringEntity(),
-        {string: 'VALUE', property},
-      ).save()).rejects.toThrow('parentId');
+      await expect(
+        Object.assign(new UserContact2stringEntity(), {string: 'VALUE', property}).save(),
+      ).rejects.toThrow('parentId');
     });
 
     test('Shouldn`t create without property', async () => {
-      const block = await new BlockEntity().save();
-      const parent = await Object.assign(new UserGroupEntity(), {block}).save();
+      const parent = await Object.assign(
+        new UserContactEntity(),
+        {id: 'mail', type: UserContactType.EMAIL},
+      ).save();
 
-      await expect(Object.assign(
-        new UserGroup2stringEntity(),
-        {string: 'VALUE', parent},
-      ).save()).rejects.toThrow('propertyId');
+      await expect(
+        Object.assign(new UserContact2stringEntity(), {string: 'VALUE', parent}).save(),
+      ).rejects.toThrow('propertyId');
     });
   });
 
-  describe('UserGroup with strings', () => {
-    test('Should create element with strings', async () => {
-      const repo = source.getRepository(UserGroupEntity);
+  describe('UserContact with strings', () => {
+    test('Should create contact with string', async () => {
+      const repo = source.getRepository(UserContactEntity);
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await new UserGroupEntity().save();
+      const parent = await Object.assign(
+        new UserContactEntity(),
+        {id: 'NAME', type: UserContactType.EMAIL},
+      ).save();
 
       await Object.assign(
-        new UserGroup2stringEntity(),
+        new UserContact2stringEntity(),
         {string: 'VALUE', parent, property},
       ).save();
 
       const inst = await repo.findOne({
-        where: {id: parent.id},
+        where: {id: 'NAME'},
         relations: {string: true},
       });
 

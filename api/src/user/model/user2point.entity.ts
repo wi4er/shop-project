@@ -10,10 +10,13 @@ import {
 import { UserEntity } from './user.entity';
 import { PointEntity } from '../../directory/model/point.entity';
 import { PropertyEntity } from '../../property/model/property.entity';
+import { CommonPointEntity } from '../../common/model/common-point.entity';
 
 @Entity('user2point')
 @Index(['point', 'property', 'parent'], {unique: true})
-export class User2pointEntity extends BaseEntity {
+export class User2pointEntity
+  extends BaseEntity
+  implements CommonPointEntity<UserEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

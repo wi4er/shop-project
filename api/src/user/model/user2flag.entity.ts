@@ -13,7 +13,9 @@ import { CommonFlagEntity } from '../../common/model/common-flag.entity';
 
 @Entity('user2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class User2flagEntity extends BaseEntity implements CommonFlagEntity<UserEntity> {
+export class User2flagEntity
+  extends BaseEntity
+  implements CommonFlagEntity<UserEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

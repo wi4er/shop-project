@@ -1,7 +1,7 @@
-import { DataSource } from "typeorm/data-source/DataSource";
-import { createConnection } from "typeorm";
-import { createConnectionOptions } from "../../createConnectionOptions";
-import { UserGroupEntity } from "./user-group.entity";
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../createConnectionOptions';
+import { UserGroupEntity } from './user-group.entity';
 
 describe('UserGroup entity', () => {
   let source: DataSource;
@@ -35,7 +35,7 @@ describe('UserGroup entity', () => {
       inst.parent = parent;
       await inst.save();
 
-      const some = await repo.findOne({ where: { id: inst.id }, relations: { parent: true } });
+      const some = await repo.findOne({where: {id: inst.id}, relations: {parent: true}});
 
       expect(some.parent.id).toBe(parent.id);
     });
@@ -48,7 +48,7 @@ describe('UserGroup entity', () => {
       inst.parent = parent;
       await inst.save();
 
-      const some = await repo.findOne({ where: { id: parent.id }, relations: { children: true } });
+      const some = await repo.findOne({where: {id: parent.id}, relations: {children: true}});
 
       expect(some.children).toHaveLength(1);
       expect(some.children[0].id).toBe(2);

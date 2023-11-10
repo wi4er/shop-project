@@ -35,7 +35,10 @@ export class UserContact2stringEntity extends BaseEntity implements CommonString
   @ManyToOne(
     () => UserContactEntity,
     user => user.string,
-    { onDelete: 'CASCADE' },
+    {
+      onDelete: 'CASCADE',
+      nullable: false,
+    },
   )
   parent: UserContactEntity;
 

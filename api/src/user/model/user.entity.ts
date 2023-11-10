@@ -19,12 +19,13 @@ import { User2userContactEntity } from './user2user-contact.entity';
 import { User2userGroupEntity } from './user2user-group.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('user')
 @Check('not_empty_login', '"login" > \'\'')
 export class UserEntity
   extends BaseEntity
-  implements WithFlagEntity<UserEntity>, WithStringEntity<UserEntity> {
+  implements WithFlagEntity<UserEntity>, WithStringEntity<UserEntity>, WithPointEntity<UserEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

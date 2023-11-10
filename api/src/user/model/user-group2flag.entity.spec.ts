@@ -1,9 +1,9 @@
-import { DataSource } from "typeorm/data-source/DataSource";
-import { createConnection } from "typeorm";
-import { createConnectionOptions } from "../../createConnectionOptions";
-import { FlagEntity } from "../../flag/model/flag.entity";
-import { UserGroupEntity } from "./user-group.entity";
-import { UserGroup2flagEntity } from "./user-group2flag.entity";
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../createConnectionOptions';
+import { FlagEntity } from '../../flag/model/flag.entity';
+import { UserGroupEntity } from './user-group.entity';
+import { UserGroup2flagEntity } from './user-group2flag.entity';
 
 describe('UserGroup 2 flag entity', () => {
   let source: DataSource;
@@ -17,7 +17,7 @@ describe('UserGroup 2 flag entity', () => {
   describe('UserGroup2flag fields', () => {
     test('Should create user contact flag', async () => {
       const parent = await new UserGroupEntity().save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const inst = new UserGroup2flagEntity();
       inst.parent = parent;
@@ -40,7 +40,7 @@ describe('UserGroup 2 flag entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const inst = new UserGroup2flagEntity();
       inst.flag = flag;
@@ -54,10 +54,10 @@ describe('UserGroup 2 flag entity', () => {
       const repo = source.getRepository(UserGroupEntity);
 
       const parent = await new UserGroupEntity().save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new UserGroup2flagEntity(), { parent, flag }).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new UserGroup2flagEntity(), {parent, flag}).save();
 
-      const inst = await repo.findOne({ where: { id: 1 }, relations: { flag: { flag: true } } });
+      const inst = await repo.findOne({where: {id: 1}, relations: {flag: {flag: true}}});
 
       expect(inst.flag).toHaveLength(1);
       expect(inst.flag[0].id).toBe(1);
@@ -66,10 +66,10 @@ describe('UserGroup 2 flag entity', () => {
 
     test('Shouldn`t create duplicate flag', async () => {
       const parent = await new UserGroupEntity().save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new UserGroup2flagEntity(), { parent, flag }).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new UserGroup2flagEntity(), {parent, flag}).save();
       await expect(
-        Object.assign(new UserGroup2flagEntity(), { parent, flag }).save()
+        Object.assign(new UserGroup2flagEntity(), {parent, flag}).save(),
       ).rejects.toThrow('duplicate key');
     });
   });

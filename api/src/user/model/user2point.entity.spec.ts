@@ -16,7 +16,38 @@ describe('User entity', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe("User values", () => {
+  describe("User2point fields", () => {
+    test('Shouldn`t create without parent', async () => {
+      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+      const inst = Object.assign(new User2pointEntity(), {property, point});
+
+      await expect(inst.save()).rejects.toThrow('parentId');
+    });
+
+    test('Shouldn`t create without property', async () => {
+      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+      const inst = Object.assign(new User2pointEntity(), {parent, point});
+
+      await expect(inst.save()).rejects.toThrow('propertyId');
+    });
+
+    test('Shouldn`t create without point', async () => {
+      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+
+      const inst = Object.assign(new User2pointEntity(), {parent, property});
+
+      await expect(inst.save()).rejects.toThrow('pointId');
+    });
+  });
+
+  describe("User points", () => {
     test('Should create user with value', async () => {
       const repo = source.getRepository(UserEntity);
 
@@ -25,7 +56,7 @@ describe('User entity', () => {
       await Object.assign(new PropertyEntity(), { id: 'CURRENT_CITY' }).save();
       const user = await Object.assign(new UserEntity(), { login: 'user' }).save();
 
-      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', value: 'LONDON', parent: 1 }).save();
+      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', point: 'LONDON', parent: 1 }).save();
 
       const inst = await repo.findOne({ where: { id: user.id }, relations: { point: { point: { directory: true } } } });
 
@@ -43,9 +74,9 @@ describe('User entity', () => {
       await Object.assign(new PropertyEntity(), { id: 'CURRENT_CITY' }).save();
       const user = await Object.assign(new UserEntity(), { login: 'user' }).save();
 
-      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', value: 'LONDON_0', parent: 1 }).save();
-      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', value: 'LONDON_3', parent: 1 }).save();
-      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', value: 'LONDON_6', parent: 1 }).save();
+      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', point: 'LONDON_0', parent: 1 }).save();
+      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', point: 'LONDON_3', parent: 1 }).save();
+      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', point: 'LONDON_6', parent: 1 }).save();
 
       const inst = await repo.findOne({ where: { id: user.id }, relations: { point: true } });
 
@@ -58,10 +89,10 @@ describe('User entity', () => {
       await Object.assign(new PropertyEntity(), { id: 'CURRENT_CITY' }).save();
       await Object.assign(new UserEntity(), { login: 'user' }).save();
 
-      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', value: 'LONDON', parent: 1 }).save();
+      await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', point: 'LONDON', parent: 1 }).save();
       const wrong = await Object.assign(new User2pointEntity(), {
         property: 'CURRENT_CITY',
-        value: 'LONDON',
+        point: 'LONDON',
         parent: 1
       });
 
