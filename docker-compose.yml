@@ -38,3 +38,8 @@ services:
     volumes:
       - "./api:/app"
 
+  cache:
+    image: redis:alpine
+    container_name: shop-project-cache
+    ports:
+      - "6379:6379"

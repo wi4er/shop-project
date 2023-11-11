@@ -89,7 +89,7 @@ describe('SectionController', () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      await Object.assign(new Section2flagEntity(), {parent, flag, string: 'VALUE'}).save();
+      await Object.assign(new Section2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')

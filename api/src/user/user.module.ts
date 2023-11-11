@@ -26,6 +26,8 @@ import { FlagEntity } from "../flag/model/flag.entity";
 import { PointEntity } from "../directory/model/point.entity";
 import { User2descriptionEntity } from "./model/user2description.entity";
 import { MyselfController } from './controller/myself/myself.controller';
+import { GroupController } from './controller/group/group.controller';
+import { ContactController } from './controller/contact/contact.controller';
 
 @Module({
   imports: [
@@ -44,7 +46,7 @@ import { MyselfController } from './controller/myself/myself.controller';
     UserService,
     SessionService,
   ],
-  controllers: [UserController, AuthController, ForgotController, MyselfController]
+  controllers: [UserController, AuthController, ForgotController, MyselfController, GroupController, ContactController]
 })
 export class UserModule {
 }
