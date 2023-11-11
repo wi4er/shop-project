@@ -1,1 +1,2 @@
 *.lockb
+/node_modules
