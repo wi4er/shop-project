@@ -6,6 +6,7 @@ import { Lang2flagEntity } from "./model/lang2flag.entity";
 import { PropertyEntity } from "../property/model/property.entity";
 import { FlagEntity } from "../flag/model/flag.entity";
 import { LangService } from './service/lang/lang.service';
+import { LangController } from './controller/lang/lang.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { LangService } from './service/lang/lang.service';
   providers: [
     LangService,
   ],
-  exports: [ LangService ]
+  exports: [ LangService ],
+  controllers: [LangController]
 })
 export class LangModule {
 }
