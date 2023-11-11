@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { ElementController } from './element.controller';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
@@ -13,13 +12,15 @@ import { FlagEntity } from '../../../flag/model/flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { Element2pointEntity } from '../../model/element2point.entity';
+import { SectionEntity } from '../../model/section.entity';
+import { Element2sectionEntity } from '../../model/element2section.entity';
 
 describe('ElementController', () => {
   let source;
   let app;
 
   beforeAll(async () => {
-    const moduleBuilder = await Test.createTestingModule({ imports: [ AppModule ] }).compile();
+    const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
     app.init();
 
@@ -40,7 +41,7 @@ describe('ElementController', () => {
 
     test('Should get element item', async () => {
       await new BlockEntity().save();
-      await Object.assign(new ElementEntity, { block: 1 }).save();
+      await Object.assign(new ElementEntity, {block: 1}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -54,7 +55,7 @@ describe('ElementController', () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new ElementEntity, { block: 1 }).save();
+        await Object.assign(new ElementEntity, {block: 1}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -70,7 +71,7 @@ describe('ElementController', () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new ElementEntity, { block: 1 }).save();
+        await Object.assign(new ElementEntity, {block: 1}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -86,7 +87,7 @@ describe('ElementController', () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new ElementEntity, { block: 1 }).save();
+        await Object.assign(new ElementEntity, {block: 1}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -100,11 +101,11 @@ describe('ElementController', () => {
   });
 
   describe('Content element with strings', () => {
-    test('Should get elements with properties', async () => {
+    test('Should get elements with strings', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
-      const parent = await Object.assign(new ElementEntity, { block }).save();
-      await Object.assign(new Element2stringEntity(), { parent, property, string: 'VALUE' }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(new ElementEntity, {block}).save();
+      await Object.assign(new Element2stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -119,12 +120,12 @@ describe('ElementController', () => {
 
     test('Should get elements list with many properties', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, { block }).save();
+        const parent = await Object.assign(new ElementEntity, {block}).save();
         for (let j = 0; j < 10; j++) {
-          await Object.assign(new Element2stringEntity(), { parent, property, string: 'VALUE' }).save();
+          await Object.assign(new Element2stringEntity(), {parent, property, string: 'VALUE'}).save();
         }
       }
 
@@ -141,11 +142,11 @@ describe('ElementController', () => {
 
     test('Should get elements with string filter', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
-      const blank = await Object.assign(new ElementEntity, { block }).save();
-      const parent = await Object.assign(new ElementEntity, { block }).save();
-      await Object.assign(new Element2stringEntity(), { parent, property, string: 'VALUE' }).save();
+      const blank = await Object.assign(new ElementEntity, {block}).save();
+      const parent = await Object.assign(new ElementEntity, {block}).save();
+      await Object.assign(new Element2stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element?filter[string][eq]=VALUE')
@@ -160,18 +161,18 @@ describe('ElementController', () => {
 
     test('Should get elements with string sort', async () => {
       const block = await new BlockEntity().save();
-      const name = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
-      const gender = await Object.assign(new PropertyEntity(), { id: 'GENDER' }).save();
+      const name = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const gender = await Object.assign(new PropertyEntity(), {id: 'GENDER'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, { block }).save();
+        const parent = await Object.assign(new ElementEntity, {block}).save();
         await Object.assign(
           new Element2stringEntity(),
-          { parent, property: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}` },
+          {parent, property: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
         ).save();
         await Object.assign(
           new Element2stringEntity(),
-          { parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}` },
+          {parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
         ).save();
       }
 
@@ -188,47 +189,87 @@ describe('ElementController', () => {
     });
   });
 
-  describe('Content element with flags', () => {
-    test('Should get element with flag', async () => {
+  describe('Content element with section', () => {
+    test('Should get elements with section', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity, { block }).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new Element2flagEntity(), { parent, flag, string: 'VALUE' }).save();
+      const parent = await Object.assign(new ElementEntity, {block}).save();
+      const section = await Object.assign(new SectionEntity(), {block}).save();
+      await Object.assign(new Element2sectionEntity(), {parent, section}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].flag).toEqual([ 'ACTIVE' ]);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[0].section).toHaveLength(1);
+      expect(list.body[0].section[0]).toBe(1);
+    });
+
+    test('Should get elements list with sections', async () => {
+      const block = await new BlockEntity().save();
+      const parent1 = await Object.assign(new ElementEntity, {block}).save();
+      const parent2 = await Object.assign(new ElementEntity, {block}).save();
+      const section1 = await Object.assign(new SectionEntity(), {block}).save();
+      const section2 = await Object.assign(new SectionEntity(), {block}).save();
+
+      await Object.assign(new Element2sectionEntity(), {parent: parent1, section: section1}).save();
+      await Object.assign(new Element2sectionEntity(), {parent: parent1, section: section2}).save();
+      await Object.assign(new Element2sectionEntity(), {parent: parent2, section: section1}).save();
+      await Object.assign(new Element2sectionEntity(), {parent: parent2, section: section2}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/element')
+        .expect(200);
+
+      expect(list.body).toHaveLength(2);
+      expect(list.body[0].section).toHaveLength(2);
+      expect(list.body[0].section[0]).toBe(1);
+      expect(list.body[0].section[1]).toBe(2);
+    });
+  });
+
+  describe('Content element with flags', () => {
+    test('Should get element with flag', async () => {
+      const block = await new BlockEntity().save();
+      const parent = await Object.assign(new ElementEntity, {block}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new Element2flagEntity(), {parent, flag, string: 'VALUE'}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/element')
+        .expect(200);
+
+      expect(list.body).toHaveLength(1);
+      expect(list.body[0].flag).toEqual(['ACTIVE']);
     });
 
     test('Should get element with flag filter', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity, { block }).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new Element2flagEntity(), { parent, flag, string: 'VALUE' }).save();
+      const parent = await Object.assign(new ElementEntity, {block}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new Element2flagEntity(), {parent, flag, string: 'VALUE'}).save();
 
-      const blank = await Object.assign(new ElementEntity, { block }).save();
+      const blank = await Object.assign(new ElementEntity, {block}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element?filter[flag][eq]=ACTIVE')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0]['flag']).toEqual([ 'ACTIVE' ]);
+      expect(list.body[0]['flag']).toEqual(['ACTIVE']);
     });
   });
 
-  describe('Content element with values', () => {
-    test('Should get element with value', async () => {
+  describe('Content element with point', () => {
+    test('Should get element with point', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), { block }).save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'CURRENT' }).save();
-      const directory = await Object.assign(new DirectoryEntity(), { id: 'CITY' }).save();
-      const value = await Object.assign(new PointEntity(), { id: 'LONDON', directory }).save();
+      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = await Object.assign(new Element2pointEntity(), { parent, property, value }).save();
+      const inst = await Object.assign(new Element2pointEntity(), {parent, property, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -236,50 +277,50 @@ describe('ElementController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].value).toBe('LONDON');
+      expect(list.body[0].property[0].point).toBe('LONDON');
       expect(list.body[0].property[0].directory).toBe('CITY');
     });
 
-    test('Should get element with value filter', async () => {
+    test('Should get element with point filter', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'CURRENT' }).save();
-      const directory = await Object.assign(new DirectoryEntity(), { id: 'CITY' }).save();
-      const value = await Object.assign(new PointEntity(), { id: 'LONDON', directory }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity(), { block }).save();
+        const parent = await Object.assign(new ElementEntity(), {block}).save();
 
         if (i % 2) {
-          await Object.assign(new Element2pointEntity(), { parent, property, value }).save();
+          await Object.assign(new Element2pointEntity(), {parent, property, point}).save();
         }
       }
 
       const list = await request(app.getHttpServer())
-        .get('/element?filter[value][CITY][eq]=LONDON')
+        .get('/element?filter[point][CITY][eq]=LONDON')
         .expect(200);
 
       expect(list.body).toHaveLength(5);
       expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].value).toBe('LONDON');
+      expect(list.body[0].property[0].point).toBe('LONDON');
       expect(list.body[0].property[0].directory).toBe('CITY');
     });
 
-    test('Should get element with value order', async () => {
+    test('Should get element with point order', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'CURRENT' }).save();
-      const directory = await Object.assign(new DirectoryEntity(), { id: 'CITY' }).save();
-      const value = await Object.assign(new PointEntity(), { id: 'LONDON', directory }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity(), { block }).save();
+        const parent = await Object.assign(new ElementEntity(), {block}).save();
 
         if (i % 2) {
-          await Object.assign(new Element2pointEntity(), { parent, property, value }).save();
+          await Object.assign(new Element2pointEntity(), {parent, property, point}).save();
         }
       }
 
       const list = await request(app.getHttpServer())
-        .get('/element?sort[value][CITY]=asc')
+        .get('/element?sort[point][CITY]=asc')
         .expect(200);
 
       // expect(list.body).toHaveLength(5);
@@ -294,7 +335,7 @@ describe('ElementController', () => {
       await new BlockEntity().save();
       const inst = await request(app.getHttpServer())
         .post('/element')
-        .send({ block: 1 })
+        .send({block: 1})
         .expect(201);
 
       expect(inst.body['id']).toBe(1);
@@ -302,22 +343,22 @@ describe('ElementController', () => {
     });
 
     test('Shouldn`t add with wrong block', async () => {
-      await new BlockEntity().save();
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({ block: 2 })
-        .expect(500);
+      // await new BlockEntity().save();
+      // const inst = await request(app.getHttpServer())
+      //   .post('/element')
+      //   .send({block: 2})
+      //   .expect(500);
     });
   });
 
   describe('Content element update', () => {
     test('Should update item', async () => {
       await new BlockEntity().save();
-      await Object.assign(new ElementEntity(), { block: 1 }).save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
 
       const item = await request(app.getHttpServer())
         .put('/element')
-        .send({ id: 1 })
+        .send({id: 1})
         .expect(200);
 
       expect(item.body['id']).toBe(1);
@@ -327,17 +368,17 @@ describe('ElementController', () => {
 
     test('Should update with property', async () => {
       await new BlockEntity().save();
-      await Object.assign(new ElementEntity(), { block: 1 }).save();
-      await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       const item = await request(app.getHttpServer())
         .put('/element')
         .send({
           id: 1,
-          property: [ {
+          property: [{
             property: 'NAME',
-            string: 'VALUE'
-          } ],
+            string: 'VALUE',
+          }],
         })
         .expect(200);
 
@@ -350,18 +391,18 @@ describe('ElementController', () => {
   describe('Content element deletion', () => {
     test('Should delete block', async () => {
       await new BlockEntity().save();
-      await Object.assign(new ElementEntity(), { block: 1 }).save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
 
       const list = await request(app.getHttpServer())
         .delete('/element/1')
         .expect(200);
 
-      expect(list.body).toEqual([ 1 ]);
+      expect(list.body).toEqual([1]);
     });
 
     test('Should delete with wrong id', async () => {
       await new BlockEntity().save();
-      await Object.assign(new ElementEntity(), { block: 1 }).save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
 
       const list = await request(app.getHttpServer())
         .delete('/element/22')

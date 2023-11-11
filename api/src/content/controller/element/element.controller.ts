@@ -41,6 +41,7 @@ export class ElementController {
         })),
       ],
       flag: item.flag.map(fl => fl.flag.id),
+      section: item.section?.map(sec => sec.id),
     };
   }
 
@@ -48,17 +49,17 @@ export class ElementController {
     const where = {};
 
     if (filter?.flag) {
-      where['flag'] = { flag: { id: filter.flag.eq } };
+      where['flag'] = {flag: {id: filter.flag.eq}};
     }
 
-    for (const key in filter?.value) {
-      where['value'] = {
-        value: { directory: { id: key }, id: filter.value[key].eq },
+    for (const key in filter?.point) {
+      where['point'] = {
+        point: {directory: {id: key}, id: filter.point[key].eq},
       };
     }
 
     if (filter?.string) {
-      where['string'] = { string: filter.string.eq };
+      where['string'] = {string: filter.string.eq};
     }
 
     return where;
@@ -68,7 +69,7 @@ export class ElementController {
     const order = {};
 
     if (!Array.isArray(sort)) {
-      sort = [ sort ];
+      sort = [sort];
     }
 
     for (const item of sort) {
@@ -80,7 +81,7 @@ export class ElementController {
         }
 
         if (key === 'string') {
-          order['string'] = { string: 'asc' };
+          order['string'] = {string: 'asc'};
         }
       }
     }
@@ -103,9 +104,10 @@ export class ElementController {
       where: filter ? this.toWhere(filter) : null,
       order: sort ? this.toOrder(sort) : null,
       relations: {
-        string: { property: true },
-        flag: { flag: true },
-        point: { point: { directory: true }, property: true },
+        string: {property: true},
+        section: true,
+        flag: {flag: true},
+        point: {point: {directory: true}, property: true},
         block: true,
       },
       take: limit,
@@ -120,11 +122,11 @@ export class ElementController {
   ) {
     return this.elementService.insert(input)
       .then(res => this.elementRepo.findOne({
-        where: { id: res.id },
+        where: {id: res.id},
         relations: {
-          string: { property: true },
-          flag: { flag: true },
-          point: { point: { directory: true }, property: true },
+          string: {property: true},
+          flag: {flag: true},
+          point: {point: {directory: true}, property: true},
           block: true,
         },
       }))
@@ -138,11 +140,11 @@ export class ElementController {
   ) {
     return this.elementService.update(input)
       .then(res => this.elementRepo.findOne({
-        where: { id: res.id },
+        where: {id: res.id},
         relations: {
-          string: { property: true },
-          flag: { flag: true },
-          point: { point: { directory: true }, property: true },
+          string: {property: true},
+          flag: {flag: true},
+          point: {point: {directory: true}, property: true},
           block: true,
         },
       }))
@@ -154,7 +156,7 @@ export class ElementController {
     @Param('id')
       id: string,
   ): Promise<number[]> {
-    return this.elementService.delete([ +id ]);
+    return this.elementService.delete([+id]);
   }
 
 }

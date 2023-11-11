@@ -4,7 +4,7 @@ class ElementFlagFilterSchema {
 
 }
 
-class ElementValueFilterSchema {
+class ElementPointFilterSchema {
 
   eq: [ string ];
 
@@ -21,7 +21,7 @@ export class ElementFilterSchema {
 
   flag?: ElementFlagFilterSchema;
 
-  value?: { [key: string]: ElementValueFilterSchema };
+  point?: { [key: string]: ElementPointFilterSchema };
 
   string?: ElementStringFilterSchema;
 

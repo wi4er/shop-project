@@ -5,13 +5,13 @@ import {
   Index,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn
-} from "typeorm";
-import { ElementEntity } from "./element.entity";
-import { SectionEntity } from "./section.entity";
+  UpdateDateColumn, VersionColumn,
+} from 'typeorm';
+import { ElementEntity } from './element.entity';
+import { SectionEntity } from './section.entity';
 
 @Entity('content-element2section')
-@Index([ 'parent', 'section' ], { unique: true })
+@Index(['parent', 'section'], {unique: true})
 export class Element2sectionEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -35,7 +35,7 @@ export class Element2sectionEntity extends BaseEntity {
     {
       onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
   parent: ElementEntity;
 
@@ -45,7 +45,7 @@ export class Element2sectionEntity extends BaseEntity {
     {
       onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
   section: SectionEntity;
 

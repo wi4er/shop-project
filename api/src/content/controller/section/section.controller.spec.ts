@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { SectionController } from './section.controller';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
@@ -10,6 +9,9 @@ import { PropertyEntity } from '../../../property/model/property.entity';
 import { Section2stringEntity } from '../../model/section2string.entity';
 import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Section2flagEntity } from '../../model/section2flag.entity';
+import { DirectoryEntity } from '../../../directory/model/directory.entity';
+import { PointEntity } from '../../../directory/model/point.entity';
+import { Section2pointEntity } from '../../model/section2point.entity';
 
 describe('SectionController', () => {
   let source;
@@ -47,6 +49,20 @@ describe('SectionController', () => {
       expect(list.body[0].id).toBe(1);
       expect(list.body[0].block).toBe(1);
     });
+
+    test('Should get section with parent', async () => {
+      await new BlockEntity().save();
+      const parent = await Object.assign(new SectionEntity(), {block: 1}).save();
+      await Object.assign(new SectionEntity(), {block: 1, parent}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/section')
+        .expect(200);
+
+      expect(list.body).toHaveLength(2);
+      expect(list.body[1].id).toBe(2);
+      expect(list.body[1].parent).toBe(1);
+    });
   });
 
   describe('Content section with strings', () => {
@@ -81,6 +97,28 @@ describe('SectionController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['ACTIVE']);
+    });
+  });
+
+  describe('Content section with points', () => {
+    test('Should get section with point', async () => {
+      const block = await new BlockEntity().save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+      await Object.assign(new Section2pointEntity(), {point, parent, property}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/section')
+        .expect(200);
+
+      expect(list.body).toHaveLength(1);
+      expect(list.body[0].property).toHaveLength(1);
+      expect(list.body[0].property[0].property).toBe('CURRENT')
+      expect(list.body[0].property[0].point).toBe('LONDON')
+      expect(list.body[0].property[0].directory).toBe('CITY')
     });
   });
 

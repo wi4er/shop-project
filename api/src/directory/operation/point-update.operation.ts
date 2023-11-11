@@ -11,7 +11,7 @@ export class PointUpdateOperation {
   }
 
   async save(beforeItem: DirectoryEntity, input: DirectoryInput) {
-    const current: Array<string> = beforeItem.point.map(it => it.id);
+    const current: Array<string> = beforeItem.point.map(it => it.point.id);
 
     for (const item of input.point ?? []) {
       if (current.includes(item)) {

@@ -20,11 +20,17 @@ export class SectionController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
+      parent: item.parent?.id,
       property: [
         ...item.string.map(str => ({
           string: str.string,
           property: str.property.id,
           lang: str.lang,
+        })),
+        ...item.point.map(val => ({
+          property: val.property.id,
+          point: val.point.id,
+          directory: val.point.directory.id,
         })),
       ],
       flag: item.flag.map(fl => fl.flag.id),
@@ -44,7 +50,13 @@ export class SectionController {
 
     return this.sectionRepo.find({
       where,
-      relations: {string: {property: true}, block: true, flag: {flag: true}},
+      relations: {
+        parent: true,
+        string: {property: true},
+        block: true,
+        flag: {flag: true},
+        point: {point: {directory: true}, property: true},
+      },
     }).then(list => list.map(this.toView));
   }
 
