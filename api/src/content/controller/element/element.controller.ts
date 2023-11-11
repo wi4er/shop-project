@@ -32,7 +32,7 @@ export class ElementController {
         ...item.string.map(str => ({
           string: str.string,
           property: str.property.id,
-          lang: str.lang,
+          lang: str.lang?.id,
         })),
         ...item.point.map(val => ({
           property: val.property.id,
@@ -104,7 +104,7 @@ export class ElementController {
       where: filter ? this.toWhere(filter) : null,
       order: sort ? this.toOrder(sort) : null,
       relations: {
-        string: {property: true},
+        string: {property: true, lang: true},
         section: true,
         flag: {flag: true},
         point: {point: {directory: true}, property: true},

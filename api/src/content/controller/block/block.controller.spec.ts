@@ -74,7 +74,7 @@ describe('BlockController', () => {
     test('Should get block with flag', async () => {
       const parent = await new BlockEntity().save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      await Object.assign(new Block2flagEntity(), {parent, flag, string: 'VALUE'}).save();
+      await Object.assign(new Block2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
         .get('/block')

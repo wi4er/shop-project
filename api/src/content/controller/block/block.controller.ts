@@ -8,6 +8,12 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('block')
 export class BlockController {
 
+  constructor(
+    @InjectRepository(BlockEntity)
+    private blockRepo: Repository<BlockEntity>,
+  ) {
+  }
+
   toView(item: BlockEntity) {
     return {
       id: item.id,
@@ -18,7 +24,7 @@ export class BlockController {
         ...item.string.map(str => ({
           string: str.string,
           property: str.property.id,
-          lang: str.lang,
+          lang: str.lang?.id,
         })),
         ...item.point.map(val => ({
           property: val.property.id,
@@ -30,12 +36,6 @@ export class BlockController {
     };
   }
 
-  constructor(
-    @InjectRepository(BlockEntity)
-    private blockRepo: Repository<BlockEntity>,
-  ) {
-  }
-
   @Get()
   async getList(
     @Query('offset')
@@ -45,10 +45,12 @@ export class BlockController {
   ) {
     return this.blockRepo.find({
       relations: {
-        string: {property: true},
+        string: {property: true, lang: true},
         flag: {flag: true},
         point: {point: {directory: true}, property: true},
       },
+      take: limit,
+      skip: offset,
     }).then(list => list.map(this.toView));
   }
 
