@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardTileComponent } from "./components/dashboard-tile/dashboard-tile.component";
 import { UserListComponent } from "./components/user-list/user-list.component";
-import { ContentListComponent } from "./components/content-list/content-list.component";
 import { BlockListComponent } from "./components/block-list/block-list.component";
 import { DirectoryListComponent } from "./components/directory-list/directory-list.component";
 import { FlagListComponent } from "./components/flag-list/flag-list.component";
 import { LangListComponent } from "./components/lang-list/lang-list.component";
 import { PropertyListComponent } from "./components/property-list/property-list.component";
 import { NotFoundComponent } from "./components/not-found/not-found.component";
+import { ContentPageComponent } from './components/content-page/content-page.component';
 
 const routes: Routes = [{
   path: '',
@@ -18,7 +18,7 @@ const routes: Routes = [{
   component: UserListComponent,
 }, {
   path: 'content/:id',
-  component: ContentListComponent,
+  component: ContentPageComponent,
 }, {
   path: 'content',
   component: BlockListComponent,

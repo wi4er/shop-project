@@ -1,5 +1,5 @@
 <mat-toolbar *ngIf="list.length">
-  <span>Properties</span>
+  <span>Flags</span>
 
   <span class="spacer"></span>
 
@@ -132,5 +132,5 @@
 <app-add-button
   [onClick]="addItem.bind(this)"
   *ngIf="!list.length"
-  name="property"
+  name="flag"
 ></app-add-button>

@@ -37,6 +37,8 @@ services:
     command: npm start
     volumes:
       - "./api:/app"
+    environment:
+      DB_HOST: postgres
 
   cache:
     image: redis:alpine

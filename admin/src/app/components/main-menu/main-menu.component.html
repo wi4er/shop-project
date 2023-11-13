@@ -1,79 +1,19 @@
 <mat-list>
-  <a [routerLink]="['/']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>home</mat-icon>
+  <div *ngFor="let group of list">
+    <div
+      *ngIf="group.title !== ''"
+      mat-subheader
+    >{{group.title}}</div>
 
-      <div matListItemTitle>Dashboard</div>
-    </mat-list-item>
-  </a>
-
-  <a matListItemTitle [routerLink]="['/user']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>person</mat-icon>
-
-      <div matListItemTitle>Users</div>
-    </mat-list-item>
-  </a>
-
-  <a [routerLink]="['/directory']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>folder</mat-icon>
-
-      <div matListItemTitle>Directories</div>
-    </mat-list-item>
-  </a>
-
-  <mat-divider></mat-divider>
-  <div mat-subheader>Settings</div>
-
-  <a [routerLink]="['/content']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>category</mat-icon>
-
-      <div matListItemTitle>Content</div>
-    </mat-list-item>
-  </a>
-
-  <a [routerLink]="['/property']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>display_settings</mat-icon>
-
-      <div matListItemTitle>Properties</div>
-    </mat-list-item>
-  </a>
-
-  <a [routerLink]="['/flag']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>flag</mat-icon>
-
-      <div matListItemTitle>Flags</div>
-    </mat-list-item>
-  </a>
-
-  <a [routerLink]="['/lang']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>translate</mat-icon>
-
-      <div matListItemTitle>Languages</div>
-    </mat-list-item>
-  </a>
-
-  <mat-divider></mat-divider>
-  <div mat-subheader>Statistics</div>
-
-  <a [routerLink]="['/log']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>list</mat-icon>
-
-      <div matListItemTitle>Logs</div>
-    </mat-list-item>
-  </a>
-
-  <a [routerLink]="['/report']">
-    <mat-list-item>
-      <mat-icon matListItemIcon>assessment</mat-icon>
-
-      <div matListItemTitle>Reports</div>
-    </mat-list-item>
-  </a>
+    <a
+      *ngFor="let item of group.child"
+      matListItemTitle
+      [routerLink]="[item.link]"
+    >
+      <mat-list-item>
+        <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
+        <div matListItemTitle>{{item.title}}</div>
+      </mat-list-item>
+    </a>
+  </div>
 </mat-list>

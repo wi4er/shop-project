@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { BlockFormComponent } from '../block-form/block-form.component';
 import { CommonList } from '../../common-list/common-list';
+import { MatDialog } from '@angular/material/dialog';
+import { LangFormComponent } from '../lang-form/lang-form.component';
+import { UserFormComponent } from '../user-form/user-form.component';
 
-interface Block {
+interface User {
   id: number;
   created_at: string;
   updated_at: string;
@@ -11,11 +12,11 @@ interface Block {
 }
 
 @Component({
-  selector: 'app-block-list',
-  templateUrl: './block-list.component.html',
-  styleUrls: ['./block-list.component.css'],
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.css']
 })
-export class BlockListComponent
+export class UserListComponent
   extends CommonList
   implements OnInit {
 
@@ -35,13 +36,13 @@ export class BlockListComponent
   }
 
   override fetchList() {
-    fetch('http://localhost:3001/block')
+    fetch('http://localhost:3001/user')
       .then(res => {
         if (!res.ok) throw new Error('Api not found!');
         return res.json();
       })
       .then(list => {
-        this.setData(list as Block[]);
+        this.setData(list as User[]);
       })
       .catch(err => {
         console.log(err);
@@ -53,7 +54,7 @@ export class BlockListComponent
    * @param data
    * @private
    */
-  private setData(data: Block[]) {
+  private setData(data: User[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -75,12 +76,12 @@ export class BlockListComponent
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col, 'section', 'element' ];
+    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
   }
 
   addItem() {
     const dialog = this.dialog.open(
-      BlockFormComponent,
+      UserFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -93,7 +94,7 @@ export class BlockListComponent
 
   updateItem(id: number) {
     const dialog = this.dialog.open(
-      BlockFormComponent,
+      UserFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
