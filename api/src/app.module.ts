@@ -11,6 +11,7 @@ import { LangModule } from './lang/lang.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { createConnectionOptions } from './createConnectionOptions';
+import { FormModule } from './form/form.module';
 import * as cors from 'cors';
 
 @Module({
@@ -24,6 +25,7 @@ import * as cors from 'cors';
     FlagModule,
     LangModule,
     CommonModule,
+    FormModule,
   ],
   controllers: [AppController],
   providers: [AppService],

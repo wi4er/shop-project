@@ -1,10 +1,11 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
-import { PropertyEntity } from './property.entity';
-import { Property2stringEntity } from './property2string.entity';
 import { createConnectionOptions } from '../../createConnectionOptions';
+import { PropertyEntity } from '../../property/model/property.entity';
+import { FormEntity } from './form.entity';
+import { Form2stringEntity } from './form2string.entity';
 
-describe('Property2string entity', () => {
+describe('Form2string entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,12 +15,12 @@ describe('Property2string entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Property2sting fields', () => {
+  describe('Form2sting fields', () => {
     test('Should create property property', async () => {
-      const parent = await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
+      const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
 
-      const value = new Property2stringEntity();
+      const value = new Form2stringEntity();
       value.string = 'VALUE';
       value.property = property;
       value.parent = parent;
@@ -33,10 +34,12 @@ describe('Property2string entity', () => {
       expect(inst.version).toBe(1);
     });
 
-    test('Should get property string', async () => {
-      const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const repo = source.getRepository(Property2stringEntity);
-      await Object.assign(new Property2stringEntity(), {string: 'VALUE', parent, property: parent}).save();
+    test('Should get form string', async () => {
+      const repo = source.getRepository(Form2stringEntity);
+
+      const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      await Object.assign(new Form2stringEntity(), {string: 'VALUE', parent, property}).save();
 
       const inst = await repo.findOne({
         where: {id: 1},
@@ -44,56 +47,44 @@ describe('Property2string entity', () => {
       });
       expect(inst.id).toBe(1);
       expect(inst.string).toBe('VALUE');
-      expect(inst.property.id).toBe('NAME');
+      expect(inst.property.id).toBe('PROPERTY');
     });
 
     test('Shouldn`t create without parent', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
 
-      const value = new Property2stringEntity();
+      const value = new Form2stringEntity();
       value.string = 'VALUE';
       value.property = property;
       await expect(value.save()).rejects.toThrow('parentId');
     });
 
     test('Shouldn`t create without property', async () => {
-      const parent = await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
+      const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
 
-      const value = new Property2stringEntity();
+      const value = new Form2stringEntity();
       value.string = 'VALUE';
       value.parent = parent;
       await expect(value.save()).rejects.toThrow('propertyId');
     });
   });
 
-  describe('Property with string', () => {
-    test('Should add property with string', async () => {
-      const repo = source.getRepository(PropertyEntity);
+  describe('Form with string', () => {
+    test('Should add form with string', async () => {
+      const repo = source.getRepository(FormEntity);
 
       const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
-      const parent = await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
-      await Object.assign(new Property2stringEntity(), {string: 'VALUE', property, parent}).save();
+      const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
+      await Object.assign(new Form2stringEntity(), {string: 'VALUE', property, parent}).save();
 
       const item = await repo.findOne({
-        where: {id: 'PARENT'},
+        where: {id: 'FORM'},
         relations: {string: {property: true}},
       });
 
       expect(item.string).toHaveLength(1);
       expect(item.string[0].string).toBe('VALUE');
       expect(item.string[0].property.id).toBe('PROPERTY');
-    });
-
-    test('Should add property with property id', async () => {
-      const repo = source.getRepository(PropertyEntity);
-
-      await Object.assign(new PropertyEntity(), {id: 'VALUE'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
-      await Object.assign(new Property2stringEntity(), {string: 'VALUE', property: 'VALUE', parent: 'PROPERTY'}).save();
-
-      const item = await repo.findOne({where: {id: 'PROPERTY'}, relations: {string: true}});
-
-      expect(item.string[0].string).toBe('VALUE');
     });
   });
 });

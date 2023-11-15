@@ -1,11 +1,11 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from './property.entity';
 import { FlagEntity } from '../../flag/model/flag.entity';
-import { Property2flagEntity } from './property2flag.entity';
+import { Form2flagEntity } from './form2flag.entity';
+import { FormEntity } from './form.entity';
 
-describe('Property2flag entity', () => {
+describe('Form2flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,18 +15,18 @@ describe('Property2flag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Property2flag fields', () => {
+  describe('Form2flag fields', () => {
     test('Should get empty list', async () => {
-      const repo = source.getRepository(Property2flagEntity);
+      const repo = source.getRepository(Form2flagEntity);
       const list = await repo.find();
 
       expect(list).toHaveLength(0);
     });
 
-    test('Should create property flag', async () => {
-      const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+    test('Should create form flag', async () => {
+      const parent = await Object.assign(new FormEntity(), {id: 'NAME'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      const inst = await Object.assign(new Property2flagEntity(), {flag, parent}).save();
+      const inst = await Object.assign(new Form2flagEntity(), {flag, parent}).save();
 
       expect(inst.id).toBe(1);
       expect(inst.created_at).toBeDefined();
@@ -36,29 +36,29 @@ describe('Property2flag entity', () => {
     });
 
     test('Shouldn`t create without flag', async () => {
-      const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const inst = Object.assign(new Property2flagEntity(), {parent});
+      const parent = await Object.assign(new FormEntity(), {id: 'NAME'}).save();
+      const inst = Object.assign(new Form2flagEntity(), {parent});
 
       await expect(inst.save()).rejects.toThrow('flagId');
     });
 
     test('Shouldn`t create without parent', async () => {
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      const inst = Object.assign(new Property2flagEntity(), {flag});
+      const inst = Object.assign(new Form2flagEntity(), {flag});
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
   });
 
-  describe('Property with flag', () => {
-    test('Should create property with flag', async () => {
-      const propRepo = source.getRepository(PropertyEntity);
+  describe('Form with flag', () => {
+    test('Should create form with flag', async () => {
+      const formRepo = source.getRepository(FormEntity);
 
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      const parent = await Object.assign(new PropertyEntity(), {id: 'VALUE'}).save();
-      await Object.assign(new Property2flagEntity(), {parent, flag}).save();
+      const parent = await Object.assign(new FormEntity(), {id: 'VALUE'}).save();
+      await Object.assign(new Form2flagEntity(), {parent, flag}).save();
 
-      const inst = await propRepo.findOne({
+      const inst = await formRepo.findOne({
         where: {id: 'VALUE'},
         relations: {flag: {flag: true}},
       });
@@ -68,20 +68,20 @@ describe('Property2flag entity', () => {
     });
 
     test('Should create with many flags', async () => {
-      const propRepo = source.getRepository(PropertyEntity);
-      const parent = await Object.assign(new PropertyEntity(), {id: 'VALUE'}).save();
+      const formRepo = source.getRepository(FormEntity);
+      const parent = await Object.assign(new FormEntity(), {id: 'VALUE'}).save();
 
       {
         const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-        await Object.assign(new Property2flagEntity(), {parent, flag}).save();
+        await Object.assign(new Form2flagEntity(), {parent, flag}).save();
       }
 
       {
         const flag = await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
-        await Object.assign(new Property2flagEntity(), {parent, flag}).save();
+        await Object.assign(new Form2flagEntity(), {parent, flag}).save();
       }
 
-      const inst = await propRepo.findOne({
+      const inst = await formRepo.findOne({
         where: {id: 'VALUE'},
         relations: {flag: {flag: true}},
       });

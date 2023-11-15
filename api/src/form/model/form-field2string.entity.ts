@@ -1,20 +1,20 @@
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn, DeleteDateColumn,
-  Entity,
-  ManyToOne,
+  BaseEntity, Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity, ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from './property.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { PropertyEntity } from '../../property/model/property.entity';
+import { LangEntity } from '../../lang/model/lang.entity';
+import { FormFieldEntity } from './form-field.entity';
 
-@Entity('property2string')
-export class Property2stringEntity
+@Entity('form-field2string')
+export class FormField2stringEntity
   extends BaseEntity
-  implements CommonStringEntity<PropertyEntity> {
+  implements CommonStringEntity<FormFieldEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,7 +26,7 @@ export class Property2stringEntity
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date | null;
+  deleted_at: Date;
 
   @VersionColumn()
   version: number;
@@ -35,14 +35,14 @@ export class Property2stringEntity
   string: string;
 
   @ManyToOne(
-    () => PropertyEntity,
-    property => property.string,
+    () => FormFieldEntity,
+    field => field.string,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: PropertyEntity;
+  parent: FormFieldEntity;
 
   @ManyToOne(
     () => PropertyEntity,

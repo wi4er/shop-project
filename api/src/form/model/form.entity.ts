@@ -1,0 +1,57 @@
+import {
+  BaseEntity, Check,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity, OneToMany, PrimaryColumn,
+  UpdateDateColumn, VersionColumn,
+} from 'typeorm';
+import { WithFlagEntity } from '../../common/model/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with-string.entity';
+import { Form2flagEntity } from './form2flag.entity';
+import { Form2stringEntity } from './form2string.entity';
+import { FormFieldStringEntity } from './form-field-string.entity';
+import { FormFieldEntity } from './form-field.entity';
+
+@Entity('form')
+@Check('not_empty_id', '"id" > \'\'')
+export class FormEntity
+  extends BaseEntity
+  implements WithFlagEntity<FormEntity>, WithStringEntity<FormEntity> {
+
+  @PrimaryColumn({
+    type: 'varchar',
+    length: 50,
+  })
+  id: string;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date | null;
+
+  @VersionColumn()
+  version: number;
+
+  @OneToMany(
+    type => Form2stringEntity,
+    string => string.parent,
+  )
+  string: Form2stringEntity[];
+
+  @OneToMany(
+    type => Form2flagEntity,
+    flag => flag.parent,
+  )
+  flag: Form2flagEntity[];
+
+  @OneToMany(
+    type => FormFieldEntity,
+    string => string.form,
+  )
+  field: FormFieldEntity[];
+
+}

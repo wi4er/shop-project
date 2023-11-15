@@ -2,19 +2,21 @@ import {
   BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, Index, ManyToOne,
+  Entity,
+  Index, ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { FlagEntity } from '../../flag/model/flag.entity';
-import { PropertyEntity } from './property.entity';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
+import { FlagEntity } from '../../flag/model/flag.entity';
+import { FormEntity } from './form.entity';
+import { CommonStringEntity } from '../../common/model/common-string.entity';
 
-@Entity('property2flag')
+@Entity('form2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class Property2flagEntity
+export class Form2flagEntity
   extends BaseEntity
-  implements CommonFlagEntity<PropertyEntity> {
+  implements CommonFlagEntity<FormEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,20 +28,20 @@ export class Property2flagEntity
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date | null;
+  deleted_at: Date;
 
   @VersionColumn()
   version: number;
 
   @ManyToOne(
-    () => PropertyEntity,
-    property => property.flag,
+    () => FormEntity,
+    form => form.flag,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: PropertyEntity;
+  parent: FormEntity;
 
   @ManyToOne(
     () => FlagEntity,

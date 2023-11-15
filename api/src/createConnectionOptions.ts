@@ -45,6 +45,16 @@ import { BlockPermissionEntity } from './content/model/block-permission.entity';
 import { Block2pointEntity } from './content/model/block2point.entity';
 import { Directory2pointEntity } from './directory/model/directory2point.entity';
 import { Point2pointEntity } from './directory/model/point2point.entity';
+import { FormEntity } from './form/model/form.entity';
+import { Form2flagEntity } from './form/model/form2flag.entity';
+import { Form2stringEntity } from './form/model/form2string.entity';
+import { FormFieldStringEntity } from './form/model/form-field-string.entity';
+import { FormFieldEntity } from './form/model/form-field.entity';
+import { FormField2flagEntity } from './form/model/form-field2flag.entity';
+import { FormField2stringEntity } from './form/model/form-field2string.entity';
+import { FormFieldElementEntity } from './form/model/form-field-element.entity';
+import { FormFieldSectionEntity } from './form/model/form-field-section.entity';
+import { FormFieldDirectoryEntity } from './form/model/form-field-directory.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -69,6 +79,9 @@ export function createConnectionOptions(): DataSourceOptions {
       ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity, Element2flagEntity,
       SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity,
       BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity,
+      FormEntity, Form2flagEntity, Form2stringEntity,
+      FormFieldEntity, FormField2flagEntity, FormField2stringEntity,
+      FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
     ],
     subscribers: [],
     migrations: [],
