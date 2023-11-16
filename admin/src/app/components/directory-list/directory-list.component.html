@@ -69,7 +69,13 @@
       </button>
 
       <mat-menu #menu="matMenu">
-
+        <app-item-menu
+          [flags]="flagList"
+          [active]="activeFlags[element.id]"
+          [onDelete]="deleteItem.bind(this, element.id)"
+          [onEdit]="updateItem.bind(this, element.id)"
+          [onFlag]="toggleFlag.bind(this, +element.id)"
+        ></app-item-menu>
       </mat-menu>
     </td>
   </ng-container>
@@ -103,14 +109,14 @@
 
   <ng-container
     *ngFor="let prop of propertyList"
-    [matColumnDef]="prop"
+    [matColumnDef]="'property_' + prop"
   >
     <th mat-header-cell *matHeaderCellDef>
       <span>{{ prop }}</span>
     </th>
 
     <td mat-cell *matCellDef="let element">
-      <span>{{element[prop]}}</span>
+      <span>{{element['property_' + prop]}}</span>
     </td>
   </ng-container>
 
@@ -132,5 +138,5 @@
 <app-add-button
   [onClick]="addItem.bind(this)"
   *ngIf="!list.length"
-  name="block"
+  name="directory"
 ></app-add-button>

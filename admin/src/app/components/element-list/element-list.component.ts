@@ -1,19 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PropertyFormComponent } from '../property-form/property-form.component';
 import { CommonList } from '../../common-list/common-list';
+import { ElementFormComponent } from '../element-form/element-form.component';
+import { Element } from '../../model/element';
+import { ApiEntity, ApiService } from '../../service/api.service';
 
-interface Element {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
 
 @Component({
   selector: 'app-element-list',
   templateUrl: './element-list.component.html',
-  styleUrls: ['./element-list.component.css']
+  styleUrls: ['./element-list.component.css'],
 })
 export class ElementListComponent
   extends CommonList
@@ -24,33 +20,29 @@ export class ElementListComponent
 
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = [];
+  propertyList: string[] = ['NAME'];
   flagList: string[] = [];
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    console.log(this.blockId);
-
     this.fetchList();
   }
 
   override fetchList() {
-    fetch('http://localhost:3001/element')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
-      .then(list => {
-        this.setData(list as Element[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    this.apiService.fetchData(ApiEntity.ELEMENT)
+      .then(list => this.setData(list as Element[]));
+
+    this.apiService.fetchData(ApiEntity.FLAG)
+      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
+
+    this.apiService.fetchData(ApiEntity.PROPERTY)
+      .then(list => this.propertyList = list.map((item: { id: string }) => item.id));
   }
 
   /**
@@ -75,17 +67,22 @@ export class ElementListComponent
         line['flag_' + fl] = fl;
       }
 
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
+      }
+
       this.activeFlags[item.id] = item.flag;
 
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem() {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      ElementFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -98,7 +95,7 @@ export class ElementListComponent
 
   updateItem(id: number) {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      ElementFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -111,13 +108,14 @@ export class ElementListComponent
   }
 
   toggleFlag(id: number, flag: string) {
+    console.log(id, '>>>>>>>', flag);
   }
 
   deleteList() {
   }
 
   deleteItem(id: string) {
-
+    console.log(`DELETE >>>> ${id}`);
   }
 
 }

@@ -11,6 +11,7 @@ import { Form2flagEntity } from './form2flag.entity';
 import { Form2stringEntity } from './form2string.entity';
 import { FormFieldStringEntity } from './form-field-string.entity';
 import { FormFieldEntity } from './form-field.entity';
+import { ResultEntity } from './result.entity';
 
 @Entity('form')
 @Check('not_empty_id', '"id" > \'\'')
@@ -53,5 +54,11 @@ export class FormEntity
     string => string.form,
   )
   field: FormFieldEntity[];
+
+  @OneToMany(
+    type => ResultEntity,
+    result => result.form,
+  )
+  result: ResultEntity[];
 
 }

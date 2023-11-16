@@ -2,14 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonList } from '../../common-list/common-list';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyFormComponent } from '../property-form/property-form.component';
-
-interface Property {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
-
+import { ApiEntity, ApiService } from '../../service/api.service';
+import { Property } from '../../model/property';
 @Component({
   selector: 'app-property-list',
   templateUrl: './property-list.component.html',
@@ -26,6 +20,7 @@ export class PropertyListComponent
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
     super();
   }
@@ -35,17 +30,14 @@ export class PropertyListComponent
   }
 
   override fetchList() {
-    fetch('http://localhost:3001/property')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
+    this.apiService.fetchData(ApiEntity.FLAG)
+      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
+
+    this.apiService.fetchData(ApiEntity.PROPERTY)
       .then(list => {
         this.setData(list as Property[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+        this.propertyList = list.map((item: { id: string }) => item.id);
+      });
   }
 
   /**
@@ -68,6 +60,11 @@ export class PropertyListComponent
       for (const fl of item.flag) {
         col.add('flag_' + fl);
         line['flag_' + fl] = fl;
+      }
+
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

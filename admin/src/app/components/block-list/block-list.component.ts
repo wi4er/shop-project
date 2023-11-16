@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BlockFormComponent } from '../block-form/block-form.component';
 import { CommonList } from '../../common-list/common-list';
-
-interface Block {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
+import { ApiEntity, ApiService } from '../../service/api.service';
+import { Block } from '../../model/block';
 
 @Component({
   selector: 'app-block-list',
@@ -26,6 +21,7 @@ export class BlockListComponent
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
     super();
   }
@@ -35,17 +31,14 @@ export class BlockListComponent
   }
 
   override fetchList() {
-    fetch('http://localhost:3001/block')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
-      .then(list => {
-        this.setData(list as Block[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    this.apiService.fetchData(ApiEntity.BLOCK)
+      .then(list => this.setData(list as Block[]));
+
+    this.apiService.fetchData(ApiEntity.FLAG)
+      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
+
+    this.apiService.fetchData(ApiEntity.PROPERTY)
+      .then(list => this.propertyList = list.map((item: { id: string }) => item.id));
   }
 
   /**
@@ -68,6 +61,11 @@ export class BlockListComponent
       for (const fl of item.flag) {
         col.add('flag_' + fl);
         line['flag_' + fl] = fl;
+      }
+
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

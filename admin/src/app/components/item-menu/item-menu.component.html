@@ -1,0 +1,19 @@
+<button
+  *ngFor="let flag of flags"
+  mat-menu-item
+  (click)="onFlag(flag)"
+>
+  <mat-icon *ngIf="active.includes(flag)">check</mat-icon>
+  <mat-icon *ngIf="!active.includes(flag)"></mat-icon>
+  <span> {{flag}} </span>
+</button>
+
+<button mat-menu-item (click)="onEdit()">
+  <mat-icon>edit</mat-icon>
+  <span>Edit</span>
+</button>
+
+<button mat-menu-item (click)="onDelete()">
+  <mat-icon>delete</mat-icon>
+  <span>Delete</span>
+</button>

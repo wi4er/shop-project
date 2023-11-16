@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonList } from '../../common-list/common-list';
 import { MatDialog } from '@angular/material/dialog';
 import { DirectoryFormComponent } from '../directory-form/directory-form.component';
-
-interface Directory {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
+import { Directory } from '../../model/directory';
+import { ApiEntity, ApiService } from '../../service/api.service';
 
 @Component({
   selector: 'app-directory-list',
@@ -26,6 +21,7 @@ export class DirectoryListComponent
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
     super();
   }
@@ -35,17 +31,14 @@ export class DirectoryListComponent
   }
 
   override fetchList() {
-    fetch('http://localhost:3001/directory')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
-      .then(list => {
-        this.setData(list as Directory[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    this.apiService.fetchData(ApiEntity.DIRECTORY)
+      .then(list => this.setData(list as Directory[]));
+
+    this.apiService.fetchData(ApiEntity.FLAG)
+      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
+
+    this.apiService.fetchData(ApiEntity.PROPERTY)
+      .then(list => this.propertyList = list.map((item: { id: string }) => item.id));
   }
 
   /**
@@ -68,6 +61,11 @@ export class DirectoryListComponent
       for (const fl of item.flag) {
         col.add('flag_' + fl);
         line['flag_' + fl] = fl;
+      }
+
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

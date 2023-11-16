@@ -37,6 +37,7 @@ import { ContentPageComponent } from './components/content-page/content-page.com
 import { MatTabsModule } from '@angular/material/tabs';
 import { SectionListComponent } from './components/section-list/section-list.component';
 import { ElementListComponent } from './components/element-list/element-list.component';
+import { ItemMenuComponent } from './components/item-menu/item-menu.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { ElementListComponent } from './components/element-list/element-list.com
     SectionFormComponent,
     ContentPageComponent,
     SectionListComponent,
-    ElementListComponent
+    ElementListComponent,
+    ItemMenuComponent,
   ],
   imports: [
     BrowserModule,

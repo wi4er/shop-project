@@ -55,6 +55,7 @@ import { FormField2stringEntity } from './form/model/form-field2string.entity';
 import { FormFieldElementEntity } from './form/model/form-field-element.entity';
 import { FormFieldSectionEntity } from './form/model/form-field-section.entity';
 import { FormFieldDirectoryEntity } from './form/model/form-field-directory.entity';
+import { ResultEntity } from './form/model/result.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -82,6 +83,7 @@ export function createConnectionOptions(): DataSourceOptions {
       FormEntity, Form2flagEntity, Form2stringEntity,
       FormFieldEntity, FormField2flagEntity, FormField2stringEntity,
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
+      ResultEntity,
     ],
     subscribers: [],
     migrations: [],

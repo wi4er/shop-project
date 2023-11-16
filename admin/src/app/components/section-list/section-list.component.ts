@@ -1,19 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PropertyFormComponent } from '../property-form/property-form.component';
 import { CommonList } from '../../common-list/common-list';
+import { ApiEntity, ApiService } from '../../service/api.service';
+import { Section } from '../../model/section';
+import { SectionFormComponent } from '../section-form/section-form.component';
 
-interface Section {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
 
 @Component({
   selector: 'app-section-list',
   templateUrl: './section-list.component.html',
-  styleUrls: ['./section-list.component.css']
+  styleUrls: ['./section-list.component.css'],
 })
 export class SectionListComponent
   extends CommonList
@@ -22,7 +18,6 @@ export class SectionListComponent
   @Input()
   blockId: number = 0;
 
-
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
   propertyList: string[] = [];
@@ -30,6 +25,7 @@ export class SectionListComponent
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
     super();
   }
@@ -39,17 +35,14 @@ export class SectionListComponent
   }
 
   override fetchList() {
-    fetch('http://localhost:3001/section')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
-      .then(list => {
-        this.setData(list as Section[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    this.apiService.fetchData(ApiEntity.SECTION)
+      .then(list => this.setData(list as Section[]));
+
+    this.apiService.fetchData(ApiEntity.FLAG)
+      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
+
+    this.apiService.fetchData(ApiEntity.PROPERTY)
+      .then(list => this.propertyList = list.map((item: { id: string }) => item.id));
   }
 
   /**
@@ -74,17 +67,22 @@ export class SectionListComponent
         line['flag_' + fl] = fl;
       }
 
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
+      }
+
       this.activeFlags[item.id] = item.flag;
 
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem() {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      SectionFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -97,7 +95,7 @@ export class SectionListComponent
 
   updateItem(id: number) {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      SectionFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
