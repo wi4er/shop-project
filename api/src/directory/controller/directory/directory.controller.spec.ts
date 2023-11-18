@@ -76,6 +76,28 @@ describe('DirectoryController', () => {
     });
   });
 
+  describe('Directory count', () => {
+    test('Should get empty count', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/directory/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get directory count', async () => {
+      for (let i = 0; i <= 9; i++) {
+        await Object.assign(new DirectoryEntity(), {id: `NAME_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/directory/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 10});
+    });
+  });
+
   describe('Directory with strings', () => {
     test('Should get with strings', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();

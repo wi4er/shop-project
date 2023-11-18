@@ -54,4 +54,9 @@ export class BlockController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.blockRepo.count({}).then(count => ({count}));
+  }
+
 }

@@ -81,6 +81,7 @@ describe('SectionController', () => {
 
     test('Should get with offset', async () => {
       await new BlockEntity().save();
+
       for (let i = 0; i < 10; i++) {
         await Object.assign(new SectionEntity(), {block: 1}).save();
       }
@@ -92,6 +93,30 @@ describe('SectionController', () => {
       expect(list.body).toHaveLength(4);
       expect(list.body[0].id).toBe(7);
       expect(list.body[3].id).toBe(10);
+    });
+  });
+
+  describe('Content section count', () => {
+    test('Should get empty section count', async () => {
+      const list = await request(app.getHttpServer())
+        .get('/section/count')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 0});
+    });
+
+    test('Should get empty section count', async () => {
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new SectionEntity(), {block: 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section/count')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 10});
     });
   });
 

@@ -47,4 +47,9 @@ export class FormController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.formRepo.count().then(count => ({count}));
+  }
+
 }

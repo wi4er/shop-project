@@ -93,6 +93,28 @@ describe('UserController', () => {
     });
   });
 
+  describe('User count', () => {
+    test('Should get empty count', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/user/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get user count', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new UserEntity(), {login: `USER_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/user/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 10});
+    });
+  });
+
   describe('User with strings', () => {
     test('Should get user with strings', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();

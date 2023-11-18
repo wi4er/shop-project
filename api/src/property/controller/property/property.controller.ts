@@ -46,4 +46,9 @@ export class PropertyController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.propertyRepo.count().then(count => ({count}));
+  }
+
 }

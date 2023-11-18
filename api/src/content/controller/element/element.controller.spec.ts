@@ -101,6 +101,30 @@ describe('ElementController', () => {
     });
   });
 
+  describe('Content element count', () => {
+    test('Should get empty element count', async () => {
+      const list = await request(app.getHttpServer())
+        .get('/element/count')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 0});
+    });
+
+    test('Should get element count', async () => {
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new ElementEntity, {block: 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/element/count')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 10});
+    });
+  });
+
   describe('Content element with strings', () => {
     test('Should get elements with strings', async () => {
       const block = await new BlockEntity().save();
@@ -159,10 +183,10 @@ describe('ElementController', () => {
         .get('/element?limit=3')
         .expect(200);
 
-      expect(list.body).toHaveLength(3)
-      expect(list.body[0].id).toBe(1)
-      expect(list.body[1].id).toBe(2)
-      expect(list.body[2].id).toBe(3)
+      expect(list.body).toHaveLength(3);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[1].id).toBe(2);
+      expect(list.body[2].id).toBe(3);
     });
 
     test('Should get elements with string filter', async () => {

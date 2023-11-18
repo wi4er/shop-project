@@ -46,4 +46,9 @@ export class FlagController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.flagRepo.count().then(count => ({count}));
+  }
+
 }

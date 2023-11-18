@@ -73,6 +73,28 @@ describe('PropertyController', () => {
     });
   });
 
+  describe('Property count', () => {
+    test('Should get empty list', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/property/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get empty list', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new PropertyEntity(), {id: `NAME_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/property/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 10});
+    });
+  });
+
   describe('Property with strings', () => {
     test('Should get property with strings', async () => {
       const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();

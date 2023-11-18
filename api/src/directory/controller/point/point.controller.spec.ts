@@ -82,6 +82,30 @@ describe('PointController', () => {
     });
   });
 
+  describe('Point count', () => {
+    test('Should get empty list', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/point/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get empty list', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new PointEntity(), {id: `NAME_${i}`, directory}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/point/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 10});
+    });
+  });
+
   describe('Point with strings', () => {
     test('Should get with strings', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();

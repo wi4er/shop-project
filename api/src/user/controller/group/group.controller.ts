@@ -47,4 +47,9 @@ export class GroupController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.groupRepo.count().then(count => ({count}));
+  }
+
 }

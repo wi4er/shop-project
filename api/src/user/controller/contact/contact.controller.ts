@@ -48,4 +48,9 @@ export class ContactController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.contactRepo.count().then(count => ({count}));
+  }
+
 }

@@ -5,15 +5,11 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
 import { PropertyEntity } from '../../../property/model/property.entity';
-import { ElementEntity } from '../../model/element.entity';
-import { Element2stringEntity } from '../../model/element2string.entity';
 import { Block2stringEntity } from '../../model/block2string.entity';
 import { FlagEntity } from '../../../flag/model/flag.entity';
-import { Element2flagEntity } from '../../model/element2flag.entity';
 import { Block2flagEntity } from '../../model/block2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
-import { Element2pointEntity } from '../../model/element2point.entity';
 import { Block2pointEntity } from '../../model/block2point.entity';
 
 describe('BlockController', () => {
@@ -49,6 +45,61 @@ describe('BlockController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].id).toBe(1);
+    });
+
+    test('Should get block with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await new BlockEntity().save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/block?limit=4')
+        .expect(200);
+
+      expect(list.body).toHaveLength(4);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[1].id).toBe(2);
+      expect(list.body[2].id).toBe(3);
+      expect(list.body[3].id).toBe(4);
+    });
+
+    test('Should get block with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await new BlockEntity().save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/block?offset=5')
+        .expect(200);
+
+      expect(list.body).toHaveLength(5);
+      expect(list.body[0].id).toBe(6);
+      expect(list.body[1].id).toBe(7);
+      expect(list.body[2].id).toBe(8);
+      expect(list.body[3].id).toBe(9);
+      expect(list.body[4].id).toBe(10);
+    });
+  });
+
+  describe('Content block count', () => {
+    test('Should get empty block count', async () => {
+      const list = await request(app.getHttpServer())
+        .get('/block/count')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 0});
+    });
+
+    test('Should get block count', async () => {
+      for (let i = 0; i < 10; i++) {
+        await new BlockEntity().save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/block/count')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 10});
     });
   });
 

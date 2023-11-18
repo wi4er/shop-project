@@ -46,7 +46,7 @@ export class UserController {
   }
 
   @Get()
-  async list(
+  async getList(
     @Query('offset')
       offset?: number,
     @Query('limit')
@@ -64,6 +64,16 @@ export class UserController {
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
+  }
+
+  @Get('count')
+  async getCount(
+    @Query('offset')
+      offset?: number,
+    @Query('limit')
+      limit?: number,
+  ) {
+    return this.userRepo.count().then(count => ({count}));
   }
 
   @Get(':id')

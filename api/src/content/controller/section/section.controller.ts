@@ -66,4 +66,20 @@ export class SectionController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount(
+    @Query('filter')
+      filter?: SectionFilterInput,
+  ) {
+    const where = {};
+
+    if (filter?.flag) {
+      where['flag'] = {flag: {id: filter.flag.eq}};
+    }
+
+    return this.sectionRepo.count({
+      where,
+    }).then(count => ({count}));
+  }
+
 }

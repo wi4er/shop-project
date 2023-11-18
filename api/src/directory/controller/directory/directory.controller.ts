@@ -55,6 +55,11 @@ export class DirectoryController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.directoryRepo.count().then(count => ({count}));
+  }
+
   @Post()
   async addItem(
     @Body()

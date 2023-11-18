@@ -74,6 +74,28 @@ describe('FormController', () => {
     });
   });
 
+  describe('Form count', () => {
+    test('Should get empty count', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/form/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get form count', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new FormEntity(), {id: `form_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/form/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 10});
+    });
+  });
+
   describe('Form with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();

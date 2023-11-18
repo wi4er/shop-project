@@ -74,6 +74,28 @@ describe('GroupController', () => {
     });
   });
 
+  describe('Group count', () => {
+    test('Should get empty count', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/group/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get group count', async () => {
+      for (let i = 0; i < 10; i++) {
+        await new UserGroupEntity().save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/group/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 10});
+    });
+  });
+
   describe('Group with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await new UserGroupEntity().save();

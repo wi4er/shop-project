@@ -122,7 +122,7 @@ export class ElementController {
   ) {
     return this.elementRepo.count({
       where: filter ? this.toWhere(filter) : null,
-    });
+    }).then(count => ({count}));
   }
 
   @Post()

@@ -52,4 +52,9 @@ export class PointController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount() {
+    return this.pointRepo.count().then(count => ({count}));
+  }
+
 }
