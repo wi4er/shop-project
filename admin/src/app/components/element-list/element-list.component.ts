@@ -1,48 +1,40 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonList } from '../../common-list/common-list';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { Element } from '../../model/element';
 import { ApiEntity, ApiService } from '../../service/api.service';
-
 
 @Component({
   selector: 'app-element-list',
   templateUrl: './element-list.component.html',
   styleUrls: ['./element-list.component.css'],
 })
-export class ElementListComponent
-  extends CommonList
-  implements OnInit {
+export class ElementListComponent implements OnInit {
 
   @Input()
   blockId: number = 0;
 
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = ['NAME'];
-  flagList: string[] = [];
+  list: { [key: string]: string }[] = [];
+  totalCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
   ) {
-    super();
   }
 
   ngOnInit(): void {
-    this.fetchList();
+
   }
 
-  override fetchList() {
-    this.apiService.fetchData(ApiEntity.ELEMENT)
+  fetchList(args: string[] = []) {
+    this.apiService.fetchData(ApiEntity.ELEMENT, [...args])
       .then(list => this.setData(list as Element[]));
 
-    this.apiService.fetchData(ApiEntity.FLAG)
-      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
-
-    this.apiService.fetchData(ApiEntity.PROPERTY)
-      .then(list => this.propertyList = list.map((item: { id: string }) => item.id));
+    this.apiService.countData(ApiEntity.ELEMENT)
+      .then(count => this.totalCount = count);
   }
 
   /**
@@ -61,11 +53,6 @@ export class ElementListComponent
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
-
-      for (const fl of item.flag) {
-        col.add('flag_' + fl);
-        line['flag_' + fl] = fl;
-      }
 
       for (const it of item.property) {
         col.add('property_' + it.property);
@@ -104,7 +91,7 @@ export class ElementListComponent
     );
 
     dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+      .subscribe(() => console.log('CLOSE'));
   }
 
   toggleFlag(id: number, flag: string) {

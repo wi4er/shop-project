@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiEntity, ApiService } from '../../service/api.service';
 
 interface MenuItem {
   title: string;
@@ -18,10 +19,20 @@ interface MenuGroup {
 })
 export class MainMenuComponent implements OnInit {
 
+  constructor(
+    private apiService: ApiService,
+  ) {
+  }
+
   content: MenuGroup = {
     title: '',
     child: [],
   };
+
+  form: MenuGroup = {
+    title: '',
+    child: [],
+  }
 
   list: MenuGroup[] = [
     {
@@ -42,9 +53,14 @@ export class MainMenuComponent implements OnInit {
         title: 'Content',
         link: '/content',
         icon: 'category',
+      }, {
+        title: 'Form',
+        link: '/form',
+        icon: 'input',
       }],
     },
     this.content,
+    this.form,
     {
       title: 'Settings',
       child: [{
@@ -72,11 +88,7 @@ export class MainMenuComponent implements OnInit {
   ];
 
   ngOnInit() {
-    fetch('http://localhost:3001/block')
-      .then(res => {
-
-        return res.json();
-      })
+    this.apiService.fetchData(ApiEntity.BLOCK)
       .then(list => {
         if (list.length > 0) {
           this.content.title = 'Content';
@@ -87,6 +99,21 @@ export class MainMenuComponent implements OnInit {
             title: 'Block' + String(item.id),
             link: `/content/${item.id}`,
             icon: 'category',
+          });
+        }
+      });
+
+    this.apiService.fetchData(ApiEntity.FORM)
+      .then(list => {
+        if (list.length > 0) {
+          this.form.title = 'Forms';
+        }
+
+        for (const item of list) {
+          this.form.child.push({
+            title: 'Form ' + String(item.id),
+            link: `/form/${item.id}`,
+            icon: 'input',
           });
         }
       });

@@ -38,6 +38,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { SectionListComponent } from './components/section-list/section-list.component';
 import { ElementListComponent } from './components/element-list/element-list.component';
 import { ItemMenuComponent } from './components/item-menu/item-menu.component';
+import { CommonListComponent } from './components/common-list/common-list.component';
+import { FormListComponent } from './components/form-list/form-list.component';
+import { FormFormComponent } from './components/form-form/form-form.component';
+import { ResultListComponent } from './components/result-list/result-list.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +68,10 @@ import { ItemMenuComponent } from './components/item-menu/item-menu.component';
     SectionListComponent,
     ElementListComponent,
     ItemMenuComponent,
+    CommonListComponent,
+    FormListComponent,
+    FormFormComponent,
+    ResultListComponent,
   ],
   imports: [
     BrowserModule,

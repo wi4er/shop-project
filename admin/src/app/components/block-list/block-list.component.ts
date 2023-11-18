@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BlockFormComponent } from '../block-form/block-form.component';
-import { CommonList } from '../../common-list/common-list';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Block } from '../../model/block';
 
@@ -10,35 +9,28 @@ import { Block } from '../../model/block';
   templateUrl: './block-list.component.html',
   styleUrls: ['./block-list.component.css'],
 })
-export class BlockListComponent
-  extends CommonList
-  implements OnInit {
+export class BlockListComponent implements OnInit {
 
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = [];
-  flagList: string[] = [];
+  totalCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
   ) {
-    super();
   }
 
   ngOnInit(): void {
-    this.fetchList();
   }
 
-  override fetchList() {
-    this.apiService.fetchData(ApiEntity.BLOCK)
+  fetchList(args: string[] = []) {
+    this.apiService.fetchData(ApiEntity.BLOCK, [...args])
       .then(list => this.setData(list as Block[]));
 
-    this.apiService.fetchData(ApiEntity.FLAG)
-      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
-
-    this.apiService.fetchData(ApiEntity.PROPERTY)
-      .then(list => this.propertyList = list.map((item: { id: string }) => item.id));
+    this.apiService.countData(ApiEntity.BLOCK)
+      .then(count => this.totalCount = count);
   }
 
   /**
@@ -58,11 +50,6 @@ export class BlockListComponent
         updated_at: item.updated_at,
       };
 
-      for (const fl of item.flag) {
-        col.add('flag_' + fl);
-        line['flag_' + fl] = fl;
-      }
-
       for (const it of item.property) {
         col.add('property_' + it.property);
         line['property_' + it.property] = it.string;
@@ -73,7 +60,7 @@ export class BlockListComponent
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col, 'section', 'element' ];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem() {
@@ -100,7 +87,7 @@ export class BlockListComponent
     );
 
     dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+      .subscribe(() => console.log('CLOSE'));
   }
 
   toggleFlag(id: number, flag: string) {
@@ -110,7 +97,6 @@ export class BlockListComponent
   }
 
   deleteItem(id: string) {
-
   }
 
 }

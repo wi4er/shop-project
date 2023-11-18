@@ -1,22 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Section } from '../../model/section';
-import { SectionFormComponent } from '../section-form/section-form.component';
+import { Flag } from '../../model/flag';
+import { FormFormComponent } from '../form-form/form-form.component';
 
 @Component({
-  selector: 'app-section-list',
-  templateUrl: './section-list.component.html',
-  styleUrls: ['./section-list.component.css'],
+  selector: 'app-form-list',
+  templateUrl: './form-list.component.html',
+  styleUrls: ['./form-list.component.css']
 })
-export class SectionListComponent implements OnInit {
+export class FormListComponent {
 
-  @Input()
-  blockId: number = 0;
-
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  list: { [key: string]: string }[] = [];
   totalCount: number = 0;
 
   constructor(
@@ -25,14 +22,14 @@ export class SectionListComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.SECTION, args)
-      .then(list => this.setData(list as Section[]));
+    this.apiService.fetchData(ApiEntity.FORM, [...args])
+      .then(list => this.setData(list));
 
-    this.apiService.countData(ApiEntity.SECTION)
+    this.apiService.countData(ApiEntity.FORM)
       .then(count => this.totalCount = count);
   }
 
@@ -41,7 +38,7 @@ export class SectionListComponent implements OnInit {
    * @param data
    * @private
    */
-  private setData(data: Section[]) {
+  private setData(data: Flag[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -68,7 +65,7 @@ export class SectionListComponent implements OnInit {
 
   addItem() {
     const dialog = this.dialog.open(
-      SectionFormComponent,
+      FormFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -81,7 +78,7 @@ export class SectionListComponent implements OnInit {
 
   updateItem(id: number) {
     const dialog = this.dialog.open(
-      SectionFormComponent,
+      FormFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -90,7 +87,7 @@ export class SectionListComponent implements OnInit {
     );
 
     dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+      .subscribe(() => console.log('CLOSE'));
   }
 
   toggleFlag(id: number, flag: string) {

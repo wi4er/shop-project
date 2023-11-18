@@ -1,43 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonList } from '../../common-list/common-list';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Property } from '../../model/property';
+
 @Component({
   selector: 'app-property-list',
   templateUrl: './property-list.component.html',
   styleUrls: ['./property-list.component.css']
 })
-export class PropertyListComponent
-  extends CommonList
-  implements OnInit {
+export class PropertyListComponent implements OnInit {
 
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = [];
-  flagList: string[] = [];
+  totalCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
   ) {
-    super();
   }
 
   ngOnInit(): void {
-    this.fetchList();
   }
 
-  override fetchList() {
-    this.apiService.fetchData(ApiEntity.FLAG)
-      .then(list => this.flagList = list.map((it: { id: string }) => it.id));
+  fetchList(args: string[] = []) {
+    this.apiService.fetchData(ApiEntity.PROPERTY, [...args])
+      .then(list => this.setData(list as Property[]));
 
-    this.apiService.fetchData(ApiEntity.PROPERTY)
-      .then(list => {
-        this.setData(list as Property[]);
-        this.propertyList = list.map((item: { id: string }) => item.id);
-      });
+    this.apiService.countData(ApiEntity.PROPERTY)
+      .then(count => this.totalCount = count);
   }
 
   /**
@@ -56,11 +49,6 @@ export class PropertyListComponent
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
-
-      for (const fl of item.flag) {
-        col.add('flag_' + fl);
-        line['flag_' + fl] = fl;
-      }
 
       for (const it of item.property) {
         col.add('property_' + it.property);
@@ -99,7 +87,7 @@ export class PropertyListComponent
     );
 
     dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+      .subscribe(() => console.log('CLOSE'));
   }
 
   toggleFlag(id: number, flag: string) {

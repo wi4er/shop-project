@@ -1,44 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonList } from '../../common-list/common-list';
 import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Flag } from '../../model/flag';
-import { Element } from '../../model/element';
 
 @Component({
   selector: 'app-flag-list',
   templateUrl: './flag-list.component.html',
-  styleUrls: ['./flag-list.component.css']
+  styleUrls: ['./flag-list.component.css'],
 })
-export class FlagListComponent
-  extends CommonList
-  implements OnInit {
+export class FlagListComponent implements OnInit {
 
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = [];
-  flagList: string[] = [];
+  totalCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
   ) {
-    super();
   }
 
   ngOnInit(): void {
-    this.fetchList();
   }
 
-  override fetchList() {
-    this.apiService.fetchData(ApiEntity.PROPERTY)
-      .then(list => this.propertyList = list.map((item: { id: string }) => item.id))
-      .then(() => this.apiService.fetchData(ApiEntity.FLAG))
-      .then(list => {
-        this.flagList = list.map((it: { id: string }) => it.id);
-        this.setData(list as Flag[]);
-      });
+  fetchList(args: string[] = []) {
+    this.apiService.fetchData(ApiEntity.FLAG, [...args])
+      .then(list => this.setData(list));
+
+    this.apiService.countData(ApiEntity.FLAG)
+      .then(count => this.totalCount = count);
   }
 
   /**
@@ -58,11 +50,6 @@ export class FlagListComponent
         updated_at: item.updated_at,
       };
 
-      for (const fl of item.flag) {
-        col.add('flag_' + fl);
-        line['flag_' + fl] = fl;
-      }
-
       for (const it of item.property) {
         col.add('property_' + it.property);
         line['property_' + it.property] = it.string;
@@ -73,7 +60,7 @@ export class FlagListComponent
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem() {
@@ -100,7 +87,7 @@ export class FlagListComponent
     );
 
     dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+      .subscribe(() => console.log('CLOSE'));
   }
 
   toggleFlag(id: number, flag: string) {
@@ -110,7 +97,6 @@ export class FlagListComponent
   }
 
   deleteItem(id: string) {
-
   }
 
 }

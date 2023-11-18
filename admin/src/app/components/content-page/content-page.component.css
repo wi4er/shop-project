@@ -1,0 +1,16 @@
+mat-tab-group {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
+mat-tab-group {
+  flex: 1;
+
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-body-wrapper {
+  flex: 1;
+  display: flex;
+}
