@@ -61,6 +61,36 @@ describe('UserController', () => {
       expect(res.body[0].id).toBe(1);
       expect(res.body[0].login).toBe('USER');
     });
+
+    test('Should get user with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new UserEntity(), {login: `USER_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get(`/user?limit=3`)
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].login).toBe('USER_0');
+      expect(res.body[1].login).toBe('USER_1');
+      expect(res.body[2].login).toBe('USER_2');
+    });
+
+    test('Should get user with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new UserEntity(), {login: `USER_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get(`/user?offset=7`)
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].login).toBe('USER_7');
+      expect(res.body[1].login).toBe('USER_8');
+      expect(res.body[2].login).toBe('USER_9');
+    });
   });
 
   describe('User with strings', () => {

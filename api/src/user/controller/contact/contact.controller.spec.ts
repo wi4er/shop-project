@@ -3,12 +3,8 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { UserGroupEntity } from '../../model/user-group.entity';
 import { PropertyEntity } from '../../../property/model/property.entity';
-import { UserGroup2stringEntity } from '../../model/user-group2string.entity';
-import { LangEntity } from '../../../lang/model/lang.entity';
 import { FlagEntity } from '../../../flag/model/flag.entity';
-import { UserGroup2flagEntity } from '../../model/user-group2flag.entity';
 import { UserContactEntity, UserContactType } from '../../model/user-contact.entity';
 import { UserContact2stringEntity } from '../../model/user-contact2string.entity';
 import { UserContact2flagEntity } from '../../model/user-contact2flag.entity';
@@ -47,6 +43,41 @@ describe('ContactController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('MAIL');
       expect(res.body[0].type).toBe('EMAIL');
+    });
+
+    test('Should get contact with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(
+          new UserContactEntity(),
+          {id: `MAIL_${i}`, type: UserContactType.EMAIL},
+        ).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/contact?limit=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].id).toBe('MAIL_0');
+      expect(res.body[1].id).toBe('MAIL_1');
+      expect(res.body[2].id).toBe('MAIL_2');
+    });
+
+    test('Should get contact with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(
+          new UserContactEntity(),
+          {id: `MAIL_${i}`, type: UserContactType.EMAIL},
+        ).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/contact?offset=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(7);
+      expect(res.body[0].id).toBe('MAIL_3');
+      expect(res.body[6].id).toBe('MAIL_9');
     });
   });
 

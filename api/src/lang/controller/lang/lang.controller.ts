@@ -1,6 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Repository } from 'typeorm';
 import { LangEntity } from '../../model/lang.entity';
 

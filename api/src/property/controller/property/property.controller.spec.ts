@@ -43,11 +43,39 @@ describe('PropertyController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('NAME');
     });
+
+    test('Should get property with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new PropertyEntity(), {id: `NAME_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/property?limit=5')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+      expect(res.body[0].id).toBe('NAME_0');
+      expect(res.body[4].id).toBe('NAME_4');
+    });
+
+    test('Should get property with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new PropertyEntity(), {id: `NAME_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/property?offset=5')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+      expect(res.body[0].id).toBe('NAME_5');
+      expect(res.body[4].id).toBe('NAME_9');
+    });
   });
 
   describe('Property with strings', () => {
     test('Should get property with strings', async () => {
-      const parent =await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(new Property2stringEntity(), {parent, property: parent, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())

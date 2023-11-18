@@ -49,6 +49,7 @@ describe('ElementController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].id).toBe(1);
+      expect(list.body[0].block).toBe(1);
     });
 
     test('Should get element list', async () => {
@@ -138,6 +139,30 @@ describe('ElementController', () => {
       expect(list.body[0].property).toHaveLength(10);
       expect(list.body[0].property[0].string).toBe('VALUE');
       expect(list.body[0].property[0].property).toBe('NAME');
+    });
+
+    test('Should get elements list with properties and limit', async () => {
+      const block = await new BlockEntity().save();
+      const property1 = await Object.assign(new PropertyEntity(), {id: 'NAME_1'}).save();
+      const property2 = await Object.assign(new PropertyEntity(), {id: 'NAME_2'}).save();
+      const property3 = await Object.assign(new PropertyEntity(), {id: 'NAME_3'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        const parent = await Object.assign(new ElementEntity, {block}).save();
+
+        await Object.assign(new Element2stringEntity(), {parent, property: property1, string: 'VALUE'}).save();
+        await Object.assign(new Element2stringEntity(), {parent, property: property2, string: 'VALUE'}).save();
+        await Object.assign(new Element2stringEntity(), {parent, property: property3, string: 'VALUE'}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/element?limit=3')
+        .expect(200);
+
+      expect(list.body).toHaveLength(3)
+      expect(list.body[0].id).toBe(1)
+      expect(list.body[1].id).toBe(2)
+      expect(list.body[2].id).toBe(3)
     });
 
     test('Should get elements with string filter', async () => {

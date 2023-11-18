@@ -43,6 +43,34 @@ describe('FlagController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('ACTIVE');
     });
+
+    test('Should get flag with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/flag?limit=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].id).toBe('flag_0');
+      expect(res.body[1].id).toBe('flag_1');
+      expect(res.body[2].id).toBe('flag_2');
+    });
+
+    test('Should get flag with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/flag?offset=9')
+        .expect(200);
+
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('flag_9');
+    });
   });
 
   describe('Flag with strings', () => {

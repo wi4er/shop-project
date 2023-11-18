@@ -115,6 +115,16 @@ export class ElementController {
     }).then(list => list.map(this.toView));
   }
 
+  @Get('count')
+  async getCount(
+    @Query('filter')
+      filter?: ElementFilterSchema,
+  ) {
+    return this.elementRepo.count({
+      where: filter ? this.toWhere(filter) : null,
+    });
+  }
+
   @Post()
   async addItem(
     @Body()

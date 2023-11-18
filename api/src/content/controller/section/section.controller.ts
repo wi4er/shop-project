@@ -41,6 +41,10 @@ export class SectionController {
   async getList(
     @Query('filter')
       filter?: SectionFilterInput,
+    @Query('offset')
+      offset?: number,
+    @Query('limit')
+      limit?: number,
   ) {
     const where = {};
 
@@ -57,6 +61,8 @@ export class SectionController {
         flag: {flag: true},
         point: {point: {directory: true}, property: true},
       },
+      take: limit,
+      skip: offset,
     }).then(list => list.map(this.toView));
   }
 

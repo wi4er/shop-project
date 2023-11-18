@@ -44,6 +44,34 @@ describe('GroupController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe(1);
     });
+
+    test('Should get group with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await new UserGroupEntity().save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/group?limit=2')
+        .expect(200);
+
+      expect(res.body).toHaveLength(2);
+      expect(res.body[0].id).toBe(1);
+      expect(res.body[1].id).toBe(2);
+    });
+
+    test('Should get group with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await new UserGroupEntity().save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/group?offset=2')
+        .expect(200);
+
+      expect(res.body).toHaveLength(8);
+      expect(res.body[0].id).toBe(3);
+      expect(res.body[7].id).toBe(10);
+    });
   });
 
   describe('Group with strings', () => {

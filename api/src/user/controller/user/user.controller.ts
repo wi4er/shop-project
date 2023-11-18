@@ -1,11 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user.entity';
 import { Repository } from 'typeorm';
-import {
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../../service/user/user.service';
 import { UserInput } from '../../input/user.input';
 
@@ -49,7 +46,12 @@ export class UserController {
   }
 
   @Get()
-  async list() {
+  async list(
+    @Query('offset')
+      offset?: number,
+    @Query('limit')
+      limit?: number,
+  ) {
     return this.userRepo.find({
       relations: {
         string: {property: true, lang: true},
@@ -59,6 +61,8 @@ export class UserController {
         flag: {flag: true},
         point: {point: {directory: true}, property: true},
       },
+      take: limit,
+      skip: offset,
     }).then(list => list.map(this.toView));
   }
 
@@ -85,9 +89,7 @@ export class UserController {
     @Body()
       user: UserInput,
   ) {
-
     console.log(user);
-
   }
 
   @Put(':id')
@@ -98,11 +100,8 @@ export class UserController {
     @Param('id')
       id: number,
   ) {
-
     console.log(id, user);
-
   }
-
 
   @Delete(':id')
   async deleteUser(

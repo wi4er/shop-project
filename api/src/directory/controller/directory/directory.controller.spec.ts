@@ -46,6 +46,34 @@ describe('DirectoryController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('NAME');
     });
+
+    test('Should get directory with limit', async () => {
+      for (let i = 0; i <= 9; i++) {
+        await Object.assign(new DirectoryEntity(), {id: `NAME_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/directory?limit=2')
+        .expect(200);
+
+      expect(res.body).toHaveLength(2);
+      expect(res.body[0].id).toBe('NAME_0');
+      expect(res.body[1].id).toBe('NAME_1');
+    });
+
+    test('Should get directory with offset', async () => {
+      for (let i = 0; i <= 9; i++) {
+        await Object.assign(new DirectoryEntity(), {id: `NAME_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/directory?offset=8')
+        .expect(200);
+
+      expect(res.body).toHaveLength(2);
+      expect(res.body[0].id).toBe('NAME_8');
+      expect(res.body[1].id).toBe('NAME_9');
+    });
   });
 
   describe('Directory with strings', () => {

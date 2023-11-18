@@ -47,6 +47,39 @@ describe('PointController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('NAME');
     });
+
+    test('Should get point with limit', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new PointEntity(), {id: `NAME_${i}`, directory}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/point?limit=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].id).toBe('NAME_0');
+      expect(res.body[1].id).toBe('NAME_1');
+      expect(res.body[2].id).toBe('NAME_2');
+    });
+
+    test('Should get point with offset', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new PointEntity(), {id: `NAME_${i}`, directory}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/point?offset=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(7);
+      expect(res.body[0].id).toBe('NAME_3');
+      expect(res.body[6].id).toBe('NAME_9');
+    });
   });
 
   describe('Point with strings', () => {

@@ -63,6 +63,36 @@ describe('SectionController', () => {
       expect(list.body[1].id).toBe(2);
       expect(list.body[1].parent).toBe(1);
     });
+
+    test('Should get with limit', async () => {
+      await new BlockEntity().save();
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new SectionEntity(), {block: 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section?limit=3')
+        .expect(200);
+
+      expect(list.body).toHaveLength(3);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[2].id).toBe(3);
+    });
+
+    test('Should get with offset', async () => {
+      await new BlockEntity().save();
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new SectionEntity(), {block: 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section?offset=6')
+        .expect(200);
+
+      expect(list.body).toHaveLength(4);
+      expect(list.body[0].id).toBe(7);
+      expect(list.body[3].id).toBe(10);
+    });
   });
 
   describe('Content section with strings', () => {
@@ -116,9 +146,9 @@ describe('SectionController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].property).toBe('CURRENT')
-      expect(list.body[0].property[0].point).toBe('LONDON')
-      expect(list.body[0].property[0].directory).toBe('CITY')
+      expect(list.body[0].property[0].property).toBe('CURRENT');
+      expect(list.body[0].property[0].point).toBe('LONDON');
+      expect(list.body[0].property[0].directory).toBe('CITY');
     });
   });
 

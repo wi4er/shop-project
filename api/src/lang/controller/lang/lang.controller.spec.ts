@@ -43,6 +43,35 @@ describe('LangController', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('EN');
     });
+
+    test('Should get lang with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new LangEntity(), {id: `LANG_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/lang?limit=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].id).toBe('LANG_0');
+      expect(res.body[1].id).toBe('LANG_1');
+      expect(res.body[2].id).toBe('LANG_2');
+    });
+
+    test('Should get lang with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new LangEntity(), {id: `LANG_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/lang?offset=3')
+        .expect(200);
+
+      expect(res.body).toHaveLength(7);
+      expect(res.body[0].id).toBe('LANG_3');
+      expect(res.body[6].id).toBe('LANG_9');
+    });
   });
 
   describe('Lang with strings', () => {

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
-import { EntityManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { DirectoryService } from '../../service/directory/directory.service';
 import { DirectoryInput } from '../../input/directory.input';
 
