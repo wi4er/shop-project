@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseFilters } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
@@ -9,6 +9,8 @@ import { ElementService } from '../../service/element/element.service';
 import { ElementInput } from '../../input/element.input';
 import { ElementFilterSchema } from '../../schema/element-filter.schema';
 import { ElementOrderSchema } from '../../schema/element-order.schema';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { WrongDataFilter } from '../../../exception/wrong-data/wrong-data.filter';
 
 @ApiTags('Content')
 @Controller('element')
@@ -126,7 +128,7 @@ export class ElementController {
   }
 
   @Post()
-  async addItem(
+  addItem(
     @Body()
       input: ElementInput,
   ) {
@@ -140,7 +142,11 @@ export class ElementController {
           block: true,
         },
       }))
-      .then(res => this.toView(res));
+      .then(res => this.toView(res))
+      .catch(err => {
+        WrongDataException.assert(err.column !== 'blockId', 'Wrong block id!');
+        throw err;
+      });
   }
 
   @Put()

@@ -155,4 +155,15 @@ describe('BlockController', () => {
       expect(list.body[0].property[0].directory).toBe('CITY');
     });
   });
+
+  describe('Content block addition', () => {
+    test('Should add block', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/block')
+        .send({})
+        .expect(201);
+
+      expect(inst.body['id']).toBe(1);
+    });
+  });
 });

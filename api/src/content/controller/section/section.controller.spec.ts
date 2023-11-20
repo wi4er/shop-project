@@ -212,4 +212,49 @@ describe('SectionController', () => {
       expect(list.body).toHaveLength(0);
     });
   });
+
+  describe('Content section addition', () => {
+    test('Should add section', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block: 1}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({block: 1, parent: 1})
+        .expect(201);
+
+      console.log(inst.body);
+
+      expect(inst.body['id']).toBe(2);
+      expect(inst.body['block']).toBe(1);
+      expect(inst.body['parent']).toBe(1);
+    });
+
+    test('Should add without parent', async () => {
+      await new BlockEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({block: 1})
+        .expect(201);
+
+      expect(inst.body['id']).toBe(1);
+      expect(inst.body['block']).toBe(1);
+    });
+
+    test('Shouldn`t add section without block', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({})
+        .expect(400);
+    });
+
+    test('Shouldn`t add with wrong block', async () => {
+      await new BlockEntity().save();
+      await request(app.getHttpServer())
+        .post('/section')
+        .send({block: 2})
+        .expect(400);
+    });
+  });
 });

@@ -1,8 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BlockEntity } from '../../model/block.entity';
 import { Repository } from 'typeorm';
 import { ApiTags } from '@nestjs/swagger';
+import { BlockService } from '../../service/block/block.service';
+import { BlockInput } from '../../input/block.input';
 
 @ApiTags('Content')
 @Controller('block')
@@ -11,6 +13,7 @@ export class BlockController {
   constructor(
     @InjectRepository(BlockEntity)
     private blockRepo: Repository<BlockEntity>,
+    private blockService: BlockService,
   ) {
   }
 
@@ -57,6 +60,27 @@ export class BlockController {
   @Get('count')
   async getCount() {
     return this.blockRepo.count({}).then(count => ({count}));
+  }
+
+
+  @Post()
+  addItem(
+    @Body()
+      input: BlockInput,
+  ) {
+    return this.blockService.insert(input)
+      .then(res => this.blockRepo.findOne({
+        where: {id: res.id},
+        relations: {
+          string: {property: true},
+          flag: {flag: true},
+          point: {point: {directory: true}, property: true},
+        },
+      }))
+      .then(res => this.toView(res))
+      .catch(err => {
+        throw err;
+      });
   }
 
 }

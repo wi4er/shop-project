@@ -391,12 +391,19 @@ describe('ElementController', () => {
       expect(inst.body['block']).toBe(1);
     });
 
+    test('Shouldn`t add without block', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({})
+        .expect(400);
+    });
+
     test('Shouldn`t add with wrong block', async () => {
-      // await new BlockEntity().save();
-      // const inst = await request(app.getHttpServer())
-      //   .post('/element')
-      //   .send({block: 2})
-      //   .expect(500);
+      await new BlockEntity().save();
+      await request(app.getHttpServer())
+        .post('/element')
+        .send({block: 2})
+        .expect(400);
     });
   });
 

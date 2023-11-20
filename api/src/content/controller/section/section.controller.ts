@@ -1,8 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
 import { SectionFilterInput } from '../../input/section-filter.input';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { SectionService } from '../../service/section/section.service';
+import { SectionInput } from '../../input/section.input';
 
 @Controller('section')
 export class SectionController {
@@ -10,6 +13,7 @@ export class SectionController {
   constructor(
     @InjectRepository(SectionEntity)
     private sectionRepo: Repository<SectionEntity>,
+    private sectionService: SectionService,
   ) {
   }
 
@@ -80,6 +84,29 @@ export class SectionController {
     return this.sectionRepo.count({
       where,
     }).then(count => ({count}));
+  }
+
+  @Post()
+  addItem(
+    @Body()
+      input: SectionInput,
+  ) {
+    return this.sectionService.insert(input)
+      .then(res => this.sectionRepo.findOne({
+        where: {id: res.id},
+        relations: {
+          string: {property: true},
+          flag: {flag: true},
+          point: {point: {directory: true}, property: true},
+          block: true,
+          parent: true,
+        },
+      }))
+      .then(res => this.toView(res))
+      .catch(err => {
+        WrongDataException.assert(err.column !== 'blockId', 'Wrong block id!');
+        throw err;
+      });
   }
 
 }

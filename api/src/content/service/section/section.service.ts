@@ -9,7 +9,6 @@ import { FlagInsertOperation } from '../../../common/operation/flag-insert.opera
 import { Section2flagEntity } from '../../model/section2flag.entity';
 import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
 import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
-import { Element2flagEntity } from '../../model/element2flag.entity';
 import { SectionInput } from '../../input/section.input';
 
 @Injectable()

@@ -12,7 +12,10 @@ import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { createConnectionOptions } from './createConnectionOptions';
 import { FormModule } from './form/form.module';
+import { ExceptionModule } from './exception/exception.module';
 import * as cors from 'cors';
+import { APP_FILTER } from '@nestjs/core';
+import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
 
 @Module({
   imports: [
@@ -26,9 +29,16 @@ import * as cors from 'cors';
     LangModule,
     CommonModule,
     FormModule,
+    ExceptionModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: WrongDataFilter,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

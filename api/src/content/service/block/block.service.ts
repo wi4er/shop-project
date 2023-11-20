@@ -37,11 +37,11 @@ export class BlockService {
       await new FlagInsertOperation(trans, Block2flagEntity).save(created, input);
     });
 
-    await Object.assign(new BlockPermissionEntity(), {
-      block: created,
-      group: 1,
-      method: PermissionMethod.ALL,
-    }).save();
+    // await Object.assign(new BlockPermissionEntity(), {
+    //   block: created,
+    //   group: 1,
+    //   method: PermissionMethod.ALL,
+    // }).save();
 
     return this.blockRepo.findOne({
       where: { id: created.id },
