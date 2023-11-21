@@ -39,6 +39,26 @@ export class ApiService {
     return req;
   }
 
+  fetchItem<T>(entity: ApiEntity, id: string) : Promise<T> {
+    const url = [
+      [
+        'http://localhost:3001',
+        entity,
+        id,
+      ].join('/'),
+    ].join('?');
+
+    const req = fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error('Api not found!');
+        return res.json();
+      });
+
+    req.catch(err => console.log(err));
+
+    return req;
+  }
+
   countData(entity: ApiEntity) {
     const url = [
       'http://localhost:3001',

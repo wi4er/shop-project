@@ -30,7 +30,7 @@ export class SectionListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData<Section>(ApiEntity.SECTION, args)
+    this.apiService.fetchData<Section>(ApiEntity.SECTION, [...args, `filter[block]=${this.blockId}`])
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.SECTION)

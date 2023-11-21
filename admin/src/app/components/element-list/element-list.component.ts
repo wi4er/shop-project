@@ -31,7 +31,7 @@ export class ElementListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, [...args])
+    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, [...args, `filter[block]=${this.blockId}`])
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.ELEMENT)

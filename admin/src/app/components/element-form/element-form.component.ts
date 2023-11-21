@@ -14,6 +14,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 })
 export class ElementFormComponent {
 
+  id: string = '';
   created_at: string = '';
   updated_at: string = '';
 
@@ -29,6 +30,7 @@ export class ElementFormComponent {
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
   ) {
+    if (data?.id) this.id = data.id;
   }
 
   ngOnInit(): void {
@@ -45,7 +47,10 @@ export class ElementFormComponent {
     });
 
     if (this.data?.id) {
-      // this.toEdit(res.data.element.item as unknown as Element);
+      this.apiService.fetchItem<Element>(ApiEntity.ELEMENT, this.data.id)
+        .then(res => {
+          this.toEdit(res);
+        });
     }
   }
 
@@ -73,9 +78,9 @@ export class ElementFormComponent {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
+    // for (const flag of item.flag) {
+    //   this.editFlags[flag] = true;
+    // }
   }
 
   toInput(): ElementInput {

@@ -14,6 +14,7 @@ import { SectionInput } from '../../model/content/section-input';
 })
 export class SectionFormComponent {
 
+  id: string = '';
   created_at: string = '';
   updated_at: string = '';
 
@@ -29,6 +30,7 @@ export class SectionFormComponent {
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
   ) {
+    if (data?.id) this.id = data.id;
   }
 
   ngOnInit(): void {
@@ -45,7 +47,8 @@ export class SectionFormComponent {
     });
 
     if (this.data?.id) {
-      // this.toEdit(res.data.element.item as unknown as Element);
+      this.apiService.fetchItem<Element>(ApiEntity.SECTION, this.data.id)
+        .then(res => this.toEdit(res));
     }
   }
 
