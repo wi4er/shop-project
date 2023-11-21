@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseFilters } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
@@ -10,7 +10,6 @@ import { ElementInput } from '../../input/element.input';
 import { ElementFilterSchema } from '../../schema/element-filter.schema';
 import { ElementOrderSchema } from '../../schema/element-order.schema';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { WrongDataFilter } from '../../../exception/wrong-data/wrong-data.filter';
 
 @ApiTags('Content')
 @Controller('element')
@@ -49,6 +48,10 @@ export class ElementController {
 
   toWhere(filter: ElementFilterSchema): FindOptionsWhere<ElementEntity> {
     const where = {};
+
+    if (filter?.block) {
+      where['block'] = {id: filter.block};
+    }
 
     if (filter?.flag) {
       where['flag'] = {flag: {id: filter.flag.eq}};
@@ -125,6 +128,23 @@ export class ElementController {
     return this.elementRepo.count({
       where: filter ? this.toWhere(filter) : null,
     }).then(count => ({count}));
+  }
+
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: number,
+  ) {
+    return this.elementRepo.findOne({
+      where: {id},
+      relations: {
+        string: {property: true, lang: true},
+        section: true,
+        flag: {flag: true},
+        point: {point: {directory: true}, property: true},
+        block: true,
+      },
+    }).then(this.toView);
   }
 
   @Post()

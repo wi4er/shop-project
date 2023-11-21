@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BlockEntity } from '../../model/block.entity';
 import { Repository } from 'typeorm';
@@ -62,6 +62,20 @@ export class BlockController {
     return this.blockRepo.count({}).then(count => ({count}));
   }
 
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: number,
+  ) {
+    return this.blockRepo.findOne({
+      where: {id},
+      relations: {
+        string: {property: true, lang: true},
+        flag: {flag: true},
+        point: {point: {directory: true}, property: true},
+      },
+    }).then(this.toView);
+  }
 
   @Post()
   addItem(

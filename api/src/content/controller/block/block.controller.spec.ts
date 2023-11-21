@@ -47,6 +47,16 @@ describe('BlockController', () => {
       expect(list.body[0].id).toBe(1);
     });
 
+    test('Should get block item', async () => {
+      await new BlockEntity().save();
+
+      const list = await request(app.getHttpServer())
+        .get('/block/1')
+        .expect(200);
+
+      expect(list.body.id).toBe(1);
+    });
+
     test('Should get block with limit', async () => {
       for (let i = 0; i < 10; i++) {
         await new BlockEntity().save();

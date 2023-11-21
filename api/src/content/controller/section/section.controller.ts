@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
@@ -52,6 +52,10 @@ export class SectionController {
   ) {
     const where = {};
 
+    if (filter?.block) {
+      where['block'] = {id: filter.block};
+    }
+
     if (filter?.flag) {
       where['flag'] = {flag: {id: filter.flag.eq}};
     }
@@ -84,6 +88,23 @@ export class SectionController {
     return this.sectionRepo.count({
       where,
     }).then(count => ({count}));
+  }
+
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: number,
+  ) {
+    return this.sectionRepo.findOne({
+      where: {id},
+      relations: {
+        parent: true,
+        string: {property: true},
+        block: true,
+        flag: {flag: true},
+        point: {point: {directory: true}, property: true},
+      },
+    }).then(this.toView);
   }
 
   @Post()

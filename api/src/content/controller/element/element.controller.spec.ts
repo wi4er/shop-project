@@ -44,12 +44,11 @@ describe('ElementController', () => {
       await Object.assign(new ElementEntity, {block: 1}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/element')
+        .get('/element/1')
         .expect(200);
 
-      expect(list.body).toHaveLength(1);
-      expect(list.body[0].id).toBe(1);
-      expect(list.body[0].block).toBe(1);
+      expect(list.body.id).toBe(1);
+      expect(list.body.block).toBe(1);
     });
 
     test('Should get element list', async () => {
@@ -66,6 +65,26 @@ describe('ElementController', () => {
       expect(list.body).toHaveLength(10);
       expect(list.body[0].id).toBe(1);
       expect(list.body[9].id).toBe(10);
+    });
+
+    test('Should get list with block filter', async () => {
+      await new BlockEntity().save();
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new ElementEntity, {block: i % 2 + 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/element?filter[block]=1')
+        .expect(200);
+
+      expect(list.body).toHaveLength(5);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[1].id).toBe(3);
+      expect(list.body[2].id).toBe(5);
+      expect(list.body[3].id).toBe(7);
+      expect(list.body[4].id).toBe(9);
     });
 
     test('Should get list with offset', async () => {

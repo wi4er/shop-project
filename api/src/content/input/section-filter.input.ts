@@ -6,6 +6,8 @@ class SectionFlagFilterSchema {
 
 export class SectionFilterInput {
 
+  block?: string;
+
   flag?: SectionFlagFilterSchema;
 
 }

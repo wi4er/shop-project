@@ -50,6 +50,35 @@ describe('SectionController', () => {
       expect(list.body[0].block).toBe(1);
     });
 
+    test('Should get list with block filter', async () => {
+      await new BlockEntity().save();
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new SectionEntity(), {block: i % 2 + 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section?filter[block]=1')
+        .expect(200);
+
+      expect(list.body).toHaveLength(5);
+    });
+
+    test('Should get section item', async () => {
+      await new BlockEntity().save();
+      const parent = await Object.assign(new SectionEntity(), {block: 1}).save();
+      await Object.assign(new SectionEntity(), {block: 1, parent}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/section/2')
+        .expect(200);
+
+      expect(list.body.id).toBe(2);
+      expect(list.body.block).toBe(1);
+      expect(list.body.parent).toBe(1);
+    });
+
     test('Should get section with parent', async () => {
       await new BlockEntity().save();
       const parent = await Object.assign(new SectionEntity(), {block: 1}).save();

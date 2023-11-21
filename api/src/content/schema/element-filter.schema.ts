@@ -19,6 +19,8 @@ class ElementStringFilterSchema {
 
 export class ElementFilterSchema {
 
+  block: string;
+
   flag?: ElementFlagFilterSchema;
 
   point?: { [key: string]: ElementPointFilterSchema };
