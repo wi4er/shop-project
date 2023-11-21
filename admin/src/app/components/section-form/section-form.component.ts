@@ -5,14 +5,14 @@ import { Flag } from '../../model/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Element } from '../../model/content/element';
-import { BlockInput } from '../../model/content/block-input';
+import { SectionInput } from '../../model/content/section-input';
 
 @Component({
-  selector: 'app-block-form',
-  templateUrl: './block-form.component.html',
-  styleUrls: ['./block-form.component.css']
+  selector: 'app-section-form',
+  templateUrl: './section-form.component.html',
+  styleUrls: ['./section-form.component.css']
 })
-export class BlockFormComponent {
+export class SectionFormComponent {
 
   created_at: string = '';
   updated_at: string = '';
@@ -25,8 +25,8 @@ export class BlockFormComponent {
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
-    private dialogRef: MatDialogRef<BlockFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
+    private dialogRef: MatDialogRef<SectionFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
   ) {
   }
@@ -78,12 +78,13 @@ export class BlockFormComponent {
     }
   }
 
-  toInput(): BlockInput {
-    const input: BlockInput = {
+  toInput(): SectionInput {
+    const input: SectionInput = {
       id: this.data?.id,
+      block: this.data?.block ?? 1,
       property: [],
       flag: [],
-    } as BlockInput;
+    } as SectionInput;
 
     for (const prop in this.editProperties) {
       for (const lang in this.editProperties[prop]) {
@@ -106,8 +107,8 @@ export class BlockFormComponent {
     if (this.data?.id) {
 
     } else {
-      this.apiService.postData<BlockInput>(
-        ApiEntity.BLOCK,
+      this.apiService.postData<SectionInput>(
+        ApiEntity.SECTION,
         this.toInput(),
       ).then(() => {
         this.dialogRef.close()

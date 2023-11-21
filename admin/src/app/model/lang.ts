@@ -1,7 +1,7 @@
 import { StringPropertyValue } from './string-property-value';
 
-export interface Element {
-  id: number;
+export interface Lang {
+  id: string;
   created_at: string;
   updated_at: string;
   flag: string[];

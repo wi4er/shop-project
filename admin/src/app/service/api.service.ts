@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 export enum ApiEntity {
   BLOCK = 'block',
   ELEMENT = 'element',
@@ -9,6 +8,7 @@ export enum ApiEntity {
   PROPERTY = 'property',
   DIRECTORY = 'directory',
   FORM = 'form',
+  LANG = 'lang',
 }
 
 @Injectable({
@@ -19,7 +19,7 @@ export class ApiService {
   constructor() {
   }
 
-  fetchData(entity: ApiEntity, args?: string[]) {
+  fetchData<T>(entity: ApiEntity, args?: string[]) : Promise<T[]> {
     const url = [
       [
         'http://localhost:3001',
@@ -54,6 +54,23 @@ export class ApiService {
       .then(({count}) => count);
 
     req.catch(err => console.log(err));
+
+    return req;
+  }
+
+  postData<T>(entity: ApiEntity, item: T) : Promise<Response> {
+    const url = [
+      'http://localhost:3001',
+      entity,
+    ].join('/');
+
+    const req = fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(item)
+    }).then()
 
     return req;
   }

@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
-import { Element } from '../../model/element';
+import { Element } from '../../model/content/element';
 import { ApiEntity, ApiService } from '../../service/api.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-element-list',
@@ -14,9 +15,9 @@ export class ElementListComponent implements OnInit {
   @Input()
   blockId: number = 0;
 
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  list: { [key: string]: string }[] = [];
   totalCount: number = 0;
 
   constructor(
@@ -26,12 +27,12 @@ export class ElementListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    console.log(this.blockId);
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.ELEMENT, [...args])
-      .then(list => this.setData(list as Element[]));
+    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, [...args])
+      .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.ELEMENT)
       .then(count => this.totalCount = count);
@@ -67,20 +68,20 @@ export class ElementListComponent implements OnInit {
     this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       ElementFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
+        data: {block: this.blockId},
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       ElementFormComponent,
       {
@@ -90,8 +91,7 @@ export class ElementListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

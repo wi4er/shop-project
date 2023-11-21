@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BlockFormComponent } from '../block-form/block-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Block } from '../../model/block';
+import { Block } from '../../model/content/block';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-block-list',
@@ -26,8 +27,8 @@ export class BlockListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.BLOCK, [...args])
-      .then(list => this.setData(list as Block[]));
+    this.apiService.fetchData<Block>(ApiEntity.BLOCK, [...args])
+      .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.BLOCK)
       .then(count => this.totalCount = count);
@@ -63,7 +64,7 @@ export class BlockListComponent implements OnInit {
     this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       BlockFormComponent,
       {
@@ -72,11 +73,10 @@ export class BlockListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       BlockFormComponent,
       {
@@ -86,8 +86,7 @@ export class BlockListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

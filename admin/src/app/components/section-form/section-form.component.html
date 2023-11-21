@@ -1,10 +1,10 @@
 <form (submit)="saveItem()">
   <h2 *ngIf="!data?.id" mat-dialog-title>
-    Create new content block
+    Create new content section
   </h2>
 
   <h2 *ngIf="data?.id" mat-dialog-title>
-    Update content element #{{data?.id}}
+    Update content section #{{data?.id}}
   </h2>
 
   <mat-form-field

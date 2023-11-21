@@ -1,7 +1,7 @@
 import { StringPropertyValue } from './string-property-value';
 
 export interface Directory {
-  id: number;
+  id: string;
   created_at: string;
   updated_at: string;
   flag: string[];

@@ -3,11 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { DirectoryFormComponent } from '../directory-form/directory-form.component';
 import { Directory } from '../../model/directory';
 import { ApiEntity, ApiService } from '../../service/api.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-directory-list',
   templateUrl: './directory-list.component.html',
-  styleUrls: ['./directory-list.component.css']
+  styleUrls: ['./directory-list.component.css'],
 })
 export class DirectoryListComponent implements OnInit {
 
@@ -26,8 +27,8 @@ export class DirectoryListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.DIRECTORY, [...args])
-      .then(list => this.setData(list as Directory[]));
+    this.apiService.fetchData<Directory>(ApiEntity.DIRECTORY, [...args])
+      .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.DIRECTORY)
       .then(count => this.totalCount = count);
@@ -60,10 +61,10 @@ export class DirectoryListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       DirectoryFormComponent,
       {
@@ -72,11 +73,10 @@ export class DirectoryListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       DirectoryFormComponent,
       {
@@ -86,8 +86,7 @@ export class DirectoryListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

@@ -2,6 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiEntity, ApiService } from '../../service/api.service';
+import { Flag } from '../../model/flag';
+import { Property } from '../../model/property';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-common-list',
@@ -65,9 +68,9 @@ export class CommonListComponent implements OnInit {
 
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchData(ApiEntity.FLAG)
+      this.apiService.fetchData<Flag>(ApiEntity.FLAG)
         .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
-      this.apiService.fetchData(ApiEntity.PROPERTY)
+      this.apiService.fetchData<Property>(ApiEntity.PROPERTY)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
     ]).then(() => this.fetchList([
       `limit=${this.pageSize}`,
@@ -75,16 +78,35 @@ export class CommonListComponent implements OnInit {
     ]));
   }
 
+  refreshData() {
+    this.fetchList([
+      `limit=${this.pageSize}`,
+      `offset=${this.currentPage * this.pageSize}`,
+    ]);
+  }
+
   @Input()
   fetchList(args: string[] = []) {
   }
 
   @Input()
+  // @ts-ignore
+  onAddItem(): Observable<undefined> {
+  }
+
   addItem() {
+    this.onAddItem()
+      .subscribe(() => this.refreshData());
   }
 
   @Input()
+  // @ts-ignore
+  onUpdateItem(id: number): Observable<undefined> {
+  }
+
   updateItem(id: number) {
+    this.onUpdateItem(id)
+      .subscribe(() => this.refreshData());
   }
 
   @Input()

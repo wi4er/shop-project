@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Flag } from '../../model/flag';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-flag-list',
@@ -26,7 +27,7 @@ export class FlagListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.FLAG, [...args])
+    this.apiService.fetchData<Flag>(ApiEntity.FLAG, [...args])
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.FLAG)
@@ -63,7 +64,7 @@ export class FlagListComponent implements OnInit {
     this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       FlagFormComponent,
       {
@@ -72,11 +73,10 @@ export class FlagListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       FlagFormComponent,
       {
@@ -86,8 +86,7 @@ export class FlagListComponent implements OnInit {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

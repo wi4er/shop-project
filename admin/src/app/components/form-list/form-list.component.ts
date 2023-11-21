@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Flag } from '../../model/flag';
 import { FormFormComponent } from '../form-form/form-form.component';
+import { Form } from '../../model/form';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-form-list',
@@ -26,7 +27,7 @@ export class FormListComponent {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.FORM, [...args])
+    this.apiService.fetchData<Form>(ApiEntity.FORM, [...args])
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.FORM)
@@ -38,7 +39,7 @@ export class FormListComponent {
    * @param data
    * @private
    */
-  private setData(data: Flag[]) {
+  private setData(data: Form[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -63,7 +64,7 @@ export class FormListComponent {
     this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       FormFormComponent,
       {
@@ -72,11 +73,10 @@ export class FormListComponent {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       FormFormComponent,
       {
@@ -86,8 +86,7 @@ export class FormListComponent {
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

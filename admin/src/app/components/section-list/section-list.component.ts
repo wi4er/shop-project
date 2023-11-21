@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Section } from '../../model/section';
+import { Section } from '../../model/content/section';
 import { SectionFormComponent } from '../section-form/section-form.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-section-list',
@@ -29,18 +30,13 @@ export class SectionListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData(ApiEntity.SECTION, args)
-      .then(list => this.setData(list as Section[]));
+    this.apiService.fetchData<Section>(ApiEntity.SECTION, args)
+      .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.SECTION)
       .then(count => this.totalCount = count);
   }
 
-  /**
-   *
-   * @param data
-   * @private
-   */
   private setData(data: Section[]) {
     const col = new Set<string>();
     this.activeFlags = {};
@@ -66,31 +62,30 @@ export class SectionListComponent implements OnInit {
     this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       SectionFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
+        data: {block: this.blockId},
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       SectionFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
-        data: {id},
+        data: {id, block: this.blockId},
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

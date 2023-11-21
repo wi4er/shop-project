@@ -1,6 +1,6 @@
 <form (submit)="saveItem()">
   <h2 *ngIf="!data?.id" mat-dialog-title>
-    Create new content block
+    Create new content element
   </h2>
 
   <h2 *ngIf="data?.id" mat-dialog-title>
@@ -13,12 +13,12 @@
   >
     <mat-label>ID</mat-label>
 
-    <!--    <input-->
-    <!--      matInput-->
-    <!--      name="id"-->
-    <!--      [(ngModel)]="data.id"-->
-    <!--      disabled-->
-    <!--    />-->
+<!--    <input-->
+<!--      matInput-->
+<!--      name="id"-->
+<!--      [(ngModel)]="data.id"-->
+<!--      disabled-->
+<!--    />-->
   </mat-form-field>
 
   <div *ngIf="!!data?.id">

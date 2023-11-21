@@ -1,6 +1,6 @@
 <app-common-list
-  [addItem]="addItem.bind(this)"
-  [updateItem]="updateItem.bind(this)"
+  [onAddItem]="addItem.bind(this)"
+  [onUpdateItem]="updateItem.bind(this)"
   [toggleFlag]="toggleFlag.bind(this)"
   [deleteList]="deleteList.bind(this)"
   [deleteItem]="deleteItem.bind(this)"
@@ -9,5 +9,5 @@
   [columns]="columns"
   [list]="list"
   [totalCount]="totalCount"
-  entity="Content Element"
+  [entity]="'Content Element #' + blockId"
 ></app-common-list>

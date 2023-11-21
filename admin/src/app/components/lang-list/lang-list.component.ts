@@ -1,51 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonList } from '../../common-list/common-list';
 import { MatDialog } from '@angular/material/dialog';
-import { PropertyFormComponent } from '../property-form/property-form.component';
-
-interface Lang {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
+import { Lang } from '../../model/lang';
+import { ApiEntity, ApiService } from '../../service/api.service';
+import { LangFormComponent } from '../lang-form/lang-form.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-lang-list',
   templateUrl: './lang-list.component.html',
   styleUrls: ['./lang-list.component.css']
 })
-export class LangListComponent
-  extends CommonList
-  implements OnInit {
+export class LangListComponent implements OnInit {
 
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = [];
-  flagList: string[] = [];
+  totalCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
-    super();
   }
 
   ngOnInit(): void {
-    this.fetchList();
   }
 
-  override fetchList() {
-    fetch('http://localhost:3001/lang')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
-      .then(list => {
-        this.setData(list as Lang[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+  fetchList(args: string[] = []) {
+    this.apiService.fetchData<Lang>(ApiEntity.LANG, [...args])
+      .then(list => this.setData(list));
+
+    this.apiService.countData(ApiEntity.LANG)
+      .then(count => this.totalCount = count);
   }
 
   /**
@@ -65,9 +51,9 @@ export class LangListComponent
         updated_at: item.updated_at,
       };
 
-      for (const fl of item.flag) {
-        col.add('flag_' + fl);
-        line['flag_' + fl] = fl;
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;
@@ -78,22 +64,21 @@ export class LangListComponent
     this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      LangFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      LangFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -101,8 +86,7 @@ export class LangListComponent
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+    return dialog.afterClosed()
   }
 
   toggleFlag(id: number, flag: string) {
@@ -112,7 +96,6 @@ export class LangListComponent
   }
 
   deleteItem(id: string) {
-
   }
 
 }

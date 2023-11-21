@@ -42,6 +42,11 @@ import { CommonListComponent } from './components/common-list/common-list.compon
 import { FormListComponent } from './components/form-list/form-list.component';
 import { FormFormComponent } from './components/form-form/form-form.component';
 import { ResultListComponent } from './components/result-list/result-list.component';
+import { PropertyEditComponent } from './components/property-edit/property-edit.component';
+import { FlagEditComponent } from './components/flag-edit/flag-edit.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -72,9 +77,12 @@ import { ResultListComponent } from './components/result-list/result-list.compon
     FormListComponent,
     FormFormComponent,
     ResultListComponent,
+    PropertyEditComponent,
+    FlagEditComponent,
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -89,6 +97,8 @@ import { ResultListComponent } from './components/result-list/result-list.compon
     MatTableModule,
     MatDialogModule,
     MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

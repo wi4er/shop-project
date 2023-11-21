@@ -1,18 +1,18 @@
 import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Property } from '../../model/property';
 import { Lang } from '../../model/lang';
 import { Flag } from '../../model/flag';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApiEntity, ApiService } from '../../service/api.service';
 import { Element } from '../../model/content/element';
-import { BlockInput } from '../../model/content/block-input';
+import { ElementInput } from '../../model/content/element-input';
+import { ApiEntity, ApiService } from '../../service/api.service';
 
 @Component({
-  selector: 'app-block-form',
-  templateUrl: './block-form.component.html',
-  styleUrls: ['./block-form.component.css']
+  selector: 'app-element-form',
+  templateUrl: './element-form.component.html',
+  styleUrls: ['./element-form.component.css'],
 })
-export class BlockFormComponent {
+export class ElementFormComponent {
 
   created_at: string = '';
   updated_at: string = '';
@@ -25,8 +25,8 @@ export class BlockFormComponent {
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
-    private dialogRef: MatDialogRef<BlockFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
+    private dialogRef: MatDialogRef<ElementFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
   ) {
   }
@@ -78,12 +78,13 @@ export class BlockFormComponent {
     }
   }
 
-  toInput(): BlockInput {
-    const input: BlockInput = {
+  toInput(): ElementInput {
+    const input: ElementInput = {
       id: this.data?.id,
+      block: this.data?.block ?? 1,
       property: [],
       flag: [],
-    } as BlockInput;
+    } as ElementInput;
 
     for (const prop in this.editProperties) {
       for (const lang in this.editProperties[prop]) {
@@ -106,8 +107,8 @@ export class BlockFormComponent {
     if (this.data?.id) {
 
     } else {
-      this.apiService.postData<BlockInput>(
-        ApiEntity.BLOCK,
+      this.apiService.postData<ElementInput>(
+        ApiEntity.ELEMENT,
         this.toInput(),
       ).then(() => {
         this.dialogRef.close()

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../../service/api.service';
+import { Block } from '../../model/content/block';
+import { Form } from '../../model/form';
 
 interface MenuItem {
   title: string;
@@ -32,7 +34,7 @@ export class MainMenuComponent implements OnInit {
   form: MenuGroup = {
     title: '',
     child: [],
-  }
+  };
 
   list: MenuGroup[] = [
     {
@@ -71,6 +73,10 @@ export class MainMenuComponent implements OnInit {
         title: 'Flags',
         link: '/flag',
         icon: 'flag',
+      }, {
+        title: 'Languages',
+        link: '/lang',
+        icon: 'translate',
       }],
     },
     {
@@ -88,7 +94,7 @@ export class MainMenuComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.apiService.fetchData(ApiEntity.BLOCK)
+    this.apiService.fetchData<Block>(ApiEntity.BLOCK)
       .then(list => {
         if (list.length > 0) {
           this.content.title = 'Content';
@@ -103,7 +109,7 @@ export class MainMenuComponent implements OnInit {
         }
       });
 
-    this.apiService.fetchData(ApiEntity.FORM)
+    this.apiService.fetchData<Form>(ApiEntity.FORM)
       .then(list => {
         if (list.length > 0) {
           this.form.title = 'Forms';
