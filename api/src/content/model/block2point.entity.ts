@@ -7,9 +7,9 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from '../../directory/model/point.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { CommonPointEntity } from '../../common/model/common-point.entity';
 import { BlockEntity } from './block.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('content-block2point')
 @Index(['point', 'property', 'parent'], {unique: true})

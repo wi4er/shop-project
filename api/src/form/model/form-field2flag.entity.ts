@@ -8,8 +8,8 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { FormFieldEntity } from './form-field.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Entity('form-field2flag')
 @Index(['parent', 'flag'], {unique: true})

@@ -10,8 +10,6 @@ import { Element2pointEntity } from './model/element2point.entity';
 import { Section2pointEntity } from './model/section2point.entity';
 import { Section2stringEntity } from './model/section2string.entity';
 import { Element2elementEntity } from './model/element2element.entity';
-import { PropertyEntity } from '../property/model/property.entity';
-import { LangEntity } from '../lang/model/lang.entity';
 import { BlockController } from './controller/block/block.controller';
 import { ElementController } from './controller/element/element.controller';
 import { Element2flagEntity } from './model/element2flag.entity';
@@ -25,6 +23,8 @@ import { BlockPermissionEntity } from './model/block-permission.entity';
 import { UserEntity } from '../user/model/user.entity';
 import { UserGroupEntity } from '../user/model/user-group.entity';
 import { Block2pointEntity } from './model/block2point.entity';
+import { PropertyEntity } from '../settings/model/property.entity';
+import { LangEntity } from '../settings/model/lang.entity';
 
 @Module({
   imports: [

@@ -10,6 +10,7 @@ import { FlagUpdateOperation } from '../../../common/operation/flag-update.opera
 import { UserInput } from '../../input/user.input';
 import { User2stringEntity } from '../../model/user2string.entity';
 import { User2flagEntity } from '../../model/user2flag.entity';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 @Injectable()
 export class UserService {
@@ -82,10 +83,13 @@ export class UserService {
 
     await this.manager.transaction(async (trans: EntityManager) => {
       created.id = input.id;
+      created.login = input.login;
       await trans.save(created);
 
       await new PropertyInsertOperation(trans, User2stringEntity).save(created, input);
       await new FlagInsertOperation(trans, User2flagEntity).save(created, input);
+    }).catch(err => {
+      WrongDataException.assert(err.column !== 'login', 'Login expected!');
     });
 
     return this.userRepo.findOne({
@@ -103,6 +107,7 @@ export class UserService {
           flag: {flag: true},
         },
       });
+      beforeItem.login = input.login;
       await beforeItem.save();
 
       await new PropertyUpdateOperation(trans, User2stringEntity).save(beforeItem, input);

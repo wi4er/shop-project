@@ -48,6 +48,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { PermissionListComponent } from './components/permission-list/permission-list.component';
+import { UserPageComponent } from './components/user-page/user-page.component';
+import { UserContactListComponent } from './components/user-contact-list/user-contact-list.component';
+import { UserGroupListComponent } from './components/user-group-list/user-group-list.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +84,9 @@ import { PermissionListComponent } from './components/permission-list/permission
     PropertyEditComponent,
     FlagEditComponent,
     PermissionListComponent,
+    UserPageComponent,
+    UserContactListComponent,
+    UserGroupListComponent,
   ],
   imports: [
     BrowserModule,

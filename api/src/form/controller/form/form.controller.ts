@@ -1,11 +1,10 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Repository } from 'typeorm';
 import { FormEntity } from '../../model/form.entity';
-import { FlagInput } from '../../../flag/input/flag.input';
 import { FormInput } from '../../input/form.input';
 import { FormService } from '../../service/form/form.service';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 @Controller('form')
 export class FormController {

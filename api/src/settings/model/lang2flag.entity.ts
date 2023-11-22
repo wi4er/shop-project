@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { LangEntity } from './lang.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
+import { FlagEntity } from './flag.entity';
 
 @Entity('lang2flag')
 @Index(['parent', 'flag'], {unique: true})

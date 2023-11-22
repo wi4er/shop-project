@@ -6,9 +6,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn
 } from "typeorm";
-import { FlagEntity } from "../../flag/model/flag.entity";
 import { UserGroupEntity } from "./user-group.entity";
 import { CommonFlagEntity } from "../../common/model/common-flag.entity";
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Entity('user-group2flag')
 @Index([ 'parent', 'flag' ], { unique: true })

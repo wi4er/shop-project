@@ -1,23 +1,15 @@
 import { UserEntity } from './user/model/user.entity';
 import { User2stringEntity } from './user/model/user2string.entity';
-import { PropertyEntity } from './property/model/property.entity';
-import { Property2stringEntity } from './property/model/property2string.entity';
 import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
 import { DirectoryEntity } from './directory/model/directory.entity';
 import { Directory2stringEntity } from './directory/model/directory2string.entity';
 import { UserGroupEntity } from './user/model/user-group.entity';
 import { PointEntity } from './directory/model/point.entity';
-import { FlagEntity } from './flag/model/flag.entity';
-import { Flag2flagEntity } from './flag/model/flag2flag.entity';
-import { Flag2stringEntity } from './flag/model/flag2string.entity';
 import { User2flagEntity } from './user/model/user2flag.entity';
 import { User2pointEntity } from './user/model/user2point.entity';
 import { User2userEntity } from './user/model/user2user.entity';
 import { User2descriptionEntity } from './user/model/user2description.entity';
 import { Point2stringEntity } from './directory/model/point2string.entity';
-import { LangEntity } from './lang/model/lang.entity';
-import { Lang2stringEntity } from './lang/model/lang2string.entity';
-import { Lang2flagEntity } from './lang/model/lang2flag.entity';
 import { ElementEntity } from './content/model/element.entity';
 import { Element2sectionEntity } from './content/model/element2section.entity';
 import { SectionEntity } from './content/model/section.entity';
@@ -40,7 +32,6 @@ import { User2userGroupEntity } from './user/model/user2user-group.entity';
 import { Element2flagEntity } from './content/model/element2flag.entity';
 import { Section2flagEntity } from './content/model/section2flag.entity';
 import { Block2flagEntity } from './content/model/block2flag.entity';
-import { Property2flagEntity } from './property/model/property2flag.entity';
 import { BlockPermissionEntity } from './content/model/block-permission.entity';
 import { Block2pointEntity } from './content/model/block2point.entity';
 import { Directory2pointEntity } from './directory/model/directory2point.entity';
@@ -56,6 +47,15 @@ import { FormFieldElementEntity } from './form/model/form-field-element.entity';
 import { FormFieldSectionEntity } from './form/model/form-field-section.entity';
 import { FormFieldDirectoryEntity } from './form/model/form-field-directory.entity';
 import { ResultEntity } from './form/model/result.entity';
+import { PropertyEntity } from './settings/model/property.entity';
+import { Property2stringEntity } from './settings/model/property2string.entity';
+import { Property2flagEntity } from './settings/model/property2flag.entity';
+import { FlagEntity } from './settings/model/flag.entity';
+import { Flag2stringEntity } from './settings/model/flag2string.entity';
+import { Flag2flagEntity } from './settings/model/flag2flag.entity';
+import { LangEntity } from './settings/model/lang.entity';
+import { Lang2stringEntity } from './settings/model/lang2string.entity';
+import { Lang2flagEntity } from './settings/model/lang2flag.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {

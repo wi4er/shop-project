@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { FlagEntity } from './flag.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
+import { PropertyEntity } from './property.entity';
+import { LangEntity } from './lang.entity';
 
 @Entity('flag2string')
 export class Flag2stringEntity

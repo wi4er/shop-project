@@ -8,8 +8,8 @@ import {
   UpdateDateColumn, VersionColumn
 } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
-import { LangEntity } from "../../lang/model/lang.entity";
+import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('user2description')
 export class User2descriptionEntity extends BaseEntity {

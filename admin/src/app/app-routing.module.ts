@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardTileComponent } from './components/dashboard-tile/dashboard-tile.component';
-import { UserListComponent } from './components/user-list/user-list.component';
 import { BlockListComponent } from './components/block-list/block-list.component';
 import { DirectoryListComponent } from './components/directory-list/directory-list.component';
 import { FlagListComponent } from './components/flag-list/flag-list.component';
@@ -12,13 +11,14 @@ import { ContentPageComponent } from './components/content-page/content-page.com
 import { FormListComponent } from './components/form-list/form-list.component';
 import { ResultListComponent } from './components/result-list/result-list.component';
 import { PermissionListComponent } from './components/permission-list/permission-list.component';
+import { UserPageComponent } from './components/user-page/user-page.component';
 
 const routes: Routes = [{
   path: '',
   component: DashboardTileComponent,
 }, {
   path: 'user',
-  component: UserListComponent,
+  component: UserPageComponent,
 }, {
   path: 'permission',
   component: PermissionListComponent,

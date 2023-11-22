@@ -7,9 +7,9 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { FormEntity } from './form.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('form2string')
 export class Form2stringEntity

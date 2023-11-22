@@ -7,9 +7,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { LangEntity } from './lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { PropertyEntity } from './property.entity';
 
 @Entity('lang2string')
 export class Lang2stringEntity extends BaseEntity implements CommonStringEntity<LangEntity> {

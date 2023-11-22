@@ -9,6 +9,9 @@ export enum ApiEntity {
   DIRECTORY = 'directory',
   FORM = 'form',
   LANG = 'lang',
+  USER = 'user',
+  CONTACT = 'contact',
+  GROUP = 'group',
 }
 
 @Injectable({

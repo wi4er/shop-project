@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { ElementEntity } from './element.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('content-element2string')
 export class Element2stringEntity

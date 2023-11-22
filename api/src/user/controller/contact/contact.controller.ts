@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserContactEntity } from '../../model/user-contact.entity';
-import { FlagInput } from '../../../flag/input/flag.input';
 import { ContactService } from '../../service/contact/contact.service';
 import { UserContactInput } from '../../input/user-contact.input';
 

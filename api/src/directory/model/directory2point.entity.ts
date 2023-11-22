@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { CommonPointEntity } from '../../common/model/common-point.entity';
 import { PointEntity } from './point.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { DirectoryEntity } from './directory.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('directory2point')
 @Index(['point', 'property', 'parent'], {unique: true})

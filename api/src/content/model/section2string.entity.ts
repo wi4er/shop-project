@@ -6,10 +6,10 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { SectionEntity } from './section.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('content-section2string')
 export class Section2stringEntity

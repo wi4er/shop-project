@@ -6,9 +6,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { ElementEntity } from './element.entity';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Entity('content-element2flag')
 @Index(['parent', 'flag'], {unique: true})

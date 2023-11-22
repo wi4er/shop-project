@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { DirectoryEntity } from './directory.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 
 @Entity('directory2string')
 export class Directory2stringEntity

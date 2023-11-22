@@ -8,9 +8,9 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 
 @Entity('user2string')
 export class User2stringEntity

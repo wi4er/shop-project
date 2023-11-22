@@ -8,8 +8,8 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PropertyEntity } from './property.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { LangEntity } from './lang.entity';
 
 @Entity('property2string')
 export class Property2stringEntity

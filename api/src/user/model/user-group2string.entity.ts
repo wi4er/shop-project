@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { UserGroupEntity } from './user-group.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('user-group2string')
 export class UserGroup2stringEntity

@@ -6,9 +6,9 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { UserContactEntity } from './user-contact.entity';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Entity('user-contact2flag')
 @Index(['parent', 'flag'], {unique: true})

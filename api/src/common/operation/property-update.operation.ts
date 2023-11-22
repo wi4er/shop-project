@@ -1,9 +1,9 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { CommonStringEntity } from '../model/common-string.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { WithStringEntity } from '../model/with-string.entity';
 import { WithPropertyInput } from '../input/with-property.input';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 
 export class PropertyUpdateOperation<T extends WithStringEntity<BaseEntity>> {
 

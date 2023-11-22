@@ -2,8 +2,8 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LangEntity } from '../../model/lang.entity';
-import { FlagInput } from '../../../flag/input/flag.input';
 import { LangService } from '../../service/lang/lang.service';
+import { FlagInput } from '../../input/flag.input';
 
 @Controller('lang')
 export class LangController {

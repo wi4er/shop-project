@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
-import { FlagEntity } from '../../../flag/model/flag.entity';
-import { FlagInput } from '../../../flag/input/flag.input';
 import { PropertyInsertOperation } from '../../../common/operation/property-insert.operation';
 import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
 import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
@@ -11,6 +9,8 @@ import { FormEntity } from '../../model/form.entity';
 import { FormInput } from '../../input/form.input';
 import { Form2stringEntity } from '../../model/form2string.entity';
 import { Form2flagEntity } from '../../model/form2flag.entity';
+import { FlagInput } from '../../../settings/input/flag.input';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 @Injectable()
 export class FormService {

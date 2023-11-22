@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { PointEntity } from './point.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 
 @Entity('directory-point2string')
 export class Point2stringEntity

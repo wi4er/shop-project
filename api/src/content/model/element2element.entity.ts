@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn
 } from "typeorm";
 import { ElementEntity } from "./element.entity";
-import { PropertyEntity } from "../../property/model/property.entity";
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('content-element2element')
 export class Element2elementEntity extends BaseEntity {
@@ -54,4 +54,5 @@ export class Element2elementEntity extends BaseEntity {
     },
   )
   property: PropertyEntity;
+
 }

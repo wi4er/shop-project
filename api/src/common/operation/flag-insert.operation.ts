@@ -1,7 +1,7 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { CommonFlagEntity } from '../model/common-flag.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { WithFlagInput } from '../input/with-flag.input';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 export class FlagInsertOperation<T extends BaseEntity> {
 

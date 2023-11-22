@@ -4,13 +4,13 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { UserEntity } from '../../model/user.entity';
 import * as request from 'supertest';
-import { PropertyEntity } from '../../../property/model/property.entity';
 import { User2stringEntity } from '../../model/user2string.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { User2flagEntity } from '../../model/user2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { User2pointEntity } from '../../model/user2point.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('UserController', () => {
   let source;
@@ -166,6 +166,25 @@ describe('UserController', () => {
       expect(list.body[0].property[0].property).toBe('SEX')
       expect(list.body[0].property[0].point).toBe('MAIL')
       expect(list.body[0].property[0].directory).toBe('GENDER')
+    });
+  });
+
+  describe('User addition', () => {
+    test('Should add user', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/user')
+        .send({login: 'user'})
+        .expect(201);
+
+      expect(inst.body.id).toBe(1);
+      expect(inst.body.login).toBe('user');
+    });
+
+    test('Shouldn`t add without login', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/user')
+        .send({})
+        .expect(400);
     });
   });
 

@@ -1,52 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonList } from '../../common-list/common-list';
 import { MatDialog } from '@angular/material/dialog';
-import { LangFormComponent } from '../lang-form/lang-form.component';
 import { UserFormComponent } from '../user-form/user-form.component';
-
-interface User {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  flag: string[];
-}
+import { ApiEntity, ApiService } from '../../service/api.service';
+import { Observable } from 'rxjs';
+import { User } from '../../model/user/user';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: ['./user-list.component.css'],
 })
-export class UserListComponent
-  extends CommonList
-  implements OnInit {
+export class UserListComponent implements OnInit {
 
+  list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  propertyList: string[] = [];
-  flagList: string[] = [];
+  totalCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
-    super();
   }
 
   ngOnInit(): void {
     this.fetchList();
   }
 
-  override fetchList() {
-    fetch('http://localhost:3001/user')
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      })
-      .then(list => {
-        this.setData(list as User[]);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+  fetchList() {
+    this.apiService.fetchData<User>(ApiEntity.USER)
+      .then(list => this.setData(list));
+
+    this.apiService.countData(ApiEntity.USER)
+      .then(count => this.totalCount = count);
   }
 
   /**
@@ -62,24 +48,20 @@ export class UserListComponent
     for (const item of data) {
       const line: { [key: string]: string } = {
         'id': String(item.id),
+        login: item.login,
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
-
-      for (const fl of item.flag) {
-        col.add('flag_' + fl);
-        line['flag_' + fl] = fl;
-      }
 
       this.activeFlags[item.id] = item.flag;
 
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem() {
+  addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
       UserFormComponent,
       {
@@ -88,11 +70,10 @@ export class UserListComponent
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => console.log('CLOSE'));
+    return dialog.afterClosed();
   }
 
-  updateItem(id: number) {
+  updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
       UserFormComponent,
       {
@@ -102,8 +83,7 @@ export class UserListComponent
       },
     );
 
-    dialog.afterClosed()
-      .subscribe(() => this.fetchList());
+    return dialog.afterClosed();
   }
 
   toggleFlag(id: number, flag: string) {

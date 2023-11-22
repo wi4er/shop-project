@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { UserContactEntity } from './user-contact.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
-import { LangEntity } from "../../lang/model/lang.entity";
+import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 @Entity('user-contact2string')
 export class UserContact2stringEntity extends BaseEntity implements CommonStringEntity<UserContactEntity> {

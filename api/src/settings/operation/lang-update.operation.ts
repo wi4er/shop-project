@@ -1,10 +1,10 @@
 import { LangEntity } from '../model/lang.entity';
 import { EntityManager } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { Lang2stringEntity } from '../model/lang2string.entity';
 import { Lang2flagEntity } from '../model/lang2flag.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { LangInput } from '../input/lang.input';
+import { PropertyEntity } from '../model/property.entity';
+import { FlagEntity } from '../model/flag.entity';
 
 export class LangUpdateOperation {
 

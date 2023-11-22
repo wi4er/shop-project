@@ -1,10 +1,10 @@
-import { LangEntity } from '../../lang/model/lang.entity';
 import { FlagEntity } from '../model/flag.entity';
 import { EntityManager } from 'typeorm';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { Flag2stringEntity } from '../model/flag2string.entity';
 import { Flag2flagEntity } from '../model/flag2flag.entity';
 import { FlagInput } from '../input/flag.input';
+import { PropertyEntity } from '../model/property.entity';
+import { LangEntity } from '../model/lang.entity';
 
 export class FlagUpdateOperation {
 
