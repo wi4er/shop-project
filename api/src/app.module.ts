@@ -4,10 +4,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ContentModule } from './content/content.module';
 import { FileModule } from './file/file.module';
-import { PropertyModule } from './property/property.module';
 import { DirectoryModule } from './directory/directory.module';
-import { FlagModule } from './flag/flag.module';
-import { LangModule } from './lang/lang.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { createConnectionOptions } from './createConnectionOptions';
@@ -16,6 +13,7 @@ import { ExceptionModule } from './exception/exception.module';
 import * as cors from 'cors';
 import { APP_FILTER } from '@nestjs/core';
 import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -23,13 +21,11 @@ import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
     UserModule,
     ContentModule,
     FileModule,
-    PropertyModule,
     DirectoryModule,
-    FlagModule,
-    LangModule,
     CommonModule,
     FormModule,
     ExceptionModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [

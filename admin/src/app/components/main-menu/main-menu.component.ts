@@ -44,14 +44,6 @@ export class MainMenuComponent implements OnInit {
         link: '/',
         icon: 'home',
       }, {
-        title: 'Users',
-        link: '/user',
-        icon: 'person',
-      }, {
-        title: 'Directories',
-        link: '/directory',
-        icon: 'folder',
-      }, {
         title: 'Content',
         link: '/content',
         icon: 'category',
@@ -59,6 +51,10 @@ export class MainMenuComponent implements OnInit {
         title: 'Form',
         link: '/form',
         icon: 'input',
+      }, {
+        title: 'Directories',
+        link: '/directory',
+        icon: 'folder',
       }],
     },
     this.content,
@@ -80,15 +76,27 @@ export class MainMenuComponent implements OnInit {
       }],
     },
     {
+      title: 'Personalization',
+      child: [{
+        title: 'Users',
+        link: '/user',
+        icon: 'person',
+      }, {
+        title: 'Permission',
+        link: '/permission',
+        icon: 'lock',
+      }],
+    },
+    {
       title: 'Statistics',
       child: [{
-        title: 'Logs',
-        link: '/log',
-        icon: 'list',
-      }, {
         title: 'Reports',
         link: '/report',
         icon: 'assessment',
+      }, {
+        title: 'Logs',
+        link: '/log',
+        icon: 'list',
       }],
     },
   ];

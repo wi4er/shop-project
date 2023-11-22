@@ -11,6 +11,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ContentPageComponent } from './components/content-page/content-page.component';
 import { FormListComponent } from './components/form-list/form-list.component';
 import { ResultListComponent } from './components/result-list/result-list.component';
+import { PermissionListComponent } from './components/permission-list/permission-list.component';
 
 const routes: Routes = [{
   path: '',
@@ -18,6 +19,9 @@ const routes: Routes = [{
 }, {
   path: 'user',
   component: UserListComponent,
+}, {
+  path: 'permission',
+  component: PermissionListComponent,
 }, {
   path: 'content/:id',
   component: ContentPageComponent,

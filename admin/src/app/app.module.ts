@@ -47,6 +47,7 @@ import { FlagEditComponent } from './components/flag-edit/flag-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { PermissionListComponent } from './components/permission-list/permission-list.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { FormsModule } from '@angular/forms';
     ResultListComponent,
     PropertyEditComponent,
     FlagEditComponent,
+    PermissionListComponent,
   ],
   imports: [
     BrowserModule,

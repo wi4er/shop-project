@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Property } from '../../model/property';
-import { Lang } from '../../model/lang';
-import { Flag } from '../../model/flag';
+import { Property } from '../../model/settings/property';
+import { Lang } from '../../model/settings/lang';
+import { Flag } from '../../model/settings/flag';
 import { Element } from '../../model/content/element';
 import { ElementInput } from '../../model/content/element-input';
 import { ApiEntity, ApiService } from '../../service/api.service';

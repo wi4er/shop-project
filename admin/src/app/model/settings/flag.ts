@@ -1,6 +1,6 @@
-import { StringPropertyValue } from './string-property-value';
+import { StringPropertyValue } from '../string-property-value';
 
-export interface Property {
+export interface Flag {
   id: string;
   created_at: string;
   updated_at: string;

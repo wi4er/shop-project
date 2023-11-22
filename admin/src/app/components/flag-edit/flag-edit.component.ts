@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Flag } from '../../model/flag';
+import { Flag } from '../../model/settings/flag';
 
 @Component({
   selector: 'app-flag-edit',

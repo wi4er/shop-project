@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Property } from '../../model/property';
-import { Lang } from '../../model/lang';
+import { Property } from '../../model/settings/property';
+import { Lang } from '../../model/settings/lang';
 
 @Component({
   selector: 'app-property-edit',

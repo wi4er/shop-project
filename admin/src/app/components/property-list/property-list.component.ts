@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Property } from '../../model/property';
+import { Property } from '../../model/settings/property';
 import { Observable } from 'rxjs';
 
 @Component({

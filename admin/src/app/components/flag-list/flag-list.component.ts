@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Flag } from '../../model/flag';
+import { Flag } from '../../model/settings/flag';
 import { Observable } from 'rxjs';
 
 @Component({

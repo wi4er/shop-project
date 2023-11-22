@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { Flag } from '../../model/flag';
-import { Property } from '../../model/property';
+import { Flag } from '../../model/settings/flag';
+import { Property } from '../../model/settings/property';
 import { Observable } from 'rxjs';
 
 @Component({

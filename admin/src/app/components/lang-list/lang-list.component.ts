@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Lang } from '../../model/lang';
+import { Lang } from '../../model/settings/lang';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { LangFormComponent } from '../lang-form/lang-form.component';
 import { Observable } from 'rxjs';
