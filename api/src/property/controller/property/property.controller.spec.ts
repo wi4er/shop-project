@@ -37,11 +37,10 @@ describe('PropertyController', () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/property')
+        .get('/property/NAME')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('NAME');
+      expect(res.body.id).toBe('NAME');
     });
 
     test('Should get property with limit', async () => {
@@ -139,6 +138,30 @@ describe('PropertyController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
+    });
+  });
+
+  describe('Property addition', () => {
+    test('Should add property', async () => {
+      const item = await request(app.getHttpServer())
+        .post('/property')
+        .send({id: 'NAME'})
+        .expect(201);
+
+      expect(item.body.id).toBe('NAME');
+    });
+  });
+
+  describe('Property update', () => {
+    test('Should update property', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/property/NAME')
+        .send({id: 'NAME'})
+        .expect(200);
+
+      expect(item.body.id).toBe('NAME');
     });
   });
 });

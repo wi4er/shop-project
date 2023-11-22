@@ -1,14 +1,22 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FlagEntity } from '../../model/flag.entity';
+import { FlagService } from '../../service/flag/flag.service';
+import { FlagInput } from '../../input/flag.input';
 
 @Controller('flag')
 export class FlagController {
 
+  relations = {
+    string: {property: true, lang: true},
+    flag: {flag: true},
+  };
+
   constructor(
     @InjectRepository(FlagEntity)
     private flagRepo: Repository<FlagEntity>,
+    private flagService: FlagService,
   ) {
   }
 
@@ -37,10 +45,7 @@ export class FlagController {
       limit?: number,
   ) {
     return this.flagRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -49,6 +54,43 @@ export class FlagController {
   @Get('count')
   async getCount() {
     return this.flagRepo.count().then(count => ({count}));
+  }
+
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: string,
+  ) {
+    return this.flagRepo.findOne({
+      where: {id},
+      relations: this.relations,
+    }).then(this.toView);
+  }
+
+  @Post()
+  async addItem(
+    @Body()
+      input: FlagInput,
+  ) {
+    return this.flagService.insert(input)
+      .then(res => this.flagRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
+  }
+
+  @Put(':id')
+  async updateItem(
+    @Body()
+      input: FlagInput,
+  ) {
+    return this.flagService.update(input)
+      .then(res => this.flagRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
   }
 
 }

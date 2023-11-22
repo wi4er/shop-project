@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { Repository } from 'typeorm';
@@ -7,6 +7,12 @@ import { DirectoryInput } from '../../input/directory.input';
 
 @Controller('directory')
 export class DirectoryController {
+
+  relations = {
+    string: {property: true, lang: true},
+    flag: {flag: true},
+    point: {point: {directory: true}, property: true},
+  };
 
   constructor(
     @InjectRepository(DirectoryEntity)
@@ -45,11 +51,7 @@ export class DirectoryController {
       limit?: number,
   ) {
     return this.directoryRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -60,20 +62,41 @@ export class DirectoryController {
     return this.directoryRepo.count().then(count => ({count}));
   }
 
-  @Post()
-  async addItem(
-    @Body()
-      input: DirectoryInput,
-  ): Promise<DirectoryEntity> {
-    return this.directoryService.insert(input);
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: string,
+  ) {
+    return this.directoryRepo.findOne({
+      where: {id},
+      relations: this.relations,
+    }).then(this.toView);
   }
 
-  @Put()
+  @Post()
+  addItem(
+    @Body()
+      input: DirectoryInput,
+  ) {
+    return this.directoryService.insert(input)
+      .then(res => this.directoryRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
+  }
+
+  @Put(':id')
   updateItem(
     @Body()
       input: DirectoryInput,
   ) {
-    return this.directoryService.update(input);
+    return this.directoryService.update(input)
+      .then(res => this.directoryRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
   }
 
   @Delete()

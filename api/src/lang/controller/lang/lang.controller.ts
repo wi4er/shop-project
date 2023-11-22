@@ -1,14 +1,22 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LangEntity } from '../../model/lang.entity';
+import { FlagInput } from '../../../flag/input/flag.input';
+import { LangService } from '../../service/lang/lang.service';
 
 @Controller('lang')
 export class LangController {
 
+  relations = {
+    string: {property: true, lang: true},
+    flag: {flag: true},
+  };
+
   constructor(
     @InjectRepository(LangEntity)
     private langRepo: Repository<LangEntity>,
+    private langService: LangService,
   ) {
   }
 
@@ -37,13 +45,52 @@ export class LangController {
       limit?: number,
   ) {
     return this.langRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
+  }
+
+  @Get('count')
+  async countList() {
+    return this.langRepo.count().then(count => ({count}));
+  }
+
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: string,
+  ) {
+    return this.langRepo.findOne({
+      where: {id},
+      relations: this.relations,
+    }).then(this.toView);
+  }
+
+  @Post()
+  async addItem(
+    @Body()
+      input: FlagInput,
+  ) {
+    return this.langService.insert(input)
+      .then(res => this.langRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
+  }
+
+  @Put(':id')
+  async updateItem(
+    @Body()
+      input: FlagInput,
+  ) {
+    return this.langService.update(input)
+      .then(res => this.langRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
   }
 
 }

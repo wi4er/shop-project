@@ -1,14 +1,22 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PropertyEntity } from '../../model/property.entity';
+import { PropertyService } from '../../service/property/property.service';
+import { PropertyInput } from '../../input/property.input';
 
 @Controller('property')
 export class PropertyController {
 
+  relations = {
+    string: {property: true, lang: true},
+    flag: {flag: true},
+  };
+
   constructor(
     @InjectRepository(PropertyEntity)
     private propertyRepo: Repository<PropertyEntity>,
+    private propertyService: PropertyService,
   ) {
   }
 
@@ -37,10 +45,7 @@ export class PropertyController {
       limit?: number,
   ) {
     return this.propertyRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -49,6 +54,43 @@ export class PropertyController {
   @Get('count')
   async getCount() {
     return this.propertyRepo.count().then(count => ({count}));
+  }
+
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: string,
+  ) {
+    return this.propertyRepo.findOne({
+      where: {id},
+      relations: this.relations,
+    }).then(this.toView);
+  }
+
+  @Post()
+  async addItem(
+    @Body()
+      input: PropertyInput,
+  ) {
+    return this.propertyService.insert(input)
+      .then(res => this.propertyRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
+  }
+
+  @Put(':id')
+  async updateItem(
+    @Body()
+      input: PropertyInput,
+  ) {
+    return this.propertyService.update(input)
+      .then(res => this.propertyRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
   }
 
 }

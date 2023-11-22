@@ -1,15 +1,24 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Repository } from 'typeorm';
 import { FormEntity } from '../../model/form.entity';
+import { FlagInput } from '../../../flag/input/flag.input';
+import { FormInput } from '../../input/form.input';
+import { FormService } from '../../service/form/form.service';
 
 @Controller('form')
 export class FormController {
 
+  relations = {
+    string: {property: true, lang: true},
+    flag: {flag: true},
+  };
+
   constructor(
     @InjectRepository(FormEntity)
     private formRepo: Repository<FormEntity>,
+    private formService: FormService,
   ) {
   }
 
@@ -38,10 +47,7 @@ export class FormController {
       limit?: number,
   ) {
     return this.formRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -50,6 +56,43 @@ export class FormController {
   @Get('count')
   async getCount() {
     return this.formRepo.count().then(count => ({count}));
+  }
+
+  @Get(':id')
+  async getItem(
+    @Param('id')
+      id: string,
+  ) {
+    return this.formRepo.findOne({
+      where: {id},
+      relations: this.relations,
+    }).then(this.toView);
+  }
+
+  @Post()
+  async addItem(
+    @Body()
+      input: FormInput,
+  ) {
+    return this.formService.insert(input)
+      .then(res => this.formRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
+  }
+
+  @Put(':id')
+  async updateItem(
+    @Body()
+      input: FormInput,
+  ) {
+    return this.formService.update(input)
+      .then(res => this.formRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
   }
 
 }

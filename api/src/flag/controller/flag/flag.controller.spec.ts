@@ -37,11 +37,10 @@ describe('FlagController', () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/flag')
+        .get('/flag/ACTIVE')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('ACTIVE');
+      expect(res.body.id).toBe('ACTIVE');
     });
 
     test('Should get flag with limit', async () => {
@@ -97,7 +96,7 @@ describe('FlagController', () => {
 
   describe('Flag with strings', () => {
     test('Should get flag with strings', async () => {
-      const parent =await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(new Flag2stringEntity(), {parent, property, string: 'VALUE'}).save();
 
@@ -141,6 +140,31 @@ describe('FlagController', () => {
 
       expect(list.body).toHaveLength(2);
       expect(list.body[0].flag).toEqual(['FLAG']);
+    });
+  });
+
+  describe('Flag addition', () => {
+    test('Should add item', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/flag')
+        .send({
+          id: 'NEW',
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe('NEW');
+    });
+  });
+
+  describe('Flag updating', () => {
+    test('Should update flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await request(app.getHttpServer())
+        .put('/flag/NEW')
+        .send({
+          id: 'NEW',
+        })
+        .expect(200);
     });
   });
 });

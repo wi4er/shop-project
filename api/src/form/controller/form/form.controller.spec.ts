@@ -38,11 +38,10 @@ describe('FormController', () => {
       await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/form')
+        .get('/form/ORDER')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('ORDER');
+      expect(res.body.id).toBe('ORDER');
     });
 
     test('Should get form with limit', async () => {
@@ -142,6 +141,30 @@ describe('FormController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
+    });
+  });
+
+  describe('Form addition', () => {
+    test('Should add form', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/form')
+        .send({id: 'ORDER'})
+        .expect(201);
+
+      expect(inst.body.id).toBe('ORDER');
+    });
+  });
+
+  describe('Form update', () => {
+    test('Should update form', async () => {
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/form/ORDER')
+        .send({id: 'ORDER'})
+        .expect(200);
+
+      expect(inst.body.id).toBe('ORDER');
     });
   });
 });

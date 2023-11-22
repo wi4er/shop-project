@@ -36,15 +36,28 @@ describe('DirectoryController', () => {
       expect(res.body).toHaveLength(0);
     });
 
-    test('Should get directory instance', async () => {
-      await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+    test('Should get directory list', async () => {
+      for (let i = 0; i <= 9; i++) {
+        await Object.assign(new DirectoryEntity(), {id: `NAME_${i}`}).save();
+      }
 
       const res = await request(app.getHttpServer())
         .get('/directory')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('NAME');
+      expect(res.body).toHaveLength(10);
+      expect(res.body[0].id).toBe('NAME_0');
+      expect(res.body[9].id).toBe('NAME_9');
+    });
+
+    test('Should get directory instance', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/directory/NAME')
+        .expect(200);
+
+      expect(res.body.id).toBe('NAME');
     });
 
     test('Should get directory with limit', async () => {
@@ -180,7 +193,8 @@ describe('DirectoryController', () => {
         .post('/directory')
         .send({
           id: 'LIST',
-        });
+        })
+        .expect(201);
 
       expect(res.body['id']).toBe('LIST');
     });
@@ -191,8 +205,9 @@ describe('DirectoryController', () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/directory')
-        .send({id: 'CITY'});
+        .put('/directory/CITY')
+        .send({id: 'CITY'})
+        .expect(200);
     });
   });
 });

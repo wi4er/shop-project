@@ -37,11 +37,10 @@ describe('LangController', () => {
       await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/lang')
+        .get('/lang/EN')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('EN');
+      expect(res.body.id).toBe('EN');
     });
 
     test('Should get lang with limit', async () => {
@@ -71,6 +70,28 @@ describe('LangController', () => {
       expect(res.body).toHaveLength(7);
       expect(res.body[0].id).toBe('LANG_3');
       expect(res.body[6].id).toBe('LANG_9');
+    });
+  });
+
+  describe('Lang count', () => {
+    test('Should count empty list', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/lang/count')
+        .expect(200);
+
+      expect(res.body.count).toBe(0);
+    });
+
+    test('Should count lang list', async () => {
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new LangEntity(), {id: `LANG_${i}`}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/lang/count')
+        .expect(200);
+
+      expect(res.body.count).toBe(10);
     });
   });
 
@@ -129,6 +150,30 @@ describe('LangController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
+    });
+  });
+
+  describe('Lang addition', () => {
+    test('Should add item', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/lang')
+        .send({id: 'EN'})
+        .expect(201);
+
+      expect(res.body.id).toBe('EN');
+    });
+  });
+
+  describe('Lang update', () => {
+    test('Should add item', async () => {
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/lang/EN')
+        .send({id: 'EN'})
+        .expect(200);
+
+      expect(res.body.id).toBe('EN');
     });
   });
 });

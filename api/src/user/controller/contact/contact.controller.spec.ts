@@ -37,12 +37,11 @@ describe('ContactController', () => {
       await Object.assign(new UserContactEntity(), {id: 'MAIL', type: UserContactType.EMAIL}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/contact')
+        .get('/contact/MAIL')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('MAIL');
-      expect(res.body[0].type).toBe('EMAIL');
+      expect(res.body.id).toBe('MAIL');
+      expect(res.body.type).toBe('EMAIL');
     });
 
     test('Should get contact with limit', async () => {
@@ -143,6 +142,38 @@ describe('ContactController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
+    });
+  });
+
+  describe('Contact addition', () => {
+    test('Should add', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/contact')
+        .send({
+          id: 'mail',
+          type: 'EMAIL',
+        })
+        .expect(201);
+    });
+  });
+
+  describe('Contact update', () => {
+    test('Should update contact', async () => {
+      await Object.assign(
+        new UserContactEntity(),
+        {id: 'MAIL', type: UserContactType.EMAIL},
+      ).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/contact/MAIL')
+        .send({
+          id: 'MAIL',
+          type: 'PHONE',
+        })
+        .expect(200);
+
+      expect(inst.body.id).toBe('MAIL');
+      expect(inst.body.type).toBe('PHONE');
     });
   });
 });

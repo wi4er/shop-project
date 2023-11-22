@@ -38,11 +38,10 @@ describe('GroupController', () => {
       await new UserGroupEntity().save();
 
       const res = await request(app.getHttpServer())
-        .get('/group')
+        .get('/group/1')
         .expect(200);
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe(1);
+      expect(res.body.id).toBe(1);
     });
 
     test('Should get group with limit', async () => {
@@ -142,6 +141,27 @@ describe('GroupController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
+    });
+  });
+
+  describe('Group addition', () => {
+    test('Should add group', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .expect(201);
+
+      expect(inst.body.id).toBe(1);
+    });
+  });
+
+  describe('Group update', () => {
+    test('Should update group', async () => {
+      await new UserGroupEntity().save();
+      const inst = await request(app.getHttpServer())
+        .put('/group/1')
+        .expect(200);
+
+      expect(inst.body.id).toBe(1);
     });
   });
 });

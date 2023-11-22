@@ -5,43 +5,42 @@ import { PropertyInsertOperation } from '../../../common/operation/property-inse
 import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
 import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
 import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
-import { LangEntity } from '../../model/lang.entity';
-import { LangInput } from '../../input/lang.input';
-import { Lang2stringEntity } from '../../model/lang2string.entity';
-import { Lang2flagEntity } from '../../model/lang2flag.entity';
+import { UserGroupEntity } from '../../model/user-group.entity';
+import { UserGroupInput } from '../../input/user-group.input';
+import { UserGroup2stringEntity } from '../../model/user-group2string.entity';
+import { UserGroup2flagEntity } from '../../model/user-group2flag.entity';
 
 @Injectable()
-export class LangService {
-
+export class GroupService {
 
   constructor(
     @InjectEntityManager()
     private manager: EntityManager,
-    @InjectRepository(LangEntity)
-    private langRepo: Repository<LangEntity>,
+    @InjectRepository(UserGroupEntity)
+    private groupRepo: Repository<UserGroupEntity>,
   ) {
   }
 
-  async insert(input: LangInput): Promise<LangEntity> {
-    const created = new LangEntity();
+  async insert(input: UserGroupInput): Promise<UserGroupEntity> {
+    const created = new UserGroupEntity();
 
     await this.manager.transaction(async (trans: EntityManager) => {
       created.id = input.id;
       await trans.save(created);
 
-      await new PropertyInsertOperation(trans, Lang2stringEntity).save(created, input);
-      await new FlagInsertOperation(trans, Lang2flagEntity).save(created, input);
+      await new PropertyInsertOperation(trans, UserGroup2stringEntity).save(created, input);
+      await new FlagInsertOperation(trans, UserGroup2flagEntity).save(created, input);
     });
 
-    return this.langRepo.findOne({
+    return this.groupRepo.findOne({
       where: { id: created.id },
       loadRelationIds: true,
     });
   }
 
-  async update(input: LangInput): Promise<LangEntity> {
+  async update(input: UserGroupInput): Promise<UserGroupEntity> {
     await this.manager.transaction(async (trans: EntityManager) => {
-      const beforeItem = await this.langRepo.findOne({
+      const beforeItem = await this.groupRepo.findOne({
         where: { id: input.id },
         relations: {
           string: { property: true },
@@ -50,11 +49,11 @@ export class LangService {
       });
       await beforeItem.save();
 
-      await new PropertyUpdateOperation(trans, Lang2stringEntity).save(beforeItem, input);
-      await new FlagUpdateOperation(trans, Lang2flagEntity).save(beforeItem, input);
+      await new PropertyUpdateOperation(trans, UserGroup2stringEntity).save(beforeItem, input);
+      await new FlagUpdateOperation(trans, UserGroup2flagEntity).save(beforeItem, input);
     });
 
-    return this.langRepo.findOne({
+    return this.groupRepo.findOne({
       where: { id: input.id },
       loadRelationIds: true,
     });
@@ -62,15 +61,14 @@ export class LangService {
 
   async delete(id: string[]): Promise<string[]> {
     const result = [];
-    const list = await this.langRepo.find({ where: { id: In(id) } });
+    const list = await this.groupRepo.find({ where: { id: In(id) } });
 
     for (const item of list) {
-      await this.langRepo.delete(item.id);
+      await this.groupRepo.delete(item.id);
       result.push(item.id);
     }
 
     return result;
   }
-
 
 }

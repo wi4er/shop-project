@@ -1,47 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
+import { FlagEntity } from '../../../flag/model/flag.entity';
+import { FlagInput } from '../../../flag/input/flag.input';
 import { PropertyInsertOperation } from '../../../common/operation/property-insert.operation';
 import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
 import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
 import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
-import { LangEntity } from '../../model/lang.entity';
-import { LangInput } from '../../input/lang.input';
-import { Lang2stringEntity } from '../../model/lang2string.entity';
-import { Lang2flagEntity } from '../../model/lang2flag.entity';
+import { FormEntity } from '../../model/form.entity';
+import { FormInput } from '../../input/form.input';
+import { Form2stringEntity } from '../../model/form2string.entity';
+import { Form2flagEntity } from '../../model/form2flag.entity';
 
 @Injectable()
-export class LangService {
-
+export class FormService {
 
   constructor(
     @InjectEntityManager()
     private manager: EntityManager,
-    @InjectRepository(LangEntity)
-    private langRepo: Repository<LangEntity>,
+    @InjectRepository(FormEntity)
+    private formRepo: Repository<FormEntity>,
   ) {
   }
 
-  async insert(input: LangInput): Promise<LangEntity> {
-    const created = new LangEntity();
+  async insert(input: FormInput): Promise<FormEntity> {
+    const created = new FormEntity();
 
     await this.manager.transaction(async (trans: EntityManager) => {
       created.id = input.id;
       await trans.save(created);
 
-      await new PropertyInsertOperation(trans, Lang2stringEntity).save(created, input);
-      await new FlagInsertOperation(trans, Lang2flagEntity).save(created, input);
+      await new PropertyInsertOperation(trans, Form2stringEntity).save(created, input);
+      await new FlagInsertOperation(trans, Form2flagEntity).save(created, input);
     });
 
-    return this.langRepo.findOne({
+    return this.formRepo.findOne({
       where: { id: created.id },
       loadRelationIds: true,
     });
   }
 
-  async update(input: LangInput): Promise<LangEntity> {
+  async update(input: FlagInput): Promise<FlagEntity> {
     await this.manager.transaction(async (trans: EntityManager) => {
-      const beforeItem = await this.langRepo.findOne({
+      const beforeItem = await this.formRepo.findOne({
         where: { id: input.id },
         relations: {
           string: { property: true },
@@ -50,11 +51,11 @@ export class LangService {
       });
       await beforeItem.save();
 
-      await new PropertyUpdateOperation(trans, Lang2stringEntity).save(beforeItem, input);
-      await new FlagUpdateOperation(trans, Lang2flagEntity).save(beforeItem, input);
+      await new PropertyUpdateOperation(trans, Form2stringEntity).save(beforeItem, input);
+      await new FlagUpdateOperation(trans, Form2flagEntity).save(beforeItem, input);
     });
 
-    return this.langRepo.findOne({
+    return this.formRepo.findOne({
       where: { id: input.id },
       loadRelationIds: true,
     });
@@ -62,15 +63,14 @@ export class LangService {
 
   async delete(id: string[]): Promise<string[]> {
     const result = [];
-    const list = await this.langRepo.find({ where: { id: In(id) } });
+    const list = await this.formRepo.find({ where: { id: In(id) } });
 
     for (const item of list) {
-      await this.langRepo.delete(item.id);
+      await this.formRepo.delete(item.id);
       result.push(item.id);
     }
 
     return result;
   }
-
 
 }

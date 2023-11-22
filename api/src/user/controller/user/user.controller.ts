@@ -10,6 +10,15 @@ import { UserInput } from '../../input/user.input';
 @Controller('user')
 export class UserController {
 
+  relations = {
+    string: {property: true, lang: true},
+    group: true,
+    child: true,
+    contact: true,
+    flag: {flag: true},
+    point: {point: {directory: true}, property: true},
+  };
+
   constructor(
     @InjectRepository(UserEntity)
     private userRepo: Repository<UserEntity>,
@@ -53,14 +62,7 @@ export class UserController {
       limit?: number,
   ) {
     return this.userRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        group: true,
-        child: true,
-        contact: true,
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -77,29 +79,27 @@ export class UserController {
   }
 
   @Get(':id')
-  async item(
+  async getItem(
     @Param('id')
       id: number,
   ) {
     return this.userRepo.findOne({
-      relations: {
-        string: {property: true, lang: true},
-        group: true,
-        child: true,
-        contact: true,
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
       where: {id},
+      relations: this.relations,
     }).then(this.toView);
   }
 
   @Post()
   async addUser(
     @Body()
-      user: UserInput,
+      input: UserInput,
   ) {
-    console.log(user);
+    return this.userService.insert(input)
+      .then(res => this.userRepo.findOne({
+        where: {id: res.id},
+        relations: this.relations,
+      }))
+      .then(this.toView);
   }
 
   @Put(':id')

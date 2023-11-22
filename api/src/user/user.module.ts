@@ -28,6 +28,8 @@ import { User2descriptionEntity } from "./model/user2description.entity";
 import { MyselfController } from './controller/myself/myself.controller';
 import { GroupController } from './controller/group/group.controller';
 import { ContactController } from './controller/contact/contact.controller';
+import { ContactService } from './service/contact/contact.service';
+import { GroupService } from './service/group/group.service';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { ContactController } from './controller/contact/contact.controller';
     EncodeService,
     UserService,
     SessionService,
+    ContactService,
+    GroupService,
   ],
   controllers: [UserController, AuthController, ForgotController, MyselfController, GroupController, ContactController]
 })
