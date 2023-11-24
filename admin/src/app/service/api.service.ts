@@ -12,6 +12,7 @@ export enum ApiEntity {
   USER = 'user',
   CONTACT = 'contact',
   GROUP = 'group',
+  DOCUMENT = 'document',
 }
 
 @Injectable({
@@ -22,7 +23,12 @@ export class ApiService {
   constructor() {
   }
 
-  fetchData<T>(entity: ApiEntity, args?: string[]) : Promise<T[]> {
+  /**
+   *
+   * @param entity
+   * @param args
+   */
+  fetchData<T>(entity: ApiEntity, args?: string[]): Promise<T[]> {
     const url = [
       [
         'http://localhost:3001',
@@ -42,7 +48,12 @@ export class ApiService {
     return req;
   }
 
-  fetchItem<T>(entity: ApiEntity, id: string) : Promise<T> {
+  /**
+   *
+   * @param entity
+   * @param id
+   */
+  fetchItem<T>(entity: ApiEntity, id: string): Promise<T> {
     const url = [
       [
         'http://localhost:3001',
@@ -62,6 +73,10 @@ export class ApiService {
     return req;
   }
 
+  /**
+   *
+   * @param entity
+   */
   countData(entity: ApiEntity) {
     const url = [
       'http://localhost:3001',
@@ -81,7 +96,12 @@ export class ApiService {
     return req;
   }
 
-  postData<T>(entity: ApiEntity, item: T) : Promise<Response> {
+  /**
+   *
+   * @param entity
+   * @param item
+   */
+  postData<T>(entity: ApiEntity, item: T): Promise<Response> {
     const url = [
       'http://localhost:3001',
       entity,
@@ -90,10 +110,10 @@ export class ApiService {
     const req = fetch(url, {
       method: 'POST',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
-      body: JSON.stringify(item)
-    }).then()
+      body: JSON.stringify(item),
+    }).then();
 
     return req;
   }

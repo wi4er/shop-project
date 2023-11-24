@@ -53,6 +53,8 @@ import { UserContactListComponent } from './components/user-contact-list/user-co
 import { UserGroupListComponent } from './components/user-group-list/user-group-list.component';
 import { UserContactFormComponent } from './components/user-contact-form/user-contact-form.component';
 import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
+import { DocumentListComponent } from './components/document-list/document-list.component';
+import { DocumentFormComponent } from './components/document-form/document-form.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +93,8 @@ import { UserGroupFormComponent } from './components/user-group-form/user-group-
     UserGroupListComponent,
     UserContactFormComponent,
     UserGroupFormComponent,
+    DocumentListComponent,
+    DocumentFormComponent,
   ],
   imports: [
     BrowserModule,

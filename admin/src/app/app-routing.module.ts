@@ -12,6 +12,7 @@ import { FormListComponent } from './components/form-list/form-list.component';
 import { ResultListComponent } from './components/result-list/result-list.component';
 import { PermissionListComponent } from './components/permission-list/permission-list.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
+import { DocumentListComponent } from './components/document-list/document-list.component';
 
 const routes: Routes = [{
   path: '',
@@ -46,6 +47,12 @@ const routes: Routes = [{
 }, {
   path: 'form/:id',
   component: ResultListComponent,
+}, {
+  path: 'document',
+  component: DocumentListComponent,
+}, {
+  path: 'doc/:id',
+  component: DocumentListComponent,
 }, {
   path: '**',
   component: NotFoundComponent,

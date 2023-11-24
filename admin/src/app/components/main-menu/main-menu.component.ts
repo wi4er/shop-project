@@ -36,6 +36,11 @@ export class MainMenuComponent implements OnInit {
     child: [],
   };
 
+  document: MenuGroup = {
+    title: '',
+    child: [],
+  };
+
   list: MenuGroup[] = [
     {
       title: '',
@@ -55,10 +60,15 @@ export class MainMenuComponent implements OnInit {
         title: 'Directories',
         link: '/directory',
         icon: 'folder',
+      }, {
+        title: 'Documents',
+        link: '/document',
+        icon: 'notes',
       }],
     },
     this.content,
     this.form,
+    this.document,
     {
       title: 'Settings',
       child: [{
@@ -105,7 +115,7 @@ export class MainMenuComponent implements OnInit {
     this.apiService.fetchData<Block>(ApiEntity.BLOCK)
       .then(list => {
         if (list.length > 0) {
-          this.content.title = 'Content';
+          this.content.title = 'Content blocks';
         }
 
         for (const item of list) {
@@ -128,6 +138,21 @@ export class MainMenuComponent implements OnInit {
             title: 'Form ' + String(item.id),
             link: `/form/${item.id}`,
             icon: 'input',
+          });
+        }
+      });
+
+    this.apiService.fetchData<Form>(ApiEntity.DOCUMENT)
+      .then(list => {
+        if (list.length > 0) {
+          this.document.title = 'Documents';
+        }
+
+        for (const item of list) {
+          this.document.child.push({
+            title: 'Document  ' + String(item.id),
+            link: `/doc/${item.id}`,
+            icon: 'notes',
           });
         }
       });
