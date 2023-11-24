@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { PointEntity } from './point.entity';
 import { Point2flagEntity } from './point2flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
-describe('ValueFlag entity', () => {
+describe('Point2Flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -16,7 +16,7 @@ describe('ValueFlag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('ValueFlag fields', () => {
+  describe('Point2Flag fields', () => {
     test('Should create', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const parent = await Object.assign(new PointEntity(), {id: 'London', directory}).save();

@@ -2,8 +2,8 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { Directory2flagEntity } from './directory2flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('DirectoryFlag entity', () => {
   let source: DataSource;

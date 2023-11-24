@@ -3,13 +3,14 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FlagEntity } from '../../model/flag.entity';
-import { Flag2stringEntity } from '../../model/flag2string.entity';
-import { Flag2flagEntity } from '../../model/flag2flag.entity';
-import { PropertyEntity } from '../../model/property.entity';
-import { LangEntity } from '../../model/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
+import { DocumentEntity } from '../../model/document.entity';
+import { Document2stringEntity } from '../../model/document2string.entity';
+import { Document2flagEntity } from '../../model/document2flag.entity';
 
-describe('FlagController', () => {
+describe('DocumentController', () => {
   let source;
   let app;
 
@@ -24,88 +25,88 @@ describe('FlagController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Flag fields', () => {
+  describe('Document fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
-        .get('/flag')
+        .get('/document')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
     });
 
-    test('Should get flag instance', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+    test('Should get document instance', async () => {
+      await new DocumentEntity().save();
 
       const res = await request(app.getHttpServer())
-        .get('/flag/ACTIVE')
+        .get('/document/1')
         .expect(200);
 
-      expect(res.body.id).toBe('ACTIVE');
+      expect(res.body.id).toBe(1);
     });
 
-    test('Should get flag with limit', async () => {
+    test('Should get document with limit', async () => {
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
+        await new DocumentEntity().save();
       }
 
       const res = await request(app.getHttpServer())
-        .get('/flag?limit=3')
+        .get('/document?limit=3')
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('flag_0');
-      expect(res.body[1].id).toBe('flag_1');
-      expect(res.body[2].id).toBe('flag_2');
+      expect(res.body[0].id).toBe(1);
+      expect(res.body[1].id).toBe(2);
+      expect(res.body[2].id).toBe(3);
     });
 
-    test('Should get flag with offset', async () => {
+    test('Should get document with offset', async () => {
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
+        await new DocumentEntity().save();
       }
 
       const res = await request(app.getHttpServer())
-        .get('/flag?offset=9')
+        .get('/document?offset=9')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('flag_9');
+      expect(res.body[0].id).toBe(10);
     });
   });
 
-  describe('Flag count', () => {
+  describe('Document count', () => {
     test('Should get empty count', async () => {
       const res = await request(app.getHttpServer())
-        .get('/flag/count')
+        .get('/document/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
     });
 
-    test('Should get flag count', async () => {
+    test('Should get document count', async () => {
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
+        await new DocumentEntity().save();
       }
 
       const res = await request(app.getHttpServer())
-        .get('/flag/count')
+        .get('/document/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 10});
     });
   });
 
-  describe('Flag with strings', () => {
+  describe('Document with strings', () => {
     test('Should get flag with strings', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await new DocumentEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Flag2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Document2stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/flag')
+        .get('/document')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('ACTIVE');
+      expect(res.body[0].id).toBe(1);
       expect(res.body[0].property).toHaveLength(1);
       expect(res.body[0].property[0].property).toBe('NAME');
       expect(res.body[0].property[0].lang).toBeUndefined();
@@ -113,58 +114,57 @@ describe('FlagController', () => {
     });
 
     test('Should get flag with lang strings', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await new DocumentEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Flag2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Document2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/flag')
+        .get('/document')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].property[0].lang).toBe('EN');
       expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].property[0].property).toBe('NAME');
     });
   });
 
-  describe('Flag with flags', () => {
+  describe('Document with flags', () => {
     test('Should get flag with flag', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await new DocumentEntity().save();
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-      await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
+      await Object.assign(new Document2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/flag')
+        .get('/document')
         .expect(200);
 
-      expect(list.body).toHaveLength(2);
+      expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
     });
   });
 
-  describe('Flag addition', () => {
+  describe('Document addition', () => {
     test('Should add item', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/flag')
-        .send({
-          id: 'NEW',
-        })
+        .post('/document')
+        .send({})
         .expect(201);
 
-      expect(inst.body.id).toBe('NEW');
+      expect(inst.body.id).toBe(1);
     });
   });
 
-  describe('Flag updating', () => {
+  describe('Document updating', () => {
     test('Should update flag', async () => {
-      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await request(app.getHttpServer())
-        .put('/flag/NEW')
-        .send({
-          id: 'NEW',
-        })
+      await new DocumentEntity().save();
+      const res = await request(app.getHttpServer())
+        .put('/document/1')
+        .send({id: 1})
         .expect(200);
+
+      expect(res.body.id).toBe(1);
     });
   });
 });

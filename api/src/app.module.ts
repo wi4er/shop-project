@@ -14,6 +14,8 @@ import * as cors from 'cors';
 import { APP_FILTER } from '@nestjs/core';
 import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
 import { SettingsModule } from './settings/settings.module';
+import { DocumentModule } from './document/document.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { SettingsModule } from './settings/settings.module';
     FormModule,
     ExceptionModule,
     SettingsModule,
+    DocumentModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [

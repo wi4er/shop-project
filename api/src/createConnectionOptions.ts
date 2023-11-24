@@ -56,6 +56,9 @@ import { Flag2flagEntity } from './settings/model/flag2flag.entity';
 import { LangEntity } from './settings/model/lang.entity';
 import { Lang2stringEntity } from './settings/model/lang2string.entity';
 import { Lang2flagEntity } from './settings/model/lang2flag.entity';
+import { DocumentEntity } from './document/model/document.entity';
+import { Document2stringEntity } from './document/model/document2string.entity';
+import { Document2flagEntity } from './document/model/document2flag.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -84,6 +87,7 @@ export function createConnectionOptions(): DataSourceOptions {
       FormFieldEntity, FormField2flagEntity, FormField2stringEntity,
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
       ResultEntity,
+      DocumentEntity, Document2flagEntity, Document2stringEntity,
     ],
     subscribers: [],
     migrations: [],

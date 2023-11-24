@@ -1,11 +1,11 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { LangEntity } from './lang.entity';
-import { Lang2flagEntity } from './lang2flag.entity';
-import { FlagEntity } from './flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
+import { DocumentEntity } from './document.entity';
+import { Document2flagEntity } from './document2flag.entity';
 
-describe('LangFlag entity', () => {
+describe('Document2Flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,12 +14,12 @@ describe('LangFlag entity', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe('LangFlag fields', () => {
+  describe('Document2Flag fields', () => {
     test('Should add item', async () => {
       const flag = await Object.assign(new FlagEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
+      const parent = await new DocumentEntity().save();
 
-      const inst = new Lang2flagEntity();
+      const inst = new Document2flagEntity();
       inst.flag = flag;
       inst.parent = parent;
       await inst.save();
@@ -32,23 +32,23 @@ describe('LangFlag entity', () => {
 
     test('Shouldn`t ad with same flag and parent', async () => {
       const flag = await Object.assign(new FlagEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
+      const parent = await new DocumentEntity().save();
 
-      const inst = new Lang2flagEntity();
+      const inst = new Document2flagEntity();
       inst.flag = flag;
       inst.parent = parent;
       await inst.save();
 
-      const again = new Lang2flagEntity();
+      const again = new Document2flagEntity();
       again.flag = flag;
       again.parent = parent;
       await expect(again.save()).rejects.toThrow();
     });
 
     test('Shouldn`t add without flag', async () => {
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
+      const parent = await new DocumentEntity().save();
 
-      const inst = new Lang2flagEntity();
+      const inst = new Document2flagEntity();
       inst.parent = parent;
       await expect(inst.save()).rejects.toThrow('flagId');
     });
@@ -56,29 +56,29 @@ describe('LangFlag entity', () => {
     test('Shouldn`t add without parent', async () => {
       const flag = await Object.assign(new FlagEntity(), {id: 'NAME'}).save();
 
-      const inst = new Lang2flagEntity();
+      const inst = new Document2flagEntity();
       inst.flag = flag;
       await expect(inst.save()).rejects.toThrow('parentId');
     });
   });
 
-  describe('Lang with flags', () => {
+  describe('Document with flags', () => {
     test('Should add item', async () => {
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
+      const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const flag = await Object.assign(new FlagEntity(), {id: `NAME_${i}`}).save();
 
-        const inst = new Lang2flagEntity();
+        const inst = new Document2flagEntity();
         inst.flag = flag;
         inst.parent = parent;
         await inst.save();
       }
 
-      const repo = source.getRepository(LangEntity);
+      const repo = source.getRepository(DocumentEntity);
 
       const item = await repo.findOne({
-        where: {id: 'UA'},
+        where: {id: 1},
         relations: {flag: true},
       });
 

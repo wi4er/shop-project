@@ -1,11 +1,12 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { LangEntity } from './lang.entity';
-import { Lang2stringEntity } from './lang2string.entity';
-import { PropertyEntity } from './property.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { DocumentEntity } from './document.entity';
+import { Document2stringEntity } from './document2string.entity';
 
-describe('Lang2string entity', () => {
+describe('Document2string entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,13 +15,13 @@ describe('Lang2string entity', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe('LangString fields', () => {
+  describe('Document2string fields', () => {
     test('Should create item', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
+      const parent = await new DocumentEntity().save();
 
-      const inst = new Lang2stringEntity();
+      const inst = new Document2stringEntity();
       inst.property = property;
       inst.parent = parent;
       inst.string = 'VALUE';
@@ -34,10 +35,10 @@ describe('Lang2string entity', () => {
     });
 
     test('Should create without lang', async () => {
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
+      const parent = await new DocumentEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
-      const inst = new Lang2stringEntity();
+      const inst = new Document2stringEntity();
       inst.property = property;
       inst.string = 'VALUE';
       inst.parent = parent;
@@ -48,48 +49,42 @@ describe('Lang2string entity', () => {
 
     test('Shouldn`t create without parent', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
-      const inst = new Lang2stringEntity();
+      const inst = new Document2stringEntity();
       inst.property = property;
       inst.string = 'VALUE';
-      inst.lang = lang;
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
     test('Shouldn`t create without property', async () => {
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
-      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      const parent = await new DocumentEntity().save();
 
-      const inst = new Lang2stringEntity();
+      const inst = new Document2stringEntity();
       inst.parent = parent;
       inst.string = 'VALUE';
-      inst.lang = lang;
 
       await expect(inst.save()).rejects.toThrow('propertyId');
     });
   });
 
-  describe('Lang with strings', () => {
+  describe('Document with strings', () => {
     test('Should create lang with strings', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
-      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const inst = new Lang2stringEntity();
+        const inst = new Document2stringEntity();
         inst.property = property;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
-        inst.lang = lang;
 
         await inst.save();
       }
 
-      const repo = source.getRepository(LangEntity);
+      const repo = source.getRepository(DocumentEntity);
       const inst = await repo.findOne({
-        where: {id: 'UA'},
+        where: {id: 1},
         relations: {string: true},
       });
 
@@ -98,46 +93,42 @@ describe('Lang2string entity', () => {
 
     test('Should delete string with lang', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new LangEntity(), {id: 'GR'}).save();
-      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const inst = new Lang2stringEntity();
+        const inst = new Document2stringEntity();
         inst.property = property;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
-        inst.lang = lang;
 
         await inst.save();
       }
 
-      const langRepo = source.getRepository(LangEntity);
-      await langRepo.delete({id: 'GR'});
+      const langRepo = source.getRepository(DocumentEntity);
+      await langRepo.delete({id: 1});
 
-      const strRepo = source.getRepository(Lang2stringEntity);
+      const strRepo = source.getRepository(Document2stringEntity);
       const list = await strRepo.find();
       expect(list).toHaveLength(0);
     });
 
     test('Should delete string with property', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new LangEntity(), {id: 'GR'}).save();
-      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const inst = new Lang2stringEntity();
+        const inst = new Document2stringEntity();
         inst.property = property;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
-        inst.lang = lang;
 
         await inst.save();
       }
 
-      const propRepo = source.getRepository(PropertyEntity);
-      await propRepo.delete({id: 'NAME'});
+      const propRepo = source.getRepository(DocumentEntity);
+      await propRepo.delete({id: 1});
 
-      const strRepo = source.getRepository(Lang2stringEntity);
+      const strRepo = source.getRepository(Document2stringEntity);
       const list = await strRepo.find();
       expect(list).toHaveLength(0);
     });

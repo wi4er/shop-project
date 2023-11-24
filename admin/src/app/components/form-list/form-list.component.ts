@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { FormFormComponent } from '../form-form/form-form.component';
-import { Form } from '../../model/form';
+import { Form } from '../../model/form/form';
 import { Observable } from 'rxjs';
 
 @Component({

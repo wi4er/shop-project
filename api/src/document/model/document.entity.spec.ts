@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { DirectoryEntity } from './directory.entity';
+import { DocumentEntity } from './document.entity';
 
-describe('Directory entity', () => {
+describe('Document entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,41 +13,31 @@ describe('Directory entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Directory fields', () => {
+  describe('Document fields', () => {
     test('Should create with id', async () => {
-      const inst = new DirectoryEntity();
-      inst.id = 'NAME';
+      const inst = await new DocumentEntity().save();
 
-      await inst.save();
-
-      expect(inst.id).toBe('NAME');
+      expect(inst.id).toBe(1);
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();
       expect(inst.deleted_at).toBeNull();
       expect(inst.version).toBe(1);
     });
 
-    test('Shouldn`t create with blank id', async () => {
-      const inst = new DirectoryEntity();
-      inst.id = '';
-
-      await expect(inst.save()).rejects.toThrow('id');
-    });
-
     test('Should get empty list', async () => {
-      const repo = source.getRepository(DirectoryEntity);
+      const repo = source.getRepository(DocumentEntity);
       const list = await repo.find();
 
       expect(list).toHaveLength(0);
     });
 
     test('Should get single element', async () => {
-      await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+      await new DocumentEntity().save();
 
-      const repo = source.getRepository(DirectoryEntity);
-      const item = await repo.findOne({where: {id: 'NAME'}});
+      const repo = source.getRepository(DocumentEntity);
+      const item = await repo.findOne({where: {id: 1}});
 
-      expect(item.id).toBe('NAME');
+      expect(item.id).toBe(1);
     });
   });
 });

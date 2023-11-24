@@ -1,4 +1,4 @@
-import { StringPropertyValue } from './string-property-value';
+import { StringPropertyValue } from '../string-property-value';
 
 export interface Form {
   id: string;

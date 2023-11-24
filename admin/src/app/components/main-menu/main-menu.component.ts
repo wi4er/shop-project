@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Block } from '../../model/content/block';
-import { Form } from '../../model/form';
+import { Form } from '../../model/form/form';
 
 interface MenuItem {
   title: string;
