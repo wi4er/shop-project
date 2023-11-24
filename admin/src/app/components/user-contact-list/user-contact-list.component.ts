@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { UserFormComponent } from '../user-form/user-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Observable } from 'rxjs';
-import { User } from '../../model/user/user';
+import { Contact } from '../../model/user/contact';
+import { UserContactFormComponent } from '../user-contact-form/user-contact-form.component';
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css'],
+  selector: 'app-user-contact-list',
+  templateUrl: './user-contact-list.component.html',
+  styleUrls: ['./user-contact-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserContactListComponent {
 
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
@@ -28,10 +28,10 @@ export class UserListComponent implements OnInit {
   }
 
   fetchList(args: string[] = []) {
-    this.apiService.fetchData<User>(ApiEntity.USER, args)
+    this.apiService.fetchData<Contact>(ApiEntity.CONTACT, args)
       .then(list => this.setData(list));
 
-    this.apiService.countData(ApiEntity.USER)
+    this.apiService.countData(ApiEntity.CONTACT)
       .then(count => this.totalCount = count);
   }
 
@@ -40,7 +40,7 @@ export class UserListComponent implements OnInit {
    * @param data
    * @private
    */
-  private setData(data: User[]) {
+  private setData(data: Contact[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -48,7 +48,7 @@ export class UserListComponent implements OnInit {
     for (const item of data) {
       const line: { [key: string]: string } = {
         'id': String(item.id),
-        login: item.login,
+        type: item.type,
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
@@ -63,7 +63,7 @@ export class UserListComponent implements OnInit {
 
   addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
-      UserFormComponent,
+      UserContactFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -75,7 +75,7 @@ export class UserListComponent implements OnInit {
 
   updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
-      UserFormComponent,
+      UserContactFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',

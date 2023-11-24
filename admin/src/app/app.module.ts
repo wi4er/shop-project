@@ -51,6 +51,8 @@ import { PermissionListComponent } from './components/permission-list/permission
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { UserContactListComponent } from './components/user-contact-list/user-contact-list.component';
 import { UserGroupListComponent } from './components/user-group-list/user-group-list.component';
+import { UserContactFormComponent } from './components/user-contact-form/user-contact-form.component';
+import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +89,8 @@ import { UserGroupListComponent } from './components/user-group-list/user-group-
     UserPageComponent,
     UserContactListComponent,
     UserGroupListComponent,
+    UserContactFormComponent,
+    UserGroupFormComponent,
   ],
   imports: [
     BrowserModule,

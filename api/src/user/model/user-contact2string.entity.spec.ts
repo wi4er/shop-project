@@ -43,7 +43,7 @@ describe('Contact2string entity', () => {
     });
   });
 
-  describe('UserContact with strings', () => {
+  describe('Contact with strings', () => {
     test('Should create contact with string', async () => {
       const repo = source.getRepository(UserContactEntity);
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
