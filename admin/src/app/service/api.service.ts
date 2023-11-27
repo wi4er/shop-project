@@ -8,6 +8,7 @@ export enum ApiEntity {
   PROPERTY = 'property',
   DIRECTORY = 'directory',
   FORM = 'form',
+  RESULT = 'result',
   LANG = 'lang',
   USER = 'user',
   CONTACT = 'contact',
@@ -77,7 +78,7 @@ export class ApiService {
    *
    * @param entity
    */
-  countData(entity: ApiEntity) {
+  countData(entity: ApiEntity, args?: string[]) {
     const url = [
       'http://localhost:3001',
       entity,

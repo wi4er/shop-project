@@ -1,1 +1,13 @@
-<p>result-list works!</p>
+<app-common-list
+  [onAddItem]="addItem.bind(this)"
+  [onUpdateItem]="updateItem.bind(this)"
+  [toggleFlag]="toggleFlag.bind(this)"
+  [deleteList]="deleteList.bind(this)"
+  [deleteItem]="deleteItem.bind(this)"
+  [fetchList]="fetchList.bind(this)"
+  [activeFlags]="activeFlags"
+  [columns]="columns"
+  [list]="list"
+  [totalCount]="totalCount"
+  entity="Forms"
+></app-common-list>
