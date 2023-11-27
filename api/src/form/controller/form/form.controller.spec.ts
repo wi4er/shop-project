@@ -4,11 +4,11 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { FormEntity } from '../../model/form.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
-import { LangEntity } from '../../../lang/model/lang.entity';
 import { Form2stringEntity } from '../../model/form2string.entity';
 import { Form2flagEntity } from '../../model/form2flag.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('FormController', () => {
   let source;

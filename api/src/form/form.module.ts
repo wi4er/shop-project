@@ -12,6 +12,8 @@ import { FormService } from './service/form/form.service';
 import { PropertyEntity } from '../settings/model/property.entity';
 import { LangEntity } from '../settings/model/lang.entity';
 import { FlagEntity } from '../settings/model/flag.entity';
+import { ResultController } from './controller/result/result.controller';
+import { ResultEntity } from './model/result.entity';
 
 @Module({
   imports: [
@@ -19,11 +21,12 @@ import { FlagEntity } from '../settings/model/flag.entity';
       FlagEntity,
       FormEntity, Form2flagEntity, Form2stringEntity,
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
+      ResultEntity,
       PropertyEntity,
       LangEntity,
     ]),
   ],
-  controllers: [FormController],
+  controllers: [FormController, ResultController],
   providers: [FormService],
 })
 export class FormModule {
