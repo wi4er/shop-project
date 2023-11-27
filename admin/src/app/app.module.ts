@@ -55,6 +55,7 @@ import { UserContactFormComponent } from './components/user-contact-form/user-co
 import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
 import { DocumentListComponent } from './components/document-list/document-list.component';
 import { DocumentFormComponent } from './components/document-form/document-form.component';
+import { DocumentPageComponent } from './components/document-page/document-page.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { DocumentFormComponent } from './components/document-form/document-form.
     UserGroupFormComponent,
     DocumentListComponent,
     DocumentFormComponent,
+    DocumentPageComponent,
   ],
   imports: [
     BrowserModule,

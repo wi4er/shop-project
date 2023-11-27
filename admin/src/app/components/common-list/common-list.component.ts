@@ -104,6 +104,11 @@ export class CommonListComponent implements OnInit {
   onUpdateItem(id: number): Observable<undefined> {
   }
 
+  @Input()
+  onNext(id: string): void {
+    console.log('>>>>>>>>>>>>>>>');
+  }
+
   updateItem(id: number) {
     this.onUpdateItem(id)
       .subscribe(() => this.refreshData());

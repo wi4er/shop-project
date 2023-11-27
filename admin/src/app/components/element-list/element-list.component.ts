@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { Element } from '../../model/content/element';
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   templateUrl: './element-list.component.html',
   styleUrls: ['./element-list.component.css'],
 })
-export class ElementListComponent implements OnInit {
+export class ElementListComponent implements OnChanges {
 
   @Input()
   blockId: number = 0;
@@ -26,8 +26,12 @@ export class ElementListComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-    console.log(this.blockId);
+  ngOnChanges(changes: SimpleChanges) {
+    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, [`filter[block]=${this.blockId}`])
+      .then(list => this.setData(list));
+
+    this.apiService.countData(ApiEntity.ELEMENT)
+      .then(count => this.totalCount = count);
   }
 
   fetchList(args: string[] = []) {

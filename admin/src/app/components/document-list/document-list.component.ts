@@ -4,6 +4,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { Observable } from 'rxjs';
 import { Document } from '../../model/document';
 import { DocumentFormComponent } from '../document-form/document-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-document-list',
@@ -20,6 +21,7 @@ export class DocumentListComponent {
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
+    private router: Router,
   ) {
   }
 
@@ -61,7 +63,7 @@ export class DocumentListComponent {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['select', 'action', 'moveto', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {
@@ -87,6 +89,13 @@ export class DocumentListComponent {
     );
 
     return dialog.afterClosed();
+  }
+
+  goNext(id: string) {
+    this.router.navigate(
+      ['/document', id],
+      {},
+    );
   }
 
   toggleFlag(id: number, flag: string) {

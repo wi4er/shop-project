@@ -4,6 +4,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { FormFormComponent } from '../form-form/form-form.component';
 import { Form } from '../../model/form/form';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-list',
@@ -20,6 +21,7 @@ export class FormListComponent {
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
+    private router: Router,
   ) {
   }
 
@@ -61,7 +63,7 @@ export class FormListComponent {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['select', 'action', 'moveto', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {
@@ -87,6 +89,13 @@ export class FormListComponent {
     );
 
     return dialog.afterClosed();
+  }
+
+  goNext(id: string) {
+    this.router.navigate(
+      ['/form', id],
+      {},
+    );
   }
 
   toggleFlag(id: number, flag: string) {

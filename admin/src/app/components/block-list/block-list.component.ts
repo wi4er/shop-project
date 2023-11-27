@@ -4,6 +4,7 @@ import { BlockFormComponent } from '../block-form/block-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Block } from '../../model/content/block';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-block-list',
@@ -20,6 +21,7 @@ export class BlockListComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
+    private router: Router,
   ) {
   }
 
@@ -61,7 +63,7 @@ export class BlockListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['select', 'action', 'moveto', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {
@@ -88,6 +90,14 @@ export class BlockListComponent implements OnInit {
 
     return dialog.afterClosed();
   }
+
+  goNext(id: string) {
+    this.router.navigate(
+      ['/content', id],
+      {},
+    );
+  }
+
 
   toggleFlag(id: number, flag: string) {
   }
