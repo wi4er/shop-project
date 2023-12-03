@@ -55,8 +55,6 @@ describe('String field entity', () => {
         where: {id: 'LEED'},
         relations: {asString: true},
       });
-
-      console.log(inst);
     });
   });
 });

@@ -3,11 +3,11 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FlagEntity } from '../../../flag/model/flag.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
 import { LangEntity } from '../../model/lang.entity';
 import { Lang2stringEntity } from '../../model/lang2string.entity';
 import { Lang2flagEntity } from '../../model/lang2flag.entity';
+import { PropertyEntity } from '../../model/property.entity';
+import { FlagEntity } from '../../model/flag.entity';
 
 describe('LangController', () => {
   let source;

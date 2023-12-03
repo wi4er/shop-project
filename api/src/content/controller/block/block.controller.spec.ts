@@ -4,13 +4,13 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
 import { Block2stringEntity } from '../../model/block2string.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Block2flagEntity } from '../../model/block2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { Block2pointEntity } from '../../model/block2point.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('BlockController', () => {
   let source;
@@ -173,7 +173,94 @@ describe('BlockController', () => {
         .send({})
         .expect(201);
 
-      expect(inst.body['id']).toBe(1);
+      expect(inst.body.id).toBe(1);
+    });
+
+    test('Should add with strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/block')
+        .send({
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/block')
+        .send({
+          flag: ['ACTIVE'],
+        })
+        .expect(201);
+
+      expect(inst.body.flag).toEqual(['ACTIVE']);
+    });
+  });
+
+  describe('Content block update', () => {
+    test('Should add block', async () => {
+      await new BlockEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/block/1')
+        .send({})
+        .expect(200);
+
+      expect(inst.body.id).toBe(1);
+    });
+
+    test('Should add strings', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/block/1')
+        .send({
+          property: [
+            {property: 'NAME', string: 'John'},
+          ],
+        })
+        .expect(200);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('John');
+    });
+
+    test('Should add flags', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/block/1')
+        .send({
+          flag: ['NEW'],
+        })
+        .expect(200);
+
+      expect(inst.body.flag).toEqual(['NEW']);
+    });
+  });
+
+  describe('Content block deletion', () => {
+    test('Should delete block', async () => {
+      await new BlockEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .delete('/block/1')
+        .expect(200);
+
+      expect(inst.body).toEqual([1]);
     });
   });
 });

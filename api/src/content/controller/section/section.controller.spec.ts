@@ -5,13 +5,13 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
 import { SectionEntity } from '../../model/section.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
 import { Section2stringEntity } from '../../model/section2string.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Section2flagEntity } from '../../model/section2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { Section2pointEntity } from '../../model/section2point.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('SectionController', () => {
   let source;
@@ -252,11 +252,71 @@ describe('SectionController', () => {
         .send({block: 1, parent: 1})
         .expect(201);
 
-      console.log(inst.body);
-
       expect(inst.body['id']).toBe(2);
       expect(inst.body['block']).toBe(1);
       expect(inst.body['parent']).toBe(1);
+    });
+
+    test('Should add with strings', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({
+          block: 1,
+          property: [
+            {property: 'NAME', string: 'VALUE'}
+          ]
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Shouldn`t add with wrong property', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      await request(app.getHttpServer())
+        .post('/section')
+        .send({
+          block: 1,
+          property: [
+            {property: 'WRONG', string: 'VALUE'}
+          ]
+        })
+        .expect(400);
+    });
+
+    test('Should add with flags', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({
+          block: 1,
+          flag: ['ACTIVE'],
+        })
+        .expect(201);
+
+      expect(inst.body.flag).toEqual(['ACTIVE']);
+    });
+
+    test('Shouldn`t add with wrong flags', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      await request(app.getHttpServer())
+        .post('/section')
+        .send({
+          block: 1,
+          flag: ['WRONG'],
+        })
+        .expect(400);
     });
 
     test('Should add without parent', async () => {
@@ -284,6 +344,34 @@ describe('SectionController', () => {
         .post('/section')
         .send({block: 2})
         .expect(400);
+    });
+  });
+
+  describe('Section updating', () => {
+    test('Should update item', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/section/1')
+        .send({block: 1})
+        .expect(200);
+
+      expect(inst.body.id).toEqual(1);
+    });
+
+    test('Should add parent', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block}).save();
+      await Object.assign(new SectionEntity(), {block}).save();
+
+      const inst =await request(app.getHttpServer())
+        .put('/section/1')
+        .send({block: 1, parent: 2})
+        .expect(200);
+
+      expect(inst.body.id).toBe(1);
+      expect(inst.body.parent).toBe(2);
     });
   });
 });

@@ -1,24 +1,34 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
-import { ElementService } from '../../service/element/element.service';
 import { ElementInput } from '../../input/element.input';
 import { ElementFilterSchema } from '../../schema/element-filter.schema';
 import { ElementOrderSchema } from '../../schema/element-order.schema';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { ElementInsertOperation } from '../../operation/element-insert.operation';
+import { ElementUpdateOperation } from '../../operation/element-update.operation';
+import { ElementDeleteOperation } from '../../operation/element-delete.operation';
 
 @ApiTags('Content')
 @Controller('element')
 export class ElementController {
 
+  relations = {
+    string: {property: true, lang: true},
+    section: true,
+    flag: {flag: true},
+    point: {point: {directory: true}, property: true},
+    block: true,
+  };
+
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(ElementEntity)
     private elementRepo: Repository<ElementEntity>,
-    private elementService: ElementService,
   ) {
   }
 
@@ -108,13 +118,7 @@ export class ElementController {
     return this.elementRepo.find({
       where: filter ? this.toWhere(filter) : null,
       order: sort ? this.toOrder(sort) : null,
-      relations: {
-        string: {property: true, lang: true},
-        section: true,
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-        block: true,
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -137,13 +141,7 @@ export class ElementController {
   ) {
     return this.elementRepo.findOne({
       where: {id},
-      relations: {
-        string: {property: true, lang: true},
-        section: true,
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-        block: true,
-      },
+      relations: this.relations,
     }).then(this.toView);
   }
 
@@ -152,47 +150,39 @@ export class ElementController {
     @Body()
       input: ElementInput,
   ) {
-    return this.elementService.insert(input)
-      .then(res => this.elementRepo.findOne({
-        where: {id: res.id},
-        relations: {
-          string: {property: true},
-          flag: {flag: true},
-          point: {point: {directory: true}, property: true},
-          block: true,
-        },
-      }))
-      .then(res => this.toView(res))
-      .catch(err => {
-        WrongDataException.assert(err.column !== 'blockId', 'Wrong block id!');
-        throw err;
-      });
+    return this.entityManager.transaction(
+      trans => new ElementInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(ElementEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
-  @Put()
-  async updateItem(
+  @Put(':id')
+  updateItem(
+    @Param('id')
+      elementId: number,
     @Body()
       input: ElementInput,
   ) {
-    return this.elementService.update(input)
-      .then(res => this.elementRepo.findOne({
-        where: {id: res.id},
-        relations: {
-          string: {property: true},
-          flag: {flag: true},
-          point: {point: {directory: true}, property: true},
-          block: true,
-        },
-      }))
-      .then(res => this.toView(res));
+    return this.entityManager.transaction(
+      trans => new ElementUpdateOperation(trans).save(elementId, input)
+        .then(id => trans.getRepository(ElementEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Delete('/:id')
   async deleteItem(
     @Param('id')
-      id: string,
+      id: number,
   ): Promise<number[]> {
-    return this.elementService.delete([+id]);
+    return this.entityManager.transaction(
+      trans => new ElementDeleteOperation(trans).save([id])
+    );
   }
 
 }

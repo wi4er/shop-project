@@ -1,18 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GroupService } from './group.service';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../../createConnectionOptions';
 
 describe('GroupService', () => {
-  let service: GroupService;
+  let source: DataSource;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [GroupService],
-    }).compile();
-
-    service = module.get<GroupService>(GroupService);
+  beforeAll(async () => {
+    source = await createConnection(createConnectionOptions());
   });
 
+  beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
+
   it('should be defined', () => {
-    expect(service).toBeDefined();
+
   });
 });

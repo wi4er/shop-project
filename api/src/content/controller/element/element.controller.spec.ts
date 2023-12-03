@@ -5,15 +5,15 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
 import { ElementEntity } from '../../model/element.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
 import { Element2stringEntity } from '../../model/element2string.entity';
 import { Element2flagEntity } from '../../model/element2flag.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { Element2pointEntity } from '../../model/element2point.entity';
 import { SectionEntity } from '../../model/section.entity';
 import { Element2sectionEntity } from '../../model/element2section.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('ElementController', () => {
   let source;
@@ -424,6 +424,55 @@ describe('ElementController', () => {
         .send({block: 2})
         .expect(400);
     });
+
+    test('Should add with strings', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({
+          block: 1,
+          property: [
+            {property: 'NAME', string: 'VALUE'}
+          ]
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Shouldn`t add with wrong property', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({
+          block: 1,
+          property: [
+            {property: 'WRONG', string: 'VALUE'}
+          ]
+        })
+        .expect(400);
+    });
+
+    test('Should add with flag', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({
+          block: 1,
+          flag: ['ACTIVE'],
+        })
+        .expect(201);
+
+      expect(inst.body.flag).toEqual(['ACTIVE']);
+    });
   });
 
   describe('Content element update', () => {
@@ -432,7 +481,7 @@ describe('ElementController', () => {
       await Object.assign(new ElementEntity(), {block: 1}).save();
 
       const item = await request(app.getHttpServer())
-        .put('/element')
+        .put('/element/1')
         .send({id: 1})
         .expect(200);
 
@@ -441,13 +490,33 @@ describe('ElementController', () => {
       expect(item.body['version']).toBe(1);
     });
 
-    test('Should update with property', async () => {
+    test('Shouldn`t change with wrong id', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
+
+      await request(app.getHttpServer())
+        .put('/element/10')
+        .send({id: 20})
+        .expect(404);
+    });
+
+    test('Shouldn`t update without id', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/element')
+        .send({id: 1})
+        .expect(404);
+    });
+
+    test('Should add string', async () => {
       await new BlockEntity().save();
       await Object.assign(new ElementEntity(), {block: 1}).save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       const item = await request(app.getHttpServer())
-        .put('/element')
+        .put('/element/1')
         .send({
           id: 1,
           property: [{
@@ -460,6 +529,22 @@ describe('ElementController', () => {
       expect(item.body.property).toHaveLength(1);
       expect(item.body.property[0]['string']).toBe('VALUE');
       expect(item.body.property[0]['property']).toBe('NAME');
+    });
+
+    test('Should add flag', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/element/1')
+        .send({
+          id: 1,
+          flag: ['ACTIVE'],
+        })
+        .expect(200);
+
+      expect(item.body.flag).toEqual(['ACTIVE']);
     });
   });
 

@@ -35,7 +35,6 @@ export class UserUpdateOperation {
       await new PropertyUpdateOperation(trans, User2stringEntity).save(this.beforeItem, input);
       await new FlagUpdateOperation(trans, User2flagEntity).save(this.beforeItem, input);
       await new User2userContactUpdateOperation(trans).save(this.beforeItem, input);
-
     });
 
     return userRepo.findOne({

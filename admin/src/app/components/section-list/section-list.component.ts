@@ -4,6 +4,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { Section } from '../../model/content/section';
 import { SectionFormComponent } from '../section-form/section-form.component';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-section-list',
@@ -29,8 +30,8 @@ export class SectionListComponent implements OnInit {
   ngOnInit() {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Section>(ApiEntity.SECTION, [...args, `filter[block]=${this.blockId}`])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Section>(ApiEntity.SECTION, {...args, ['filter[block]=']: this.blockId})
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.SECTION)

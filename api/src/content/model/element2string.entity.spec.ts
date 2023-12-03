@@ -3,8 +3,8 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { ElementEntity } from './element.entity';
 import { Element2stringEntity } from './element2string.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { BlockEntity } from './block.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('ElementString entity', () => {
   let source: DataSource;

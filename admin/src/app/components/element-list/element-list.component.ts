@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { Element } from '../../model/content/element';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-element-list',
@@ -27,18 +28,15 @@ export class ElementListComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, [`filter[block]=${this.blockId}`])
-      .then(list => this.setData(list));
-
-    this.apiService.countData(ApiEntity.ELEMENT)
-      .then(count => this.totalCount = count);
+    console.log(changes);
+    // this.fetchList();
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, [...args, `filter[block]=${this.blockId}`])
+  fetchList(args: StringifiableRecord = {}) {
+    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, {...args, ['filter[block]']: this.blockId})
       .then(list => this.setData(list));
 
-    this.apiService.countData(ApiEntity.ELEMENT)
+    this.apiService.countData(ApiEntity.ELEMENT, {...args, ['filter[block]']: this.blockId})
       .then(count => this.totalCount = count);
   }
 

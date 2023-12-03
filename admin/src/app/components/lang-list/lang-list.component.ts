@@ -4,6 +4,7 @@ import { Lang } from '../../model/settings/lang';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { LangFormComponent } from '../lang-form/lang-form.component';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-lang-list',
@@ -26,8 +27,8 @@ export class LangListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Lang>(ApiEntity.LANG, [...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Lang>(ApiEntity.LANG, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.LANG)

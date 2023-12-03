@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FormFormComponent } from '../form-form/form-form.component';
 import { Result } from '../../model/form/result';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-result-list',
@@ -32,7 +33,7 @@ export class ResultListComponent {
       .subscribe(value => {
         this.formId = value.get('id') ?? '';
 
-        this.apiService.fetchData<Result>(ApiEntity.RESULT, [`filter[form]=${this.formId}`])
+        this.apiService.fetchData<Result>(ApiEntity.RESULT, {['filter[form]']: this.formId})
           .then(list => this.setData(list));
 
         this.apiService.countData(ApiEntity.RESULT)
@@ -40,8 +41,8 @@ export class ResultListComponent {
       });
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Result>(ApiEntity.RESULT, [`filter[form]=${this.formId}`, ...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Result>(ApiEntity.RESULT, {['filter[form]']: this.formId, ...args})
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.RESULT)
@@ -68,7 +69,7 @@ export class ResultListComponent {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'moveto', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {

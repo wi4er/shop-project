@@ -3,12 +3,12 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FlagEntity } from '../../../flag/model/flag.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
-import { LangEntity } from '../../../lang/model/lang.entity';
 import { UserGroupEntity } from '../../model/user-group.entity';
 import { UserGroup2stringEntity } from '../../model/user-group2string.entity';
 import { UserGroup2flagEntity } from '../../model/user-group2flag.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('GroupController', () => {
   let source;

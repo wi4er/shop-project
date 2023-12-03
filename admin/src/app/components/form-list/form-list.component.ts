@@ -5,6 +5,7 @@ import { FormFormComponent } from '../form-form/form-form.component';
 import { Form } from '../../model/form/form';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-form-list',
@@ -28,11 +29,11 @@ export class FormListComponent {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Form>(ApiEntity.FORM, [...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Form>(ApiEntity.FORM, args)
       .then(list => this.setData(list));
 
-    this.apiService.countData(ApiEntity.FORM)
+    this.apiService.countData(ApiEntity.FORM, args)
       .then(count => this.totalCount = count);
   }
 

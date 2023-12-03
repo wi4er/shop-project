@@ -5,6 +5,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { Flag } from '../../model/settings/flag';
 import { Property } from '../../model/settings/property';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-common-list',
@@ -54,10 +55,10 @@ export class CommonListComponent implements OnInit {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
 
-    this.fetchList([
-      `limit=${this.pageSize}`,
-      `offset=${this.currentPage * this.pageSize}`,
-    ]);
+    this.fetchList({
+      limit: this.pageSize,
+      offset: this.currentPage * this.pageSize,
+    });
   }
 
   constructor(
@@ -72,21 +73,23 @@ export class CommonListComponent implements OnInit {
         .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
       this.apiService.fetchData<Property>(ApiEntity.PROPERTY)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
-    ]).then(() => this.fetchList([
-      `limit=${this.pageSize}`,
-      `offset=${this.currentPage * this.pageSize}`,
-    ]));
+    ]).then(() => {
+      this.fetchList({
+        limit: this.pageSize,
+        offset: this.currentPage * this.pageSize,
+      })
+    });
   }
 
   refreshData() {
-    this.fetchList([
-      `limit=${this.pageSize}`,
-      `offset=${this.currentPage * this.pageSize}`,
-    ]);
+    this.fetchList({
+      limit: this.pageSize,
+      offset: this.currentPage * this.pageSize,
+    });
   }
 
   @Input()
-  fetchList(args: string[] = []) {
+  fetchList(query: StringifiableRecord) {
   }
 
   @Input()

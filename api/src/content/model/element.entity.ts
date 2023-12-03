@@ -15,6 +15,7 @@ import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Element2flagEntity } from './element2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
+import { ElementPermissionEntity } from './element-permission.entity';
 
 @Entity('content-element')
 export class ElementEntity
@@ -69,5 +70,12 @@ export class ElementEntity
     point => point.parent,
   )
   point: Element2pointEntity[];
+
+
+  @OneToMany(
+    type => ElementPermissionEntity,
+    permission => permission.element,
+  )
+  permission: ElementPermissionEntity[];
 
 }

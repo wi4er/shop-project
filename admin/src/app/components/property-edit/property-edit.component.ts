@@ -22,6 +22,10 @@ export class PropertyEditComponent {
   edit: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
 
   addEdit(id: string, lang: string) {
+    if (!this.edit[id][lang]) this.edit[id][lang] = [];
+
+    console.log(this.edit[id]);
+
     this.edit[id][lang].push({
       value: '',
       error: '',

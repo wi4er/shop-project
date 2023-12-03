@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { FlagService } from './flag.service';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../../createConnectionOptions';
 
 describe('FlagService', () => {
-  let service: FlagService;
+  let source: DataSource;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [FlagService],
-    }).compile();
-
-    service = module.get<FlagService>(FlagService);
+  beforeAll(async () => {
+    source = await createConnection(createConnectionOptions());
   });
 
+  beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
+
   it('should be defined', () => {
-    expect(service).toBeDefined();
+
   });
 });

@@ -39,8 +39,8 @@ export class Element2stringEntity
     () => ElementEntity,
     element => element.string,
     {
-      nullable: false,
       onDelete: 'CASCADE',
+      nullable: false,
     },
   )
   parent: ElementEntity;

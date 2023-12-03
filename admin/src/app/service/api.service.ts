@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import qs from 'query-string';
+import { StringifiableRecord } from 'query-string/base';
 
 export enum ApiEntity {
   BLOCK = 'block',
@@ -21,22 +23,21 @@ export enum ApiEntity {
 })
 export class ApiService {
 
+  apiUrl = 'http://localhost:3001';
+
   constructor() {
   }
 
   /**
    *
    * @param entity
-   * @param args
+   * @param query
    */
-  fetchData<T>(entity: ApiEntity, args?: string[]): Promise<T[]> {
-    const url = [
-      [
-        'http://localhost:3001',
-        entity,
-      ].join('/'),
-      args?.join('&') || undefined,
-    ].join('?');
+  fetchData<T>(entity: ApiEntity, query?: StringifiableRecord): Promise<T[]> {
+    const url = qs.stringifyUrl({
+      url: [this.apiUrl, entity].join('/'),
+      query: query,
+    });
 
     const req = fetch(url)
       .then(res => {
@@ -55,21 +56,14 @@ export class ApiService {
    * @param id
    */
   fetchItem<T>(entity: ApiEntity, id: string): Promise<T> {
-    const url = [
-      [
-        'http://localhost:3001',
-        entity,
-        id,
-      ].join('/'),
-    ].join('?');
+    const req = fetch(
+      [this.apiUrl, entity, id].join('/')
+    ).then(res => {
+      if (!res.ok) throw new Error('Api not found!');
+      return res.json();
+    });
 
-    const req = fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      });
-
-    req.catch(err => console.log(err));
+    req.catch(err => console.error(err));
 
     return req;
   }
@@ -77,13 +71,13 @@ export class ApiService {
   /**
    *
    * @param entity
+   * @param query
    */
-  countData(entity: ApiEntity, args?: string[]) {
-    const url = [
-      'http://localhost:3001',
-      entity,
-      'count',
-    ].join('/');
+  countData(entity: ApiEntity, query?: StringifiableRecord) {
+    const url = qs.stringifyUrl({
+      url: [this.apiUrl, entity, 'count'].join('/'),
+      query: query,
+    });
 
     const req = fetch(url)
       .then(res => {
@@ -104,12 +98,30 @@ export class ApiService {
    */
   postData<T>(entity: ApiEntity, item: T): Promise<Response> {
     const url = [
-      'http://localhost:3001',
+      this.apiUrl,
       entity,
     ].join('/');
 
     const req = fetch(url, {
       method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    }).then();
+
+    return req;
+  }
+
+  putData<T>(entity: ApiEntity, id: string | number, item: T): Promise<Response> {
+    const url = [
+      this.apiUrl,
+      entity,
+      id.toString(),
+    ].join('/');
+
+    const req = fetch(url, {
+      method: 'PUT',
       headers: {
         'content-type': 'application/json',
       },

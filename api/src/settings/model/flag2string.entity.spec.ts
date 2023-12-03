@@ -2,8 +2,8 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { FlagEntity } from './flag.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { Flag2stringEntity } from './flag2string.entity';
+import { PropertyEntity } from './property.entity';
 
 describe('Flag property entity', () => {
   let source: DataSource;

@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { BlockEntity } from './block.entity';
 import { Section2stringEntity } from './section2string.entity';
 import { SectionEntity } from './section.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('SectionString entity', () => {
   let source: DataSource;

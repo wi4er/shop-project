@@ -5,6 +5,7 @@ import { User } from '../../model/user/user';
 import { Observable } from 'rxjs';
 import { Group } from '../../model/user/group';
 import { UserGroupFormComponent } from '../user-group-form/user-group-form.component';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-user-group-list',
@@ -28,7 +29,7 @@ export class UserGroupListComponent {
 
   }
 
-  fetchList(args: string[] = []) {
+  fetchList(args: StringifiableRecord) {
     this.apiService.fetchData<Group>(ApiEntity.GROUP, args)
       .then(list => this.setData(list));
 

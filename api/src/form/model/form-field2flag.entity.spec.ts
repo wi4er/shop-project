@@ -2,9 +2,9 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { FormEntity } from './form.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { FormField2flagEntity } from './form-field2flag.entity';
 import { FormFieldEntity } from './form-field.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('FormField2flag entity', () => {
   let source: DataSource;

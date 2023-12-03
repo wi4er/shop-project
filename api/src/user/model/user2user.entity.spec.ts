@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { UserEntity } from './user.entity';
 import { User2userEntity } from "./user2user.entity";
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('User user entity', () => {
   let source: DataSource;

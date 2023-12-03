@@ -1,19 +1,29 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
 import { SectionFilterInput } from '../../input/section-filter.input';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { SectionService } from '../../service/section/section.service';
 import { SectionInput } from '../../input/section.input';
+import { SectionInsertOperation } from '../../operation/section-insert.operation';
+import { SectionUpdateOperation } from '../../operation/section-update.operation';
+import { SectionDeleteOperation } from '../../operation/section-delete.operation';
 
 @Controller('section')
 export class SectionController {
 
+  relations = {
+    parent: true,
+    string: {property: true},
+    block: true,
+    flag: {flag: true},
+    point: {point: {directory: true}, property: true},
+  };
+
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(SectionEntity)
     private sectionRepo: Repository<SectionEntity>,
-    private sectionService: SectionService,
   ) {
   }
 
@@ -62,13 +72,7 @@ export class SectionController {
 
     return this.sectionRepo.find({
       where,
-      relations: {
-        parent: true,
-        string: {property: true},
-        block: true,
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -97,37 +101,49 @@ export class SectionController {
   ) {
     return this.sectionRepo.findOne({
       where: {id},
-      relations: {
-        parent: true,
-        string: {property: true},
-        block: true,
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
     }).then(this.toView);
   }
+
 
   @Post()
   addItem(
     @Body()
       input: SectionInput,
   ) {
-    return this.sectionService.insert(input)
-      .then(res => this.sectionRepo.findOne({
-        where: {id: res.id},
-        relations: {
-          string: {property: true},
-          flag: {flag: true},
-          point: {point: {directory: true}, property: true},
-          block: true,
-          parent: true,
-        },
-      }))
-      .then(res => this.toView(res))
-      .catch(err => {
-        WrongDataException.assert(err.column !== 'blockId', 'Wrong block id!');
-        throw err;
-      });
+    return this.entityManager.transaction(
+      trans => new SectionInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(SectionEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Put(':id')
+  updateItem(
+    @Param('id')
+      sectionId: number,
+    @Body()
+      input: SectionInput,
+  ) {
+    return this.entityManager.transaction(
+      trans => new SectionUpdateOperation(trans).save(sectionId, input)
+        .then(id => trans.getRepository(SectionEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete('/:id')
+  deleteItem(
+    @Param('id')
+      id: number,
+  ): Promise<number[]> {
+    return this.entityManager.transaction(
+      trans => new SectionDeleteOperation(trans).save([id])
+    );
   }
 
 }

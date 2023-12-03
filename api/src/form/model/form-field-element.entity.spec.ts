@@ -23,8 +23,6 @@ describe('Element field entity', () => {
 
       expect(inst.id).toBe(1);
       expect(inst.field.id).toBe('ELEMENT');
-
-      console.log(inst);
     });
   });
 

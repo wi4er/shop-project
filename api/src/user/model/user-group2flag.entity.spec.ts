@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { FlagEntity } from '../../flag/model/flag.entity';
 import { UserGroupEntity } from './user-group.entity';
 import { UserGroup2flagEntity } from './user-group2flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('UserGroup 2 flag entity', () => {
   let source: DataSource;

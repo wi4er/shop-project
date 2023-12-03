@@ -1,19 +1,28 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { BlockEntity } from '../../model/block.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ApiTags } from '@nestjs/swagger';
-import { BlockService } from '../../service/block/block.service';
 import { BlockInput } from '../../input/block.input';
+import { BlockInsertOperation } from '../../operation/block-insert.operation';
+import { BlockUpdateOperation } from '../../operation/block-update.operation';
+import { BlockDeleteOperation } from '../../operation/block-delete.operation';
 
 @ApiTags('Content')
 @Controller('block')
 export class BlockController {
 
+  relations = {
+    string: {property: true},
+    flag: {flag: true},
+    point: {point: {directory: true}, property: true},
+  };
+
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(BlockEntity)
     private blockRepo: Repository<BlockEntity>,
-    private blockService: BlockService,
   ) {
   }
 
@@ -47,11 +56,7 @@ export class BlockController {
       limit?: number,
   ) {
     return this.blockRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -69,11 +74,7 @@ export class BlockController {
   ) {
     return this.blockRepo.findOne({
       where: {id},
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
     }).then(this.toView);
   }
 
@@ -82,19 +83,39 @@ export class BlockController {
     @Body()
       input: BlockInput,
   ) {
-    return this.blockService.insert(input)
-      .then(res => this.blockRepo.findOne({
-        where: {id: res.id},
-        relations: {
-          string: {property: true},
-          flag: {flag: true},
-          point: {point: {directory: true}, property: true},
-        },
-      }))
-      .then(res => this.toView(res))
-      .catch(err => {
-        throw err;
-      });
+    return this.entityManager.transaction(
+      trans => new BlockInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(BlockEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Put(':id')
+  updateItem(
+    @Param('id')
+      blockId: number,
+    @Body()
+      input: BlockInput,
+  ) {
+    return this.entityManager.transaction(
+      trans => new BlockUpdateOperation(trans).save(blockId, input)
+        .then(id => trans.getRepository(BlockEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete('/:id')
+  async deleteItem(
+    @Param('id')
+      id: number,
+  ): Promise<number[]> {
+    return this.entityManager.transaction(
+      trans => new BlockDeleteOperation(trans).save([id])
+    );
   }
 
 }

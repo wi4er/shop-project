@@ -4,6 +4,7 @@ import { DirectoryFormComponent } from '../directory-form/directory-form.compone
 import { Directory } from '../../model/directory';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-directory-list',
@@ -26,8 +27,8 @@ export class DirectoryListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Directory>(ApiEntity.DIRECTORY, [...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Directory>(ApiEntity.DIRECTORY, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.DIRECTORY)

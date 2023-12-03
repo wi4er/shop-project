@@ -59,6 +59,8 @@ import { Lang2flagEntity } from './settings/model/lang2flag.entity';
 import { DocumentEntity } from './document/model/document.entity';
 import { Document2stringEntity } from './document/model/document2string.entity';
 import { Document2flagEntity } from './document/model/document2flag.entity';
+import { ElementPermissionEntity } from './content/model/element-permission.entity';
+import { SectionPermissionEntity } from './content/model/section-permission.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -80,8 +82,8 @@ export function createConnectionOptions(): DataSourceOptions {
       PointEntity, Point2stringEntity, Point2flagEntity, Point2pointEntity,
       FlagEntity, Flag2stringEntity, Flag2flagEntity,
       LangEntity, Lang2stringEntity, Lang2flagEntity,
-      ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity, Element2flagEntity,
-      SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity,
+      ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity, Element2flagEntity, ElementPermissionEntity,
+      SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity, SectionPermissionEntity,
       BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity,
       FormEntity, Form2flagEntity, Form2stringEntity,
       FormFieldEntity, FormField2flagEntity, FormField2stringEntity,

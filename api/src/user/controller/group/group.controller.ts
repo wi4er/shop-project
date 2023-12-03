@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { UserGroupEntity } from '../../model/user-group.entity';
 import { GroupService } from '../../service/group/group.service';
 import { UserGroupInput } from '../../input/user-group.input';
@@ -14,6 +14,8 @@ export class GroupController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(UserGroupEntity)
     private groupRepo: Repository<UserGroupEntity>,
     private groupService: GroupService,

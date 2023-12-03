@@ -3,7 +3,7 @@ import { createConnection } from "typeorm";
 import { createConnectionOptions } from "../../createConnectionOptions";
 import { UserContact2flagEntity } from "./user-contact2flag.entity";
 import { UserContactEntity, UserContactType } from "./user-contact.entity";
-import { FlagEntity } from "../../flag/model/flag.entity";
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('Contact 2 flag entity', () => {
   let source: DataSource;

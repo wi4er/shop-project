@@ -4,13 +4,13 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { DirectoryEntity } from '../../model/directory.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
 import { Directory2stringEntity } from '../../model/directory2string.entity';
-import { LangEntity } from '../../../lang/model/lang.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
 import { PointEntity } from '../../model/point.entity';
 import { Directory2pointEntity } from '../../model/directory2point.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('DirectoryController', () => {
   let source;

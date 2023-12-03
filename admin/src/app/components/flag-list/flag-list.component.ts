@@ -4,6 +4,7 @@ import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Flag } from '../../model/settings/flag';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-flag-list',
@@ -26,8 +27,8 @@ export class FlagListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Flag>(ApiEntity.FLAG, [...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Flag>(ApiEntity.FLAG, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.FLAG)

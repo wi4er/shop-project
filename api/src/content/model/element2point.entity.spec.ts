@@ -4,9 +4,9 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 import { Element2pointEntity } from './element2point.entity';
 import { ElementEntity } from './element.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { DirectoryEntity } from '../../directory/model/directory.entity';
 import { PointEntity } from '../../directory/model/point.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('Element2point entity', () => {
   let source: DataSource;

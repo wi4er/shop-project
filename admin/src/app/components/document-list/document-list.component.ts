@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Document } from '../../model/document';
 import { DocumentFormComponent } from '../document-form/document-form.component';
 import { Router } from '@angular/router';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-document-list',
@@ -28,7 +29,7 @@ export class DocumentListComponent {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
+  fetchList(args: StringifiableRecord) {
     this.apiService.fetchData<Document>(ApiEntity.DOCUMENT, args)
       .then(list => this.setData(list));
 

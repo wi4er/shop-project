@@ -2,8 +2,8 @@ import { DataSource } from "typeorm/data-source/DataSource";
 import { createConnection } from "typeorm";
 import { createConnectionOptions } from "../../createConnectionOptions";
 import { UserGroupInsertOperation } from "./user-group-insert.operation";
-import { FlagEntity } from "../../flag/model/flag.entity";
 import { UserGroupEntity } from "../model/user-group.entity";
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('UserGroup insert operation', () => {
   let source: DataSource;

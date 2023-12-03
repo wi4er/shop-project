@@ -33,7 +33,7 @@ describe('Value entity', () => {
 
     test('Shouldn`t add with blank id', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'LIST'}).save();
-      const inst = await Object.assign(new PointEntity(), {
+      const inst = Object.assign(new PointEntity(), {
         id: '',
         directory: 'LIST',
       });

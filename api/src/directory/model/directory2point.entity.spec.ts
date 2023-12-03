@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { DirectoryEntity } from './directory.entity';
 import { PointEntity } from './point.entity';
 import { Directory2pointEntity } from './directory2point.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('Directory2point entity', () => {
   let source: DataSource;

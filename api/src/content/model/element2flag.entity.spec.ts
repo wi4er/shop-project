@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { Element2flagEntity } from './element2flag.entity';
 import { ElementEntity } from './element.entity';
 import { BlockEntity } from './block.entity';
-import { FlagEntity } from '../../flag/model/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('Element2Flag entity', () => {
   let source: DataSource;

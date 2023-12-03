@@ -4,6 +4,7 @@ import { PropertyFormComponent } from '../property-form/property-form.component'
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Property } from '../../model/settings/property';
 import { Observable } from 'rxjs';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-property-list',
@@ -26,8 +27,8 @@ export class PropertyListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Property>(ApiEntity.PROPERTY, [...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Property>(ApiEntity.PROPERTY, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.PROPERTY)

@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { UserContact2stringEntity } from './user-contact2string.entity';
 import { UserContactEntity, UserContactType } from './user-contact.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('Contact2string entity', () => {
   let source: DataSource;

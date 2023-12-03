@@ -3,9 +3,9 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { Directory2pointEntity } from './directory2point.entity';
 import { DirectoryEntity } from './directory.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { PointEntity } from './point.entity';
 import { Point2pointEntity } from './point2point.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('Point2point entity', () => {
   let source: DataSource;

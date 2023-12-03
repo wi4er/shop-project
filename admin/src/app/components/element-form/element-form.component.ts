@@ -78,6 +78,21 @@ export class ElementFormComponent {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
+    for (const prop of item.property) {
+      if (!this.editProperties[prop.property]) {
+        this.editProperties[prop.property] = {};
+      }
+
+      if (!this.editProperties[prop.property][prop.lang ?? '']) {
+        this.editProperties[prop.property][prop.lang ?? ''] = [];
+      }
+
+      this.editProperties[prop.property][prop.lang ?? ''].push({
+        value: prop.string,
+        error: '',
+      });
+    }
+
     // for (const flag of item.flag) {
     //   this.editFlags[flag] = true;
     // }
@@ -96,6 +111,14 @@ export class ElementFormComponent {
         if (!this.editProperties[prop][lang]) {
           continue;
         }
+
+        for (const value of this.editProperties[prop][lang]) {
+          input.property.push({
+            property: prop,
+            string: value.value,
+            lang: lang || undefined,
+          });
+        }
       }
     }
 
@@ -110,13 +133,19 @@ export class ElementFormComponent {
 
   saveItem() {
     if (this.data?.id) {
-
+      this.apiService.putData<ElementInput>(
+        ApiEntity.ELEMENT,
+        this.id,
+        this.toInput(),
+      ).then(() => {
+        this.dialogRef.close();
+      });
     } else {
       this.apiService.postData<ElementInput>(
         ApiEntity.ELEMENT,
         this.toInput(),
       ).then(() => {
-        this.dialogRef.close()
+        this.dialogRef.close();
       });
     }
   }

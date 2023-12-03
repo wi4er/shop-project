@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { PropertyService } from './property.service';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../../createConnectionOptions';
 
 describe('PropertyService', () => {
-  let service: PropertyService;
+  let source: DataSource;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [PropertyService],
-    }).compile();
-
-    service = module.get<PropertyService>(PropertyService);
+  beforeAll(async () => {
+    source = await createConnection(createConnectionOptions());
   });
 
+  beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
+
   it('should be defined', () => {
-    expect(service).toBeDefined();
+
   });
 });

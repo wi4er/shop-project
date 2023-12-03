@@ -5,6 +5,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { Block } from '../../model/content/block';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-block-list',
@@ -28,8 +29,8 @@ export class BlockListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fetchList(args: string[] = []) {
-    this.apiService.fetchData<Block>(ApiEntity.BLOCK, [...args])
+  fetchList(args: StringifiableRecord) {
+    this.apiService.fetchData<Block>(ApiEntity.BLOCK, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.BLOCK)

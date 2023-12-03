@@ -16,6 +16,7 @@ import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
 import { SettingsModule } from './settings/settings.module';
 import { DocumentModule } from './document/document.module';
 import { ReportModule } from './report/report.module';
+import { NoDataFilter } from './exception/no-data/no-data.filter';
 
 @Module({
   imports: [
@@ -37,6 +38,10 @@ import { ReportModule } from './report/report.module';
     {
       provide: APP_FILTER,
       useClass: WrongDataFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: NoDataFilter,
     },
   ],
 })

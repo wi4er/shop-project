@@ -1,11 +1,10 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { BlockEntity } from '../../content/model/block.entity';
-import { SectionEntity } from '../../content/model/section.entity';
 import { UserGroup2stringEntity } from './user-group2string.entity';
 import { UserGroupEntity } from './user-group.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('UserGroup2string entity', () => {
   let source: DataSource;

@@ -4,6 +4,7 @@ import { UserFormComponent } from '../user-form/user-form.component';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Observable } from 'rxjs';
 import { User } from '../../model/user/user';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-user-list',
@@ -27,7 +28,7 @@ export class UserListComponent implements OnInit {
 
   }
 
-  fetchList(args: string[] = []) {
+  fetchList(args: StringifiableRecord) {
     this.apiService.fetchData<User>(ApiEntity.USER, args)
       .then(list => this.setData(list));
 

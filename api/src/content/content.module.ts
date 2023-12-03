@@ -16,30 +16,28 @@ import { Element2flagEntity } from './model/element2flag.entity';
 import { SectionController } from './controller/section/section.controller';
 import { Section2flagEntity } from './model/section2flag.entity';
 import { Block2flagEntity } from './model/block2flag.entity';
-import { ElementService } from './service/element/element.service';
-import { SectionService } from './service/section/section.service';
-import { BlockService } from './service/block/block.service';
 import { BlockPermissionEntity } from './model/block-permission.entity';
 import { UserEntity } from '../user/model/user.entity';
 import { UserGroupEntity } from '../user/model/user-group.entity';
 import { Block2pointEntity } from './model/block2point.entity';
 import { PropertyEntity } from '../settings/model/property.entity';
 import { LangEntity } from '../settings/model/lang.entity';
+import { ElementPermissionEntity } from './model/element-permission.entity';
+import { SectionPermissionEntity } from './model/section-permission.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity,
-      Element2flagEntity,
-      SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity,
-      BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity,
+      Element2flagEntity, ElementPermissionEntity,
+      SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity, SectionPermissionEntity,
+      BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity, BlockPermissionEntity,
       UserEntity, UserGroupEntity,
       PropertyEntity,
       LangEntity,
     ]),
   ],
   providers: [
-    ElementService, SectionService, BlockService,
   ],
   controllers: [ BlockController, ElementController, SectionController ],
 })

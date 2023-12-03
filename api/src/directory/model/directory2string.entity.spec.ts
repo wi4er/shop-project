@@ -3,8 +3,8 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
 import { Directory2stringEntity } from './directory2string.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 
 describe('DirectoryString entity', () => {
   let source: DataSource;

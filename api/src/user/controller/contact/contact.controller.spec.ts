@@ -3,11 +3,11 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { PropertyEntity } from '../../../property/model/property.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { UserContactEntity, UserContactType } from '../../model/user-contact.entity';
 import { UserContact2stringEntity } from '../../model/user-contact2string.entity';
 import { UserContact2flagEntity } from '../../model/user-contact2flag.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('ContactController', () => {
   let source;

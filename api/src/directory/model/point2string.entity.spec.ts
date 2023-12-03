@@ -2,10 +2,10 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
-import { PropertyEntity } from '../../property/model/property.entity';
 import { Point2stringEntity } from './point2string.entity';
 import { PointEntity } from './point.entity';
-import { LangEntity } from '../../lang/model/lang.entity';
+import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 
 describe('ValueString entity', () => {
   let source: DataSource;

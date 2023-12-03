@@ -23,8 +23,6 @@ describe('Directory field entity', () => {
 
       expect(inst.id).toBe(1);
       expect(inst.field.id).toBe('DIRECTORY');
-
-      console.log(inst);
     });
   });
 

@@ -5,12 +5,12 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { PointEntity } from '../../model/point.entity';
-import { PropertyEntity } from '../../../property/model/property.entity';
-import { LangEntity } from '../../../lang/model/lang.entity';
 import { Point2stringEntity } from '../../model/point2string.entity';
-import { FlagEntity } from '../../../flag/model/flag.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { Point2pointEntity } from '../../model/point2point.entity';
+import { PropertyEntity } from '../../../settings/model/property.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('PointController', () => {
   let source;

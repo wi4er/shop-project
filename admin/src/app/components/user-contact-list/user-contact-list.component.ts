@@ -4,6 +4,7 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { Observable } from 'rxjs';
 import { Contact } from '../../model/user/contact';
 import { UserContactFormComponent } from '../user-contact-form/user-contact-form.component';
+import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-user-contact-list',
@@ -27,7 +28,7 @@ export class UserContactListComponent {
 
   }
 
-  fetchList(args: string[] = []) {
+  fetchList(args: StringifiableRecord) {
     this.apiService.fetchData<Contact>(ApiEntity.CONTACT, args)
       .then(list => this.setData(list));
 

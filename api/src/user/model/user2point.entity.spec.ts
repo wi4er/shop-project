@@ -4,8 +4,8 @@ import { createConnectionOptions } from "../../createConnectionOptions";
 import { UserEntity } from "./user.entity";
 import { PointEntity } from "../../directory/model/point.entity";
 import { DirectoryEntity } from "../../directory/model/directory.entity";
-import { PropertyEntity } from "../../property/model/property.entity";
 import { User2pointEntity } from "./user2point.entity";
+import { PropertyEntity } from '../../settings/model/property.entity';
 
 describe('User entity', () => {
   let source: DataSource;
@@ -90,7 +90,7 @@ describe('User entity', () => {
       await Object.assign(new UserEntity(), { login: 'user' }).save();
 
       await Object.assign(new User2pointEntity(), { property: 'CURRENT_CITY', point: 'LONDON', parent: 1 }).save();
-      const wrong = await Object.assign(new User2pointEntity(), {
+      const wrong = Object.assign(new User2pointEntity(), {
         property: 'CURRENT_CITY',
         point: 'LONDON',
         parent: 1

@@ -9,7 +9,6 @@ import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Form2flagEntity } from './form2flag.entity';
 import { Form2stringEntity } from './form2string.entity';
-import { FormFieldStringEntity } from './form-field-string.entity';
 import { FormFieldEntity } from './form-field.entity';
 import { ResultEntity } from './result.entity';
 

@@ -1,4 +1,12 @@
 
+.select {
+  width: 36px;
+}
+
+.action {
+  width: 48px;
+}
+
 .spacer {
   flex: 1;
 }

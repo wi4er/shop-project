@@ -11,6 +11,7 @@ describe('Contact entity', () => {
   });
 
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('Contact fields', () => {
     test('Should create', async () => {

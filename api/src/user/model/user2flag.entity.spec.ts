@@ -2,8 +2,8 @@ import { DataSource } from "typeorm/data-source/DataSource";
 import { createConnection } from "typeorm";
 import { createConnectionOptions } from "../../createConnectionOptions";
 import { UserEntity } from "./user.entity";
-import { FlagEntity } from "../../flag/model/flag.entity";
 import { User2flagEntity } from "./user2flag.entity";
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 describe('User2flag entity', () => {
 
