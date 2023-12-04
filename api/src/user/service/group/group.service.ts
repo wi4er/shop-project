@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
-import { PropertyInsertOperation } from '../../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
-import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
-import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
+import { PropertyValueInsertOperation } from '../../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { PropertyValueUpdateOperation } from '../../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { UserGroupEntity } from '../../model/user-group.entity';
 import { UserGroupInput } from '../../input/user-group.input';
 import { UserGroup2stringEntity } from '../../model/user-group2string.entity';
@@ -28,8 +28,8 @@ export class GroupService {
       created.id = input.id;
       await trans.save(created);
 
-      await new PropertyInsertOperation(trans, UserGroup2stringEntity).save(created, input);
-      await new FlagInsertOperation(trans, UserGroup2flagEntity).save(created, input);
+      await new PropertyValueInsertOperation(trans, UserGroup2stringEntity).save(created, input);
+      await new FlagValueInsertOperation(trans, UserGroup2flagEntity).save(created, input);
     });
 
     return this.groupRepo.findOne({
@@ -49,8 +49,8 @@ export class GroupService {
       });
       await beforeItem.save();
 
-      await new PropertyUpdateOperation(trans, UserGroup2stringEntity).save(beforeItem, input);
-      await new FlagUpdateOperation(trans, UserGroup2flagEntity).save(beforeItem, input);
+      await new PropertyValueUpdateOperation(trans, UserGroup2stringEntity).save(beforeItem, input);
+      await new FlagValueUpdateOperation(trans, UserGroup2flagEntity).save(beforeItem, input);
     });
 
     return this.groupRepo.findOne({

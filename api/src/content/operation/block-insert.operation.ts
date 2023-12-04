@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../model/block.entity';
-import { PropertyInsertOperation } from '../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../common/operation/flag-insert.operation';
+import { PropertyValueInsertOperation } from '../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { Block2stringEntity } from '../model/block2string.entity';
 import { Block2flagEntity } from '../model/block2flag.entity';
 import { BlockInput } from '../input/block.input';
@@ -23,8 +23,8 @@ export class BlockInsertOperation {
   async save(input: BlockInput): Promise<number> {
     await this.manager.save(this.created);
 
-    await new PropertyInsertOperation(this.manager, Block2stringEntity).save(this.created, input);
-    await new FlagInsertOperation(this.manager, Block2flagEntity).save(this.created, input);
+    await new PropertyValueInsertOperation(this.manager, Block2stringEntity).save(this.created, input);
+    await new FlagValueInsertOperation(this.manager, Block2flagEntity).save(this.created, input);
 
     return this.created.id;
   }

@@ -1,7 +1,13 @@
 import { EntityManager } from 'typeorm';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { NoDataException } from '../../exception/no-data/no-data.exception';
+import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
+import { PointInput } from '../input/point.input';
 import { DirectoryEntity } from '../model/directory.entity';
 import { PointEntity } from '../model/point.entity';
-import { DirectoryInput } from '../input/directory.input';
+import { Point2stringEntity } from '../model/point2string.entity';
+import { Point2flagEntity } from '../model/point2flag.entity';
 
 export class PointUpdateOperation {
 
@@ -10,24 +16,56 @@ export class PointUpdateOperation {
   ) {
   }
 
-  async save(beforeItem: DirectoryEntity, input: DirectoryInput) {
-    const current: Array<string> = beforeItem.point.map(it => it.point.id);
+  /**
+   *
+   * @param id
+   * @private
+   */
+  private async checkDirectory(id: string): Promise<DirectoryEntity> {
+    const dirRepo = this.manager.getRepository<DirectoryEntity>(DirectoryEntity);
 
-    for (const item of input.point ?? []) {
-      if (current.includes(item)) {
-        current.splice(current.indexOf(item), 1);
-      } else {
-        const inst = new PointEntity();
-        inst.id = item;
-        inst.directory = beforeItem;
+    const inst = await dirRepo.findOne({where: {id}});
+    WrongDataException.assert(inst, 'Wrong directory id!');
 
-        await this.manager.save(inst);
-      }
-    }
+    return inst;
+  }
 
-    for (const item of current) {
-      await this.manager.delete(PointEntity, {id: item});
-    }
+  /**
+   *
+   * @param id
+   * @private
+   */
+  private async checkPoint(id: string): Promise<PointEntity> {
+    const pointRepo = this.manager.getRepository(PointEntity);
+
+    const inst = await pointRepo.findOne({
+      where: {id},
+      relations: {
+        string: {property: true},
+        flag: {flag: true},
+      },
+    });
+    NoDataException.assert(inst, 'Point not found!');
+
+    return inst;
+  }
+
+  /**
+   *
+   * @param id
+   * @param input
+   */
+  async save(id: string, input: PointInput): Promise<string> {
+    const beforeItem = await this.checkPoint(id);
+    beforeItem.directory = await this.checkDirectory(input.directory);
+    beforeItem.id = input.id;
+
+    await beforeItem.save();
+
+    await new PropertyValueUpdateOperation(this.manager, Point2stringEntity).save(beforeItem, input);
+    await new FlagValueUpdateOperation(this.manager, Point2flagEntity).save(beforeItem, input);
+
+    return beforeItem.id;
   }
 
 }

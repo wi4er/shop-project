@@ -3,10 +3,10 @@ import { UserEntity } from '../../model/user.entity';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
 import { EncodeService } from '../encode/encode.service';
-import { PropertyInsertOperation } from '../../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
-import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
-import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
+import { PropertyValueInsertOperation } from '../../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { PropertyValueUpdateOperation } from '../../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { UserInput } from '../../input/user.input';
 import { User2stringEntity } from '../../model/user2string.entity';
 import { User2flagEntity } from '../../model/user2flag.entity';
@@ -86,8 +86,8 @@ export class UserService {
       created.login = input.login;
       await trans.save(created);
 
-      await new PropertyInsertOperation(trans, User2stringEntity).save(created, input);
-      await new FlagInsertOperation(trans, User2flagEntity).save(created, input);
+      await new PropertyValueInsertOperation(trans, User2stringEntity).save(created, input);
+      await new FlagValueInsertOperation(trans, User2flagEntity).save(created, input);
     }).catch(err => {
       WrongDataException.assert(err.column !== 'login', 'Login expected!');
     });
@@ -110,8 +110,8 @@ export class UserService {
       beforeItem.login = input.login;
       await beforeItem.save();
 
-      await new PropertyUpdateOperation(trans, User2stringEntity).save(beforeItem, input);
-      await new FlagUpdateOperation(trans, User2flagEntity).save(beforeItem, input);
+      await new PropertyValueUpdateOperation(trans, User2stringEntity).save(beforeItem, input);
+      await new FlagValueUpdateOperation(trans, User2flagEntity).save(beforeItem, input);
     });
 
     return this.userRepo.findOne({

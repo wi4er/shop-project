@@ -2,8 +2,8 @@ import { EntityManager } from "typeorm";
 import { UserContactEntity } from "../model/user-contact.entity";
 import { UserContact2stringEntity } from "../model/user-contact2string.entity";
 import { UserContact2flagEntity } from "../model/user-contact2flag.entity";
-import { PropertyUpdateOperation } from "../../common/operation/property-update.operation";
-import { FlagUpdateOperation } from "../../common/operation/flag-update.operation";
+import { PropertyValueUpdateOperation } from "../../common/operation/property-value-update.operation";
+import { FlagValueUpdateOperation } from "../../common/operation/flag-value-update.operation";
 import { UserContactInput } from "../input/user-contact.input";
 
 export class UserContactUpdateOperation {
@@ -32,8 +32,8 @@ export class UserContactUpdateOperation {
       });
 
       this.beforeItem.type = this.input.type;
-      await new PropertyUpdateOperation(trans, UserContact2stringEntity).save(this.beforeItem, this.input);
-      await new FlagUpdateOperation(trans, UserContact2flagEntity).save(this.beforeItem, this.input);
+      await new PropertyValueUpdateOperation(trans, UserContact2stringEntity).save(this.beforeItem, this.input);
+      await new FlagValueUpdateOperation(trans, UserContact2flagEntity).save(this.beforeItem, this.input);
 
       await this.beforeItem.save();
     });

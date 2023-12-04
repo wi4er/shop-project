@@ -7,7 +7,6 @@ import { DocumentEntity } from './model/document.entity';
 import { Document2flagEntity } from './model/document2flag.entity';
 import { Document2stringEntity } from './model/document2string.entity';
 import { DocumentController } from './controller/document/document.controller';
-import { DocumentService } from './service/document/document.service';
 
 @Module({
   imports: [
@@ -19,6 +18,6 @@ import { DocumentService } from './service/document/document.service';
     ]),
   ],
   controllers: [DocumentController],
-  providers: [DocumentService],
+  providers: [],
 })
 export class DocumentModule {}

@@ -154,17 +154,83 @@ describe('DocumentController', () => {
 
       expect(inst.body.id).toBe(1);
     });
+
+    test('Should add with string', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const inst = await request(app.getHttpServer())
+        .post('/document')
+        .send({
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const inst = await request(app.getHttpServer())
+        .post('/document')
+        .send({
+          flag: ['ACTIVE'],
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe(1);
+      expect(inst.body.flag).toEqual(['ACTIVE']);
+    });
   });
 
   describe('Document updating', () => {
-    test('Should update flag', async () => {
+    test('Should update document', async () => {
       await new DocumentEntity().save();
+
       const res = await request(app.getHttpServer())
         .put('/document/1')
         .send({id: 1})
         .expect(200);
 
       expect(res.body.id).toBe(1);
+    });
+
+    test('Shouldn`t update with wriong id', async () => {
+      await new DocumentEntity().save();
+
+      const res = await request(app.getHttpServer())
+        .put('/document/99')
+        .send({id: 1})
+        .expect(404);
+    });
+
+    test('Should update with string', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await new DocumentEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/document/1')
+        .send({
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(200);
+
+      expect(inst.body.id).toBe(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should update with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await new DocumentEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/document/1')
+        .send({flag: ['ACTIVE']})
+        .expect(200);
+
+      expect(inst.body.id).toBe(1);
+      expect(inst.body.flag).toEqual(['ACTIVE']);
     });
   });
 });

@@ -8,8 +8,6 @@ export class DirectoryInput implements WithPropertyInput, WithFlagInput {
 
   property: PropertyValueInput[];
 
-  point: string[];
-
   flag: string[];
 
 }

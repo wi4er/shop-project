@@ -36,7 +36,7 @@ export class Form2flagEntity
     () => FormEntity,
     form => form.flag,
     {
-      onDelete: 'CASCADE',
+      cascade: true,
       nullable: false,
     },
   )
@@ -45,7 +45,7 @@ export class Form2flagEntity
   @ManyToOne(
     () => FlagEntity,
     {
-      onDelete: 'CASCADE',
+      cascade: true,
       nullable: false,
     },
   )

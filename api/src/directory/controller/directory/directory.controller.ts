@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
-import { Repository } from 'typeorm';
-import { DirectoryService } from '../../service/directory/directory.service';
+import { EntityManager, Repository } from 'typeorm';
 import { DirectoryInput } from '../../input/directory.input';
+import { DirectoryInsertOperation } from '../../operation/directory-insert.operation';
+import { DirectoryUpdateOperation } from '../../operation/directory-update.operation';
+import { DirectoryDeleteOperation } from '../../operation/directory-delete.operation';
 
 @Controller('directory')
 export class DirectoryController {
@@ -15,9 +17,10 @@ export class DirectoryController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(DirectoryEntity)
     private directoryRepo: Repository<DirectoryEntity>,
-    private directoryService: DirectoryService,
   ) {
   }
 
@@ -78,30 +81,39 @@ export class DirectoryController {
     @Body()
       input: DirectoryInput,
   ) {
-    return this.directoryService.insert(input)
-      .then(res => this.directoryRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new DirectoryInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(DirectoryEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
   updateItem(
+    @Param('id')
+      id: string,
     @Body()
       input: DirectoryInput,
   ) {
-    return this.directoryService.update(input)
-      .then(res => this.directoryRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new DirectoryUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(DirectoryEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
-  @Delete()
-  deleteItem() {
-
+  @Delete(':id')
+  deleteItem(
+    @Param('id')
+      id: string,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new DirectoryDeleteOperation(trans).save([id])
+    );
   }
 
 }

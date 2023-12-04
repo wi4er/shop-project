@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
-import { PropertyInsertOperation } from '../../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
-import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
-import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
+import { PropertyValueInsertOperation } from '../../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { PropertyValueUpdateOperation } from '../../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { PropertyEntity } from '../../model/property.entity';
 import { Property2stringEntity } from '../../model/property2string.entity';
 import { Property2flagEntity } from '../../model/property2flag.entity';
@@ -28,8 +28,8 @@ export class PropertyService {
       created.id = input.id;
       await trans.save(created);
 
-      await new PropertyInsertOperation(trans, Property2stringEntity).save(created, input);
-      await new FlagInsertOperation(trans, Property2flagEntity).save(created, input);
+      await new PropertyValueInsertOperation(trans, Property2stringEntity).save(created, input);
+      await new FlagValueInsertOperation(trans, Property2flagEntity).save(created, input);
     });
 
     return this.propertyRepo.findOne({
@@ -49,8 +49,8 @@ export class PropertyService {
       });
       await beforeItem.save();
 
-      await new PropertyUpdateOperation(trans, Property2stringEntity).save(beforeItem, input);
-      await new FlagUpdateOperation(trans, Property2flagEntity).save(beforeItem, input);
+      await new PropertyValueUpdateOperation(trans, Property2stringEntity).save(beforeItem, input);
+      await new FlagValueUpdateOperation(trans, Property2flagEntity).save(beforeItem, input);
     });
 
     return this.propertyRepo.findOne({

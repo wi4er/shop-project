@@ -5,7 +5,7 @@ import { LangEntity } from '../../settings/model/lang.entity';
 import { PropertyEntity } from '../../settings/model/property.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
-export class PropertyInsertOperation<T extends BaseEntity> {
+export class PropertyValueInsertOperation<T extends BaseEntity> {
 
   constructor(
     private trans: EntityManager,

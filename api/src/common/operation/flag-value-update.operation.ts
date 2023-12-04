@@ -4,7 +4,7 @@ import { WithFlagEntity } from '../model/with-flag.entity';
 import { WithFlagInput } from '../input/with-flag.input';
 import { FlagEntity } from '../../settings/model/flag.entity';
 
-export class FlagUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
+export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
 
   constructor(
     private trans: EntityManager,

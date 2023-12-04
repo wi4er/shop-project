@@ -38,7 +38,7 @@ export class Form2stringEntity
     () => FormEntity,
     property => property.string,
     {
-      onDelete: 'CASCADE',
+      cascade: true,
       nullable: false,
     },
   )
@@ -47,7 +47,7 @@ export class Form2stringEntity
   @ManyToOne(
     () => PropertyEntity,
     {
-      onDelete: 'CASCADE',
+      cascade: true,
       nullable: false,
     },
   )
@@ -56,7 +56,7 @@ export class Form2stringEntity
   @ManyToOne(
     () => LangEntity,
     {
-      onDelete: 'CASCADE',
+      cascade: true,
       nullable: true,
     },
   )

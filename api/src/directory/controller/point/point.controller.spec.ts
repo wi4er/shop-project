@@ -179,4 +179,42 @@ describe('PointController', () => {
       expect(list.body[0].property[0].directory).toBe('CITY');
     });
   });
+
+  describe('Point addition', () => {
+    test('Should add point', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
+      const res = await request(app.getHttpServer())
+        .post('/point')
+        .send({
+          id: 'London',
+          directory: 'CITY',
+        })
+        .expect(201);
+
+      expect(res.body.id).toBe('London')
+      expect(res.body.directory).toBe('CITY')
+    });
+
+    test('Shouldn`t add without directory', async () => {
+      await request(app.getHttpServer())
+        .post('/point')
+        .send({
+          id: 'London',
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t add with wrong directory', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
+      await request(app.getHttpServer())
+        .post('/point')
+        .send({
+          id: 'London',
+          directory: 'WRONG',
+        })
+        .expect(400);
+    });
+  });
 });

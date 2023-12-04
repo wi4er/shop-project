@@ -191,12 +191,40 @@ describe('DirectoryController', () => {
     test('Should add item', async () => {
       const res = await request(app.getHttpServer())
         .post('/directory')
+        .send({id: 'LIST'})
+        .expect(201);
+
+      expect(res.body.id).toBe('LIST');
+    });
+
+    test('Should add with string', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const res = await request(app.getHttpServer())
+        .post('/directory')
         .send({
           id: 'LIST',
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
         })
         .expect(201);
 
-      expect(res.body['id']).toBe('LIST');
+      expect(res.body.property).toHaveLength(1);
+      expect(res.body.property[0].property).toBe('NAME');
+      expect(res.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      const res = await request(app.getHttpServer())
+        .post('/directory')
+        .send({
+          id: 'LIST',
+          flag: ['NEW'],
+        })
+        .expect(201);
+
+      expect(res.body.flag).toEqual(['NEW']);
     });
   });
 
@@ -208,6 +236,53 @@ describe('DirectoryController', () => {
         .put('/directory/CITY')
         .send({id: 'CITY'})
         .expect(200);
+
+      expect(res.body.id).toBe('CITY');
+    });
+
+    test('Should update id', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/directory/CITY')
+        .send({id: 'NEW'})
+        .expect(200);
+
+      expect(res.body.id).toBe('NEW');
+    });
+
+    test('Should add strings', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/directory/CITY')
+        .send({
+          id: 'CITY',
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(200);
+
+      expect(res.body.id).toBe('CITY');
+      expect(res.body.property[0].property).toBe('NAME');
+      expect(res.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add flags', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/directory/CITY')
+        .send({
+          id: 'CITY',
+          flag: ['ACTIVE'],
+        })
+        .expect(200);
+
+      expect(res.body.flag).toEqual(['ACTIVE']);
     });
   });
 });

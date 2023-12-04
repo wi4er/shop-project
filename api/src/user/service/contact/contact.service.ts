@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
-import { PropertyInsertOperation } from '../../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../../common/operation/flag-insert.operation';
-import { PropertyUpdateOperation } from '../../../common/operation/property-update.operation';
-import { FlagUpdateOperation } from '../../../common/operation/flag-update.operation';
+import { PropertyValueInsertOperation } from '../../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { PropertyValueUpdateOperation } from '../../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { UserContactEntity } from '../../model/user-contact.entity';
 import { UserContactInput } from '../../input/user-contact.input';
 import { UserContact2stringEntity } from '../../model/user-contact2string.entity';
@@ -29,8 +29,8 @@ export class ContactService {
       created.type = input.type;
       await trans.save(created);
 
-      await new PropertyInsertOperation(trans, UserContact2stringEntity).save(created, input);
-      await new FlagInsertOperation(trans, UserContact2flagEntity).save(created, input);
+      await new PropertyValueInsertOperation(trans, UserContact2stringEntity).save(created, input);
+      await new FlagValueInsertOperation(trans, UserContact2flagEntity).save(created, input);
     });
 
     return this.contactRepo.findOne({
@@ -52,8 +52,8 @@ export class ContactService {
       beforeItem.type = input.type;
       await beforeItem.save();
 
-      await new PropertyUpdateOperation(trans, UserContact2stringEntity).save(beforeItem, input);
-      await new FlagUpdateOperation(trans, UserContact2flagEntity).save(beforeItem, input);
+      await new PropertyValueUpdateOperation(trans, UserContact2stringEntity).save(beforeItem, input);
+      await new FlagValueUpdateOperation(trans, UserContact2flagEntity).save(beforeItem, input);
     });
 
     return this.contactRepo.findOne({

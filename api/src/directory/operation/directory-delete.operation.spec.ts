@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { FormDeleteOperation } from './form-delete.operation';
-import { FormEntity } from '../model/form.entity';
+import { DirectoryEntity } from '../model/directory.entity';
+import { DirectoryDeleteOperation } from './directory-delete.operation';
 
-describe('Form delete operation', () => {
+describe('Point delete operation', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,13 +14,13 @@ describe('Form delete operation', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Form delete', () => {
+  describe('Directory delete', () => {
     test('Should delete', async () => {
-      await Object.assign(new FormEntity(), {id: 'LEAD'}).save();
+      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
-      const id = await new FormDeleteOperation(source.manager).save(['LEAD']);
+      const id = await new DirectoryDeleteOperation(source.manager).save(['CITY']);
 
-      expect(id).toEqual(['LEAD']);
+      expect(id).toEqual(['CITY']);
     });
   });
 });

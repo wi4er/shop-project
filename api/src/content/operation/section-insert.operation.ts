@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../model/block.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { PropertyInsertOperation } from '../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../common/operation/flag-insert.operation';
+import { PropertyValueInsertOperation } from '../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { SectionEntity } from '../model/section.entity';
 import { SectionInput } from '../input/section.input';
 import { Section2stringEntity } from '../model/section2string.entity';
@@ -60,8 +60,8 @@ export class SectionInsertOperation {
 
     await this.manager.save(this.created);
 
-    await new PropertyInsertOperation(this.manager, Section2stringEntity).save(this.created, input);
-    await new FlagInsertOperation(this.manager, Section2flagEntity).save(this.created, input);
+    await new PropertyValueInsertOperation(this.manager, Section2stringEntity).save(this.created, input);
+    await new FlagValueInsertOperation(this.manager, Section2flagEntity).save(this.created, input);
 
     return this.created.id;
   }

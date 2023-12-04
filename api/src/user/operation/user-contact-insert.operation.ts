@@ -2,8 +2,8 @@ import { EntityManager } from "typeorm";
 import { UserContactEntity } from "../model/user-contact.entity";
 import { UserContact2stringEntity } from "../model/user-contact2string.entity";
 import { UserContact2flagEntity } from "../model/user-contact2flag.entity";
-import { PropertyInsertOperation } from "../../common/operation/property-insert.operation";
-import { FlagInsertOperation } from "../../common/operation/flag-insert.operation";
+import { PropertyValueInsertOperation } from "../../common/operation/property-value-insert.operation";
+import { FlagValueInsertOperation } from "../../common/operation/flag-value-insert.operation";
 import { UserContactInput } from "../input/user-contact.input";
 
 export class UserContactInsertOperation {
@@ -27,8 +27,8 @@ export class UserContactInsertOperation {
     await this.manager.transaction(async (trans: EntityManager) => {
       await trans.save(this.created);
 
-      await new PropertyInsertOperation(trans, UserContact2stringEntity).save(this.created, this.input);
-      await new FlagInsertOperation(trans, UserContact2flagEntity).save(this.created, this.input);
+      await new PropertyValueInsertOperation(trans, UserContact2stringEntity).save(this.created, this.input);
+      await new FlagValueInsertOperation(trans, UserContact2flagEntity).save(this.created, this.input);
     });
 
     return contactRepo.findOne({

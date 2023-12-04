@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { FormDeleteOperation } from './form-delete.operation';
-import { FormEntity } from '../model/form.entity';
+import { DocumentEntity } from '../model/document.entity';
+import { DocumentDeleteOperation } from './document-delete.operation';
 
-describe('Form delete operation', () => {
+describe('Document delete operation', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,13 +14,13 @@ describe('Form delete operation', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Form delete', () => {
+  describe('Block delete', () => {
     test('Should delete', async () => {
-      await Object.assign(new FormEntity(), {id: 'LEAD'}).save();
+      const block = await new DocumentEntity().save();
 
-      const id = await new FormDeleteOperation(source.manager).save(['LEAD']);
+      const id = await new DocumentDeleteOperation(source.manager).save([1]);
 
-      expect(id).toEqual(['LEAD']);
+      expect(id).toEqual([1]);
     });
   });
 });

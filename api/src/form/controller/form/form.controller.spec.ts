@@ -152,6 +152,42 @@ describe('FormController', () => {
         .expect(201);
 
       expect(inst.body.id).toBe('ORDER');
+      expect(inst.body.created_at).toBeDefined();
+      expect(inst.body.updated_at).toBeDefined();
+    });
+
+    test('Should add with strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/form')
+        .send({
+          id: 'ORDER',
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe('ORDER');
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flags', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/form')
+        .send({
+          id: 'ORDER',
+          flag: ['NEW'],
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe('ORDER');
+      expect(inst.body.flag).toEqual(['NEW']);
     });
   });
 
@@ -165,6 +201,72 @@ describe('FormController', () => {
         .expect(200);
 
       expect(inst.body.id).toBe('ORDER');
+    });
+
+    test('Should update id', async () => {
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/form/ORDER')
+        .send({id: 'UPDATED'})
+        .expect(200);
+
+      expect(inst.body.id).toBe('UPDATED');
+    });
+
+    test('Should add strings', async () => {
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/form/ORDER')
+        .send({
+          id: 'ORDER',
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(200);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should update strings', async () => {
+      const parent = await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Form2stringEntity(), {property, parent, string: 'OLD'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/form/ORDER')
+        .send({
+          id: 'UPDATED',
+          property: [
+            {property: 'NAME', string: 'NEW'},
+          ],
+        })
+        .expect(200);
+
+      expect(inst.body.id).toBe('UPDATED');
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('NEW');
+    });
+
+    test('Should add flags', async () => {
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/form/ORDER')
+        .send({
+          id: 'ORDER',
+          flag: ['ACTIVE'],
+        })
+        .expect(200);
+
+      expect(inst.body.flag).toEqual(['ACTIVE']);
     });
   });
 });

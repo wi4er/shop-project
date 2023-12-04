@@ -2,8 +2,8 @@ import { EntityManager } from "typeorm";
 import { UserGroupEntity } from "../model/user-group.entity";
 import { UserGroup2stringEntity } from "../model/user-group2string.entity";
 import { UserGroup2flagEntity } from "../model/user-group2flag.entity";
-import { PropertyInsertOperation } from "../../common/operation/property-insert.operation";
-import { FlagInsertOperation } from "../../common/operation/flag-insert.operation";
+import { PropertyValueInsertOperation } from "../../common/operation/property-value-insert.operation";
+import { FlagValueInsertOperation } from "../../common/operation/flag-value-insert.operation";
 import { UserGroupInput } from "../input/user-group.input";
 
 export class UserGroupInsertOperation {
@@ -25,8 +25,8 @@ export class UserGroupInsertOperation {
 
       await trans.save(this.created);
 
-      await new PropertyInsertOperation(trans, UserGroup2stringEntity).save(this.created, input);
-      await new FlagInsertOperation(trans, UserGroup2flagEntity).save(this.created, input);
+      await new PropertyValueInsertOperation(trans, UserGroup2stringEntity).save(this.created, input);
+      await new FlagValueInsertOperation(trans, UserGroup2flagEntity).save(this.created, input);
     });
 
     return groupRepo.findOne({

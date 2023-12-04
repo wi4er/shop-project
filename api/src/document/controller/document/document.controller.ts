@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { DocumentEntity } from '../../model/document.entity';
-import { DocumentService } from '../../service/document/document.service';
 import { DocumentInput } from '../../input/document.input';
+import { DocumentInsertOperation } from '../../operation/document-insert.operation';
+import { DocumentUpdateOperation } from '../../operation/document-update.operation';
+import { DocumentDeleteOperation } from '../../operation/document-delete.operation';
 
 @Controller('document')
 export class DocumentController {
@@ -14,9 +16,10 @@ export class DocumentController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(DocumentEntity)
     private docRepo: Repository<DocumentEntity>,
-    private docService: DocumentService,
   ) {
   }
 
@@ -68,29 +71,43 @@ export class DocumentController {
   }
 
   @Post()
-  async addItem(
+  addItem(
     @Body()
       input: DocumentInput,
   ) {
-    return this.docService.insert(input)
-      .then(res => this.docRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new DocumentInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(DocumentEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
-  async updateItem(
+  updateItem(
+    @Param('id')
+      id: number,
     @Body()
       input: DocumentInput,
   ) {
-    return this.docService.update(input)
-      .then(res => this.docRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new DocumentUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(DocumentEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete(':id')
+  deleteItem(
+    @Param('id')
+      id: number,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new DocumentDeleteOperation(trans).save([id]),
+    );
   }
 
 }

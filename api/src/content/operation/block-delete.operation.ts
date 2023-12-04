@@ -6,7 +6,6 @@ export class BlockDeleteOperation {
   constructor(
     private manager: EntityManager,
   ) {
-
   }
 
   async save(idList: number[]) {

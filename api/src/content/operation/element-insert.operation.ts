@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
-import { PropertyInsertOperation } from '../../common/operation/property-insert.operation';
-import { FlagInsertOperation } from '../../common/operation/flag-insert.operation';
+import { PropertyValueInsertOperation } from '../../common/operation/property-value-insert.operation';
+import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { ElementEntity } from '../model/element.entity';
 import { Element2stringEntity } from '../model/element2string.entity';
 import { Element2flagEntity } from '../model/element2flag.entity';
@@ -41,8 +41,8 @@ export class ElementInsertOperation {
 
     await this.manager.save(this.created);
 
-    await new PropertyInsertOperation(this.manager, Element2stringEntity).save(this.created, input);
-    await new FlagInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
+    await new PropertyValueInsertOperation(this.manager, Element2stringEntity).save(this.created, input);
+    await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
 
     return this.created.id;
   }

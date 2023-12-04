@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { FormEntity } from '../../model/form.entity';
 import { FormInput } from '../../input/form.input';
-import { FormService } from '../../service/form/form.service';
 import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FormInsertOperation } from '../../operation/form-insert.operation';
+import { FormUpdateOperation } from '../../operation/form-update.operation';
+import { FormDeleteOperation } from '../../operation/form-delete.operation';
 
 @Controller('form')
 export class FormController {
@@ -15,9 +17,10 @@ export class FormController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(FormEntity)
     private formRepo: Repository<FormEntity>,
-    private formService: FormService,
   ) {
   }
 
@@ -73,25 +76,39 @@ export class FormController {
     @Body()
       input: FormInput,
   ) {
-    return this.formService.insert(input)
-      .then(res => this.formRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new FormInsertOperation(this.entityManager).save(input)
+        .then(id => trans.getRepository(FormEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
   async updateItem(
+    @Param('id')
+      id: string,
     @Body()
       input: FormInput,
   ) {
-    return this.formService.update(input)
-      .then(res => this.formRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new FormUpdateOperation(this.entityManager).save(id, input)
+        .then(id => trans.getRepository(FormEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete(':id')
+  deleteItem(
+    @Param('id')
+      id: string,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new FormDeleteOperation(this.entityManager).save([id]),
+    );
   }
 
 }

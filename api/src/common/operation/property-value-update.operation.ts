@@ -5,7 +5,7 @@ import { WithPropertyInput } from '../input/with-property.input';
 import { PropertyEntity } from '../../settings/model/property.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
-export class PropertyUpdateOperation<T extends WithStringEntity<BaseEntity>> {
+export class PropertyValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
 
   constructor(
     private trans: EntityManager,

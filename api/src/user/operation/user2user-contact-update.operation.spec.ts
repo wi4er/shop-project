@@ -28,7 +28,8 @@ describe('User 2 userContact update operation', () => {
         {
           id: 1,
           login: 'user',
-          group: [], contact: [ {
+          group: [],
+          contact: [ {
             contact: 'phone',
             value: '123'
           } ],

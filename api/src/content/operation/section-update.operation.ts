@@ -2,8 +2,8 @@ import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../model/block.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { PropertyUpdateOperation } from '../../common/operation/property-update.operation';
-import { FlagUpdateOperation } from '../../common/operation/flag-update.operation';
+import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { SectionInput } from '../input/section.input';
 import { Section2stringEntity } from '../model/section2string.entity';
 import { Section2flagEntity } from '../model/section2flag.entity';
@@ -80,8 +80,8 @@ export class SectionUpdateOperation {
     }
     await beforeItem.save();
 
-    await new PropertyUpdateOperation(this.manager, Section2stringEntity).save(beforeItem, input);
-    await new FlagUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
+    await new PropertyValueUpdateOperation(this.manager, Section2stringEntity).save(beforeItem, input);
+    await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;
   }

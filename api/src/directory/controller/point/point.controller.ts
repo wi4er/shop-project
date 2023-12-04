@@ -1,12 +1,25 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { PointEntity } from '../../model/point.entity';
+import { PointInsertOperation } from '../../operation/point-insert.operation';
+import { PointInput } from '../../input/point.input';
+import { PointUpdateOperation } from '../../operation/point-update.operation';
+import { PointDeleteOperation } from '../../operation/point-delete.operation';
 
 @Controller('point')
 export class PointController {
 
+  relations = {
+    directory: true,
+    string: {property: true, lang: true},
+    flag: {flag: true},
+    point: {point: {directory: true}, property: true},
+  };
+
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(PointEntity)
     private pointRepo: Repository<PointEntity>,
   ) {
@@ -15,6 +28,7 @@ export class PointController {
   toView(item: PointEntity) {
     return {
       id: item.id,
+      directory: item.directory.id,
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
@@ -42,11 +56,7 @@ export class PointController {
       limit?: number,
   ) {
     return this.pointRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-        point: {point: {directory: true}, property: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
@@ -55,6 +65,46 @@ export class PointController {
   @Get('count')
   async getCount() {
     return this.pointRepo.count().then(count => ({count}));
+  }
+
+  @Post()
+  addItem(
+    @Body()
+      input: PointInput,
+  ) {
+    return this.entityManager.transaction(
+      trans => new PointInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(PointEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Put(':id')
+  updateItem(
+    @Param('id')
+      pointId: string,
+    @Body()
+      input: PointInput,
+  ) {
+    return this.entityManager.transaction(
+      trans => new PointUpdateOperation(trans).save(pointId, input)
+        .then(id => trans.getRepository(PointEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete('/:id')
+  async deleteItem(
+    @Param('id')
+      id: string,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new PointDeleteOperation(trans).save([id])
+    );
   }
 
 }

@@ -4,7 +4,7 @@ import { WithFlagInput } from '../input/with-flag.input';
 import { FlagEntity } from '../../settings/model/flag.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
-export class FlagInsertOperation<T extends BaseEntity> {
+export class FlagValueInsertOperation<T extends BaseEntity> {
 
   constructor(
     private trans: EntityManager,

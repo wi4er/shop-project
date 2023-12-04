@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
-import { PropertyUpdateOperation } from '../../common/operation/property-update.operation';
-import { FlagUpdateOperation } from '../../common/operation/flag-update.operation';
+import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { ElementEntity } from '../model/element.entity';
 import { ElementInput } from '../input/element.input';
 import { Element2stringEntity } from '../model/element2string.entity';
@@ -61,8 +61,8 @@ export class ElementUpdateOperation {
     beforeItem.block = await this.checkBlock(input.block);
     await beforeItem.save();
 
-    await new PropertyUpdateOperation(this.manager, Element2stringEntity).save(beforeItem, input);
-    await new FlagUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
+    await new PropertyValueUpdateOperation(this.manager, Element2stringEntity).save(beforeItem, input);
+    await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;
   }
