@@ -3,14 +3,15 @@ import { UserEntity } from '../../model/user.entity';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
 import { EncodeService } from '../encode/encode.service';
-import { PropertyValueInsertOperation } from '../../../common/operation/property-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
-import { PropertyValueUpdateOperation } from '../../../common/operation/property-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { UserInput } from '../../input/user.input';
 import { User2stringEntity } from '../../model/user2string.entity';
 import { User2flagEntity } from '../../model/user2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { filterProperties } from '../../../common/input/filter-properties';
 
 @Injectable()
 export class UserService {
@@ -86,7 +87,9 @@ export class UserService {
       created.login = input.login;
       await trans.save(created);
 
-      await new PropertyValueInsertOperation(trans, User2stringEntity).save(created, input);
+      const [stringList, pointList] = filterProperties(input.property);
+
+      await new StringValueInsertOperation(trans, User2stringEntity).save(created, stringList);
       await new FlagValueInsertOperation(trans, User2flagEntity).save(created, input);
     }).catch(err => {
       WrongDataException.assert(err.column !== 'login', 'Login expected!');
@@ -110,7 +113,8 @@ export class UserService {
       beforeItem.login = input.login;
       await beforeItem.save();
 
-      await new PropertyValueUpdateOperation(trans, User2stringEntity).save(beforeItem, input);
+      const [stringList, pointList] = filterProperties(input.property);
+      await new StringValueUpdateOperation(trans, User2stringEntity).save(beforeItem, stringList);
       await new FlagValueUpdateOperation(trans, User2flagEntity).save(beforeItem, input);
     });
 

@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { FlagEntity } from '../../model/flag.entity';
-import { FlagService } from '../../service/flag/flag.service';
 import { FlagInput } from '../../input/flag.input';
+import { FlagInsertOperation } from '../../operation/flag-insert.operation';
+import { FlagUpdateOperation } from '../../operation/flag-update.operation';
+import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
 
 @Controller('flag')
 export class FlagController {
@@ -14,9 +16,10 @@ export class FlagController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(FlagEntity)
     private flagRepo: Repository<FlagEntity>,
-    private flagService: FlagService,
   ) {
   }
 
@@ -38,7 +41,7 @@ export class FlagController {
   }
 
   @Get()
-  async getList(
+  getList(
     @Query('offset')
       offset?: number,
     @Query('limit')
@@ -52,12 +55,12 @@ export class FlagController {
   }
 
   @Get('count')
-  async getCount() {
+  getCount() {
     return this.flagRepo.count().then(count => ({count}));
   }
 
   @Get(':id')
-  async getItem(
+  getItem(
     @Param('id')
       id: string,
   ) {
@@ -68,29 +71,43 @@ export class FlagController {
   }
 
   @Post()
-  async addItem(
+  addItem(
     @Body()
       input: FlagInput,
   ) {
-    return this.flagService.insert(input)
-      .then(res => this.flagRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new FlagInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(FlagEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
-  async updateItem(
+  updateItem(
+    @Param('id')
+      id: string,
     @Body()
       input: FlagInput,
   ) {
-    return this.flagService.update(input)
-      .then(res => this.flagRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new FlagUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(FlagEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete('/:id')
+  async deleteItem(
+    @Param('id')
+      id: string,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new FlagDeleteOperation(trans).save([id]),
+    );
   }
 
 }

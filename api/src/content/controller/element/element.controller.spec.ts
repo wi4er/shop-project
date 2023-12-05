@@ -434,8 +434,8 @@ describe('ElementController', () => {
         .send({
           block: 1,
           property: [
-            {property: 'NAME', string: 'VALUE'}
-          ]
+            {property: 'NAME', string: 'VALUE'},
+          ],
         })
         .expect(201);
 
@@ -453,8 +453,8 @@ describe('ElementController', () => {
         .send({
           block: 1,
           property: [
-            {property: 'WRONG', string: 'VALUE'}
-          ]
+            {property: 'WRONG', string: 'VALUE'},
+          ],
         })
         .expect(400);
     });
@@ -482,12 +482,35 @@ describe('ElementController', () => {
 
       const item = await request(app.getHttpServer())
         .put('/element/1')
-        .send({id: 1})
+        .send({id: 1, block: 1})
         .expect(200);
 
       expect(item.body['id']).toBe(1);
       expect(item.body['block']).toBe(1);
       expect(item.body['version']).toBe(1);
+    });
+
+    test('Should change element block', async () => {
+      await new BlockEntity().save();
+      await new BlockEntity().save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/element/1')
+        .send({id: 1, block: 2})
+        .expect(200);
+
+      expect(item.body['block']).toBe(2);
+    });
+
+    test('Should`t update without block', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new ElementEntity(), {block: 1}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/element/1')
+        .send({id: 1})
+        .expect(400);
     });
 
     test('Shouldn`t change with wrong id', async () => {
@@ -496,7 +519,7 @@ describe('ElementController', () => {
 
       await request(app.getHttpServer())
         .put('/element/10')
-        .send({id: 20})
+        .send({id: 10})
         .expect(404);
     });
 
@@ -519,6 +542,7 @@ describe('ElementController', () => {
         .put('/element/1')
         .send({
           id: 1,
+          block: 1,
           property: [{
             property: 'NAME',
             string: 'VALUE',
@@ -540,6 +564,7 @@ describe('ElementController', () => {
         .put('/element/1')
         .send({
           id: 1,
+          block: 1,
           flag: ['ACTIVE'],
         })
         .expect(200);

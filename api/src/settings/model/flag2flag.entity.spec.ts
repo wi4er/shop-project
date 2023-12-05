@@ -3,6 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { FlagEntity } from './flag.entity';
 import { Flag2flagEntity } from './flag2flag.entity';
+import { Flag2stringEntity } from './flag2string.entity';
 
 describe('Flag entity', () => {
   let source: DataSource;
@@ -34,12 +35,39 @@ describe('Flag entity', () => {
     test('Shouldn`t create flag with duplicate flag', async () => {
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'CHILD'}).save();
-
       await Object.assign(new Flag2flagEntity(), {flag, parent}).save();
 
       await expect(
         Object.assign(new Flag2flagEntity(), {flag, parent}).save()
       ).rejects.toThrow();
     });
+  });
+
+  describe('Flag deletion', () => {
+    test('Should delete flag after parent', async () => {
+      const strRepo = source.getRepository(Flag2stringEntity);
+      const flagRepo = source.getRepository(FlagEntity);
+
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'CHILD'}).save();
+      await Object.assign(new Flag2flagEntity(), {flag, parent}).save();
+
+      await flagRepo.delete({id: 'CHILD'});
+
+      expect(await strRepo.count()).toBe(0);
+    });
+
+    test('Should delete flag after flag', async () => {
+      const strRepo = source.getRepository(Flag2stringEntity);
+      const flagRepo = source.getRepository(FlagEntity);
+
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'CHILD'}).save();
+      await Object.assign(new Flag2flagEntity(), {flag, parent}).save();
+
+      await flagRepo.delete({id: 'ACTIVE'});
+
+      expect(await strRepo.count()).toBe(0);
+    })
   });
 });

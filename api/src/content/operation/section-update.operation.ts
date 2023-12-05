@@ -2,12 +2,13 @@ import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../model/block.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { SectionInput } from '../input/section.input';
 import { Section2stringEntity } from '../model/section2string.entity';
 import { Section2flagEntity } from '../model/section2flag.entity';
 import { SectionEntity } from '../model/section.entity';
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class SectionUpdateOperation {
 
@@ -21,9 +22,10 @@ export class SectionUpdateOperation {
    * @param id
    * @private
    */
-  private async checkBlock(id: number): Promise<BlockEntity> {
-    const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
+  private async checkBlock(id?: number): Promise<BlockEntity> {
+    WrongDataException.assert(id, 'Block id expected!');
 
+    const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
     const inst = await blockRepo.findOne({where: {id}});
     WrongDataException.assert(inst, 'Wrong block id!');
 
@@ -80,7 +82,8 @@ export class SectionUpdateOperation {
     }
     await beforeItem.save();
 
-    await new PropertyValueUpdateOperation(this.manager, Section2stringEntity).save(beforeItem, input);
+    const [stringList, pointList] = filterProperties(input.property);
+    await new StringValueUpdateOperation(this.manager, Section2stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

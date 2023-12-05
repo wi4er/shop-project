@@ -26,10 +26,7 @@ describe('Flag property entity', () => {
       const repo = source.getRepository(FlagEntity);
 
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new FlagEntity(), {
-        id: 'ACTIVE',
-        label: 'activity',
-      }).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       await Object.assign(new Flag2stringEntity(), {
         string: 'Flag name',
@@ -48,10 +45,7 @@ describe('Flag property entity', () => {
       const flagRepo = source.getRepository(FlagEntity);
 
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(new FlagEntity(), {
-        id: 'ACTIVE',
-        label: 'activity',
-      }).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       await Object.assign(new Flag2stringEntity(), {string: 'Flag name', property: 'NAME', parent}).save();
 
@@ -62,4 +56,32 @@ describe('Flag property entity', () => {
       expect(list[0].string).toEqual([]);
     });
   });
+
+  describe('Flag deletion', () => {
+    test('Should delete string after patent', async () => {
+      const strRepo = source.getRepository(Flag2stringEntity);
+      const flagRepo = source.getRepository(FlagEntity);
+
+      const property =await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new Flag2stringEntity(), {string: 'Flag name', property, parent}).save();
+
+      await flagRepo.delete({id: 'ACTIVE'})
+
+      expect(await strRepo.count()).toBe(0);
+    });
+
+    test('Should delete string after patent', async () => {
+      const strRepo = source.getRepository(Flag2stringEntity);
+      const propRepo = source.getRepository(PropertyEntity);
+
+      const property =await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new Flag2stringEntity(), {string: 'Flag name', property, parent}).save();
+
+      await propRepo.delete({id: 'NAME'})
+
+      expect(await strRepo.count()).toBe(0);
+    });
+  })
 });

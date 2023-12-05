@@ -162,6 +162,36 @@ describe('LangController', () => {
 
       expect(res.body.id).toBe('EN');
     });
+
+    test('Should add with strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .post('/lang')
+        .send({
+          id: 'EN',
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(201);
+
+      expect(res.body.id).toBe('EN');
+      expect(res.body.property[0].property).toBe('NAME');
+      expect(res.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const res = await request(app.getHttpServer())
+        .post('/lang')
+        .send({
+          id: 'EN',
+          flag: ['NEW'],
+        })
+        .expect(201);
+
+      expect(res.body.flag).toEqual(['NEW']);
+    });
   });
 
   describe('Lang update', () => {

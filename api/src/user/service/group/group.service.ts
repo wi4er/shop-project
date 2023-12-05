@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
-import { PropertyValueInsertOperation } from '../../../common/operation/property-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
-import { PropertyValueUpdateOperation } from '../../../common/operation/property-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { UserGroupEntity } from '../../model/user-group.entity';
 import { UserGroupInput } from '../../input/user-group.input';
 import { UserGroup2stringEntity } from '../../model/user-group2string.entity';
 import { UserGroup2flagEntity } from '../../model/user-group2flag.entity';
+import { filterProperties } from '../../../common/input/filter-properties';
 
 @Injectable()
 export class GroupService {
@@ -28,7 +29,9 @@ export class GroupService {
       created.id = input.id;
       await trans.save(created);
 
-      await new PropertyValueInsertOperation(trans, UserGroup2stringEntity).save(created, input);
+      const [stringList, pointList] = filterProperties(input.property);
+
+      await new StringValueInsertOperation(trans, UserGroup2stringEntity).save(created, stringList);
       await new FlagValueInsertOperation(trans, UserGroup2flagEntity).save(created, input);
     });
 
@@ -49,7 +52,8 @@ export class GroupService {
       });
       await beforeItem.save();
 
-      await new PropertyValueUpdateOperation(trans, UserGroup2stringEntity).save(beforeItem, input);
+      const [stringList, pointList] = filterProperties(input.property);
+      await new StringValueUpdateOperation(trans, UserGroup2stringEntity).save(beforeItem, stringList);
       await new FlagValueUpdateOperation(trans, UserGroup2flagEntity).save(beforeItem, input);
     });
 

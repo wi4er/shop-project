@@ -1,9 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { LangEntity } from '../../model/lang.entity';
-import { LangService } from '../../service/lang/lang.service';
 import { FlagInput } from '../../input/flag.input';
+import { LangInput } from '../../input/lang.input';
+import { LangInsertOperation } from '../../operation/lang-insert.operation';
+import { LangUpdateOperation } from '../../operation/lang-update.operation';
+import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
+import { LangDeleteOperation } from '../../operation/lang-delete.operation';
 
 @Controller('lang')
 export class LangController {
@@ -14,9 +18,10 @@ export class LangController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(LangEntity)
     private langRepo: Repository<LangEntity>,
-    private langService: LangService,
   ) {
   }
 
@@ -68,29 +73,44 @@ export class LangController {
   }
 
   @Post()
-  async addItem(
+  addItem(
     @Body()
-      input: FlagInput,
+      input: LangInput,
   ) {
-    return this.langService.insert(input)
-      .then(res => this.langRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new LangInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(LangEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
-  async updateItem(
+  updateItem(
+    @Param('id')
+      id: string,
     @Body()
       input: FlagInput,
   ) {
-    return this.langService.update(input)
-      .then(res => this.langRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new LangUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(LangEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+
+  @Delete('/:id')
+  async deleteItem(
+    @Param('id')
+      id: string,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new LangDeleteOperation(trans).save([id]),
+    );
   }
 
 }

@@ -2,11 +2,14 @@ import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../model/directory.entity';
 import { PointEntity } from '../model/point.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { PropertyValueInsertOperation } from '../../common/operation/property-value-insert.operation';
+import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { PointInput } from '../input/point.input';
 import { Point2stringEntity } from '../model/point2string.entity';
 import { Point2flagEntity } from '../model/point2flag.entity';
+import { filterProperties } from '../../common/input/filter-properties';
+import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
+import { Point2pointEntity } from '../model/point2point.entity';
 
 export class PointInsertOperation {
 
@@ -42,7 +45,10 @@ export class PointInsertOperation {
 
     await this.manager.save(this.created);
 
-    await new PropertyValueInsertOperation(this.manager, Point2stringEntity).save(this.created, input);
+    const [stringList, pointList] = filterProperties(input.property);
+
+    await new StringValueInsertOperation(this.manager, Point2stringEntity).save(this.created, stringList);
+    await new PointValueInsertOperation(this.manager, Point2pointEntity).save(this.created, pointList);
     await new FlagValueInsertOperation(this.manager, Point2flagEntity).save(this.created, input);
 
     return this.created.id;

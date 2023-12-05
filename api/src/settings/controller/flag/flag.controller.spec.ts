@@ -154,17 +154,111 @@ describe('FlagController', () => {
 
       expect(inst.body.id).toBe('NEW');
     });
+
+    test('Should add with string', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/flag')
+        .send({
+          id: 'NEW',
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe('NEW');
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/flag')
+        .send({
+          id: 'NEW',
+          flag: ['ACTIVE'],
+        })
+        .expect(201);
+
+      expect(inst.body.id).toBe('NEW');
+      expect(inst.body.flag).toEqual(['ACTIVE']);
+    });
   });
 
   describe('Flag updating', () => {
     test('Should update flag', async () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .put('/flag/NEW')
         .send({
           id: 'NEW',
         })
         .expect(200);
+
+      expect(res.body.id).toBe('NEW');
+    });
+
+    test('Should change id', async () => {
+      await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+      const res = await request(app.getHttpServer())
+        .put('/flag/OLD')
+        .send({
+          id: 'UPDATED',
+        })
+        .expect(200);
+
+      expect(res.body.id).toBe('UPDATED');
+    });
+
+    test('Should add string', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/flag/NEW')
+        .send({
+          id: 'NEW',
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(200);
+
+      expect(res.body.property).toHaveLength(1);
+      expect(res.body.property[0].property).toBe('NAME');
+      expect(res.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/flag/NEW')
+        .send({
+          id: 'NEW',
+          flag: ['ACTIVE'],
+        })
+        .expect(200);
+
+      expect(res.body.flag).toEqual(['ACTIVE']);
+    });
+  });
+
+  describe('Flag deletion', () => {
+    test('Should delete', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .delete('/flag/ACTIVE')
+        .expect(200);
+
+      expect(inst.body).toEqual(['ACTIVE']);
     });
   });
 });

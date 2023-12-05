@@ -1,11 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../model/directory.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { Directory2stringEntity } from '../model/directory2string.entity';
 import { Directory2flagEntity } from '../model/directory2flag.entity';
 import { DirectoryInput } from '../input/directory.input';
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class DirectoryUpdateOperation {
 
@@ -45,7 +46,8 @@ export class DirectoryUpdateOperation {
 
     await beforeItem.save();
 
-    await new PropertyValueUpdateOperation(this.manager, Directory2stringEntity).save(beforeItem, input);
+    const [stringList, pointList] = filterProperties(input.property);
+    await new StringValueUpdateOperation(this.manager, Directory2stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Directory2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

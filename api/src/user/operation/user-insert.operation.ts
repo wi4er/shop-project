@@ -2,7 +2,7 @@ import { EntityManager } from "typeorm";
 import { UserEntity } from "../model/user.entity";
 import { User2stringEntity } from "../model/user2string.entity";
 import { User2flagEntity } from "../model/user2flag.entity";
-import { PropertyValueInsertOperation } from "../../common/operation/property-value-insert.operation";
+import { StringValueInsertOperation } from "../../common/operation/string-value-insert.operation";
 import { FlagValueInsertOperation } from "../../common/operation/flag-value-insert.operation";
 import { User2userContactInsertOperation } from "./user2user-contact-insert.operation";
 import { User2userGroupInsertOperation } from "./user2user-group-insert.operation";
@@ -25,7 +25,7 @@ export class UserInsertOperation {
 
       await trans.save(this.created);
 
-      await new PropertyValueInsertOperation(trans, User2stringEntity).save(this.created, input);
+      await new StringValueInsertOperation(trans, User2stringEntity).save(this.created, input);
       await new FlagValueInsertOperation(trans, User2flagEntity).save(this.created, input);
       await new User2userContactInsertOperation(trans).save(this.created, input);
       await new User2userGroupInsertOperation(trans).save(this.created, input);

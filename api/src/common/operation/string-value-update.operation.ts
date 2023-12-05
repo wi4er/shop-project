@@ -1,11 +1,11 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { CommonStringEntity } from '../model/common-string.entity';
 import { WithStringEntity } from '../model/with-string.entity';
-import { WithPropertyInput } from '../input/with-property.input';
 import { PropertyEntity } from '../../settings/model/property.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
+import { PropertyStringInput } from '../input/property-string.input';
 
-export class PropertyValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
+export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
 
   constructor(
     private trans: EntityManager,
@@ -13,7 +13,7 @@ export class PropertyValueUpdateOperation<T extends WithStringEntity<BaseEntity>
   ) {
   }
 
-  async save(beforeItem: T, input: WithPropertyInput) {
+  async save(beforeItem: T, list: PropertyStringInput[]) {
     const propRepo = this.trans.getRepository(PropertyEntity);
     const langRepo = this.trans.getRepository(LangEntity);
     const current: { [key: string]: Array<CommonStringEntity<BaseEntity>> } = {};
@@ -26,7 +26,7 @@ export class PropertyValueUpdateOperation<T extends WithStringEntity<BaseEntity>
       current[item.property.id].push(item);
     }
 
-    for (const item of input.property ?? []) {
+    for (const item of list ?? []) {
       let inst;
 
       if (current[item.property]?.[0]) {
@@ -36,9 +36,9 @@ export class PropertyValueUpdateOperation<T extends WithStringEntity<BaseEntity>
       }
 
       inst.parent = beforeItem;
-      inst.property = await propRepo.findOne({ where: { id: item.property } });
+      inst.property = await propRepo.findOne({where: {id: item.property}});
       inst.string = item.string;
-      inst.lang = await langRepo.findOne({ where: { id: item.lang } });
+      inst.lang = await langRepo.findOne({where: {id: item.lang}});
 
       await this.trans.save(inst);
     }

@@ -10,9 +10,6 @@ import { Lang2flagEntity } from './model/lang2flag.entity';
 import { FlagEntity } from './model/flag.entity';
 import { Flag2flagEntity } from './model/flag2flag.entity';
 import { Flag2stringEntity } from './model/flag2string.entity';
-import { PropertyService } from './service/property/property.service';
-import { LangService } from './service/lang/lang.service';
-import { FlagService } from './service/flag/flag.service';
 import { PropertyController } from './controller/property/property.controller';
 import { FlagController } from './controller/flag/flag.controller';
 
@@ -25,9 +22,6 @@ import { FlagController } from './controller/flag/flag.controller';
     ]),
   ],
   providers: [
-    PropertyService,
-    LangService,
-    FlagService,
   ],
   controllers: [
     PropertyController,

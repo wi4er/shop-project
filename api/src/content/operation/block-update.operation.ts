@@ -1,11 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../model/block.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { BlockInput } from '../input/block.input';
 import { Block2stringEntity } from '../model/block2string.entity';
 import { Block2flagEntity } from '../model/block2flag.entity';
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class BlockUpdateOperation {
 
@@ -44,7 +45,8 @@ export class BlockUpdateOperation {
 
     await beforeItem.save();
 
-    await new PropertyValueUpdateOperation(this.manager, Block2stringEntity).save(beforeItem, input);
+    const [stringList, pointList] = filterProperties(input.property);
+    await new StringValueUpdateOperation(this.manager, Block2stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Block2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

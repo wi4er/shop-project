@@ -150,6 +150,36 @@ describe('PropertyController', () => {
 
       expect(item.body.id).toBe('NAME');
     });
+
+    test('Should add with strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const item = await request(app.getHttpServer())
+        .post('/property')
+        .send({
+          id: 'SOME',
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(201);
+
+      expect(item.body.id).toBe('SOME');
+      expect(item.body.property[0].property).toBe('NAME');
+      expect(item.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add with flags', async () => {
+      await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
+
+      const item = await request(app.getHttpServer())
+        .post('/property')
+        .send({
+          id: 'SOME',
+          flag: ['PASSIVE'],
+        })
+        .expect(201);
+
+      expect(item.body.flag).toEqual(['PASSIVE']);
+    });
   });
 
   describe('Property update', () => {
@@ -162,6 +192,57 @@ describe('PropertyController', () => {
         .expect(200);
 
       expect(item.body.id).toBe('NAME');
+    });
+
+    test('Should add strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'TARGET'}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/property/TARGET')
+        .send({
+          id: 'TARGET',
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(200);
+
+      expect(item.body.property[0].property).toBe('NAME');
+      expect(item.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add flags', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'TARGET'}).save();
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/property/TARGET')
+        .send({
+          id: 'TARGET',
+          flag: ['ACTIVE'],
+        })
+        .expect(200);
+
+      expect(item.body.flag).toEqual(['ACTIVE']);
+    });
+  });
+
+  describe('Property deletion', () => {
+    test('Should delete property', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const item = await request(app.getHttpServer())
+        .delete('/property/NAME')
+        .expect(200);
+
+      expect(item.body).toEqual(['NAME']);
+    });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const item = await request(app.getHttpServer())
+        .delete('/property/WRONG')
+        .expect(404);
     });
   });
 });

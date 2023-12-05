@@ -1,10 +1,11 @@
 
-export class PropertyValueInput {
+export interface PropertyValueInput {
 
   property: string;
 
-  string: string;
-
-  lang: string;
-
 }
+
+
+
+
+

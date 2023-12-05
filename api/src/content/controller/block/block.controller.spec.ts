@@ -193,6 +193,26 @@ describe('BlockController', () => {
       expect(inst.body.property[0].string).toBe('VALUE');
     });
 
+    test('Should add with point', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      await Object.assign(new PointEntity(), {id: 'London', directory}).save();
+      await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/block')
+        .send({
+          property: [
+            {property: 'CURRENT', point: 'London'},
+          ],
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('CURRENT');
+      expect(inst.body.property[0].point).toBe('London');
+      expect(inst.body.property[0].directory).toBe('CITY');
+    });
+
     test('Should add with flag', async () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
@@ -237,6 +257,21 @@ describe('BlockController', () => {
       expect(inst.body.property[0].string).toBe('John');
     });
 
+    test('Should remove strings', async () => {
+      const parent = await new BlockEntity().save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Block2stringEntity(), {property, parent, string: 'VALUE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/block/1')
+        .send({
+          property: [],
+        })
+        .expect(200);
+
+      expect(inst.body.property).toHaveLength(0);
+    });
+
     test('Should add flags', async () => {
       await new BlockEntity().save();
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
@@ -249,6 +284,19 @@ describe('BlockController', () => {
         .expect(200);
 
       expect(inst.body.flag).toEqual(['NEW']);
+    });
+
+    test('Should remove flags', async () => {
+      const parent = await new BlockEntity().save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await Object.assign(new Block2flagEntity(), {flag, parent}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/block/1')
+        .send({flag: []})
+        .expect(200);
+
+      expect(inst.body.flag).toEqual([]);
     });
   });
 

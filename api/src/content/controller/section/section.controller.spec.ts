@@ -266,8 +266,8 @@ describe('SectionController', () => {
         .send({
           block: 1,
           property: [
-            {property: 'NAME', string: 'VALUE'}
-          ]
+            {property: 'NAME', string: 'VALUE'},
+          ],
         })
         .expect(201);
 
@@ -285,8 +285,8 @@ describe('SectionController', () => {
         .send({
           block: 1,
           property: [
-            {property: 'WRONG', string: 'VALUE'}
-          ]
+            {property: 'WRONG', string: 'VALUE'},
+          ],
         })
         .expect(400);
     });
@@ -347,7 +347,7 @@ describe('SectionController', () => {
     });
   });
 
-  describe('Section updating', () => {
+  describe('Content section updating', () => {
     test('Should update item', async () => {
       const block = await new BlockEntity().save();
       await Object.assign(new SectionEntity(), {block}).save();
@@ -360,18 +360,74 @@ describe('SectionController', () => {
       expect(inst.body.id).toEqual(1);
     });
 
+    test('Shouldn`t update without block', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/section/1')
+        .send({})
+        .expect(400);
+    });
+
+    test('Shouldn`t update with wrong block', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/section/1')
+        .send({block: 999})
+        .expect(400);
+    });
+
     test('Should add parent', async () => {
       const block = await new BlockEntity().save();
       await Object.assign(new SectionEntity(), {block}).save();
       await Object.assign(new SectionEntity(), {block}).save();
 
-      const inst =await request(app.getHttpServer())
+      const inst = await request(app.getHttpServer())
         .put('/section/1')
         .send({block: 1, parent: 2})
         .expect(200);
 
       expect(inst.body.id).toBe(1);
       expect(inst.body.parent).toBe(2);
+    });
+
+    test('Should add strings', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/section/1')
+        .send({
+          block: 1,
+          property: [
+            {property: 'NAME', string: 'VALUE'},
+          ],
+        })
+        .expect(200);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add flag', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new SectionEntity(), {block}).save();
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/section/1')
+        .send({
+          block: 1,
+          flag: ['NEW'],
+        })
+        .expect(200);
+
+      expect(inst.body.flag).toEqual(['NEW']);
     });
   });
 });

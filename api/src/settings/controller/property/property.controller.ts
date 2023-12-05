@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { PropertyEntity } from '../../model/property.entity';
-import { PropertyService } from '../../service/property/property.service';
 import { PropertyInput } from '../../input/property.input';
+import { PropertyInsertOperation } from '../../operation/property-insert.operation';
+import { PropertyUpdateOperation } from '../../operation/property-update.operation';
+import { PropertyDeleteOperation } from '../../operation/property-delete.operation';
 
 @Controller('property')
 export class PropertyController {
@@ -14,9 +16,10 @@ export class PropertyController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(PropertyEntity)
     private propertyRepo: Repository<PropertyEntity>,
-    private propertyService: PropertyService,
   ) {
   }
 
@@ -72,25 +75,39 @@ export class PropertyController {
     @Body()
       input: PropertyInput,
   ) {
-    return this.propertyService.insert(input)
-      .then(res => this.propertyRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new PropertyInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(PropertyEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
   async updateItem(
+    @Param('id')
+      id: string,
     @Body()
       input: PropertyInput,
   ) {
-    return this.propertyService.update(input)
-      .then(res => this.propertyRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new PropertyUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(PropertyEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete(':id')
+  async deleteItem(
+    @Param('id')
+      id: string,
+  ): Promise<string[]> {
+    return this.entityManager.transaction(
+      trans => new PropertyDeleteOperation(trans).save([id]),
+    );
   }
 
 }

@@ -10,10 +10,6 @@ export class UserGroupInput implements WithPropertyInput, WithFlagInput {
 
   parent: number | null;
 
-  @ApiProperty({
-    type: () => PropertyValueInput,
-    description: 'User group property data list',
-  })
   property: PropertyValueInput[];
 
   @ApiProperty({ type: [ String ] })

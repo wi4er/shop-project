@@ -1,13 +1,14 @@
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { PropertyValueUpdateOperation } from '../../common/operation/property-value-update.operation';
+import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { PointInput } from '../input/point.input';
 import { DirectoryEntity } from '../model/directory.entity';
 import { PointEntity } from '../model/point.entity';
 import { Point2stringEntity } from '../model/point2string.entity';
 import { Point2flagEntity } from '../model/point2flag.entity';
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class PointUpdateOperation {
 
@@ -62,7 +63,8 @@ export class PointUpdateOperation {
 
     await beforeItem.save();
 
-    await new PropertyValueUpdateOperation(this.manager, Point2stringEntity).save(beforeItem, input);
+    const [stringList, pointList] = filterProperties(input.property);
+    await new StringValueUpdateOperation(this.manager, Point2stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Point2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

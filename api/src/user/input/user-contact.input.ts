@@ -12,10 +12,6 @@ export class UserContactInput implements WithPropertyInput, WithFlagInput {
   @ApiProperty()
   type: UserContactType;
 
-  @ApiProperty({
-    type: () => PropertyValueInput,
-    description: 'User property data list',
-  })
   property: PropertyValueInput[];
 
   @ApiProperty({ type: [ String ] })

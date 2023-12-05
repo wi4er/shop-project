@@ -36,6 +36,7 @@ export class Flag2flagEntity
     flag => flag.flag,
     {
       onDelete: 'CASCADE',
+      nullable: false,
     },
   )
   parent: FlagEntity;
