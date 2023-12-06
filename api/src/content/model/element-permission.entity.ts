@@ -9,9 +9,13 @@ import {
 import { UserGroupEntity } from '../../user/model/user-group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 import { ElementEntity } from './element.entity';
+import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
 
-@Entity('element-permission')
-export class ElementPermissionEntity extends BaseEntity {
+@Entity('content-element-permission')
+export class ElementPermissionEntity
+  extends BaseEntity
+  implements CommonPermissionEntity<ElementEntity>
+{
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -32,16 +36,16 @@ export class ElementPermissionEntity extends BaseEntity {
     type => ElementEntity,
     element => element.permission,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     }
   )
-  element: ElementEntity;
+  parent: ElementEntity;
 
   @ManyToOne(
     type => UserGroupEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     }
   )

@@ -74,7 +74,7 @@ export class ElementEntity
 
   @OneToMany(
     type => ElementPermissionEntity,
-    permission => permission.element,
+    permission => permission.parent,
   )
   permission: ElementPermissionEntity[];
 

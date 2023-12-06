@@ -26,6 +26,7 @@ export class ElementController {
     section: true,
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
+    permission: {group: true},
     block: true,
   };
 
@@ -60,6 +61,10 @@ export class ElementController {
       ],
       flag: item.flag.map(fl => fl.flag.id),
       section: item.section?.map(sec => sec.id),
+      permission: item.permission?.map(it => ({
+        method: it.method,
+        group: it.group.id,
+      })),
     };
   }
 
@@ -170,7 +175,7 @@ export class ElementController {
       await this.permRepo.findOne({
         where: {
           group: In(group),
-          element: {id},
+          parent: {id},
           method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       }),
@@ -184,7 +189,9 @@ export class ElementController {
   }
 
   @Post()
-  addItem(
+  async addItem(
+    @CurrentGroups()
+      group: number[],
     @Body()
       input: ElementInput,
   ) {
@@ -198,16 +205,29 @@ export class ElementController {
   }
 
   @Put(':id')
-  updateItem(
+  async updateItem(
+    @CurrentGroups()
+      group: number[],
     @Param('id')
-      elementId: number,
+      id: number,
     @Body()
       input: ElementInput,
   ) {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: In(group),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
     return this.entityManager.transaction(
-      trans => new ElementUpdateOperation(trans).save(elementId, input)
-        .then(id => trans.getRepository(ElementEntity).findOne({
-          where: {id},
+      trans => new ElementUpdateOperation(trans).save(id, input)
+        .then(updatedId => trans.getRepository(ElementEntity).findOne({
+          where: {id: updatedId},
           relations: this.relations,
         })),
     ).then(this.toView);
@@ -215,9 +235,22 @@ export class ElementController {
 
   @Delete('/:id')
   async deleteItem(
+    @CurrentGroups()
+      group: number[],
     @Param('id')
       id: number,
   ): Promise<number[]> {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: In(group),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
     return this.entityManager.transaction(
       trans => new ElementDeleteOperation(trans).save([id]),
     );
