@@ -29,7 +29,12 @@ export class UserService {
    *
    */
   async findByLogin(login: string, password: string): Promise<UserEntity | null> {
-    const user = await this.userRepo.findOne({where: {login}});
+    const user = await this.userRepo.findOne({
+      where: {login},
+      relations: {
+        group: true,
+      }
+    });
 
     if (
       !user

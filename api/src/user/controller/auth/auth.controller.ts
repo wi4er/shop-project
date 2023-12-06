@@ -23,8 +23,8 @@ export class AuthController {
     name: 'password',
     description: 'User password',
   })
-  @ApiResponse({ status: 403, description: 'User login or password incorrect!' })
-  @ApiResponse({ status: 200, description: 'Successfully authorized!' })
+  @ApiResponse({status: 403, description: 'User login or password incorrect!'})
+  @ApiResponse({status: 200, description: 'Successfully authorized!'})
   async createSession(
     @Headers('login')
       login: string,
@@ -46,8 +46,8 @@ export class AuthController {
   }
 
   @Delete()
-  @ApiResponse({ status: 200, description: 'Session was successfully closed!' })
-  @ApiResponse({ status: 400, description: 'Session not found!' })
+  @ApiResponse({status: 200, description: 'Session was successfully closed!'})
+  @ApiResponse({status: 400, description: 'Session not found!'})
   async closeSession(
     @Req()
       req: Request,

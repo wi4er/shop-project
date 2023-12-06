@@ -32,7 +32,8 @@ describe('AuthController', () => {
       const res = await request(app.getHttpServer())
         .get('/auth')
         .set('login', 'USER')
-        .set('password', 'qwerty');
+        .set('password', 'qwerty')
+        .expect(200);
 
       expect(res.body['login']).toBe('USER');
       expect(res.body['id']).toBe(1);

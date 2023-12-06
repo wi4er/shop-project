@@ -7,6 +7,7 @@ import { FlagValueInsertOperation } from "../../common/operation/flag-value-inse
 import { User2userContactInsertOperation } from "./user2user-contact-insert.operation";
 import { User2userGroupInsertOperation } from "./user2user-group-insert.operation";
 import { UserInput } from "../input/user.input";
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class UserInsertOperation {
 
@@ -25,7 +26,9 @@ export class UserInsertOperation {
 
       await trans.save(this.created);
 
-      await new StringValueInsertOperation(trans, User2stringEntity).save(this.created, input);
+      const [stringList, pointList] = filterProperties(input.property);
+
+      await new StringValueInsertOperation(trans, User2stringEntity).save(this.created, stringList);
       await new FlagValueInsertOperation(trans, User2flagEntity).save(this.created, input);
       await new User2userContactInsertOperation(trans).save(this.created, input);
       await new User2userGroupInsertOperation(trans).save(this.created, input);

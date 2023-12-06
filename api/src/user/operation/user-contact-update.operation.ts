@@ -5,6 +5,7 @@ import { UserContact2flagEntity } from "../model/user-contact2flag.entity";
 import { StringValueUpdateOperation } from "../../common/operation/string-value-update.operation";
 import { FlagValueUpdateOperation } from "../../common/operation/flag-value-update.operation";
 import { UserContactInput } from "../input/user-contact.input";
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class UserContactUpdateOperation {
 
@@ -32,7 +33,9 @@ export class UserContactUpdateOperation {
       });
 
       this.beforeItem.type = this.input.type;
-      await new StringValueUpdateOperation(trans, UserContact2stringEntity).save(this.beforeItem, this.input);
+
+      const [stringList, pointList] = filterProperties(this.input.property);
+      await new StringValueUpdateOperation(trans, UserContact2stringEntity).save(this.beforeItem, stringList);
       await new FlagValueUpdateOperation(trans, UserContact2flagEntity).save(this.beforeItem, this.input);
 
       await this.beforeItem.save();

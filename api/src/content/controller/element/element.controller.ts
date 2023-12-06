@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
@@ -11,6 +11,11 @@ import { ElementOrderSchema } from '../../schema/element-order.schema';
 import { ElementInsertOperation } from '../../operation/element-insert.operation';
 import { ElementUpdateOperation } from '../../operation/element-update.operation';
 import { ElementDeleteOperation } from '../../operation/element-delete.operation';
+import { ElementPermissionEntity } from '../../model/element-permission.entity';
+import { PermissionMethod } from '../../../permission/model/permission-method';
+import { Request } from 'express';
+import { PermissionException } from '../../../exception/permission/permission.exception';
+import { CurrentGroups } from '../../../user/decorator/current-user/current-user.decorator';
 
 @ApiTags('Content')
 @Controller('element')
@@ -29,6 +34,8 @@ export class ElementController {
     private entityManager: EntityManager,
     @InjectRepository(ElementEntity)
     private elementRepo: Repository<ElementEntity>,
+    @InjectRepository(ElementPermissionEntity)
+    private permRepo: Repository<ElementPermissionEntity>,
   ) {
   }
 
@@ -106,6 +113,8 @@ export class ElementController {
 
   @Get()
   async getList(
+    @CurrentGroups()
+      group: number[],
     @Query('filter')
       filter?: ElementFilterSchema,
     @Query('sort')
@@ -116,7 +125,13 @@ export class ElementController {
       limit?: number,
   ) {
     return this.elementRepo.find({
-      where: filter ? this.toWhere(filter) : null,
+      where: {
+        ...(filter ? this.toWhere(filter) : {}),
+        permission: {
+          group: In(group),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+        },
+      },
       order: sort ? this.toOrder(sort) : null,
       relations: this.relations,
       take: limit,
@@ -126,19 +141,42 @@ export class ElementController {
 
   @Get('count')
   async getCount(
+    @CurrentGroups()
+      group: number[],
     @Query('filter')
       filter?: ElementFilterSchema,
   ) {
     return this.elementRepo.count({
-      where: filter ? this.toWhere(filter) : null,
+      where: {
+        ...(filter ? this.toWhere(filter) : {}),
+        permission: {
+          group: In(group),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+        },
+      },
     }).then(count => ({count}));
   }
 
   @Get(':id')
   async getItem(
+    @CurrentGroups()
+      group: number[],
     @Param('id')
       id: number,
+    @Req()
+      req: Request,
   ) {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: In(group),
+          element: {id},
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied for element ${id}`,
+    );
+
     return this.elementRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -181,7 +219,7 @@ export class ElementController {
       id: number,
   ): Promise<number[]> {
     return this.entityManager.transaction(
-      trans => new ElementDeleteOperation(trans).save([id])
+      trans => new ElementDeleteOperation(trans).save([id]),
     );
   }
 

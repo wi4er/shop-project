@@ -5,6 +5,7 @@ import { UserGroup2flagEntity } from "../model/user-group2flag.entity";
 import { StringValueUpdateOperation } from "../../common/operation/string-value-update.operation";
 import { FlagValueUpdateOperation } from "../../common/operation/flag-value-update.operation";
 import { UserGroupInput } from "../input/user-group.input";
+import { filterProperties } from '../../common/input/filter-properties';
 
 export class UserGroupUpdateOperation {
 
@@ -31,7 +32,9 @@ export class UserGroupUpdateOperation {
         },
       });
 
-      await new StringValueUpdateOperation(trans, UserGroup2stringEntity).save(this.beforeItem, this.input);
+      const [stringList, pointList] = filterProperties(this.input.property);
+
+      await new StringValueUpdateOperation(trans, UserGroup2stringEntity).save(this.beforeItem, stringList);
       await new FlagValueUpdateOperation(trans, UserGroup2flagEntity).save(this.beforeItem, this.input);
 
       await this.beforeItem.save();

@@ -17,6 +17,8 @@ import { SettingsModule } from './settings/settings.module';
 import { DocumentModule } from './document/document.module';
 import { ReportModule } from './report/report.module';
 import { NoDataFilter } from './exception/no-data/no-data.filter';
+import redisPermission from './permission/redis.permission';
+import { PermissionFilter } from './exception/permission/permission.filter';
 
 @Module({
   imports: [
@@ -43,10 +45,18 @@ import { NoDataFilter } from './exception/no-data/no-data.filter';
       provide: APP_FILTER,
       useClass: NoDataFilter,
     },
+    {
+      provide: APP_FILTER,
+      useClass: PermissionFilter,
+    },
   ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(redisPermission())
+      .forRoutes('/');
+
     consumer
       .apply(cors({
         credentials: true,

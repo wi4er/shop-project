@@ -9,7 +9,10 @@ export class SessionService {
     req: Request,
     user: UserEntity,
   ) {
-    req['session']['user'] = { id: user.id };
+    req['session']['user'] = {
+      id: user.id,
+      group: user.group.map(it => it.id),
+    };
   }
 
   close(
