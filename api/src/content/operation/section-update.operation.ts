@@ -5,7 +5,7 @@ import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { SectionInput } from '../input/section.input';
-import { Section2stringEntity } from '../model/section2string.entity';
+import { Section4stringEntity } from '../model/section4string.entity';
 import { Section2flagEntity } from '../model/section2flag.entity';
 import { SectionEntity } from '../model/section.entity';
 import { filterProperties } from '../../common/input/filter-properties';
@@ -83,7 +83,7 @@ export class SectionUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Section2stringEntity).save(beforeItem, stringList);
+    await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

@@ -4,7 +4,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { UserGroupEntity } from '../../model/user-group.entity';
-import { UserGroup2stringEntity } from '../../model/user-group2string.entity';
+import { UserGroup4stringEntity } from '../../model/user-group4string.entity';
 import { UserGroup2flagEntity } from '../../model/user-group2flag.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
@@ -99,7 +99,7 @@ describe('GroupController', () => {
     test('Should get flag with strings', async () => {
       const parent = await new UserGroupEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new UserGroup2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new UserGroup4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/group')
@@ -117,7 +117,7 @@ describe('GroupController', () => {
       const parent = await new UserGroupEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new UserGroup2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new UserGroup4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/group')
@@ -152,6 +152,77 @@ describe('GroupController', () => {
 
       expect(inst.body.id).toBe(1);
     });
+
+    test('Should add with parent', async () => {
+      await new UserGroupEntity().save();
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .send({parent: 1})
+        .expect(201);
+
+      expect(inst.body.id).toBe(2);
+      expect(inst.body.parent).toBe(1);
+    });
+
+    test('Shouldn`t add with wrong parent', async () => {
+      await new UserGroupEntity().save();
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .send({
+          parent: 777
+        })
+        .expect(400);
+
+      console.log(inst.body);
+    });
+
+    test('Should add with strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .send({
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Shouldn`t with wrong property', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .send({
+          property: [{property: 'WRONG', string: 'VALUE'}],
+        })
+        .expect(400);
+    });
+
+    test('Should add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .send({
+          flag: ['OLD'],
+        })
+        .expect(201);
+
+      expect(inst.body.flag).toEqual(['OLD']);
+    });
+
+    test('Should n`t add with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/group')
+        .send({flag: ['WRONG']})
+        .expect(400);
+    });
   });
 
   describe('Group update', () => {
@@ -162,6 +233,100 @@ describe('GroupController', () => {
         .expect(200);
 
       expect(inst.body.id).toBe(1);
+    });
+
+    test('Should add parent to group', async () => {
+      await new UserGroupEntity().save();
+      await new UserGroupEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/group/2')
+        .send({parent: 1})
+        .expect(200);
+
+      expect(inst.body.id).toBe(2);
+      expect(inst.body.parent).toBe(1);
+    });
+
+    test('Shouldn`t add wrong parent', async () => {
+      await new UserGroupEntity().save();
+      await new UserGroupEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/group/2')
+        .send({parent: 777})
+        .expect(400);
+    });
+
+    test('Should add strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await new UserGroupEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/group/1')
+        .send({
+          property: [{property: 'NAME', string: 'VALUE'}]
+        })
+        .expect(200);
+
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Shouldn`t add with wrong property', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await new UserGroupEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/group/1')
+        .send({
+          property: [{property: 'WRONG', string: 'VALUE'}]
+        })
+        .expect(400);
+    });
+
+    test('Should add flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await new UserGroupEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/group/1')
+        .send({
+          flag: ['NEW']
+        })
+        .expect(200);
+
+      expect(inst.body.flag).toEqual(['NEW']);
+    });
+
+    test('Shouldn`t add wrong flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await new UserGroupEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/group/1')
+        .send({
+          flag: ['WRONG']
+        })
+        .expect(400);
+    });
+  });
+
+  describe('Group delete', () => {
+    test('Should delete group', async () => {
+      await new UserGroupEntity().save();
+      const inst = await request(app.getHttpServer())
+        .delete('/group/1')
+        .expect(200);
+
+      expect(inst.body).toEqual([1]);
+    });
+
+    test('Shouldn`t delete with wrong group', async () => {
+      await new UserGroupEntity().save();
+      const inst = await request(app.getHttpServer())
+        .delete('/group/777')
+        .expect(404);
     });
   });
 });

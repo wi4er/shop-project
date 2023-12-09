@@ -5,9 +5,9 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { PointEntity } from '../../model/point.entity';
-import { Point2stringEntity } from '../../model/point2string.entity';
+import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
-import { Point2pointEntity } from '../../model/point2point.entity';
+import { Point4pointEntity } from '../../model/point4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
@@ -111,7 +111,7 @@ describe('PointController', () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Point2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Point4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/point')
@@ -130,7 +130,7 @@ describe('PointController', () => {
       const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Point2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Point4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/point')
@@ -166,7 +166,7 @@ describe('PointController', () => {
       const point = await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'RULES'}).save();
 
-      await Object.assign(new Point2pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Point4pointEntity(), {parent, property, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/point')

@@ -9,7 +9,7 @@ import {
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Document2flagEntity } from './document2flag.entity';
-import { Document2stringEntity } from './document2string.entity';
+import { Document4stringEntity } from './document4string.entity';
 
 @Entity('document')
 export class DocumentEntity
@@ -32,10 +32,10 @@ export class DocumentEntity
   version: number;
 
   @OneToMany(
-    type => Document2stringEntity,
+    type => Document4stringEntity,
     string => string.parent,
   )
-  string: Document2stringEntity[];
+  string: Document4stringEntity[];
 
   @OneToMany(
     type => Document2flagEntity,

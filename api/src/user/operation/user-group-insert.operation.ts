@@ -1,41 +1,49 @@
-import { EntityManager } from "typeorm";
-import { UserGroupEntity } from "../model/user-group.entity";
-import { UserGroup2stringEntity } from "../model/user-group2string.entity";
-import { UserGroup2flagEntity } from "../model/user-group2flag.entity";
-import { StringValueInsertOperation } from "../../common/operation/string-value-insert.operation";
-import { FlagValueInsertOperation } from "../../common/operation/flag-value-insert.operation";
-import { UserGroupInput } from "../input/user-group.input";
+import { EntityManager } from 'typeorm';
+import { UserGroupEntity } from '../model/user-group.entity';
+import { UserGroup4stringEntity } from '../model/user-group4string.entity';
+import { UserGroup2flagEntity } from '../model/user-group2flag.entity';
+import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
+import { UserGroupInput } from '../input/user-group.input';
 import { filterProperties } from '../../common/input/filter-properties';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class UserGroupInsertOperation {
 
   created: UserGroupEntity;
 
   constructor(
-    private manager: EntityManager,
+    private trans: EntityManager,
   ) {
     this.created = new UserGroupEntity();
   }
 
-  async save(input: UserGroupInput): Promise<UserGroupEntity> {
-    const groupRepo = this.manager.getRepository(UserGroupEntity);
+  /**
+   *
+   * @param id
+   */
+  async checkGroup(id: number): Promise<UserGroupEntity> {
+    const groupRepo = this.trans.getRepository<UserGroupEntity>(UserGroupEntity);
+    const inst = await groupRepo.findOne({where: {id}});
 
-    await this.manager.transaction(async (trans: EntityManager) => {
-      this.created.parent = await groupRepo.findOne({ where: { id: input.parent } });
-      this.created.id = input.id;
+    return WrongDataException.assert(inst, `Group id ${id} not found!`);
+  }
 
-      await trans.save(this.created);
+  /**
+   *
+   * @param input
+   */
+  async save(input: UserGroupInput): Promise<number> {
+    this.created.parent = input.parent ? await this.checkGroup(input.parent) : null;
 
-      const [stringList, pointList] = filterProperties(input.property);
+    await this.trans.save(this.created);
 
-      await new StringValueInsertOperation(trans, UserGroup2stringEntity).save(this.created, stringList);
-      await new FlagValueInsertOperation(trans, UserGroup2flagEntity).save(this.created, input);
-    });
+    const [stringList, pointList] = filterProperties(input.property);
 
-    return groupRepo.findOne({
-      where: { id: this.created.id },
-      loadRelationIds: true,
-    });
+    await new StringValueInsertOperation(this.trans, UserGroup4stringEntity).save(this.created, stringList);
+    await new FlagValueInsertOperation(this.trans, UserGroup2flagEntity).save(this.created, input);
+
+    return this.created.id;
   }
 
 }

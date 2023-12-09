@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { Property2stringEntity } from './property2string.entity';
+import { Property4stringEntity } from './property4string.entity';
 import { Property2flagEntity } from './property2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
@@ -37,10 +37,10 @@ export class PropertyEntity extends BaseEntity
   version: number;
 
   @OneToMany(
-    type => Property2stringEntity,
+    type => Property4stringEntity,
     property => property.parent,
   )
-  string: Property2stringEntity[];
+  string: Property4stringEntity[];
 
   @OneToMany(
     type => Property2flagEntity,

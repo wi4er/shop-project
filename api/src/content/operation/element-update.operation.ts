@@ -3,7 +3,7 @@ import { StringValueUpdateOperation } from '../../common/operation/string-value-
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { ElementEntity } from '../model/element.entity';
 import { ElementInput } from '../input/element.input';
-import { Element2stringEntity } from '../model/element2string.entity';
+import { Element4stringEntity } from '../model/element4string.entity';
 import { Element2flagEntity } from '../model/element2flag.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { BlockEntity } from '../model/block.entity';
@@ -64,7 +64,7 @@ export class ElementUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Element2stringEntity).save(beforeItem, stringList);
+    await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

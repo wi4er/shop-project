@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn, DeleteDateColumn, VersionColumn, OneToMany, ManyToOne,
 } from 'typeorm';
-import { UserGroup2stringEntity } from './user-group2string.entity';
+import { UserGroup4stringEntity } from './user-group4string.entity';
 import { UserGroup2flagEntity } from './user-group2flag.entity';
 import { User2userGroupEntity } from './user2user-group.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
@@ -39,7 +39,7 @@ export class UserGroupEntity
       nullable: true,
     },
   )
-  parent: UserGroupEntity;
+  parent: UserGroupEntity | null;
 
   @OneToMany(
     type => UserGroupEntity,
@@ -54,10 +54,10 @@ export class UserGroupEntity
   user: User2userGroupEntity[];
 
   @OneToMany(
-    type => UserGroup2stringEntity,
+    type => UserGroup4stringEntity,
     property => property.parent,
   )
-  string: UserGroup2stringEntity[];
+  string: UserGroup4stringEntity[];
 
   @OneToMany(
     type => UserGroup2flagEntity,

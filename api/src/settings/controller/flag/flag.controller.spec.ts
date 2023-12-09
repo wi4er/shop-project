@@ -4,7 +4,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { FlagEntity } from '../../model/flag.entity';
-import { Flag2stringEntity } from '../../model/flag2string.entity';
+import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { PropertyEntity } from '../../model/property.entity';
 import { LangEntity } from '../../model/lang.entity';
@@ -98,7 +98,7 @@ describe('FlagController', () => {
     test('Should get flag with strings', async () => {
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Flag2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Flag4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/flag')
@@ -116,7 +116,7 @@ describe('FlagController', () => {
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Flag2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Flag4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/flag')

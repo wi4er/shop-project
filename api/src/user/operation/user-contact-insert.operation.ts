@@ -1,11 +1,12 @@
 import { EntityManager } from "typeorm";
 import { UserContactEntity } from "../model/user-contact.entity";
-import { UserContact2stringEntity } from "../model/user-contact2string.entity";
+import { UserContact4stringEntity } from "../model/user-contact4string.entity";
 import { UserContact2flagEntity } from "../model/user-contact2flag.entity";
 import { StringValueInsertOperation } from "../../common/operation/string-value-insert.operation";
 import { FlagValueInsertOperation } from "../../common/operation/flag-value-insert.operation";
 import { UserContactInput } from "../input/user-contact.input";
 import { filterProperties } from '../../common/input/filter-properties';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class UserContactInsertOperation {
 
@@ -14,30 +15,23 @@ export class UserContactInsertOperation {
   protected manager: EntityManager;
 
   constructor(
-    protected input: UserContactInput
+    private trans: EntityManager,
   ) {
     this.created = new UserContactEntity();
-    this.created.id = this.input.id;
-    this.created.type = this.input.type;
   }
 
-  async save(manager: EntityManager): Promise<UserContactEntity> {
-    this.manager = manager;
-    const contactRepo = this.manager.getRepository(UserContactEntity);
+  async save(input: UserContactInput): Promise<string> {
+    this.created.id = WrongDataException.assert(input.id, 'Contact id expected');
+    this.created.type = WrongDataException.assert(input.type, 'Contact type expected!');
 
-    await this.manager.transaction(async (trans: EntityManager) => {
-      await trans.save(this.created);
+    await this.trans.save(this.created);
 
-      const [stringList, pointList] = filterProperties(this.input.property);
+    const [stringList, pointList] = filterProperties(input.property);
 
-      await new StringValueInsertOperation(trans, UserContact2stringEntity).save(this.created, stringList);
-      await new FlagValueInsertOperation(trans, UserContact2flagEntity).save(this.created, this.input);
-    });
+    await new StringValueInsertOperation(this.trans, UserContact4stringEntity).save(this.created, stringList);
+    await new FlagValueInsertOperation(this.trans, UserContact2flagEntity).save(this.created, input);
 
-    return contactRepo.findOne({
-      where: { id: this.created.id },
-      loadRelationIds: true,
-    });
+    return this.created.id;
   }
 
 }

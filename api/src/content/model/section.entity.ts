@@ -9,11 +9,11 @@ import {
 } from 'typeorm';
 import { Element2sectionEntity } from './element2section.entity';
 import { BlockEntity } from './block.entity';
-import { Section2stringEntity } from './section2string.entity';
+import { Section4stringEntity } from './section4string.entity';
 import { Section2flagEntity } from './section2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
-import { Section2pointEntity } from './section2point.entity';
+import { Section4pointEntity } from './section4point.entity';
 import { SectionPermissionEntity } from './section-permission.entity';
 
 @Entity('content-section')
@@ -63,10 +63,10 @@ export class SectionEntity
   block: BlockEntity;
 
   @OneToMany(
-    type => Section2stringEntity,
+    type => Section4stringEntity,
     property => property.parent,
   )
-  string: Section2stringEntity[];
+  string: Section4stringEntity[];
 
   @OneToMany(
     type => Section2flagEntity,
@@ -81,10 +81,10 @@ export class SectionEntity
   element: Element2sectionEntity[];
 
   @OneToMany(
-    type => Section2pointEntity,
+    type => Section4pointEntity,
     point => point.parent,
   )
-  point: Section2pointEntity[];
+  point: Section4pointEntity[];
 
   @OneToMany(
     type => SectionPermissionEntity,

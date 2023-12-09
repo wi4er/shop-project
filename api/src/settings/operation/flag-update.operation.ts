@@ -1,6 +1,6 @@
 import { FlagEntity } from '../model/flag.entity';
 import { EntityManager } from 'typeorm';
-import { Flag2stringEntity } from '../model/flag2string.entity';
+import { Flag4stringEntity } from '../model/flag4string.entity';
 import { Flag2flagEntity } from '../model/flag2flag.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { filterProperties } from '../../common/input/filter-properties';
@@ -48,7 +48,7 @@ export class FlagUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Flag2stringEntity).save(beforeItem, stringList);
+    await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Flag2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

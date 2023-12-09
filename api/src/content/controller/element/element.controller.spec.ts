@@ -5,11 +5,11 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
 import { ElementEntity } from '../../model/element.entity';
-import { Element2stringEntity } from '../../model/element2string.entity';
+import { Element4stringEntity } from '../../model/element4string.entity';
 import { Element2flagEntity } from '../../model/element2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
-import { Element2pointEntity } from '../../model/element2point.entity';
+import { Element4pointEntity } from '../../model/element4point.entity';
 import { SectionEntity } from '../../model/section.entity';
 import { Element2sectionEntity } from '../../model/element2section.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
@@ -252,7 +252,7 @@ describe('ElementController', () => {
       const block = await new BlockEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const parent = await createElement(block.id);
-      await Object.assign(new Element2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -275,7 +275,7 @@ describe('ElementController', () => {
         const parent = await createElement();
 
         for (let j = 0; j < 10; j++) {
-          await Object.assign(new Element2stringEntity(), {parent, property, string: 'VALUE'}).save();
+          await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
         }
       }
 
@@ -301,9 +301,9 @@ describe('ElementController', () => {
       for (let i = 0; i < 10; i++) {
         const parent = await createElement();
 
-        await Object.assign(new Element2stringEntity(), {parent, property: property1, string: 'VALUE'}).save();
-        await Object.assign(new Element2stringEntity(), {parent, property: property2, string: 'VALUE'}).save();
-        await Object.assign(new Element2stringEntity(), {parent, property: property3, string: 'VALUE'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, property: property1, string: 'VALUE'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, property: property2, string: 'VALUE'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, property: property3, string: 'VALUE'}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -324,7 +324,7 @@ describe('ElementController', () => {
 
       const blank = await Object.assign(new ElementEntity, {block}).save();
       const parent = await createElement();
-      await Object.assign(new Element2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element?filter[string][eq]=VALUE')
@@ -347,11 +347,11 @@ describe('ElementController', () => {
       for (let i = 0; i < 10; i++) {
         const parent = await createElement();
         await Object.assign(
-          new Element2stringEntity(),
+          new Element4stringEntity(),
           {parent, property: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
         ).save();
         await Object.assign(
-          new Element2stringEntity(),
+          new Element4stringEntity(),
           {parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
         ).save();
       }
@@ -459,7 +459,7 @@ describe('ElementController', () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = await Object.assign(new Element2pointEntity(), {parent, property, point}).save();
+      const inst = await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -483,7 +483,7 @@ describe('ElementController', () => {
         const parent = await createElement();
 
         if (i % 2) {
-          await Object.assign(new Element2pointEntity(), {parent, property, point}).save();
+          await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
         }
       }
 
@@ -509,7 +509,7 @@ describe('ElementController', () => {
         const parent = await createElement();
 
         if (i % 2) {
-          await Object.assign(new Element2pointEntity(), {parent, property, point}).save();
+          await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
         }
       }
 

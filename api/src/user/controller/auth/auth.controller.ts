@@ -1,16 +1,19 @@
 import { Controller, Delete, Get, Headers, HttpStatus, Req, Res } from '@nestjs/common';
-import { UserService } from '../../service/user/user.service';
 import { Request, Response } from 'express';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SessionService } from '../../service/session/session.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from '../../model/user.entity';
+import { Repository } from 'typeorm';
 
 @ApiTags('User authorization')
 @Controller('auth')
 export class AuthController {
 
   constructor(
-    private userService: UserService,
     private sessionService: SessionService,
+    @InjectRepository(UserEntity)
+    private userRepo: Repository<UserEntity>,
   ) {
   }
 
@@ -35,7 +38,9 @@ export class AuthController {
     @Res()
       res: Response,
   ) {
-    const user = await this.userService.findByLogin(login, password);
+    const user = await this.userRepo.findOne({
+      where: {login}
+    });
 
     if (user) {
       this.sessionService.open(req, user);

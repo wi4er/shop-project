@@ -4,7 +4,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { FormEntity } from '../../model/form.entity';
-import { Form2stringEntity } from '../../model/form2string.entity';
+import { Form4stringEntity } from '../../model/form4string.entity';
 import { Form2flagEntity } from '../../model/form2flag.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
@@ -99,7 +99,7 @@ describe('FormController', () => {
     test('Should get flag with strings', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Form2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Form4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/form')
@@ -117,7 +117,7 @@ describe('FormController', () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Form2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Form4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/form')
@@ -236,7 +236,7 @@ describe('FormController', () => {
     test('Should update strings', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Form2stringEntity(), {property, parent, string: 'OLD'}).save();
+      await Object.assign(new Form4stringEntity(), {property, parent, string: 'OLD'}).save();
 
       const inst = await request(app.getHttpServer())
         .put('/form/ORDER')

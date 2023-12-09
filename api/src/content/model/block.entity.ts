@@ -9,12 +9,12 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { SectionEntity } from './section.entity';
-import { Block2stringEntity } from './block2string.entity';
+import { Block4stringEntity } from './block4string.entity';
 import { Block2flagEntity } from './block2flag.entity';
 import { BlockPermissionEntity } from './block-permission.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
-import { Block2pointEntity } from './block2point.entity';
+import { Block4pointEntity } from './block4point.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('content-block')
@@ -56,10 +56,10 @@ export class BlockEntity
   section: SectionEntity;
 
   @OneToMany(
-    type => Block2stringEntity,
+    type => Block4stringEntity,
     property => property.parent,
   )
-  string: Block2stringEntity[];
+  string: Block4stringEntity[];
 
   @OneToMany(
     type => Block2flagEntity,
@@ -68,8 +68,8 @@ export class BlockEntity
   flag: Block2flagEntity[];
 
   @OneToMany(
-    type => Block2pointEntity,
+    type => Block4pointEntity,
     point => point.parent,
   )
-  point: Block2pointEntity[];
+  point: Block4pointEntity[];
 }

@@ -4,13 +4,14 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { UserEntity } from '../../model/user.entity';
 import * as request from 'supertest';
-import { User2stringEntity } from '../../model/user2string.entity';
+import { User4stringEntity } from '../../model/user4string.entity';
 import { User2flagEntity } from '../../model/user2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
-import { User2pointEntity } from '../../model/user2point.entity';
+import { User4pointEntity } from '../../model/user4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
+import { UserContactEntity, UserContactType } from '../../model/user-contact.entity';
 
 describe('UserController', () => {
   let source;
@@ -119,7 +120,7 @@ describe('UserController', () => {
     test('Should get user with strings', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
-      await Object.assign(new User2stringEntity(), {parent, property, string: 'John'}).save();
+      await Object.assign(new User4stringEntity(), {parent, property, string: 'John'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/user')
@@ -155,7 +156,7 @@ describe('UserController', () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'SEX'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'MAIL', directory}).save();
 
-      await Object.assign(new User2pointEntity(), {point, parent, property}).save();
+      await Object.assign(new User4pointEntity(), {point, parent, property}).save();
 
       const list = await request(app.getHttpServer())
         .get('/user')
@@ -163,9 +164,9 @@ describe('UserController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].property).toBe('SEX')
-      expect(list.body[0].property[0].point).toBe('MAIL')
-      expect(list.body[0].property[0].directory).toBe('GENDER')
+      expect(list.body[0].property[0].property).toBe('SEX');
+      expect(list.body[0].property[0].point).toBe('MAIL');
+      expect(list.body[0].property[0].directory).toBe('GENDER');
     });
   });
 
@@ -181,10 +182,122 @@ describe('UserController', () => {
     });
 
     test('Shouldn`t add without login', async () => {
-      const inst = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/user')
         .send({})
         .expect(400);
+    });
+
+    test('Should add user with strings', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/user')
+        .send({
+          login: 'user',
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add user with flag', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/user')
+        .send({
+          login: 'user',
+          flag: ['ACTIVE'],
+        })
+        .expect(201);
+
+      expect(inst.body.flag).toEqual(['ACTIVE']);
+    });
+
+    test('Should add user with contact', async () => {
+      await Object.assign(new UserContactEntity(), {id: 'PHONE', type: UserContactType.PHONE}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/user')
+        .send({
+          login: 'user',
+          contact: [{contact: 'PHONE', value: 'VALUE'}],
+        })
+        .expect(201);
+
+      expect(inst.body.contact).toHaveLength(1);
+      expect(inst.body.contact[0].contact).toBe('PHONE');
+      expect(inst.body.contact[0].value).toBe('VALUE');
+    });
+
+    test('Shouldn`t add with wrong contact', async () => {
+      await Object.assign(new UserContactEntity(), {id: 'PHONE', type: UserContactType.PHONE}).save();
+
+      await request(app.getHttpServer())
+        .post('/user')
+        .send({
+          login: 'user',
+          contact: [{contact: 'WRONG', value: 'VALUE'}],
+        })
+        .expect(400);
+    });
+  });
+
+  describe('User update', () => {
+    test('Should update', async () => {
+      await Object.assign(new UserEntity(), {login: 'user'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/user/1')
+        .send({login: 'user'})
+        .expect(200);
+
+      expect(res.body.id).toBe(1);
+      expect(res.body.login).toBe('user');
+    });
+
+    test('Shouldn`t update with login', async () => {
+      await Object.assign(new UserEntity(), {login: 'user'}).save();
+
+      await request(app.getHttpServer())
+        .put('/user/1')
+        .send({})
+        .expect(400);
+    });
+
+    test('Should add strings', async () => {
+      await Object.assign(new UserEntity(), {login: 'user'}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/user/1')
+        .send({
+          login: 'user',
+          property: [{property: 'NAME', string: 'VALUE'}],
+        })
+        .expect(200);
+
+      expect(res.body.property[0].property).toBe('NAME');
+      expect(res.body.property[0].string).toBe('VALUE');
+    });
+
+    test('Should add strings', async () => {
+      await Object.assign(new UserEntity(), {login: 'user'}).save();
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/user/1')
+        .send({
+          login: 'user',
+          flag: ['NEW'],
+        })
+        .expect(200);
+
+      expect(res.body.flag).toEqual(['NEW']);
     });
   });
 

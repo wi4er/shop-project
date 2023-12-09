@@ -10,11 +10,11 @@ import {
   VersionColumn,
   Check,
 } from 'typeorm';
-import { User2stringEntity } from './user2string.entity';
+import { User4stringEntity } from './user4string.entity';
 import { User2flagEntity } from './user2flag.entity';
-import { User2pointEntity } from './user2point.entity';
-import { User2userEntity } from './user2user.entity';
-import { User2descriptionEntity } from './user2description.entity';
+import { User4pointEntity } from './user4point.entity';
+import { User4userEntity } from './user4user.entity';
+import { User4descriptionEntity } from './user4description.entity';
 import { User2userContactEntity } from './user2user-contact.entity';
 import { User2userGroupEntity } from './user2user-group.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
@@ -63,22 +63,22 @@ export class UserEntity
   group: User2userGroupEntity[];
 
   @OneToMany(
-    type => User2stringEntity,
+    type => User4stringEntity,
     property => property.parent,
   )
-  string: User2stringEntity[];
+  string: User4stringEntity[];
 
   @OneToMany(
-    type => User2descriptionEntity,
+    type => User4descriptionEntity,
     property => property.parent,
   )
-  description: User2descriptionEntity[];
+  description: User4descriptionEntity[];
 
   @OneToMany(
-    type => User2pointEntity,
+    type => User4pointEntity,
     point => point.parent,
   )
-  point: User2pointEntity[];
+  point: User4pointEntity[];
 
   @OneToMany(
     type => User2flagEntity,
@@ -87,9 +87,9 @@ export class UserEntity
   flag: User2flagEntity[];
 
   @OneToMany(
-    type => User2userEntity,
+    type => User4userEntity,
     user => user.parent,
   )
-  child: User2userEntity[];
+  child: User4userEntity[];
 
 }

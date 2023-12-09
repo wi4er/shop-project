@@ -5,7 +5,7 @@ import { StringValueUpdateOperation } from '../../common/operation/string-value-
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { LangEntity } from '../model/lang.entity';
 import { LangInput } from '../input/lang.input';
-import { Lang2stringEntity } from '../model/lang2string.entity';
+import { Lang4stringEntity } from '../model/lang4string.entity';
 import { Lang2flagEntity } from '../model/lang2flag.entity';
 
 export class LangUpdateOperation {
@@ -47,7 +47,7 @@ export class LangUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Lang2stringEntity).save(beforeItem, stringList);
+    await new StringValueUpdateOperation(this.manager, Lang4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Lang2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

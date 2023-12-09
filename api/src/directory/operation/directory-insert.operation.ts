@@ -3,11 +3,11 @@ import { DirectoryEntity } from '../model/directory.entity';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { DirectoryInput } from '../input/directory.input';
-import { Directory2stringEntity } from '../model/directory2string.entity';
+import { Directory4stringEntity } from '../model/directory4string.entity';
 import { Directory2flagEntity } from '../model/directory2flag.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
-import { Directory2pointEntity } from '../model/directory2point.entity';
+import { Directory4pointEntity } from '../model/directory4point.entity';
 
 export class DirectoryInsertOperation {
 
@@ -30,8 +30,8 @@ export class DirectoryInsertOperation {
 
     const [stringList, pointList] = filterProperties(input.property);
 
-    await new StringValueInsertOperation(this.manager, Directory2stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.manager, Directory2pointEntity).save(this.created, pointList);
+    await new StringValueInsertOperation(this.manager, Directory4stringEntity).save(this.created, stringList);
+    await new PointValueInsertOperation(this.manager, Directory4pointEntity).save(this.created, pointList);
     await new FlagValueInsertOperation(this.manager, Directory2flagEntity).save(this.created, input);
 
     return this.created.id;

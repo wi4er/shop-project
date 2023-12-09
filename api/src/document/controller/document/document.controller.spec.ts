@@ -7,7 +7,7 @@ import { FlagEntity } from '../../../settings/model/flag.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { DocumentEntity } from '../../model/document.entity';
-import { Document2stringEntity } from '../../model/document2string.entity';
+import { Document4stringEntity } from '../../model/document4string.entity';
 import { Document2flagEntity } from '../../model/document2flag.entity';
 
 describe('DocumentController', () => {
@@ -99,7 +99,7 @@ describe('DocumentController', () => {
     test('Should get flag with strings', async () => {
       const parent = await new DocumentEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Document2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Document4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/document')
@@ -117,7 +117,7 @@ describe('DocumentController', () => {
       const parent = await new DocumentEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Document2stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Document4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/document')

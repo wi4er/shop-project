@@ -4,7 +4,7 @@ import { filterProperties } from '../../common/input/filter-properties';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { PropertyEntity } from '../model/property.entity';
-import { Property2stringEntity } from '../model/property2string.entity';
+import { Property4stringEntity } from '../model/property4string.entity';
 import { Property2flagEntity } from '../model/property2flag.entity';
 
 export class PropertyInsertOperation {
@@ -23,7 +23,7 @@ export class PropertyInsertOperation {
 
     const [stringList, pointList] = filterProperties(input.property);
 
-    await new StringValueInsertOperation(this.manager, Property2stringEntity).save(this.created, stringList);
+    await new StringValueInsertOperation(this.manager, Property4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, Property2flagEntity).save(this.created, input);
 
     return this.created.id;

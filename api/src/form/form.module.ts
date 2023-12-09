@@ -3,7 +3,7 @@ import { FormController } from './controller/form/form.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormEntity } from './model/form.entity';
 import { Form2flagEntity } from './model/form2flag.entity';
-import { Form2stringEntity } from './model/form2string.entity';
+import { Form4stringEntity } from './model/form4string.entity';
 import { FormFieldStringEntity } from './model/form-field-string.entity';
 import { FormFieldElementEntity } from './model/form-field-element.entity';
 import { FormFieldSectionEntity } from './model/form-field-section.entity';
@@ -18,7 +18,7 @@ import { ResultEntity } from './model/result.entity';
   imports: [
     TypeOrmModule.forFeature([
       FlagEntity,
-      FormEntity, Form2flagEntity, Form2stringEntity,
+      FormEntity, Form2flagEntity, Form4stringEntity,
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
       ResultEntity,
       PropertyEntity,

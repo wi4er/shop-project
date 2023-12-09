@@ -8,11 +8,11 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { DirectoryEntity } from './directory.entity';
-import { Point2stringEntity } from './point2string.entity';
+import { Point4stringEntity } from './point4string.entity';
 import { Point2flagEntity } from './point2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
-import { Point2pointEntity } from './point2point.entity';
+import { Point4pointEntity } from './point4point.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('directory-point')
@@ -39,10 +39,10 @@ export class PointEntity
   version: number;
 
   @OneToMany(
-    type => Point2stringEntity,
+    type => Point4stringEntity,
     string => string.parent,
   )
-  string: Point2stringEntity[];
+  string: Point4stringEntity[];
 
   @ManyToOne(
     type => DirectoryEntity,
@@ -61,9 +61,9 @@ export class PointEntity
   flag: Point2flagEntity[];
 
   @OneToMany(
-    type => Point2pointEntity,
+    type => Point4pointEntity,
     point => point.parent,
   )
-  point: Point2pointEntity[];
+  point: Point4pointEntity[];
 
 }

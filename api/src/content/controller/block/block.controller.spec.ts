@@ -4,11 +4,11 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
-import { Block2stringEntity } from '../../model/block2string.entity';
+import { Block4stringEntity } from '../../model/block4string.entity';
 import { Block2flagEntity } from '../../model/block2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
-import { Block2pointEntity } from '../../model/block2point.entity';
+import { Block4pointEntity } from '../../model/block4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
@@ -117,7 +117,7 @@ describe('BlockController', () => {
     test('Should get block with properties', async () => {
       const parent = await new BlockEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Block2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Block4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/block')
@@ -153,7 +153,7 @@ describe('BlockController', () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Block2pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Block4pointEntity(), {parent, property, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/block')
@@ -260,7 +260,7 @@ describe('BlockController', () => {
     test('Should remove strings', async () => {
       const parent = await new BlockEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Block2stringEntity(), {property, parent, string: 'VALUE'}).save();
+      await Object.assign(new Block4stringEntity(), {property, parent, string: 'VALUE'}).save();
 
       const inst = await request(app.getHttpServer())
         .put('/block/1')

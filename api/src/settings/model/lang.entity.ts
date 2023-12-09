@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { Lang2stringEntity } from './lang2string.entity';
+import { Lang4stringEntity } from './lang4string.entity';
 import { Lang2flagEntity } from './lang2flag.entity';
 
 @Entity('lang')
@@ -33,10 +33,10 @@ export class LangEntity extends BaseEntity {
   version: number;
 
   @OneToMany(
-    type => Lang2stringEntity,
+    type => Lang4stringEntity,
     string => string.parent,
   )
-  string: Lang2stringEntity[];
+  string: Lang4stringEntity[];
 
   @OneToMany(
     type => Lang2flagEntity,

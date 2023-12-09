@@ -6,7 +6,7 @@ import {
   UpdateDateColumn, VersionColumn
 } from "typeorm";
 import { UserContact2flagEntity } from "./user-contact2flag.entity";
-import { UserContact2stringEntity } from "./user-contact2string.entity";
+import { UserContact4stringEntity } from "./user-contact4string.entity";
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 
@@ -51,10 +51,10 @@ export class UserContactEntity
   type: UserContactType;
 
   @OneToMany(
-    type => UserContact2stringEntity,
+    type => UserContact4stringEntity,
     property => property.parent,
   )
-  string: UserContact2stringEntity[];
+  string: UserContact4stringEntity[];
 
   @OneToMany(
     type => UserContact2flagEntity,

@@ -4,7 +4,7 @@ import { StringValueInsertOperation } from '../../common/operation/string-value-
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { LangEntity } from '../model/lang.entity';
 import { LangInput } from '../input/lang.input';
-import { Lang2stringEntity } from '../model/lang2string.entity';
+import { Lang4stringEntity } from '../model/lang4string.entity';
 import { Lang2flagEntity } from '../model/lang2flag.entity';
 
 export class LangInsertOperation {
@@ -23,7 +23,7 @@ export class LangInsertOperation {
 
     const [stringList, pointList] = filterProperties(input.property);
 
-    await new StringValueInsertOperation(this.manager, Lang2stringEntity).save(this.created, stringList);
+    await new StringValueInsertOperation(this.manager, Lang4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, Lang2flagEntity).save(this.created, input);
 
     return this.created.id;

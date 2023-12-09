@@ -8,7 +8,7 @@ import {
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Form2flagEntity } from './form2flag.entity';
-import { Form2stringEntity } from './form2string.entity';
+import { Form4stringEntity } from './form4string.entity';
 import { FormFieldEntity } from './form-field.entity';
 import { ResultEntity } from './result.entity';
 
@@ -37,10 +37,10 @@ export class FormEntity
   version: number;
 
   @OneToMany(
-    type => Form2stringEntity,
+    type => Form4stringEntity,
     string => string.parent,
   )
-  string: Form2stringEntity[];
+  string: Form4stringEntity[];
 
   @OneToMany(
     type => Form2flagEntity,

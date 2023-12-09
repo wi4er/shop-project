@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { UserContactEntity } from '../../model/user-contact.entity';
-import { ContactService } from '../../service/contact/contact.service';
 import { UserContactInput } from '../../input/user-contact.input';
+import { UserContactInsertOperation } from '../../operation/user-contact-insert.operation';
+import { UserContactUpdateOperation } from '../../operation/user-contact-update.operation';
+import { UserContactDeleteOperation } from '../../operation/user-contact-delete.operation';
 
 @Controller('contact')
 export class ContactController {
@@ -14,9 +16,10 @@ export class ContactController {
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(UserContactEntity)
     private contactRepo: Repository<UserContactEntity>,
-    private contactService: ContactService,
   ) {
   }
 
@@ -74,25 +77,39 @@ export class ContactController {
     @Body()
       input: UserContactInput,
   ) {
-    return this.contactService.insert(input)
-      .then(res => this.contactRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new UserContactInsertOperation(this.entityManager).save(input)
+        .then(id => trans.getRepository(UserContactEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
   async updateItem(
+    @Param('id')
+      id: string,
     @Body()
       input: UserContactInput,
   ) {
-    return this.contactService.update(input)
-      .then(res => this.contactRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new UserContactUpdateOperation(this.entityManager).save(id, input)
+        .then(contactId => trans.getRepository(UserContactEntity).findOne({
+          where: {id: contactId},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete(':id')
+  async deleteItem(
+    @Param('id')
+      id: string,
+  ) {
+    return this.entityManager.transaction(
+      trans => new UserContactDeleteOperation(this.entityManager).save([id]),
+    );
   }
 
 }

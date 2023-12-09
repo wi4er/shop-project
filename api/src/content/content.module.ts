@@ -3,13 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ElementEntity } from './model/element.entity';
 import { Element2sectionEntity } from './model/element2section.entity';
 import { SectionEntity } from './model/section.entity';
-import { Element2stringEntity } from './model/element2string.entity';
+import { Element4stringEntity } from './model/element4string.entity';
 import { BlockEntity } from './model/block.entity';
-import { Block2stringEntity } from './model/block2string.entity';
-import { Element2pointEntity } from './model/element2point.entity';
-import { Section2pointEntity } from './model/section2point.entity';
-import { Section2stringEntity } from './model/section2string.entity';
-import { Element2elementEntity } from './model/element2element.entity';
+import { Block4stringEntity } from './model/block4string.entity';
+import { Element4pointEntity } from './model/element4point.entity';
+import { Section4pointEntity } from './model/section4point.entity';
+import { Section4stringEntity } from './model/section4string.entity';
+import { Element4elementEntity } from './model/element4element.entity';
 import { BlockController } from './controller/block/block.controller';
 import { ElementController } from './controller/element/element.controller';
 import { Element2flagEntity } from './model/element2flag.entity';
@@ -19,19 +19,21 @@ import { Block2flagEntity } from './model/block2flag.entity';
 import { BlockPermissionEntity } from './model/block-permission.entity';
 import { UserEntity } from '../user/model/user.entity';
 import { UserGroupEntity } from '../user/model/user-group.entity';
-import { Block2pointEntity } from './model/block2point.entity';
+import { Block4pointEntity } from './model/block4point.entity';
 import { PropertyEntity } from '../settings/model/property.entity';
 import { LangEntity } from '../settings/model/lang.entity';
 import { ElementPermissionEntity } from './model/element-permission.entity';
 import { SectionPermissionEntity } from './model/section-permission.entity';
+import { Element4sectionEntity } from './model/element4section.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      ElementEntity, Element2sectionEntity, Element2stringEntity, Element2pointEntity, Element2elementEntity,
+      ElementEntity, Element2sectionEntity, Element4stringEntity, Element4pointEntity,
+      Element4elementEntity, Element4sectionEntity,
       Element2flagEntity, ElementPermissionEntity,
-      SectionEntity, Section2pointEntity, Section2stringEntity, Section2flagEntity, SectionPermissionEntity,
-      BlockEntity, Block2stringEntity, Block2flagEntity, Block2pointEntity, BlockPermissionEntity, BlockPermissionEntity,
+      SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, SectionPermissionEntity,
+      BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, BlockPermissionEntity, BlockPermissionEntity,
       UserEntity, UserGroupEntity,
       PropertyEntity,
       LangEntity,

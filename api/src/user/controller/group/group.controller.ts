@@ -1,14 +1,17 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { UserGroupEntity } from '../../model/user-group.entity';
-import { GroupService } from '../../service/group/group.service';
 import { UserGroupInput } from '../../input/user-group.input';
+import { UserGroupInsertOperation } from '../../operation/user-group-insert.operation';
+import { UserGroupUpdateOperation } from '../../operation/user-group-update.operation';
+import { UserGroupDeleteOperation } from '../../operation/user-group-delete.operation';
 
 @Controller('group')
 export class GroupController {
 
   relations = {
+    parent: true,
     string: {property: true, lang: true},
     flag: {flag: true},
   };
@@ -18,7 +21,6 @@ export class GroupController {
     private entityManager: EntityManager,
     @InjectRepository(UserGroupEntity)
     private groupRepo: Repository<UserGroupEntity>,
-    private groupService: GroupService,
   ) {
   }
 
@@ -28,6 +30,7 @@ export class GroupController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
+      parent: item.parent?.id,
       property: [
         ...item.string.map(str => ({
           string: str.string,
@@ -78,25 +81,39 @@ export class GroupController {
     @Body()
       input: UserGroupInput,
   ) {
-    return this.groupService.insert(input)
-      .then(res => this.groupRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new UserGroupInsertOperation(this.entityManager).save(input)
+        .then(id => trans.getRepository(UserGroupEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
   async updateItem(
+    @Param('id')
+      id: number,
     @Body()
       input: UserGroupInput,
   ) {
-    return this.groupService.update(input)
-      .then(res => this.groupRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new UserGroupUpdateOperation(trans).save(id, input)
+        .then(groupId => trans.getRepository(UserGroupEntity).findOne({
+          where: {id: groupId},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Delete(':id')
+  async deleteItem(
+    @Param('id')
+      id: number,
+  ): Promise<number[]> {
+    return this.entityManager.transaction(
+      trans => new UserGroupDeleteOperation(this.entityManager).save([id]),
+    );
   }
 
 }

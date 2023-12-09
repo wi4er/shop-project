@@ -3,6 +3,7 @@ import { CommonFlagEntity } from '../model/common-flag.entity';
 import { WithFlagEntity } from '../model/with-flag.entity';
 import { WithFlagInput } from '../input/with-flag.input';
 import { FlagEntity } from '../../settings/model/flag.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
 
@@ -12,6 +13,23 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
   ) {
   }
 
+  /**
+   *
+   * @param id
+   * @private
+   */
+  private async checkFlag(id: string): Promise<FlagEntity> {
+    const flagRepo = this.trans.getRepository(FlagEntity);
+    const flag = await flagRepo.findOne({where: {id}});
+
+    return WrongDataException.assert(flag, `Flag ${id} not found!`);
+  }
+
+  /**
+   *
+   * @param beforeItem
+   * @param input
+   */
   async save(beforeItem: T, input: WithFlagInput) {
     const flagRepo = this.trans.getRepository(FlagEntity);
 
@@ -23,7 +41,7 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
       } else {
         const inst = new this.entity();
         inst.parent = beforeItem;
-        inst.flag = await flagRepo.findOne({ where: { id: item } });
+        inst.flag = await this.checkFlag(item);
 
         await this.trans.save(inst);
       }

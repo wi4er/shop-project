@@ -5,11 +5,11 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { BlockEntity } from '../../model/block.entity';
 import { SectionEntity } from '../../model/section.entity';
-import { Section2stringEntity } from '../../model/section2string.entity';
+import { Section4stringEntity } from '../../model/section4string.entity';
 import { Section2flagEntity } from '../../model/section2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
-import { Section2pointEntity } from '../../model/section2point.entity';
+import { Section4pointEntity } from '../../model/section4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
@@ -154,7 +154,7 @@ describe('SectionController', () => {
       const block = await new BlockEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
-      await Object.assign(new Section2stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Section4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')
@@ -192,7 +192,7 @@ describe('SectionController', () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Section2pointEntity(), {point, parent, property}).save();
+      await Object.assign(new Section4pointEntity(), {point, parent, property}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')

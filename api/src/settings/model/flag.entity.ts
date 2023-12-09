@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn, VersionColumn
 } from "typeorm";
-import { Flag2stringEntity } from "./flag2string.entity";
+import { Flag4stringEntity } from "./flag4string.entity";
 import { Flag2flagEntity } from "./flag2flag.entity";
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
@@ -37,10 +37,10 @@ export class FlagEntity
   version: number;
 
   @OneToMany(
-    type => Flag2stringEntity,
+    type => Flag4stringEntity,
     property => property.parent,
   )
-  string: Flag2stringEntity[];
+  string: Flag4stringEntity[];
 
   @OneToMany(
     type => Flag2flagEntity,

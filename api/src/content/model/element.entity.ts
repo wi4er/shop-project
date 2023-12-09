@@ -8,9 +8,9 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { Element2sectionEntity } from './element2section.entity';
-import { Element2stringEntity } from './element2string.entity';
+import { Element4stringEntity } from './element4string.entity';
 import { BlockEntity } from './block.entity';
-import { Element2pointEntity } from './element2point.entity';
+import { Element4pointEntity } from './element4point.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Element2flagEntity } from './element2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
@@ -54,10 +54,10 @@ export class ElementEntity
   section: Element2sectionEntity[];
 
   @OneToMany(
-    type => Element2stringEntity,
+    type => Element4stringEntity,
     property => property.parent,
   )
-  string: Element2stringEntity[];
+  string: Element4stringEntity[];
 
   @OneToMany(
     type => Element2flagEntity,
@@ -66,10 +66,10 @@ export class ElementEntity
   flag: Element2flagEntity[];
 
   @OneToMany(
-    type => Element2pointEntity,
+    type => Element4pointEntity,
     point => point.parent,
   )
-  point: Element2pointEntity[];
+  point: Element4pointEntity[];
 
 
   @OneToMany(

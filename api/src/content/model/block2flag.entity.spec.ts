@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { Block2stringEntity } from './block2string.entity';
+import { Block4stringEntity } from './block4string.entity';
 import { BlockEntity } from './block.entity';
 import { Block2flagEntity } from './block2flag.entity';
 import { FlagEntity } from '../../settings/model/flag.entity';
@@ -18,7 +18,7 @@ describe('Block2flag entity', () => {
 
   describe('Block2flag fields', () => {
     test('Should get empty list', async () => {
-      const repo = source.getRepository(Block2stringEntity);
+      const repo = source.getRepository(Block4stringEntity);
       const list = await repo.find();
 
       expect(list).toHaveLength(0);

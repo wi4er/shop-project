@@ -5,13 +5,13 @@ import { LangEntity } from '../settings/model/lang.entity';
 import { FlagEntity } from '../settings/model/flag.entity';
 import { DocumentEntity } from './model/document.entity';
 import { Document2flagEntity } from './model/document2flag.entity';
-import { Document2stringEntity } from './model/document2string.entity';
+import { Document4stringEntity } from './model/document4string.entity';
 import { DocumentController } from './controller/document/document.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      DocumentEntity, Document2flagEntity, Document2stringEntity,
+      DocumentEntity, Document2flagEntity, Document4stringEntity,
       PropertyEntity,
       LangEntity,
       FlagEntity,

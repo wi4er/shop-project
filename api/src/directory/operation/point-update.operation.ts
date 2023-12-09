@@ -6,7 +6,7 @@ import { FlagValueUpdateOperation } from '../../common/operation/flag-value-upda
 import { PointInput } from '../input/point.input';
 import { DirectoryEntity } from '../model/directory.entity';
 import { PointEntity } from '../model/point.entity';
-import { Point2stringEntity } from '../model/point2string.entity';
+import { Point4stringEntity } from '../model/point4string.entity';
 import { Point2flagEntity } from '../model/point2flag.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 
@@ -64,7 +64,7 @@ export class PointUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Point2stringEntity).save(beforeItem, stringList);
+    await new StringValueUpdateOperation(this.manager, Point4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Point2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

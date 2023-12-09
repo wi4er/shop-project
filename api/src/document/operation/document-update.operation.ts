@@ -4,7 +4,7 @@ import { StringValueUpdateOperation } from '../../common/operation/string-value-
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { DocumentEntity } from '../model/document.entity';
 import { DocumentInput } from '../input/document.input';
-import { Document2stringEntity } from '../model/document2string.entity';
+import { Document4stringEntity } from '../model/document4string.entity';
 import { Document2flagEntity } from '../model/document2flag.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 
@@ -46,7 +46,7 @@ export class DocumentUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Document2stringEntity).save(beforeItem, stringList);
+    await new StringValueUpdateOperation(this.manager, Document4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Document2flagEntity).save(beforeItem, input);
 
     return beforeItem.id;

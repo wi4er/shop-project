@@ -4,10 +4,10 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { DirectoryEntity } from '../../model/directory.entity';
-import { Directory2stringEntity } from '../../model/directory2string.entity';
+import { Directory4stringEntity } from '../../model/directory4string.entity';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
 import { PointEntity } from '../../model/point.entity';
-import { Directory2pointEntity } from '../../model/directory2point.entity';
+import { Directory4pointEntity } from '../../model/directory4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
@@ -116,7 +116,7 @@ describe('DirectoryController', () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(
-        new Directory2stringEntity(),
+        new Directory4stringEntity(),
         {parent: 'CITY', property: 'NAME', string: 'VALUE'},
       ).save();
 
@@ -137,7 +137,7 @@ describe('DirectoryController', () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(
-        new Directory2stringEntity(),
+        new Directory4stringEntity(),
         {parent: 'CITY', property: 'NAME', lang: 'EN', string: 'VALUE'},
       ).save();
 
@@ -174,7 +174,7 @@ describe('DirectoryController', () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'CAPITAL'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Directory2pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Directory4pointEntity(), {parent, property, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/directory')

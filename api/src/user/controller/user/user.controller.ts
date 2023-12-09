@@ -1,10 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { UserService } from '../../service/user/user.service';
 import { UserInput } from '../../input/user.input';
+import { UserInsertOperation } from '../../operation/user-insert.operation';
+import { UserUpdateOperation } from '../../operation/user-update.operation';
+import { UserDeleteOperation } from '../../operation/user-delete.operation';
 
 @ApiTags('User object')
 @Controller('user')
@@ -14,15 +16,16 @@ export class UserController {
     string: {property: true, lang: true},
     group: true,
     child: true,
-    contact: true,
+    contact: {contact: true},
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
   };
 
   constructor(
+    @InjectEntityManager()
+    private entityManager: EntityManager,
     @InjectRepository(UserEntity)
     private userRepo: Repository<UserEntity>,
-    private userService: UserService,
   ) {
   }
 
@@ -34,7 +37,7 @@ export class UserController {
       version: item.version,
       login: item.login,
       contact: item.contact.map(cn => ({
-        contact: cn.contact,
+        contact: cn.contact.id,
         value: cn.value,
       })),
       group: item.group.map(gr => gr.id),
@@ -94,23 +97,30 @@ export class UserController {
     @Body()
       input: UserInput,
   ) {
-    return this.userService.insert(input)
-      .then(res => this.userRepo.findOne({
-        where: {id: res.id},
-        relations: this.relations,
-      }))
-      .then(this.toView);
+    return this.entityManager.transaction(
+      trans => new UserInsertOperation(this.entityManager).save(input)
+        .then(id => trans.getRepository(UserEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Put(':id')
   @ApiParam({name: 'id', description: 'User id'})
   async updateUser(
     @Body()
-      user: UserInput,
+      input: UserInput,
     @Param('id')
       id: number,
   ) {
-    console.log(id, user);
+    return this.entityManager.transaction(
+      trans => new UserUpdateOperation(this.entityManager).save(id, input)
+        .then(id => trans.getRepository(UserEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
   }
 
   @Delete(':id')
@@ -118,7 +128,9 @@ export class UserController {
     @Param('id')
       id: number,
   ) {
-    return this.userService.deleteUser([id]);
+    return this.entityManager.transaction(
+      trans => new UserDeleteOperation(trans).save([id]),
+    );
   }
 
 }

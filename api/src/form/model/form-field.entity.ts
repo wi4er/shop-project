@@ -9,7 +9,7 @@ import { FormEntity } from './form.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { FormField2flagEntity } from './form-field2flag.entity';
-import { FormField2stringEntity } from './form-field2string.entity';
+import { FormField4stringEntity } from './form-field4string.entity';
 import { FormFieldStringEntity } from './form-field-string.entity';
 import { FormFieldElementEntity } from './form-field-element.entity';
 import { FormFieldSectionEntity } from './form-field-section.entity';
@@ -104,10 +104,10 @@ export class FormFieldEntity
   asDirectory: FormFieldDirectoryEntity;
 
   @OneToMany(
-    type => FormField2stringEntity,
+    type => FormField4stringEntity,
     string => string.parent,
   )
-  string: FormField2stringEntity[];
+  string: FormField4stringEntity[];
 
   @OneToMany(
     type => FormField2flagEntity,

@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { FlagEntity } from './flag.entity';
 import { Flag2flagEntity } from './flag2flag.entity';
-import { Flag2stringEntity } from './flag2string.entity';
+import { Flag4stringEntity } from './flag4string.entity';
 
 describe('Flag entity', () => {
   let source: DataSource;
@@ -45,7 +45,7 @@ describe('Flag entity', () => {
 
   describe('Flag deletion', () => {
     test('Should delete flag after parent', async () => {
-      const strRepo = source.getRepository(Flag2stringEntity);
+      const strRepo = source.getRepository(Flag4stringEntity);
       const flagRepo = source.getRepository(FlagEntity);
 
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
@@ -58,7 +58,7 @@ describe('Flag entity', () => {
     });
 
     test('Should delete flag after flag', async () => {
-      const strRepo = source.getRepository(Flag2stringEntity);
+      const strRepo = source.getRepository(Flag4stringEntity);
       const flagRepo = source.getRepository(FlagEntity);
 
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();

@@ -6,12 +6,12 @@ import {
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { Directory2stringEntity } from './directory2string.entity';
+import { Directory4stringEntity } from './directory4string.entity';
 import { PointEntity } from './point.entity';
 import { Directory2flagEntity } from './directory2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
-import { Directory2pointEntity } from './directory2point.entity';
+import { Directory4pointEntity } from './directory4point.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('directory')
@@ -41,10 +41,10 @@ export class DirectoryEntity
   version: number;
 
   @OneToMany(
-    type => Directory2stringEntity,
+    type => Directory4stringEntity,
     propertyProperty => propertyProperty.parent,
   )
-  string: Directory2stringEntity[];
+  string: Directory4stringEntity[];
 
   @OneToMany(
     type => PointEntity,
@@ -59,9 +59,9 @@ export class DirectoryEntity
   flag: Directory2flagEntity[];
 
   @OneToMany(
-    type => Directory2pointEntity,
+    type => Directory4pointEntity,
     point => point.parent,
   )
-  point: Directory2pointEntity[];
+  point: Directory4pointEntity[];
 
 }

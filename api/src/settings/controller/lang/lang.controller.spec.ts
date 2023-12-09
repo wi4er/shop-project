@@ -4,7 +4,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { LangEntity } from '../../model/lang.entity';
-import { Lang2stringEntity } from '../../model/lang2string.entity';
+import { Lang4stringEntity } from '../../model/lang4string.entity';
 import { Lang2flagEntity } from '../../model/lang2flag.entity';
 import { PropertyEntity } from '../../model/property.entity';
 import { FlagEntity } from '../../model/flag.entity';
@@ -99,7 +99,7 @@ describe('LangController', () => {
     test('Should get lang with strings', async () => {
       const parent = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Lang2stringEntity(), {parent, property, string: 'English'}).save();
+      await Object.assign(new Lang4stringEntity(), {parent, property, string: 'English'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/lang')
@@ -118,11 +118,11 @@ describe('LangController', () => {
       const lang1 = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const lang2 = await Object.assign(new LangEntity(), {id: 'GR'}).save();
       await Object.assign(
-        new Lang2stringEntity(),
+        new Lang4stringEntity(),
         {parent: lang1, property, lang: lang1, string: 'English'},
       ).save();
       await Object.assign(
-        new Lang2stringEntity(),
+        new Lang4stringEntity(),
         {parent: lang1, property, lang: lang2, string: 'Englisch'},
       ).save();
 

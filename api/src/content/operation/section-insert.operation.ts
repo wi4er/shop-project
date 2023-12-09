@@ -5,10 +5,10 @@ import { StringValueInsertOperation } from '../../common/operation/string-value-
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { SectionEntity } from '../model/section.entity';
 import { SectionInput } from '../input/section.input';
-import { Section2stringEntity } from '../model/section2string.entity';
+import { Section4stringEntity } from '../model/section4string.entity';
 import { Section2flagEntity } from '../model/section2flag.entity';
 import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
-import { Section2pointEntity } from '../model/section2point.entity';
+import { Section4pointEntity } from '../model/section4point.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 
 export class SectionInsertOperation {
@@ -61,8 +61,8 @@ export class SectionInsertOperation {
 
     const [stringList, pointList] = filterProperties(input.property);
 
-    await new StringValueInsertOperation(this.manager, Section2stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.manager, Section2pointEntity).save(this.created, pointList);
+    await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, stringList);
+    await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pointList);
     await new FlagValueInsertOperation(this.manager, Section2flagEntity).save(this.created, input);
 
     return this.created.id;

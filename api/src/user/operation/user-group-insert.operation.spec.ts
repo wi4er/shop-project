@@ -17,44 +17,38 @@ describe('UserGroup insert operation', () => {
   test('Should insert', async () => {
     const operation = new UserGroupInsertOperation(source.manager)
 
-    const inst = await operation.save({
+    const id = await operation.save({
       parent: null,
       flag: [],
       property: [],
     });
 
-    expect(inst.id).toBe(1);
-    expect(inst.parent).toBe(null);
-    expect(inst.flag).toEqual([]);
-    expect(inst.string).toEqual([]);
-    expect(inst.user).toEqual([]);
+    expect(id).toBe(1);
   });
 
   test('Should insert with flag', async () => {
     await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-
     const operation = new UserGroupInsertOperation(source.manager)
 
-    const inst = await operation.save({
+    const id = await operation.save({
       parent: null,
       flag: [ 'ACTIVE' ],
       property: [],
     });
 
-    expect(inst.flag).toEqual([ 1 ]);
+    expect(id).toBe(1);
   });
 
   test('Should insert with parent', async () => {
     await new UserGroupEntity().save();
-
     const operation = new UserGroupInsertOperation(source.manager)
 
-    const inst = await operation.save({
+    const id = await operation.save({
       parent: 1,
       flag: [],
       property: [],
     });
 
-    expect(inst.parent).toBe(1);
+    expect(id).toBe(2);
   });
 });

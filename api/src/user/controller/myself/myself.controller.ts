@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user.entity';
 import { EntityManager, Repository } from 'typeorm';
-import { UserService } from '../../service/user/user.service';
 import { SessionService } from '../../service/session/session.service';
 import { ApiCreatedResponse, ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserUpdateOperation } from '../../operation/user-update.operation';
@@ -18,7 +17,6 @@ export class MyselfController {
     private userRepo: Repository<UserEntity>,
     @InjectEntityManager()
     private entityManager: EntityManager,
-    private userService: UserService,
     private sessionService: SessionService,
   ) {
   }
@@ -67,28 +65,28 @@ export class MyselfController {
       });
     }
 
-    return this.userService.createByLogin(login, password)
-      .then(user => {
-        this.sessionService.open(req, user);
-        res.json(user);
-      })
-      .catch(err => {
-        if (err.code === '23505') {
-          res.status(400);
-          return res.json({
-            message: 'Login already exists!',
-            field: 'login',
-          });
-        }
-
-        if (err['field']) {
-          res.status(400);
-          return res.json(err);
-        }
-
-        res.status(500);
-        return res.json(err);
-      });
+    // return this.userService.createByLogin(login, password)
+    //   .then(user => {
+    //     this.sessionService.open(req, user);
+    //     res.json(user);
+    //   })
+    //   .catch(err => {
+    //     if (err.code === '23505') {
+    //       res.status(400);
+    //       return res.json({
+    //         message: 'Login already exists!',
+    //         field: 'login',
+    //       });
+    //     }
+    //
+    //     if (err['field']) {
+    //       res.status(400);
+    //       return res.json(err);
+    //     }
+    //
+    //     res.status(500);
+    //     return res.json(err);
+    //   });
   }
 
   @Put()
@@ -110,7 +108,7 @@ export class MyselfController {
       res.send(null);
     } else {
       res.status(201);
-      res.send(await new UserUpdateOperation(this.entityManager).save(user));
+      res.send(await new UserUpdateOperation(this.entityManager).save(id, user));
     }
   }
 

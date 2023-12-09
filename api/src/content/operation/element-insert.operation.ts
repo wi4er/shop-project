@@ -2,13 +2,13 @@ import { EntityManager } from 'typeorm';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { ElementEntity } from '../model/element.entity';
-import { Element2stringEntity } from '../model/element2string.entity';
+import { Element4stringEntity } from '../model/element4string.entity';
 import { Element2flagEntity } from '../model/element2flag.entity';
 import { ElementInput } from '../input/element.input';
 import { BlockEntity } from '../model/block.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
-import { Element2pointEntity } from '../model/element2point.entity';
+import { Element4pointEntity } from '../model/element4point.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
 import { ElementPermissionEntity } from '../model/element-permission.entity';
@@ -30,11 +30,9 @@ export class ElementInsertOperation {
    */
   private async checkBlock(id: number): Promise<BlockEntity> {
     const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
-
     const inst = await blockRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, 'Wrong block id!')
 
-    return inst;
+    return WrongDataException.assert(inst, 'Wrong block id!');
   }
 
   /**
@@ -48,8 +46,8 @@ export class ElementInsertOperation {
 
     const [stringList, pointList] = filterProperties(input.property);
 
-    await new StringValueInsertOperation(this.manager, Element2stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.manager, Element2pointEntity).save(this.created, pointList);
+    await new StringValueInsertOperation(this.manager, Element4stringEntity).save(this.created, stringList);
+    await new PointValueInsertOperation(this.manager, Element4pointEntity).save(this.created, pointList);
     await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
     await new PermissionValueInsertOperation(this.manager, ElementPermissionEntity).save(this.created, input);
 
