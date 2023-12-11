@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
@@ -35,11 +34,12 @@ describe('AuthController', () => {
         .set('password', 'qwerty')
         .expect(200);
 
-      expect(res.body['login']).toBe('USER');
-      expect(res.body['id']).toBe(1);
+      expect(res.body.id).toBe(1);
+      expect(res.body.login).toBe('USER');
+      expect(res.body.group).toEqual([]);
     });
 
-    test('Shouldn`t auth', async () => {
+    test('Shouldn`t auth with wrong password', async () => {
       await Object.assign(new UserEntity(), {
         login: 'USER',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
@@ -48,9 +48,16 @@ describe('AuthController', () => {
       const res = await request(app.getHttpServer())
         .get('/auth')
         .set('login', 'USER')
-        .set('password', 'wrong');
+        .set('password', 'wrong')
+        .expect(403);
+    });
 
-      expect(res.status).toBe(401);
+    test('Shouldn`t auth without password', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/auth')
+        .set('login', 'WRONG')
+        .set('password', 'wrong')
+        .expect(403);
     });
   });
 

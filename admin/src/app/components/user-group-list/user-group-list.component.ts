@@ -30,7 +30,7 @@ export class UserGroupListComponent {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Group>(ApiEntity.GROUP, args)
+    this.apiService.fetchList<Group>(ApiEntity.GROUP, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.GROUP)

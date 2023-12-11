@@ -29,7 +29,7 @@ export class UserContactListComponent {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Contact>(ApiEntity.CONTACT, args)
+    this.apiService.fetchList<Contact>(ApiEntity.CONTACT, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.CONTACT)

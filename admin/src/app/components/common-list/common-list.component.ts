@@ -69,9 +69,9 @@ export class CommonListComponent implements OnInit {
 
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchData<Flag>(ApiEntity.FLAG)
+      this.apiService.fetchList<Flag>(ApiEntity.FLAG)
         .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
-      this.apiService.fetchData<Property>(ApiEntity.PROPERTY)
+      this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
     ]).then(() => {
       this.fetchList({

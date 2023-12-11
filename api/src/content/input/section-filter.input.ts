@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 class SectionFlagFilterSchema {
 
   eq: [ string ];
@@ -6,6 +8,11 @@ class SectionFlagFilterSchema {
 
 export class SectionFilterInput {
 
+  @ApiProperty({
+    name: "filter[block]",
+    description: 'Filter by content block',
+    required: false,
+  })
   block?: string;
 
   flag?: SectionFlagFilterSchema;

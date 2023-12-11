@@ -1,13 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
-import { NoDataFilter } from './exception/no-data/no-data.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // app.useGlobalFilters(new WrongDataFilter());
-  // app.useGlobalFilters(new NoDataFilter());
+  const config = new DocumentBuilder()
+    .setTitle('Philister')
+    .setDescription('The philister API description')
+    .setVersion('1.0')
+    .addTag('philister')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('help', app, document);
 
   await app.listen(3000);
 }

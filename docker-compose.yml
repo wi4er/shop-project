@@ -31,14 +31,16 @@ services:
     restart: always
     links:
       - postgres
+      - cache
     ports:
       - "3001:3000"
     working_dir: /app
-    command: npm start
+    command: npm run start:dev
     volumes:
       - "./api:/app"
     environment:
       DB_HOST: postgres
+      REDIS_URL: redis://cache:6379
 
   cache:
     image: redis:alpine

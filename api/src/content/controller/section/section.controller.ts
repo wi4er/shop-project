@@ -7,7 +7,10 @@ import { SectionInput } from '../../input/section.input';
 import { SectionInsertOperation } from '../../operation/section-insert.operation';
 import { SectionUpdateOperation } from '../../operation/section-update.operation';
 import { SectionDeleteOperation } from '../../operation/section-delete.operation';
+import { ApiCookieAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Content section')
+@ApiCookieAuth()
 @Controller('section')
 export class SectionController {
 
@@ -52,6 +55,14 @@ export class SectionController {
   }
 
   @Get()
+  @ApiParam({
+    name: 'offset',
+    required: false
+  })
+  @ApiParam({
+    name: 'limit',
+    required: false
+  })
   async getList(
     @Query('filter')
       filter?: SectionFilterInput,

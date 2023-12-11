@@ -8,7 +8,7 @@ import { BlockInsertOperation } from '../../operation/block-insert.operation';
 import { BlockUpdateOperation } from '../../operation/block-update.operation';
 import { BlockDeleteOperation } from '../../operation/block-delete.operation';
 
-@ApiTags('Content')
+@ApiTags('Content block')
 @Controller('block')
 export class BlockController {
 

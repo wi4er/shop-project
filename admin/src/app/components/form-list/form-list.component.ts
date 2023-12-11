@@ -30,7 +30,7 @@ export class FormListComponent {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Form>(ApiEntity.FORM, args)
+    this.apiService.fetchList<Form>(ApiEntity.FORM, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.FORM, args)

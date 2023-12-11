@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { MyselfController } from './myself.controller';
 import { UserEntity } from '../../model/user.entity';
 import * as request from 'supertest';
 import { AppModule } from '../../../app.module';
@@ -20,14 +19,14 @@ describe('MyselfController', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe('Myself endpoint', () => {
+  describe('Getting myself', () => {
     test('Should get myself', async () => {
       await Object.assign(new UserEntity(), {
         login: 'user',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
 
-      const { headers } = await request(app.getHttpServer())
+      const {headers} = await request(app.getHttpServer())
         .get(`/auth`)
         .set('login', 'user')
         .set('password', 'qwerty');
@@ -42,11 +41,12 @@ describe('MyselfController', () => {
 
     test('Shouldn`t get without authorization', async () => {
       const res = await request(app.getHttpServer())
-        .get(`/myself`);
-
-      expect(res.status).toBe(401);
+        .get(`/myself`)
+        .expect(403);
     });
+  });
 
+  describe('Updating myself', () => {
     test('Should update myself', async () => {
       await Object.assign(new UserEntity(), {
         login: 'user',

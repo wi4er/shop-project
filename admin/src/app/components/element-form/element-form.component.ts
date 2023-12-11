@@ -35,9 +35,9 @@ export class ElementFormComponent {
 
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchData<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchData<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchData<Lang>(ApiEntity.LANG),
+      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
+      this.apiService.fetchList<Lang>(ApiEntity.LANG),
     ]).then(([property, flag, lang]) => {
       this.propertyList = property;
       this.flagList = flag;

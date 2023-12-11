@@ -31,7 +31,7 @@ export class SectionListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Section>(ApiEntity.SECTION, {...args, ['filter[block]=']: this.blockId})
+    this.apiService.fetchList<Section>(ApiEntity.SECTION, {...args, ['filter[block]=']: this.blockId})
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.SECTION)

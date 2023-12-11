@@ -112,7 +112,7 @@ export class MainMenuComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.apiService.fetchData<Block>(ApiEntity.BLOCK)
+    this.apiService.fetchList<Block>(ApiEntity.BLOCK)
       .then(list => {
         if (list.length > 0) {
           this.content.title = 'Content blocks';
@@ -127,7 +127,7 @@ export class MainMenuComponent implements OnInit {
         }
       });
 
-    this.apiService.fetchData<Form>(ApiEntity.FORM)
+    this.apiService.fetchList<Form>(ApiEntity.FORM)
       .then(list => {
         if (list.length > 0) {
           this.form.title = 'Forms';
@@ -142,7 +142,7 @@ export class MainMenuComponent implements OnInit {
         }
       });
 
-    this.apiService.fetchData<Form>(ApiEntity.DOCUMENT)
+    this.apiService.fetchList<Form>(ApiEntity.DOCUMENT)
       .then(list => {
         if (list.length > 0) {
           this.document.title = 'Documents';

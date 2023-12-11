@@ -28,7 +28,7 @@ export class PropertyListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Property>(ApiEntity.PROPERTY, args)
+    this.apiService.fetchList<Property>(ApiEntity.PROPERTY, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.PROPERTY)

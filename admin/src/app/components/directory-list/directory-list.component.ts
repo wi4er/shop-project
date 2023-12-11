@@ -28,7 +28,7 @@ export class DirectoryListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Directory>(ApiEntity.DIRECTORY, args)
+    this.apiService.fetchList<Directory>(ApiEntity.DIRECTORY, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.DIRECTORY)

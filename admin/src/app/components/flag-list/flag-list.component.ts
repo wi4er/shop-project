@@ -28,7 +28,7 @@ export class FlagListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Flag>(ApiEntity.FLAG, args)
+    this.apiService.fetchList<Flag>(ApiEntity.FLAG, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.FLAG)

@@ -28,7 +28,7 @@ export class LangListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Lang>(ApiEntity.LANG, args)
+    this.apiService.fetchList<Lang>(ApiEntity.LANG, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.LANG)

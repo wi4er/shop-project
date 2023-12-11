@@ -33,7 +33,7 @@ export class ResultListComponent {
       .subscribe(value => {
         this.formId = value.get('id') ?? '';
 
-        this.apiService.fetchData<Result>(ApiEntity.RESULT, {['filter[form]']: this.formId})
+        this.apiService.fetchList<Result>(ApiEntity.RESULT, {['filter[form]']: this.formId})
           .then(list => this.setData(list));
 
         this.apiService.countData(ApiEntity.RESULT)
@@ -42,7 +42,7 @@ export class ResultListComponent {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Result>(ApiEntity.RESULT, {['filter[form]']: this.formId, ...args})
+    this.apiService.fetchList<Result>(ApiEntity.RESULT, {['filter[form]']: this.formId, ...args})
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.RESULT)

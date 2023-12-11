@@ -15,9 +15,9 @@ import { ElementPermissionEntity } from '../../model/element-permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Request } from 'express';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { CurrentGroups } from '../../../user/decorator/current-user/current-user.decorator';
+import { CurrentGroups } from '../../../user/decorator/current-groups/current-groups.decorator';
 
-@ApiTags('Content')
+@ApiTags('Content element')
 @Controller('element')
 export class ElementController {
 

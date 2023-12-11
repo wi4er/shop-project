@@ -16,6 +16,7 @@ export enum ApiEntity {
   CONTACT = 'contact',
   GROUP = 'group',
   DOCUMENT = 'document',
+  MYSELF = 'myself',
 }
 
 @Injectable({
@@ -33,17 +34,21 @@ export class ApiService {
    * @param entity
    * @param query
    */
-  fetchData<T>(entity: ApiEntity, query?: StringifiableRecord): Promise<T[]> {
+  fetchList<T>(entity: ApiEntity, query?: StringifiableRecord): Promise<T[]> {
     const url = qs.stringifyUrl({
       url: [this.apiUrl, entity].join('/'),
       query: query,
     });
 
-    const req = fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error('Api not found!');
-        return res.json();
-      });
+    const req = fetch(url, {
+      headers: {
+        'content-type': 'application/json',
+      },
+      credentials: 'include',
+    }).then(res => {
+      if (!res.ok) throw new Error('Api not found!');
+      return res.json();
+    });
 
     req.catch(err => console.log(err));
 
@@ -55,9 +60,14 @@ export class ApiService {
    * @param entity
    * @param id
    */
-  fetchItem<T>(entity: ApiEntity, id: string): Promise<T> {
+  fetchItem<T>(entity: ApiEntity, id?: string): Promise<T> {
     const req = fetch(
-      [this.apiUrl, entity, id].join('/')
+      [this.apiUrl, entity, id].join('/'), {
+        headers: {
+          'content-type': 'application/json',
+        },
+        credentials: 'include',
+      },
     ).then(res => {
       if (!res.ok) throw new Error('Api not found!');
       return res.json();

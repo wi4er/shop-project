@@ -3,11 +3,13 @@ import { Request, Response } from 'express';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user.entity';
 import { EntityManager, Repository } from 'typeorm';
-import { SessionService } from '../../service/session/session.service';
 import { ApiCreatedResponse, ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserUpdateOperation } from '../../operation/user-update.operation';
-import { UserSchema } from "../../schema/user.schema";
-import { UserInput } from "../../input/user.input";
+import { UserSchema } from '../../schema/user.schema';
+import { UserInput } from '../../input/user.input';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { CurrentUser } from '../../decorator/current-user/current-user.decorator';
+import { PermissionException } from '../../../exception/permission/permission.exception';
 
 @Controller('myself')
 export class MyselfController {
@@ -17,25 +19,24 @@ export class MyselfController {
     private userRepo: Repository<UserEntity>,
     @InjectEntityManager()
     private entityManager: EntityManager,
-    private sessionService: SessionService,
   ) {
   }
 
   @Get()
   async getMyself(
-    @Req()
-      req: Request,
-    @Res()
-      res: Response,
+    @CurrentUser()
+      id: number | null,
   ) {
-    const id = req['session']?.['user']?.['id'];
+    PermissionException.assert(id, 'Authorization required!');
 
-    if (id) {
-      res.json(await this.userRepo.findOne({ where: { id }, loadRelationIds: true }));
-    } else {
-      res.status(HttpStatus.UNAUTHORIZED);
-      res.send(null);
-    }
+    const inst = await this.userRepo.findOne({
+      where: {id},
+      relations: {
+        group: true,
+      },
+    });
+
+    return inst;
   }
 
   @Post()
@@ -49,21 +50,8 @@ export class MyselfController {
     @Res()
       res: Response,
   ) {
-    if (!login) {
-      res.status(400);
-      return res.send({
-        message: 'login expected!',
-        field: 'login',
-      });
-    }
-
-    if (!password) {
-      res.status(400);
-      return res.send({
-        message: 'password expected!',
-        field: 'password',
-      });
-    }
+    WrongDataException.assert(login, 'Login expected!');
+    WrongDataException.assert(password, 'Password expected!');
 
     // return this.userService.createByLogin(login, password)
     //   .then(user => {
@@ -90,9 +78,9 @@ export class MyselfController {
   }
 
   @Put()
-  @ApiOperation({ description: 'Update user by current session' })
-  @ApiCreatedResponse({ description: 'Current user updated successfully', type: UserSchema })
-  @ApiUnauthorizedResponse({ description: 'There is no current session' })
+  @ApiOperation({description: 'Update user by current session'})
+  @ApiCreatedResponse({description: 'Current user updated successfully', type: UserSchema})
+  @ApiUnauthorizedResponse({description: 'There is no current session'})
   async updateMyself(
     @Body()
       user: UserInput,

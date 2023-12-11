@@ -30,7 +30,7 @@ export class BlockListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Block>(ApiEntity.BLOCK, args)
+    this.apiService.fetchList<Block>(ApiEntity.BLOCK, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.BLOCK)

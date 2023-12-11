@@ -172,8 +172,6 @@ describe('GroupController', () => {
           parent: 777
         })
         .expect(400);
-
-      console.log(inst.body);
     });
 
     test('Should add with strings', async () => {

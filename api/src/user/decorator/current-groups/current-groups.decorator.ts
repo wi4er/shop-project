@@ -1,11 +1,11 @@
 import { createParamDecorator, ExecutionContext, SetMetadata } from '@nestjs/common';
 
-export const CurrentUser = createParamDecorator(
+export const CurrentGroups = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest()
     const user = req?.session?.user;
 
-    if (user) return user.id;
-    else return null;
+    if (user) return user.group;
+    else return [];
   },
 )

@@ -33,7 +33,7 @@ export class ElementListComponent implements OnChanges {
   }
 
   fetchList(args: StringifiableRecord = {}) {
-    this.apiService.fetchData<Element>(ApiEntity.ELEMENT, {...args, ['filter[block]']: this.blockId})
+    this.apiService.fetchList<Element>(ApiEntity.ELEMENT, {...args, ['filter[block]']: this.blockId})
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.ELEMENT, {...args, ['filter[block]']: this.blockId})

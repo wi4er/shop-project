@@ -56,6 +56,8 @@ import { UserGroupFormComponent } from './components/user-group-form/user-group-
 import { DocumentListComponent } from './components/document-list/document-list.component';
 import { DocumentFormComponent } from './components/document-form/document-form.component';
 import { DocumentPageComponent } from './components/document-page/document-page.component';
+import { AuthDialogComponent } from './components/auth-dialog/auth-dialog.component';
+import { AuthFormComponent } from './components/auth-form/auth-form.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +99,8 @@ import { DocumentPageComponent } from './components/document-page/document-page.
     DocumentListComponent,
     DocumentFormComponent,
     DocumentPageComponent,
+    AuthDialogComponent,
+    AuthFormComponent,
   ],
   imports: [
     BrowserModule,

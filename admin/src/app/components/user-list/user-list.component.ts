@@ -29,7 +29,7 @@ export class UserListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<User>(ApiEntity.USER, args)
+    this.apiService.fetchList<User>(ApiEntity.USER, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.USER)

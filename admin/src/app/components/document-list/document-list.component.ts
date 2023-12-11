@@ -30,7 +30,7 @@ export class DocumentListComponent {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchData<Document>(ApiEntity.DOCUMENT, args)
+    this.apiService.fetchList<Document>(ApiEntity.DOCUMENT, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.DOCUMENT)

@@ -13,6 +13,7 @@ export default function redisPermission() {
     secret: 'secret$%^134',
     saveUninitialized: false,
     resave: false,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 }
 
