@@ -12,6 +12,10 @@ import { PermissionException } from '../../../exception/permission/permission.ex
 @Controller('auth')
 export class AuthController {
 
+  relations = {
+    group: true,
+  }
+
   constructor(
     private sessionService: SessionService,
     @InjectRepository(UserEntity)
@@ -42,9 +46,7 @@ export class AuthController {
   ) {
     const user = await this.userRepo.findOne({
       where: {login: body.login},
-      relations: {
-        group: true,
-      },
+      relations: this.relations,
     });
 
     PermissionException.assert(user?.hash === this.encodeService.toSha256(body.password), 'Wrong user or password');

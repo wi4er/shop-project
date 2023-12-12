@@ -10,7 +10,7 @@ describe('MyselfController', () => {
   let app;
 
   beforeAll(async () => {
-    const moduleBuilder = await Test.createTestingModule({ imports: [ AppModule ] }).compile();
+    const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
     app.init();
 
@@ -27,9 +27,12 @@ describe('MyselfController', () => {
       }).save();
 
       const {headers} = await request(app.getHttpServer())
-        .get(`/auth`)
-        .set('login', 'user')
-        .set('password', 'qwerty');
+        .post(`/auth`)
+        .send({
+          login: 'user',
+          password: 'qwerty',
+        })
+        .expect(201);
 
       const res = await request(app.getHttpServer())
         .get(`/myself`)
@@ -53,10 +56,12 @@ describe('MyselfController', () => {
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
 
-      const { headers } = await request(app.getHttpServer())
-        .get(`/auth`)
-        .set('login', 'user')
-        .set('password', 'qwerty');
+      const {headers} = await request(app.getHttpServer())
+        .post(`/auth`)
+        .send({
+          login: 'user',
+          password: 'qwerty',
+        });
 
       const res = await request(app.getHttpServer())
         .put(`/myself`)
@@ -67,11 +72,20 @@ describe('MyselfController', () => {
           contact: [],
           property: [],
         })
-        .set('cookie', headers['set-cookie']);
+        .set('cookie', headers['set-cookie'])
+        .expect(200);
 
-      expect(res.status).toBe(201);
-      expect(res.body.login).toBe('admin');
       expect(res.body.id).toBe(1);
+      expect(res.body.login).toBe('admin');
+    });
+
+    test('Shouldn`t update without authorization', async () => {
+      const res = await request(app.getHttpServer())
+        .put(`/myself`)
+        .send({
+          login: 'admin',
+        })
+        .expect(403);
     });
   });
 
@@ -79,41 +93,45 @@ describe('MyselfController', () => {
     test('Should register', async () => {
       const res = await request(app.getHttpServer())
         .post('/myself')
-        .set('login', 'USER')
-        .set('password', 'qwerty123');
+        .send({
+          login: 'user',
+          password: 'qwerty123',
+        })
+        .expect(201);
 
-      // expect(res.body['login']).toBe('USER');
-      // expect(res.body['id']).toBe(1);
+      expect(res.body['id']).toBe(1);
+      expect(res.body['login']).toBe('user');
     });
 
     test('Shouldn`t create with same login', async () => {
       await request(app.getHttpServer())
         .post('/myself')
-        .set('login', 'USER')
-        .set('password', 'qwerty123');
+        .send({
+          login: 'user',
+          password: 'qwerty123',
+        });
 
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/myself')
-        .set('login', 'USER')
-        .set('password', 'qwerty123');
-
-      expect(res.status).toBe(400);
+        .send({
+          login: 'user',
+          password: 'qwerty123',
+        })
+        .expect(400);
     });
 
     test('Shouldn`t create without login', async () => {
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/myself')
-        .set('password', 'qwerty');
-
-      expect(res.status).toBe(400);
+        .send({password: 'qwerty123'})
+        .expect(400);
     });
 
     test('Shouldn`t create without password', async () => {
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/myself')
-        .set('login', 'USER');
-
-      expect(res.status).toBe(400);
+        .send({login: 'user'})
+        .expect(400);
     });
   });
 });
