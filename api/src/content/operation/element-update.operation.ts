@@ -11,6 +11,8 @@ import { WrongDataException } from '../../exception/wrong-data/wrong-data.except
 import { filterProperties } from '../../common/input/filter-properties';
 import { PointValueUpdateOperation } from '../../common/operation/point-value-update.operation';
 import { Element4pointEntity } from '../model/element4point.entity';
+import { Element4elementUpdateOperation } from './element4element-update.operation';
+import { elementAt } from 'rxjs';
 
 export class ElementUpdateOperation {
 
@@ -27,11 +29,12 @@ export class ElementUpdateOperation {
   private async checkBlock(id?: number): Promise<BlockEntity> {
     WrongDataException.assert(id, 'Block id expected!');
 
-    const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
-    const inst = await blockRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, 'Wrong block id!');
-
-    return inst;
+    return WrongDataException.assert(
+      await this.manager
+        .getRepository<BlockEntity>(BlockEntity)
+        .findOne({where: {id}}),
+      `Block id ${id} not found!`,
+    );
   }
 
   /**
@@ -48,6 +51,7 @@ export class ElementUpdateOperation {
         string: {property: true},
         flag: {flag: true},
         point: {point: true, property: true},
+        element: {element: true, property: true},
       },
     });
     NoDataException.assert(inst, 'Element not found!');
@@ -66,10 +70,11 @@ export class ElementUpdateOperation {
     beforeItem.block = await this.checkBlock(input.block);
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList, elemList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
-    await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList)
+    await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList);
+    await new Element4elementUpdateOperation(this.manager).save(beforeItem, elemList);
 
     return beforeItem.id;
   }

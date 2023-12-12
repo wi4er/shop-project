@@ -51,7 +51,7 @@ export class ElementController {
       property: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          proper6ty: str.property.id,
           lang: str.lang?.id,
         })),
         ...item.point.map(val => ({

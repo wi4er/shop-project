@@ -932,6 +932,53 @@ describe('ElementController', () => {
       });
     });
 
+    describe('Content element element update', () => {
+      test('Should add element', async () => {
+        const cookie = await createSession();
+        const block = await new BlockEntity().save();
+        await createElement();
+        await Object.assign(new PropertyEntity(), {id: 'CHILD'}).save();
+        await Object.assign(new ElementEntity(), {block}).save();
+
+        const res = await request(app.getHttpServer())
+          .put('/element/1')
+          .send({
+            id: 1,
+            block: 1,
+            property: [
+              {property: 'CHILD', element: 2}
+            ],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(res.body.property).toHaveLength(1);
+        expect(res.body.property[0].property).toBe('CHILD');
+        expect(res.body.property[0].element).toBe(2);
+      });
+
+      test('Should remove element', async () => {
+        const cookie = await createSession();
+        const block = await new BlockEntity().save();
+        const parent = await createElement();
+        const property = await Object.assign(new PropertyEntity(), {id: 'CHILD'}).save();
+        const element = await Object.assign(new ElementEntity(), {block}).save();
+        await Object.assign(new Element4elementEntity(), {parent, property, element}).save();
+
+        const res = await request(app.getHttpServer())
+          .put('/element/1')
+          .send({
+            id: 1,
+            block: 1,
+            property: [],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(res.body.property).toHaveLength(0);
+      });
+    });
+
     describe('Content element flag update', () => {
       test('Should add flag', async () => {
         const cookie = await createSession();
