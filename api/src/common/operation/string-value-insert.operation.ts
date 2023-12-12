@@ -21,11 +21,9 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
    */
   private async checkProperty(id: string): Promise<PropertyEntity> {
     const propRepo = this.trans.getRepository(PropertyEntity);
-
     const inst = await propRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, `Wrong property ${id}`);
 
-    return inst;
+    return WrongDataException.assert(inst, `Wrong property ${id}`);
   }
 
   /**

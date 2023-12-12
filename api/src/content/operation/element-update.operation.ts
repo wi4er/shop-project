@@ -9,6 +9,8 @@ import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { BlockEntity } from '../model/block.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { filterProperties } from '../../common/input/filter-properties';
+import { PointValueUpdateOperation } from '../../common/operation/point-value-update.operation';
+import { Element4pointEntity } from '../model/element4point.entity';
 
 export class ElementUpdateOperation {
 
@@ -45,6 +47,7 @@ export class ElementUpdateOperation {
       relations: {
         string: {property: true},
         flag: {flag: true},
+        point: {point: true, property: true},
       },
     });
     NoDataException.assert(inst, 'Element not found!');
@@ -66,6 +69,7 @@ export class ElementUpdateOperation {
     const [stringList, pointList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
+    await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList)
 
     return beforeItem.id;
   }

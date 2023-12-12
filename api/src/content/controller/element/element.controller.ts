@@ -26,6 +26,7 @@ export class ElementController {
     section: true,
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
+    element: {element: true, property: true},
     permission: {group: true},
     block: true,
   };
@@ -57,6 +58,10 @@ export class ElementController {
           property: val.property.id,
           point: val.point.id,
           directory: val.point.directory.id,
+        })),
+        ...item.element.map(val => ({
+          property: val.property.id,
+          element: val.element.id,
         })),
       ],
       flag: item.flag.map(fl => fl.flag.id),

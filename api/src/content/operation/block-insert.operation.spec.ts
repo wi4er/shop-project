@@ -31,7 +31,6 @@ describe('Block insert operation', () => {
     });
   });
 
-
   describe('Block insert with string', () => {
     test('Should save with property', async () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();

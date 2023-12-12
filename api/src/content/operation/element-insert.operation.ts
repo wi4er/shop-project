@@ -12,6 +12,7 @@ import { Element4pointEntity } from '../model/element4point.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
 import { ElementPermissionEntity } from '../model/element-permission.entity';
+import { Element4elementInsertOperation } from './element4element-insert.operation';
 
 export class ElementInsertOperation {
 
@@ -32,7 +33,7 @@ export class ElementInsertOperation {
     const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
     const inst = await blockRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, 'Wrong block id!');
+    return WrongDataException.assert(inst, `Block with id ${id} not found!`);
   }
 
   /**
@@ -44,11 +45,12 @@ export class ElementInsertOperation {
 
     await this.manager.save(this.created);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList, elementList] = filterProperties(input.property);
 
     await new StringValueInsertOperation(this.manager, Element4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Element4pointEntity).save(this.created, pointList);
     await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
+    await new Element4elementInsertOperation(this.manager).save(this.created, elementList);
     await new PermissionValueInsertOperation(this.manager, ElementPermissionEntity).save(this.created, input);
 
     return this.created.id;

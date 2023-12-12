@@ -21,11 +21,9 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
    */
   private async checkProperty(id: string): Promise<PropertyEntity> {
     const propRepo = this.trans.getRepository(PropertyEntity);
-
     const inst = await propRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, `Property id ${id} not found!`);
 
-    return inst;
+    return WrongDataException.assert(inst, `Property id ${id} not found!`);
   }
 
   /**
@@ -36,48 +34,42 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
   private async checkLang(id?: string): Promise<LangEntity> {
     if (!id) return null;
 
-    const langRepo = this.trans.getRepository(LangEntity);
-    const inst = await langRepo.findOne({where: {id}});
-
-    WrongDataException.assert(inst, `Language id ${id} not found!`);
-
-    return inst;
+    return WrongDataException.assert(
+      await this.trans.getRepository(LangEntity).findOne({where: {id}}),
+      `Language id ${id} not found!`,
+    );
   }
 
+  /**
+   *
+   * @param beforeItem
+   * @param list
+   */
   async save(beforeItem: T, list: PropertyStringInput[]) {
-    const propRepo = this.trans.getRepository(PropertyEntity);
-    const langRepo = this.trans.getRepository(LangEntity);
     const current: { [key: string]: Array<CommonStringEntity<BaseEntity>> } = {};
 
     for (const item of beforeItem.string) {
-      if (!current[item.property.id]) {
-        current[item.property.id] = [];
-      }
+      const {id} = item.property;
 
-      current[item.property.id].push(item);
+      if (current[id]) current[id].push(item);
+      else current[id] = [item];
     }
 
-    for (const item of list ?? []) {
-      let inst;
-
-      if (current[item.property]?.[0]) {
-        inst = current[item.property].shift();
-      } else {
-        inst = new this.entity();
-      }
+    for (const item of list) {
+      const inst = current[item.property]?.length
+        ? current[item.property].shift()
+        : new this.entity();
 
       inst.parent = beforeItem;
       inst.property = await this.checkProperty(item.property);
-      inst.string = item.string;
+      inst.string = WrongDataException.assert(item.string, 'Property string value expected');
       inst.lang = await this.checkLang(item.lang);
 
       await this.trans.save(inst);
     }
 
-    for (const prop of Object.values(current)) {
-      for (const item of prop) {
-        await this.trans.delete(this.entity, item.id);
-      }
+    for (const item of Object.values(current).flat()) {
+      await this.trans.delete(this.entity, item.id);
     }
   }
 
