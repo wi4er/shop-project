@@ -8,11 +8,10 @@ import { GroupInput } from '../../model/user/group.input';
 
 @Component({
   selector: 'app-user-group-form',
-  templateUrl: './user-group-form.component.html',
-  styleUrls: ['./user-group-form.component.css']
+  templateUrl: './group-form.component.html',
+  styleUrls: ['./group-form.component.css']
 })
-export class UserGroupFormComponent {
-
+export class GroupFormComponent {
 
   id: string = '';
   login: string = '';
@@ -27,7 +26,7 @@ export class UserGroupFormComponent {
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
-    private dialogRef: MatDialogRef<UserGroupFormComponent>,
+    private dialogRef: MatDialogRef<GroupFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
   ) {

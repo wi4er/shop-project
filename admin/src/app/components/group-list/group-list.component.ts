@@ -4,15 +4,15 @@ import { ApiEntity, ApiService } from '../../service/api.service';
 import { User } from '../../model/user/user';
 import { Observable } from 'rxjs';
 import { Group } from '../../model/user/group';
-import { UserGroupFormComponent } from '../user-group-form/user-group-form.component';
+import { GroupFormComponent } from '../group-form/group-form.component';
 import { StringifiableRecord } from 'query-string/base';
 
 @Component({
   selector: 'app-user-group-list',
-  templateUrl: './user-group-list.component.html',
-  styleUrls: ['./user-group-list.component.css']
+  templateUrl: './group-list.component.html',
+  styleUrls: ['./group-list.component.css']
 })
-export class UserGroupListComponent {
+export class GroupListComponent {
 
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
@@ -64,7 +64,7 @@ export class UserGroupListComponent {
 
   addItem(): Observable<undefined> {
     const dialog = this.dialog.open(
-      UserGroupFormComponent,
+      GroupFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -76,7 +76,7 @@ export class UserGroupListComponent {
 
   updateItem(id: number): Observable<undefined> {
     const dialog = this.dialog.open(
-      UserGroupFormComponent,
+      GroupFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',

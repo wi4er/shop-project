@@ -6,6 +6,7 @@ import { UserGroupInput } from '../../input/user-group.input';
 import { UserGroupInsertOperation } from '../../operation/user-group-insert.operation';
 import { UserGroupUpdateOperation } from '../../operation/user-group-update.operation';
 import { UserGroupDeleteOperation } from '../../operation/user-group-delete.operation';
+import { GroupRender } from '../../render/group.render';
 
 @Controller('group')
 export class GroupController {
@@ -24,25 +25,6 @@ export class GroupController {
   ) {
   }
 
-  toView(item: GroupEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      parent: item.parent?.id,
-      property: [
-        ...item.string.map(str => ({
-          string: str.string,
-          property: str.property.id,
-          lang: str.lang?.id,
-        })),
-
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
-  }
-
   @Get()
   async getList(
     @Query('offset')
@@ -51,13 +33,10 @@ export class GroupController {
       limit?: number,
   ) {
     return this.groupRepo.find({
-      relations: {
-        string: {property: true, lang: true},
-        flag: {flag: true},
-      },
+      relations: this.relations,
       take: limit,
       skip: offset,
-    }).then(list => list.map(this.toView));
+    }).then(list => list.map(item => new GroupRender(item)));
   }
 
   @Get('count')
@@ -73,7 +52,7 @@ export class GroupController {
     return this.groupRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(this.toView);
+    }).then(item => new GroupRender(item));
   }
 
   @Post()
@@ -87,7 +66,7 @@ export class GroupController {
           where: {id},
           relations: this.relations,
         })),
-    ).then(this.toView);
+    ).then(item => new GroupRender(item));
   }
 
   @Put(':id')
@@ -103,7 +82,7 @@ export class GroupController {
           where: {id: groupId},
           relations: this.relations,
         })),
-    ).then(this.toView);
+    ).then(item => new GroupRender(item));
   }
 
   @Delete(':id')

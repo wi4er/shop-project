@@ -44,6 +44,36 @@ describe('GroupController', () => {
       expect(res.body.id).toBe(1);
     });
 
+    test('Should get group with parent', async () => {
+      const parent = await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {parent}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/group/2')
+        .expect(200);
+
+      expect(res.body.id).toBe(2);
+      expect(res.body.parent).toBe(1);
+    });
+
+    test('Should get list with parent', async () => {
+      const parent = await new GroupEntity().save();
+
+      for (let i = 0; i < 4; i++) {
+        await Object.assign(new GroupEntity(), {parent: i % 2 ? parent: null}).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/group')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+      expect(res.body[1].parent).toBeUndefined();
+      expect(res.body[2].parent).toBe(1);
+      expect(res.body[3].parent).toBeUndefined();
+      expect(res.body[4].parent).toBe(1);
+    });
+
     test('Should get group with limit', async () => {
       for (let i = 0; i < 10; i++) {
         await new GroupEntity().save();

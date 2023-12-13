@@ -48,6 +48,7 @@
   <mat-tab-group dynamicHeight>
     <mat-tab
       [label]="'Properties ( ' + getPropertyCount() + ' )'"
+      *ngIf="flagList.length"
     >
       <app-property-edit
         [edit]="editProperties"
@@ -64,6 +65,12 @@
         [list]="flagList"
         [edit]="editFlags"
       ></app-flag-edit>
+    </mat-tab>
+
+    <mat-tab label="Permissions">
+      <app-group-tree
+
+      ></app-group-tree>
     </mat-tab>
   </mat-tab-group>
 

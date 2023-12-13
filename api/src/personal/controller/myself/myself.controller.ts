@@ -17,7 +17,7 @@ import { AuthInput } from '../../input/auth.input';
 export class MyselfController {
 
   relations = {
-    group: true,
+    group: {group: true},
   };
 
   constructor(

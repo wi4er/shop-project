@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserGroupFormComponent } from './user-group-form.component';
+import { GroupFormComponent } from './group-form.component';
 
 describe('UserGroupFormComponent', () => {
-  let component: UserGroupFormComponent;
-  let fixture: ComponentFixture<UserGroupFormComponent>;
+  let component: GroupFormComponent;
+  let fixture: ComponentFixture<GroupFormComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UserGroupFormComponent]
+      declarations: [GroupFormComponent]
     });
-    fixture = TestBed.createComponent(UserGroupFormComponent);
+    fixture = TestBed.createComponent(GroupFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

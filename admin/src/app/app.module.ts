@@ -50,14 +50,16 @@ import { FormsModule } from '@angular/forms';
 import { PermissionListComponent } from './components/permission-list/permission-list.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { UserContactListComponent } from './components/user-contact-list/user-contact-list.component';
-import { UserGroupListComponent } from './components/user-group-list/user-group-list.component';
+import { GroupListComponent } from './components/group-list/group-list.component';
 import { UserContactFormComponent } from './components/user-contact-form/user-contact-form.component';
-import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
+import { GroupFormComponent } from './components/group-form/group-form.component';
 import { DocumentListComponent } from './components/document-list/document-list.component';
 import { DocumentFormComponent } from './components/document-form/document-form.component';
 import { DocumentPageComponent } from './components/document-page/document-page.component';
 import { AuthDialogComponent } from './components/auth-dialog/auth-dialog.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
+import { GroupTreeComponent } from './components/group-tree/group-tree.component';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -93,14 +95,15 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component';
     PermissionListComponent,
     UserPageComponent,
     UserContactListComponent,
-    UserGroupListComponent,
+    GroupListComponent,
     UserContactFormComponent,
-    UserGroupFormComponent,
+    GroupFormComponent,
     DocumentListComponent,
     DocumentFormComponent,
     DocumentPageComponent,
     AuthDialogComponent,
     AuthFormComponent,
+    GroupTreeComponent,
   ],
   imports: [
     BrowserModule,
@@ -121,6 +124,7 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component';
     MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTreeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

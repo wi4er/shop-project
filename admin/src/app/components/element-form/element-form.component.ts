@@ -6,6 +6,7 @@ import { Flag } from '../../model/settings/flag';
 import { Element } from '../../model/content/element';
 import { ElementInput } from '../../model/content/element-input';
 import { ApiEntity, ApiService } from '../../service/api.service';
+import { Group } from '../../model/user/group';
 
 @Component({
   selector: 'app-element-form',
@@ -104,6 +105,10 @@ export class ElementFormComponent {
       block: this.data?.block ?? 1,
       property: [],
       flag: [],
+      permission: [{
+        group: 1,
+        method: 'READ',
+      }],
     } as ElementInput;
 
     for (const prop in this.editProperties) {
