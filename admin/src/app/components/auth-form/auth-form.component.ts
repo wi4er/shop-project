@@ -9,7 +9,7 @@ import { UserService } from '../../service/user.service';
 })
 export class AuthFormComponent {
 
-  login: string = 'USER';
+  login: string = 'USER_1';
   password: string = 'qwerty';
 
   constructor(

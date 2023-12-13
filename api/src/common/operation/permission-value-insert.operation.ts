@@ -1,7 +1,7 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { WithPermissionInput } from '../input/with-permission.input';
-import { UserGroupEntity } from '../../user/model/user-group.entity';
+import { GroupEntity } from '../../personal/model/group.entity';
 import { CommonPermissionEntity } from '../model/common-permission.entity';
 
 export class PermissionValueInsertOperation<T extends BaseEntity> {
@@ -17,8 +17,8 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
    * @param id
    * @private
    */
-  private async checkGroup(id: number): Promise<UserGroupEntity> {
-    const groupRepo = this.trans.getRepository(UserGroupEntity);
+  private async checkGroup(id: number): Promise<GroupEntity> {
+    const groupRepo = this.trans.getRepository(GroupEntity);
 
     const flag = await groupRepo.findOne({where: {id}});
     WrongDataException.assert(flag, 'Wrong flag!')

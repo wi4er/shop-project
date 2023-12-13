@@ -8,15 +8,22 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class UserService {
 
-  private dataSubject = new BehaviorSubject<User | null>(null);
+  private dataSubject = new BehaviorSubject<User | null | undefined>(undefined);
 
-  user: Observable<User | null> = this.dataSubject.asObservable();
+  user: Observable<User | null | undefined> = this.dataSubject.asObservable();
 
   constructor(
     private apiService: ApiService,
   ) {
-    this.apiService.fetchItem<User>(ApiEntity.MYSELF)
-      .then(user => this.dataSubject.next(user));
+    fetch('http://localhost:3001/myself', {
+      credentials: 'include',
+    }).then(res => {
+      if (res.ok) {
+        res.json().then(res => this.dataSubject.next(res));
+      } else {
+        this.dataSubject.next(null)
+      }
+    });
   }
 
   async authUser(
@@ -31,10 +38,7 @@ export class UserService {
       body: JSON.stringify({login, password}),
       credentials: 'include',
     }).then(res => {
-      if (res.ok) return res.json();
-      return console.error(res);
-    }).then(res => {
-      this.dataSubject.next(res);
+      if (res.ok) res.json().then(res => this.dataSubject.next(res));
     });
 
     return null;

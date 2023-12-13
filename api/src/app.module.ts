@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { PersonalModule } from './personal/personal.module';
 import { ContentModule } from './content/content.module';
 import { FileModule } from './file/file.module';
 import { DirectoryModule } from './directory/directory.module';
@@ -23,7 +23,7 @@ import { PermissionFilter } from './exception/permission/permission.filter';
 @Module({
   imports: [
     TypeOrmModule.forRoot(createConnectionOptions()),
-    UserModule,
+    PersonalModule,
     ContentModule,
     FileModule,
     DirectoryModule,

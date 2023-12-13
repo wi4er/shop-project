@@ -14,10 +14,10 @@ import { SectionEntity } from '../../model/section.entity';
 import { Element2sectionEntity } from '../../model/element2section.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { UserEntity } from '../../../user/model/user.entity';
-import { UserGroupEntity } from '../../../user/model/user-group.entity';
-import { User2userGroupEntity } from '../../../user/model/user2user-group.entity';
-import { ElementPermissionEntity } from '../../model/element-permission.entity';
+import { UserEntity } from '../../../personal/model/user.entity';
+import { GroupEntity } from '../../../personal/model/group.entity';
+import { User2groupEntity } from '../../../personal/model/user2group.entity';
+import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Element4elementEntity } from '../../model/element4element.entity';
 
@@ -37,12 +37,12 @@ describe('ElementController', () => {
   afterAll(() => source.destroy());
 
   async function createSession(): Promise<string> {
-    const group = await Object.assign(new UserGroupEntity(), {}).save();
+    const group = await Object.assign(new GroupEntity(), {}).save();
     const parent = await Object.assign(new UserEntity(), {
       login: 'USER',
       hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
     }).save();
-    await Object.assign(new User2userGroupEntity(), {group, parent}).save();
+    await Object.assign(new User2groupEntity(), {group, parent}).save();
 
     const res = await request(app.getHttpServer())
       .post('/auth')
@@ -58,7 +58,7 @@ describe('ElementController', () => {
   async function createElement(block: number = 1): Promise<ElementEntity> {
     const parent = await Object.assign(new ElementEntity, {block}).save();
     await Object.assign(
-      new ElementPermissionEntity(),
+      new Element2permissionEntity(),
       {parent, group: 1, method: PermissionMethod.ALL},
     ).save();
 
@@ -99,7 +99,7 @@ describe('ElementController', () => {
       for (let i = 0; i < 10; i++) {
         const parent = await Object.assign(new ElementEntity, {block: 1}).save();
         if (i % 2) await Object.assign(
-          new ElementPermissionEntity(),
+          new Element2permissionEntity(),
           {parent, group: 1, method: PermissionMethod.READ},
         ).save();
       }
@@ -235,7 +235,7 @@ describe('ElementController', () => {
       for (let i = 0; i < 10; i++) {
         const parent = await Object.assign(new ElementEntity, {block: 1}).save();
         if (i % 2) await Object.assign(
-          new ElementPermissionEntity(),
+          new Element2permissionEntity(),
           {parent, group: 1, method: PermissionMethod.READ},
         ).save();
       }

@@ -16,21 +16,13 @@ export class AuthDialogComponent {
     private userService: UserService,
     private dialog: MatDialog,
   ) {
-
     userService.user.subscribe(user => {
-      console.log(user);
+      if (user !== null) return this.current?.close();
 
-      if (user === null) {
-
-        this.current = this.dialog.open(
-          AuthFormComponent,
-          {
-            disableClose: true,
-          },
-        );
-      } else {
-        this.current?.close();
-      }
+      this.current = this.dialog.open(
+        AuthFormComponent,
+        {disableClose: true},
+      );
     });
   }
 

@@ -11,7 +11,7 @@ import { PointValueInsertOperation } from '../../common/operation/point-value-in
 import { Element4pointEntity } from '../model/element4point.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
-import { ElementPermissionEntity } from '../model/element-permission.entity';
+import { Element2permissionEntity } from '../model/element2permission.entity';
 import { Element4elementInsertOperation } from './element4element-insert.operation';
 
 export class ElementInsertOperation {
@@ -51,7 +51,7 @@ export class ElementInsertOperation {
     await new PointValueInsertOperation(this.manager, Element4pointEntity).save(this.created, pointList);
     await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
     await new Element4elementInsertOperation(this.manager).save(this.created, elementList);
-    await new PermissionValueInsertOperation(this.manager, ElementPermissionEntity).save(this.created, input);
+    await new PermissionValueInsertOperation(this.manager, Element2permissionEntity).save(this.created, input);
 
     return this.created.id;
   }

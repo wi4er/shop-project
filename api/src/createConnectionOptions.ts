@@ -1,14 +1,14 @@
-import { UserEntity } from './user/model/user.entity';
-import { User4stringEntity } from './user/model/user4string.entity';
+import { UserEntity } from './personal/model/user.entity';
+import { User4stringEntity } from './personal/model/user4string.entity';
 import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
 import { DirectoryEntity } from './directory/model/directory.entity';
 import { Directory4stringEntity } from './directory/model/directory4string.entity';
-import { UserGroupEntity } from './user/model/user-group.entity';
+import { GroupEntity } from './personal/model/group.entity';
 import { PointEntity } from './directory/model/point.entity';
-import { User2flagEntity } from './user/model/user2flag.entity';
-import { User4pointEntity } from './user/model/user4point.entity';
-import { User4userEntity } from './user/model/user4user.entity';
-import { User4descriptionEntity } from './user/model/user4description.entity';
+import { User2flagEntity } from './personal/model/user2flag.entity';
+import { User4pointEntity } from './personal/model/user4point.entity';
+import { User4userEntity } from './personal/model/user4user.entity';
+import { User4descriptionEntity } from './personal/model/user4description.entity';
 import { Point4stringEntity } from './directory/model/point4string.entity';
 import { ElementEntity } from './content/model/element.entity';
 import { Element2sectionEntity } from './content/model/element2section.entity';
@@ -22,13 +22,13 @@ import { Section4stringEntity } from './content/model/section4string.entity';
 import { Element4elementEntity } from './content/model/element4element.entity';
 import { Directory2flagEntity } from './directory/model/directory2flag.entity';
 import { Point2flagEntity } from './directory/model/point2flag.entity';
-import { UserContactEntity } from './user/model/user-contact.entity';
-import { User2userContactEntity } from './user/model/user2user-contact.entity';
-import { UserContact2flagEntity } from './user/model/user-contact2flag.entity';
-import { UserContact4stringEntity } from './user/model/user-contact4string.entity';
-import { UserGroup4stringEntity } from './user/model/user-group4string.entity';
-import { UserGroup2flagEntity } from './user/model/user-group2flag.entity';
-import { User2userGroupEntity } from './user/model/user2user-group.entity';
+import { ContactEntity } from './personal/model/contact.entity';
+import { User2contactEntity } from './personal/model/user2contact.entity';
+import { Contact2flagEntity } from './personal/model/contact2flag.entity';
+import { Contact4stringEntity } from './personal/model/contact4string.entity';
+import { Group4stringEntity } from './personal/model/group4string.entity';
+import { Group2flagEntity } from './personal/model/group2flag.entity';
+import { User2groupEntity } from './personal/model/user2group.entity';
 import { Element2flagEntity } from './content/model/element2flag.entity';
 import { Section2flagEntity } from './content/model/section2flag.entity';
 import { Block2flagEntity } from './content/model/block2flag.entity';
@@ -59,9 +59,10 @@ import { Lang2flagEntity } from './settings/model/lang2flag.entity';
 import { DocumentEntity } from './document/model/document.entity';
 import { Document4stringEntity } from './document/model/document4string.entity';
 import { Document2flagEntity } from './document/model/document2flag.entity';
-import { ElementPermissionEntity } from './content/model/element-permission.entity';
+import { Element2permissionEntity } from './content/model/element2permission.entity';
 import { SectionPermissionEntity } from './content/model/section-permission.entity';
 import { Element4sectionEntity } from './content/model/element4section.entity';
+import { User4groupEntity } from './personal/model/user4group.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -74,10 +75,12 @@ export function createConnectionOptions(): DataSourceOptions {
     synchronize: true,
     logging: false,
     entities: [
-      UserEntity, User4stringEntity, User2flagEntity, User4pointEntity, User4userEntity, User4descriptionEntity,
-      User2userContactEntity, User2userGroupEntity,
-      UserContactEntity, UserContact4stringEntity, UserContact2flagEntity,
-      UserGroupEntity, UserGroup4stringEntity, UserGroup2flagEntity,
+      UserEntity, User2flagEntity, User2contactEntity, User2groupEntity,
+      User4stringEntity, User4pointEntity, User4userEntity, User4groupEntity, User4descriptionEntity,
+      ContactEntity, Contact2flagEntity,
+      Contact4stringEntity,
+      GroupEntity, Group2flagEntity,
+      Group4stringEntity,
       PropertyEntity, Property4stringEntity, Property2flagEntity,
       DirectoryEntity, Directory4stringEntity, Directory2flagEntity, Directory4pointEntity,
       PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,
@@ -85,7 +88,7 @@ export function createConnectionOptions(): DataSourceOptions {
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       ElementEntity, Element2flagEntity, Element2sectionEntity,
       Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity,
-      ElementPermissionEntity,
+      Element2permissionEntity,
       SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, SectionPermissionEntity,
       BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, BlockPermissionEntity,
       FormEntity, Form2flagEntity, Form4stringEntity,

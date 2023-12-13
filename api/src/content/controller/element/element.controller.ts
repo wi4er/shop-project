@@ -11,11 +11,11 @@ import { ElementOrderSchema } from '../../schema/element-order.schema';
 import { ElementInsertOperation } from '../../operation/element-insert.operation';
 import { ElementUpdateOperation } from '../../operation/element-update.operation';
 import { ElementDeleteOperation } from '../../operation/element-delete.operation';
-import { ElementPermissionEntity } from '../../model/element-permission.entity';
+import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Request } from 'express';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { CurrentGroups } from '../../../user/decorator/current-groups/current-groups.decorator';
+import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 
 @ApiTags('Content element')
 @Controller('element')
@@ -36,8 +36,8 @@ export class ElementController {
     private entityManager: EntityManager,
     @InjectRepository(ElementEntity)
     private elementRepo: Repository<ElementEntity>,
-    @InjectRepository(ElementPermissionEntity)
-    private permRepo: Repository<ElementPermissionEntity>,
+    @InjectRepository(Element2permissionEntity)
+    private permRepo: Repository<Element2permissionEntity>,
   ) {
   }
 

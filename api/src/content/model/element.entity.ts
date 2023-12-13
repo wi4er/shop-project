@@ -15,7 +15,7 @@ import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Element2flagEntity } from './element2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
-import { ElementPermissionEntity } from './element-permission.entity';
+import { Element2permissionEntity } from './element2permission.entity';
 import { Element4elementEntity } from './element4element.entity';
 
 @Entity('content-element')
@@ -79,9 +79,9 @@ export class ElementEntity
   element: Element4elementEntity[];
 
   @OneToMany(
-    type => ElementPermissionEntity,
+    type => Element2permissionEntity,
     permission => permission.parent,
   )
-  permission: ElementPermissionEntity[];
+  permission: Element2permissionEntity[];
 
 }

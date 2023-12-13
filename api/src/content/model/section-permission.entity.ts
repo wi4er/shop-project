@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { UserGroupEntity } from '../../user/model/user-group.entity';
+import { GroupEntity } from '../../personal/model/group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 import { SectionEntity } from './section.entity';
 
@@ -39,13 +39,13 @@ export class SectionPermissionEntity extends BaseEntity {
   section: SectionEntity;
 
   @ManyToOne(
-    type => UserGroupEntity,
+    type => GroupEntity,
     {
       cascade: true,
       nullable: false,
     }
   )
-  group: UserGroupEntity;
+  group: GroupEntity;
 
   @Column({
     type: 'enum',

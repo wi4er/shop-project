@@ -8,7 +8,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { BlockEntity } from './block.entity';
-import { UserGroupEntity } from '../../user/model/user-group.entity';
+import { GroupEntity } from '../../personal/model/group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 
 @Entity('content-block-permission')
@@ -40,13 +40,13 @@ export class BlockPermissionEntity extends BaseEntity {
   block: BlockEntity;
 
   @ManyToOne(
-    type => UserGroupEntity,
+    type => GroupEntity,
     {
       cascade: true,
       nullable: false,
     }
   )
-  group: UserGroupEntity;
+  group: GroupEntity;
 
   @Column({
     type: 'enum',

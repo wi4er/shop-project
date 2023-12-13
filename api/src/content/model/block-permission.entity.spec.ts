@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockPermissionEntity } from './block-permission.entity';
 import { BlockEntity } from './block.entity';
-import { UserGroupEntity } from '../../user/model/user-group.entity';
+import { GroupEntity } from '../../personal/model/group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 
 describe('Block permission entity', () => {
@@ -27,7 +27,7 @@ describe('Block permission entity', () => {
     test('Should create instance', async () => {
       const inst = new BlockPermissionEntity();
 
-      inst.group = await new UserGroupEntity().save();
+      inst.group = await new GroupEntity().save();
       inst.block = await new BlockEntity().save();
       inst.method = PermissionMethod.ALL;
 
@@ -44,7 +44,7 @@ describe('Block permission entity', () => {
       await Object.assign(
         new BlockPermissionEntity(),
         {
-          group: await new UserGroupEntity().save(),
+          group: await new GroupEntity().save(),
           block: await new BlockEntity().save(),
           method: PermissionMethod.ALL,
         }
