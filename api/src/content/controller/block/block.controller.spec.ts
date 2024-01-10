@@ -11,6 +11,7 @@ import { PointEntity } from '../../../directory/model/point.entity';
 import { Block4pointEntity } from '../../model/block4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
 
 describe('BlockController', () => {
   let source;
@@ -55,6 +56,11 @@ describe('BlockController', () => {
         .expect(200);
 
       expect(list.body.id).toBe(1);
+      expect(list.body.created_at).toBeDefined();
+      expect(list.body.updated_at).toBeDefined()
+      expect(list.body.version).toBe(1);
+      expect(list.body.property).toEqual([]);
+      expect(list.body.flag).toEqual([]);
     });
 
     test('Should get block with limit', async () => {
@@ -114,7 +120,7 @@ describe('BlockController', () => {
   });
 
   describe('Content element with strings', () => {
-    test('Should get block with properties', async () => {
+    test('Should get block with string', async () => {
       const parent = await new BlockEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(new Block4stringEntity(), {parent, property, string: 'VALUE'}).save();
@@ -128,6 +134,24 @@ describe('BlockController', () => {
       expect(list.body[0].property).toHaveLength(1);
       expect(list.body[0].property[0].string).toBe('VALUE');
       expect(list.body[0].property[0].property).toBe('NAME');
+    });
+
+    test('Should get block with lang', async () => {
+      const parent = await new BlockEntity().save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      await Object.assign(new Block4stringEntity(), {parent, property, lang, string: 'WITH_LANG'}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/block')
+        .expect(200);
+
+      expect(list.body).toHaveLength(1);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[0].property).toHaveLength(1);
+      expect(list.body[0].property[0].string).toBe('WITH_LANG');
+      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].property[0].lang).toBe('EN');
     });
   });
 

@@ -7,7 +7,8 @@ import { SectionInput } from '../../input/section.input';
 import { SectionInsertOperation } from '../../operation/section-insert.operation';
 import { SectionUpdateOperation } from '../../operation/section-update.operation';
 import { SectionDeleteOperation } from '../../operation/section-delete.operation';
-import { ApiCookieAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SectionRender } from '../../render/section.render';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
@@ -16,7 +17,7 @@ export class SectionController {
 
   relations = {
     parent: true,
-    string: {property: true},
+    string: {property: true, lang: true},
     block: true,
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
@@ -31,37 +32,22 @@ export class SectionController {
   }
 
   toView(item: SectionEntity) {
-    return {
-      id: item.id,
-      block: item.block.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      parent: item.parent?.id,
-      property: [
-        ...item.string.map(str => ({
-          string: str.string,
-          property: str.property.id,
-          lang: str.lang,
-        })),
-        ...item.point.map(val => ({
-          property: val.property.id,
-          point: val.point.id,
-          directory: val.point.directory.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new SectionRender(item);
   }
 
   @Get()
   @ApiParam({
     name: 'offset',
-    required: false
+    required: false,
   })
   @ApiParam({
     name: 'limit',
-    required: false
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Content section',
+    type: [SectionRender],
   })
   async getList(
     @Query('filter')
@@ -70,7 +56,7 @@ export class SectionController {
       offset?: number,
     @Query('limit')
       limit?: number,
-  ) {
+  ): Promise<SectionRender[]> {
     const where = {};
 
     if (filter?.block) {
@@ -93,7 +79,7 @@ export class SectionController {
   async getCount(
     @Query('filter')
       filter?: SectionFilterInput,
-  ) {
+  ): Promise<{ count: number }> {
     const where = {};
 
     if (filter?.flag) {
@@ -106,22 +92,31 @@ export class SectionController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content section',
+    type: SectionRender,
+  })
   async getItem(
     @Param('id')
       id: number,
-  ) {
+  ): Promise<SectionRender> {
     return this.sectionRepo.findOne({
       where: {id},
       relations: this.relations,
     }).then(this.toView);
   }
 
-
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Content section',
+    type: SectionRender,
+  })
   addItem(
     @Body()
       input: SectionInput,
-  ) {
+  ): Promise<SectionRender> {
     return this.entityManager.transaction(
       trans => new SectionInsertOperation(trans).save(input)
         .then(id => trans.getRepository(SectionEntity).findOne({
@@ -132,12 +127,17 @@ export class SectionController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content section',
+    type: SectionRender,
+  })
   updateItem(
     @Param('id')
       sectionId: number,
     @Body()
       input: SectionInput,
-  ) {
+  ): Promise<SectionRender> {
     return this.entityManager.transaction(
       trans => new SectionUpdateOperation(trans).save(sectionId, input)
         .then(id => trans.getRepository(SectionEntity).findOne({
@@ -147,13 +147,13 @@ export class SectionController {
     ).then(this.toView);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   deleteItem(
     @Param('id')
       id: number,
   ): Promise<number[]> {
     return this.entityManager.transaction(
-      trans => new SectionDeleteOperation(trans).save([id])
+      trans => new SectionDeleteOperation(trans).save([id]),
     );
   }
 

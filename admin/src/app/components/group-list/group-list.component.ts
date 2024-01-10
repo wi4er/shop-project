@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
-import { User } from '../../model/user/user';
 import { Observable } from 'rxjs';
 import { Group } from '../../model/user/group';
 import { GroupFormComponent } from '../group-form/group-form.component';
@@ -49,17 +48,22 @@ export class GroupListComponent {
 
     for (const item of data) {
       const line: { [key: string]: string } = {
-        'id': String(item.id),
+        id: String(item.id),
+        parent: String(item.parent ?? ''),
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
 
+      for (const it of item.property) {
+        col.add('property_' + it.property);
+        line['property_' + it.property] = it.string;
+      }
       this.activeFlags[item.id] = item.flag;
 
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'parent', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {
@@ -94,6 +98,9 @@ export class GroupListComponent {
   }
 
   deleteItem(id: string) {
-
+    this.apiService.deleteList(ApiEntity.GROUP, [id])
+      .then(res => {
+        console.log(res);
+      })
   }
 }

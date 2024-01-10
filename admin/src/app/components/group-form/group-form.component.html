@@ -1,4 +1,7 @@
-<form (submit)="saveItem()">
+<form
+  (submit)="saveItem()"
+  *ngIf="!loading"
+>
   <h2 *ngIf="!data?.id" mat-dialog-title>
     Create new User
   </h2>
@@ -45,6 +48,13 @@
   </div>
 
   <mat-tab-group dynamicHeight>
+    <mat-tab label="Parent">
+      <app-group-tree
+        [groupList]="parent ? [parent] : []"
+        [onChange]="handleEditParent.bind(this)"
+      ></app-group-tree>
+    </mat-tab>
+
     <mat-tab
       [label]="'Properties ( ' + getPropertyCount() + ' )'"
     >

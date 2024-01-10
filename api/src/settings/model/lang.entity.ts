@@ -10,7 +10,7 @@ import {
 import { Lang4stringEntity } from './lang4string.entity';
 import { Lang2flagEntity } from './lang2flag.entity';
 
-@Entity('lang')
+@Entity('settings-lang')
 @Check('not_empty_id', '"id" > \'\'')
 export class LangEntity extends BaseEntity {
 

@@ -67,7 +67,7 @@ export class ElementListComponent implements OnChanges {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {

@@ -63,6 +63,7 @@ import { Element2permissionEntity } from './content/model/element2permission.ent
 import { SectionPermissionEntity } from './content/model/section-permission.entity';
 import { Element4sectionEntity } from './content/model/element4section.entity';
 import { User4groupEntity } from './personal/model/user4group.entity';
+import { ContentPermissionEntity } from './content/model/content-permission.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -91,6 +92,7 @@ export function createConnectionOptions(): DataSourceOptions {
       Element2permissionEntity,
       SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, SectionPermissionEntity,
       BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, BlockPermissionEntity,
+      ContentPermissionEntity,
       FormEntity, Form2flagEntity, Form4stringEntity,
       FormFieldEntity, FormField2flagEntity, FormField4stringEntity,
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,

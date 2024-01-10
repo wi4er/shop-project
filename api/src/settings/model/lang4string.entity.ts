@@ -11,7 +11,7 @@ import { LangEntity } from './lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { PropertyEntity } from './property.entity';
 
-@Entity('lang4string')
+@Entity('settings-lang4string')
 export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<LangEntity> {
 
   @PrimaryGeneratedColumn()

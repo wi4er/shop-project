@@ -13,7 +13,7 @@ import { Property2flagEntity } from './property2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 
-@Entity('property')
+@Entity('settings-property')
 @Check('not_empty_id', '"id" > \'\'')
 export class PropertyEntity extends BaseEntity
   implements WithFlagEntity<PropertyEntity>, WithStringEntity<PropertyEntity> {

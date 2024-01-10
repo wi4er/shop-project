@@ -9,7 +9,7 @@ import {
 import { LangEntity } from './lang.entity';
 import { FlagEntity } from './flag.entity';
 
-@Entity('lang2flag')
+@Entity('settings-lang2flag')
 @Index(['parent', 'flag'], {unique: true})
 export class Lang2flagEntity extends BaseEntity {
 

@@ -13,7 +13,7 @@ import { Flag2flagEntity } from "./flag2flag.entity";
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 
-@Entity('flag')
+@Entity('settings-flag')
 export class FlagEntity
   extends BaseEntity
   implements WithStringEntity<FlagEntity>, WithFlagEntity<FlagEntity> {

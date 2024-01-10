@@ -30,13 +30,22 @@ export class CommonListComponent implements OnInit {
   @Input()
   activeFlags: { [key: string]: string[] } = {};
 
-  propertyList: string[] = ['NAME'];
+  propertyList: string[] = [];
   flagList: string[] = [];
 
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   @Input()
   columns: string[] = [];
+
+  getColumns() {
+    return [
+      'select',
+      'action',
+      ...(this.onNext ? ['moveto'] : []),
+      ...this.columns,
+    ];
+  }
 
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
@@ -64,7 +73,6 @@ export class CommonListComponent implements OnInit {
   constructor(
     private apiService: ApiService,
   ) {
-
   }
 
   ngOnInit(): void {
@@ -108,9 +116,7 @@ export class CommonListComponent implements OnInit {
   }
 
   @Input()
-  onNext(id: string): void {
-    console.log('>>>>>>>>>>>>>>>');
-  }
+  onNext?: (id: string) => void;
 
   updateItem(id: number) {
     this.onUpdateItem(id)

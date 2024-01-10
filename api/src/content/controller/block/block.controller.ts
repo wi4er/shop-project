@@ -2,18 +2,19 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { BlockEntity } from '../../model/block.entity';
 import { EntityManager, Repository } from 'typeorm';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlockInput } from '../../input/block.input';
 import { BlockInsertOperation } from '../../operation/block-insert.operation';
 import { BlockUpdateOperation } from '../../operation/block-update.operation';
 import { BlockDeleteOperation } from '../../operation/block-delete.operation';
+import { BlockRender } from '../../render/block.render';
 
 @ApiTags('Content block')
 @Controller('block')
 export class BlockController {
 
   relations = {
-    string: {property: true},
+    string: {property: true, lang: true},
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
   };
@@ -27,34 +28,21 @@ export class BlockController {
   }
 
   toView(item: BlockEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      property: [
-        ...item.string.map(str => ({
-          string: str.string,
-          property: str.property.id,
-          lang: str.lang?.id,
-        })),
-        ...item.point.map(val => ({
-          property: val.property.id,
-          point: val.point.id,
-          directory: val.point.directory.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new BlockRender(item)
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Content block',
+    type: [BlockRender],
+  })
   async getList(
     @Query('offset')
       offset?: number,
     @Query('limit')
       limit?: number,
-  ) {
+  ): Promise<BlockRender[]> {
     return this.blockRepo.find({
       relations: this.relations,
       take: limit,
@@ -68,10 +56,15 @@ export class BlockController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content block',
+    type: BlockRender,
+  })
   async getItem(
     @Param('id')
       id: number,
-  ) {
+  ): Promise<BlockRender> {
     return this.blockRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -79,10 +72,15 @@ export class BlockController {
   }
 
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Content block created successfully',
+    type: BlockRender,
+  })
   addItem(
     @Body()
       input: BlockInput,
-  ) {
+  ): Promise<BlockRender> {
     return this.entityManager.transaction(
       trans => new BlockInsertOperation(trans).save(input)
         .then(id => trans.getRepository(BlockEntity).findOne({
@@ -93,12 +91,17 @@ export class BlockController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content block',
+    type: BlockRender,
+  })
   updateItem(
     @Param('id')
       blockId: number,
     @Body()
       input: BlockInput,
-  ) {
+  ): Promise<BlockRender> {
     return this.entityManager.transaction(
       trans => new BlockUpdateOperation(trans).save(blockId, input)
         .then(id => trans.getRepository(BlockEntity).findOne({

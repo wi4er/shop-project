@@ -12,7 +12,7 @@ import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { PropertyEntity } from './property.entity';
 import { LangEntity } from './lang.entity';
 
-@Entity('flag4string')
+@Entity('settings-flag4string')
 export class Flag4stringEntity
   extends BaseEntity
   implements CommonStringEntity<FlagEntity> {

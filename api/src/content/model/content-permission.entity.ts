@@ -2,16 +2,18 @@ import {
   BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, ManyToOne,
+  Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
+import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
-import { SectionEntity } from './section.entity';
 
-@Entity('content-section-permission')
-export class SectionPermissionEntity extends BaseEntity {
+@Entity('content-permission')
+export class ContentPermissionEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,27 +25,26 @@ export class SectionPermissionEntity extends BaseEntity {
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date;
+  deleted_at: Date | null;
 
   @VersionColumn()
   version: number;
 
   @ManyToOne(
-    type => SectionEntity,
-    section => section.permission,
+    type => BlockEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
-  section: SectionEntity;
+  block: BlockEntity;
 
   @ManyToOne(
     type => GroupEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
   group: GroupEntity;
 

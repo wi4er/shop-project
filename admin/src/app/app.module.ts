@@ -46,7 +46,7 @@ import { PropertyEditComponent } from './components/property-edit/property-edit.
 import { FlagEditComponent } from './components/flag-edit/flag-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PermissionListComponent } from './components/permission-list/permission-list.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { UserContactListComponent } from './components/user-contact-list/user-contact-list.component';
@@ -60,6 +60,7 @@ import { AuthDialogComponent } from './components/auth-dialog/auth-dialog.compon
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { GroupTreeComponent } from './components/group-tree/group-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -125,6 +126,9 @@ import { MatTreeModule } from '@angular/material/tree';
     MatFormFieldModule,
     MatInputModule,
     MatTreeModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

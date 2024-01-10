@@ -18,6 +18,12 @@ export class ElementFormComponent {
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
+  permission: {[method: string]: number[]} = {
+    READ: [],
+    WRITE: [],
+    DELETE: [],
+    ALL: [],
+  };
 
   propertyList: Property[] = [];
   langList: Lang[] = [];
@@ -99,6 +105,10 @@ export class ElementFormComponent {
     // }
   }
 
+  handleChangePermission = (method: string) => (id: number[]) => {
+    this.permission[method] = id;
+  };
+
   toInput(): ElementInput {
     const input: ElementInput = {
       id: this.data?.id,
@@ -110,6 +120,12 @@ export class ElementFormComponent {
         method: 'READ',
       }],
     } as ElementInput;
+
+    for (const method in this.permission) {
+      for (const group of this.permission[method]) {
+        input.permission.push({method, group});
+      }
+    }
 
     for (const prop in this.editProperties) {
       for (const lang in this.editProperties[prop]) {

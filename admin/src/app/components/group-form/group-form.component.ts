@@ -1,10 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../service/api.service';
 import { Property } from '../../model/settings/property';
 import { Lang } from '../../model/settings/lang';
 import { Flag } from '../../model/settings/flag';
 import { GroupInput } from '../../model/user/group.input';
+import { Group } from '../../model/user/group';
 
 @Component({
   selector: 'app-user-group-form',
@@ -13,8 +14,11 @@ import { GroupInput } from '../../model/user/group.input';
 })
 export class GroupFormComponent {
 
+  loading = true;
+
   id: string = '';
   login: string = '';
+  parent?: number;
   created_at: string = '';
   updated_at: string = '';
 
@@ -33,25 +37,25 @@ export class GroupFormComponent {
     if (data?.id) this.id = data.id;
   }
 
+  handleEditParent(id: number[]) {
+    this.parent = id[0];
+  }
+
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, flag, lang]) => {
+      this.data?.id ? this.apiService.fetchItem<Group>(ApiEntity.GROUP, this.data.id) : undefined,
+    ]).then(([property, flag, lang, item]) => {
       this.propertyList = property;
       this.flagList = flag;
       this.langList = lang;
 
       this.initEditValues();
+      if (item)this.toEdit(item);
+      this.loading = false;
     });
-
-    if (this.data?.id) {
-      this.apiService.fetchItem<Property>(ApiEntity.GROUP, this.data.id)
-        .then(res => {
-          this.toEdit(res);
-        });
-    }
   }
 
   getPropertyCount() {
@@ -74,14 +78,16 @@ export class GroupFormComponent {
     }
   }
 
-  toEdit(item: Property) {
+  toEdit(item: Group) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+    this.parent = item.parent;
   }
 
   toInput(): GroupInput {
     const input: GroupInput = {
       id: +this.id,
+      parent: this.parent,
       property: [],
       flag: [],
     } as GroupInput;
@@ -90,6 +96,14 @@ export class GroupFormComponent {
       for (const lang in this.editProperties[prop]) {
         if (!this.editProperties[prop][lang]) {
           continue;
+        }
+
+        for (const value of this.editProperties[prop][lang]) {
+          input.property.push({
+            property: prop,
+            string: value.value,
+            lang: lang || undefined,
+          });
         }
       }
     }

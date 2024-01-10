@@ -12,6 +12,7 @@ import { PointEntity } from '../../../directory/model/point.entity';
 import { Section4pointEntity } from '../../model/section4point.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
+import { LangEntity } from '../../../settings/model/lang.entity';
 
 describe('SectionController', () => {
   let source;
@@ -150,7 +151,7 @@ describe('SectionController', () => {
   });
 
   describe('Content section with strings', () => {
-    test('Should get section with properties', async () => {
+    test('Should get section with strings', async () => {
       const block = await new BlockEntity().save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
@@ -165,6 +166,25 @@ describe('SectionController', () => {
       expect(list.body[0].property).toHaveLength(1);
       expect(list.body[0].property[0].string).toBe('VALUE');
       expect(list.body[0].property[0].property).toBe('NAME');
+    });
+
+    test('Should get section with lang', async () => {
+      const block = await new BlockEntity().save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      await Object.assign(new Section4stringEntity(), {parent, property, lang, string: 'WITH_LANG'}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/section')
+        .expect(200);
+
+      expect(list.body).toHaveLength(1);
+      expect(list.body[0].id).toBe(1);
+      expect(list.body[0].property).toHaveLength(1);
+      expect(list.body[0].property[0].string).toBe('WITH_LANG');
+      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].property[0].lang).toBe('EN');
     });
   });
 
@@ -243,7 +263,7 @@ describe('SectionController', () => {
   });
 
   describe('Content section addition', () => {
-    test('Should add section', async () => {
+    test('Should add with parent', async () => {
       await new BlockEntity().save();
       await Object.assign(new SectionEntity(), {block: 1}).save();
 
@@ -255,6 +275,18 @@ describe('SectionController', () => {
       expect(inst.body['id']).toBe(2);
       expect(inst.body['block']).toBe(1);
       expect(inst.body['parent']).toBe(1);
+    });
+
+    test('Should add without parent', async () => {
+      await new BlockEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({block: 1})
+        .expect(201);
+
+      expect(inst.body['id']).toBe(1);
+      expect(inst.body['block']).toBe(1);
     });
 
     test('Should add with strings', async () => {
@@ -276,6 +308,27 @@ describe('SectionController', () => {
       expect(inst.body.property[0].string).toBe('VALUE');
     });
 
+    test('Should add with lang', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/section')
+        .send({
+          block: 1,
+          property: [
+            {property: 'NAME', string: 'VALUE', lang: 'EN'},
+          ],
+        })
+        .expect(201);
+
+      expect(inst.body.property).toHaveLength(1);
+      expect(inst.body.property[0].property).toBe('NAME');
+      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.property[0].lang).toBe('EN');
+    });
+
     test('Shouldn`t add with wrong property', async () => {
       await new BlockEntity().save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
@@ -286,6 +339,22 @@ describe('SectionController', () => {
           block: 1,
           property: [
             {property: 'WRONG', string: 'VALUE'},
+          ],
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t add with wrong lang', async () => {
+      await new BlockEntity().save();
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      await request(app.getHttpServer())
+        .post('/section')
+        .send({
+          block: 1,
+          property: [
+            {property: 'NAME', string: 'VALUE', lang: 'WRONG'},
           ],
         })
         .expect(400);
@@ -317,18 +386,6 @@ describe('SectionController', () => {
           flag: ['WRONG'],
         })
         .expect(400);
-    });
-
-    test('Should add without parent', async () => {
-      await new BlockEntity().save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/section')
-        .send({block: 1})
-        .expect(201);
-
-      expect(inst.body['id']).toBe(1);
-      expect(inst.body['block']).toBe(1);
     });
 
     test('Shouldn`t add section without block', async () => {

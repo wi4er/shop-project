@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { ElementInput } from '../../input/element.input';
@@ -13,22 +13,23 @@ import { ElementUpdateOperation } from '../../operation/element-update.operation
 import { ElementDeleteOperation } from '../../operation/element-delete.operation';
 import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { Request } from 'express';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
+import { ElementRender } from '../../render/element.render';
 
 @ApiTags('Content element')
 @Controller('element')
 export class ElementController {
 
   relations = {
+    block: true,
+    parent: {section: true},
+    permission: {group: true},
     string: {property: true, lang: true},
-    section: true,
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
     element: {element: true, property: true},
-    permission: {group: true},
-    block: true,
+    section: {section: true, property: true},
   };
 
   constructor(
@@ -42,35 +43,7 @@ export class ElementController {
   }
 
   toView(item: ElementEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      block: item.block.id,
-      property: [
-        ...item.string.map(str => ({
-          string: str.string,
-          proper6ty: str.property.id,
-          lang: str.lang?.id,
-        })),
-        ...item.point.map(val => ({
-          property: val.property.id,
-          point: val.point.id,
-          directory: val.point.directory.id,
-        })),
-        ...item.element.map(val => ({
-          property: val.property.id,
-          element: val.element.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-      section: item.section?.map(sec => sec.id),
-      permission: item.permission?.map(it => ({
-        method: it.method,
-        group: it.group.id,
-      })),
-    };
+    return new ElementRender(item);
   }
 
   toWhere(filter: ElementFilterSchema): FindOptionsWhere<ElementEntity> {
@@ -122,6 +95,11 @@ export class ElementController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Content element',
+    type: [ElementRender],
+  })
   async getList(
     @CurrentGroups()
       group: number[],
@@ -133,7 +111,7 @@ export class ElementController {
       offset?: number,
     @Query('limit')
       limit?: number,
-  ) {
+  ): Promise<ElementRender[]> {
     return this.elementRepo.find({
       where: {
         ...(filter ? this.toWhere(filter) : {}),
@@ -155,7 +133,7 @@ export class ElementController {
       group: number[],
     @Query('filter')
       filter?: ElementFilterSchema,
-  ) {
+  ): Promise<{ count: number }> {
     return this.elementRepo.count({
       where: {
         ...(filter ? this.toWhere(filter) : {}),
@@ -168,14 +146,17 @@ export class ElementController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content element',
+    type: ElementRender,
+  })
   async getItem(
     @CurrentGroups()
       group: number[],
     @Param('id')
       id: number,
-    @Req()
-      req: Request,
-  ) {
+  ): Promise<ElementRender> {
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {
@@ -194,12 +175,17 @@ export class ElementController {
   }
 
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Content element created successfully',
+    type: ElementRender,
+  })
   async addItem(
     @CurrentGroups()
       group: number[],
     @Body()
       input: ElementInput,
-  ) {
+  ): Promise<ElementRender> {
     return this.entityManager.transaction(
       trans => new ElementInsertOperation(trans).save(input)
         .then(id => trans.getRepository(ElementEntity).findOne({
@@ -210,6 +196,11 @@ export class ElementController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content element updated successfully',
+    type: ElementRender,
+  })
   async updateItem(
     @CurrentGroups()
       group: number[],
@@ -217,7 +208,7 @@ export class ElementController {
       id: number,
     @Body()
       input: ElementInput,
-  ) {
+  ): Promise<ElementRender> {
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {

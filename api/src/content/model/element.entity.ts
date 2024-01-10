@@ -17,6 +17,7 @@ import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 import { Element2permissionEntity } from './element2permission.entity';
 import { Element4elementEntity } from './element4element.entity';
+import { Element4sectionEntity } from './element4section.entity';
 
 @Entity('content-element')
 export class ElementEntity
@@ -52,7 +53,7 @@ export class ElementEntity
     type => Element2sectionEntity,
     section => section.parent,
   )
-  section: Element2sectionEntity[];
+  parent: Element2sectionEntity[];
 
   @OneToMany(
     type => Element4stringEntity,
@@ -77,6 +78,12 @@ export class ElementEntity
     element => element.parent,
   )
   element: Element4elementEntity[];
+
+  @OneToMany(
+    type => Element4sectionEntity,
+    section => section.parent,
+  )
+  section: Element4sectionEntity[];
 
   @OneToMany(
     type => Element2permissionEntity,

@@ -141,4 +141,29 @@ export class ApiService {
     return req;
   }
 
+  deleteList(entity: ApiEntity, idList: string[] | number[]) {
+    const reqList = [];
+
+    for (const id of idList) {
+      const url = [
+        this.apiUrl,
+        entity,
+        id.toString(),
+      ].join('/');
+
+      reqList.push(fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json',
+        },
+      }).then(res => {
+        if (!res.ok) console.error(res);
+        return res.json();
+      }));
+    }
+
+
+    return Promise.all(reqList);
+  }
+
 }

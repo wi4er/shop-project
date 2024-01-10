@@ -68,9 +68,35 @@
     </mat-tab>
 
     <mat-tab label="Permissions">
-      <app-group-tree
+      <mat-tab-group dynamicHeight>
+        <mat-tab label="READ">
+          <app-group-tree
+            [onChange]="handleChangePermission('READ')"
+            [multiple]="true"
+          ></app-group-tree>
+        </mat-tab>
 
-      ></app-group-tree>
+        <mat-tab label="WRITE">
+          <app-group-tree
+            [onChange]="handleChangePermission('WRITE')"
+            [multiple]="true"
+          ></app-group-tree>
+        </mat-tab>
+
+        <mat-tab label="DELETE">
+          <app-group-tree
+            [onChange]="handleChangePermission('DELETE')"
+            [multiple]="true"
+          ></app-group-tree>
+        </mat-tab>
+
+        <mat-tab label="ALL">
+          <app-group-tree
+            [onChange]="handleChangePermission('ALL')"
+            [multiple]="true"
+          ></app-group-tree>
+        </mat-tab>
+      </mat-tab-group>
     </mat-tab>
   </mat-tab-group>
 

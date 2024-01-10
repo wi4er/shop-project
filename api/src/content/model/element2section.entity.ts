@@ -12,7 +12,8 @@ import { SectionEntity } from './section.entity';
 
 @Entity('content-element2section')
 @Index(['parent', 'section'], {unique: true})
-export class Element2sectionEntity extends BaseEntity {
+export class Element2sectionEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -24,7 +25,7 @@ export class Element2sectionEntity extends BaseEntity {
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date;
+  deleted_at: Date | null;
 
   @VersionColumn()
   version: number;

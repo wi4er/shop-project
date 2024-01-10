@@ -49,7 +49,7 @@ export class BlockListComponent implements OnInit {
 
     for (const item of data) {
       const line: { [key: string]: string } = {
-        'id': String(item.id),
+        id: String(item.id),
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
@@ -64,7 +64,7 @@ export class BlockListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'moveto', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', ...col];
   }
 
   addItem(): Observable<undefined> {
