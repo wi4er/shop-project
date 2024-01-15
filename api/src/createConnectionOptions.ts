@@ -32,7 +32,7 @@ import { User2groupEntity } from './personal/model/user2group.entity';
 import { Element2flagEntity } from './content/model/element2flag.entity';
 import { Section2flagEntity } from './content/model/section2flag.entity';
 import { Block2flagEntity } from './content/model/block2flag.entity';
-import { BlockPermissionEntity } from './content/model/block-permission.entity';
+import { Block2permissionEntity } from './content/model/block2permission.entity';
 import { Block4pointEntity } from './content/model/block4point.entity';
 import { Directory4pointEntity } from './directory/model/directory4point.entity';
 import { Point4pointEntity } from './directory/model/point4point.entity';
@@ -60,7 +60,7 @@ import { DocumentEntity } from './document/model/document.entity';
 import { Document4stringEntity } from './document/model/document4string.entity';
 import { Document2flagEntity } from './document/model/document2flag.entity';
 import { Element2permissionEntity } from './content/model/element2permission.entity';
-import { SectionPermissionEntity } from './content/model/section-permission.entity';
+import { Section2permissionEntity } from './content/model/section2permission.entity';
 import { Element4sectionEntity } from './content/model/element4section.entity';
 import { User4groupEntity } from './personal/model/user4group.entity';
 import { ContentPermissionEntity } from './content/model/content-permission.entity';
@@ -90,8 +90,8 @@ export function createConnectionOptions(): DataSourceOptions {
       ElementEntity, Element2flagEntity, Element2sectionEntity,
       Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity,
       Element2permissionEntity,
-      SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, SectionPermissionEntity,
-      BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, BlockPermissionEntity,
+      SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, Section2permissionEntity,
+      BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, Block2permissionEntity,
       ContentPermissionEntity,
       FormEntity, Form2flagEntity, Form4stringEntity,
       FormFieldEntity, FormField2flagEntity, FormField4stringEntity,

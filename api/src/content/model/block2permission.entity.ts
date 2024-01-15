@@ -2,16 +2,21 @@ import {
   BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, ManyToOne,
+  Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
+  UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
+import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
-import { SectionEntity } from './section.entity';
+import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
 
-@Entity('content-section-permission')
-export class SectionPermissionEntity extends BaseEntity {
+@Entity('content-block2permission')
+@Index(['parent', 'group', 'method'], {unique: true})
+export class Block2permissionEntity
+  extends BaseEntity
+  implements CommonPermissionEntity<BlockEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,27 +28,27 @@ export class SectionPermissionEntity extends BaseEntity {
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date;
+  deleted_at: Date | null;
 
   @VersionColumn()
   version: number;
 
   @ManyToOne(
-    type => SectionEntity,
-    section => section.permission,
+    type => BlockEntity,
+    block => block.permission,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
-  section: SectionEntity;
+  parent: BlockEntity;
 
   @ManyToOne(
     type => GroupEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
   group: GroupEntity;
 

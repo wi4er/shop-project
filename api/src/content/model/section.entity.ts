@@ -14,12 +14,17 @@ import { Section2flagEntity } from './section2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Section4pointEntity } from './section4point.entity';
-import { SectionPermissionEntity } from './section-permission.entity';
+import { Section2permissionEntity } from './section2permission.entity';
+import { WithPointEntity } from '../../common/model/with-point.entity';
+import { WithPermissionEntity } from '../../common/model/with-permission.entity';
 
 @Entity('content-section')
 export class SectionEntity
   extends BaseEntity
-  implements WithFlagEntity<SectionEntity>, WithStringEntity<SectionEntity> {
+  implements WithFlagEntity<SectionEntity>,
+    WithStringEntity<SectionEntity>,
+    WithPointEntity<SectionEntity>,
+    WithPermissionEntity<SectionEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -87,9 +92,9 @@ export class SectionEntity
   point: Section4pointEntity[];
 
   @OneToMany(
-    type => SectionPermissionEntity,
-    permission => permission.section,
+    type => Section2permissionEntity,
+    permission => permission.parent,
   )
-  permission: SectionPermissionEntity;
+  permission: Section2permissionEntity[];
 
 }

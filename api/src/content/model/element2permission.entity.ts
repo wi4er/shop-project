@@ -2,7 +2,7 @@ import {
   BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, ManyToOne,
+  Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
@@ -12,10 +12,10 @@ import { ElementEntity } from './element.entity';
 import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
 
 @Entity('content-element2permission')
+@Index(['parent', 'group', 'method'], {unique: true})
 export class Element2permissionEntity
   extends BaseEntity
-  implements CommonPermissionEntity<ElementEntity>
-{
+  implements CommonPermissionEntity<ElementEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -38,7 +38,7 @@ export class Element2permissionEntity
     {
       onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
   parent: ElementEntity;
 
@@ -47,7 +47,7 @@ export class Element2permissionEntity
     {
       onDelete: 'CASCADE',
       nullable: false,
-    }
+    },
   )
   group: GroupEntity;
 

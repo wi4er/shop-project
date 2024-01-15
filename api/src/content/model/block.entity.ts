@@ -11,7 +11,7 @@ import { ElementEntity } from './element.entity';
 import { SectionEntity } from './section.entity';
 import { Block4stringEntity } from './block4string.entity';
 import { Block2flagEntity } from './block2flag.entity';
-import { BlockPermissionEntity } from './block-permission.entity';
+import { Block2permissionEntity } from './block2permission.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Block4pointEntity } from './block4point.entity';
@@ -38,10 +38,10 @@ export class BlockEntity
   version: number;
 
   @OneToMany(
-    type => BlockPermissionEntity,
-    permission => permission.block,
+    type => Block2permissionEntity,
+    permission => permission.parent,
   )
-  permission: BlockPermissionEntity[];
+  permission: Block2permissionEntity[];
 
   @OneToMany(
     type => ElementEntity,

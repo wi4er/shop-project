@@ -18,11 +18,15 @@ import { WithPointEntity } from '../../common/model/with-point.entity';
 import { Element2permissionEntity } from './element2permission.entity';
 import { Element4elementEntity } from './element4element.entity';
 import { Element4sectionEntity } from './element4section.entity';
+import { WithPermissionEntity } from '../../common/model/with-permission.entity';
 
 @Entity('content-element')
 export class ElementEntity
   extends BaseEntity
-  implements WithStringEntity<ElementEntity>, WithFlagEntity<ElementEntity>, WithPointEntity<ElementEntity> {
+  implements WithStringEntity<ElementEntity>,
+    WithFlagEntity<ElementEntity>,
+    WithPointEntity<ElementEntity>,
+    WithPermissionEntity<ElementEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
