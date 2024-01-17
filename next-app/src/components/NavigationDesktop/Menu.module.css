@@ -1,0 +1,17 @@
+
+.root {
+    display: flex;
+    gap: 100px;
+}
+
+.item {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+
+    color: var(--color-black);
+}
+
+.name {
+
+}

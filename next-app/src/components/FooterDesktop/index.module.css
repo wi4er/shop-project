@@ -1,10 +1,33 @@
 
-.index {
+.root {
     display: none;
+    background-color: var(--color-black);
+    padding: 60px 165px 117px;
 }
 
 @media screen and (min-width: 768px) {
-    .index {
+    .root {
         display: block;
     }
+}
+
+.box {
+    border-top: 1.5px solid var(--colot-white);
+    display: flex;
+
+}
+
+.logo {
+    flex: 1;
+}
+
+.text {
+    color: var(--colot-white);
+    max-width: 250px;
+}
+
+.menu {
+    display: flex;
+    margin-top: 40px;
+    gap: 18px;
 }

@@ -4,10 +4,8 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <Link href={"/product/123"}>
-        TO PRODUCT
-      </Link>
-    </main>
+    <Link href={'/product/123'}>
+      TO PRODUCT
+    </Link>
   );
 }
