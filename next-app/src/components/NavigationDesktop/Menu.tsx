@@ -7,7 +7,10 @@ export function Menu(props: MenuProps) {
   return (
     <div className={css.root}>
       {props.list.map(item => (
-        <div className={css.item}>
+        <div
+          key={item.name}
+          className={css.item}
+        >
           <div className={cn(css.name, font.poppins_medium_16)}>
             {item.name}
           </div>

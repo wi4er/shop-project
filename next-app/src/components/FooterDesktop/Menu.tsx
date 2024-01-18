@@ -3,7 +3,6 @@ import { MenuProps } from '@/components/FooterDesktop/Menu.props';
 import font from '../../style/text-style.module.css';
 import cn from 'classnames';
 
-
 export default function Menu(props: MenuProps) {
   return (
     <div className={css.root}>
@@ -13,7 +12,10 @@ export default function Menu(props: MenuProps) {
 
       <div className={css.list}>
         {props.list.map(item => (
-          <div className={cn(css.item, font.poppins_medium_16)}>
+          <div
+            className={cn(css.item, font.poppins_medium_16)}
+            key={item.name}
+          >
             {item.name}
           </div>
         ))}

@@ -2,8 +2,27 @@
     display: flex;
     gap: 20px;
     align-items: center;
+    justify-content: flex-end;
 }
 
-.ico {
+.profile {
+    width: 34px;
+    height: 34px;
+}
 
+.cart {
+    width: 26px;
+    height: 26px;
+
+}
+
+@media screen and (max-width: 768px) {
+    .root {
+        gap: 15px;
+    }
+
+    .profile {
+        width: 30px;
+        height: 30px;
+    }
 }

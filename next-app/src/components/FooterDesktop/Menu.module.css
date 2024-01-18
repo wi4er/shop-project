@@ -20,3 +20,13 @@
 .item {
     color: var(--colot-white);
 }
+
+@media screen and (max-width: 768px) {
+    .root {
+        gap: 20px;
+    }
+
+    .list {
+        gap: 12px
+    }
+}

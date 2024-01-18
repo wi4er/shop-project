@@ -5,16 +5,9 @@ import css from './index.module.css';
 export default function HeaderIcons() {
   return (
     <div className={css.root}>
-      <ProfileSvg
-        className={css.ico}
-        width="34"
-        height="34"
-      />
+      <ProfileSvg className={css.profile} />
 
-      <CartSvg
-        width="26"
-        height="26"
-      />
+      <CartSvg className={css.cart} />
     </div>
   );
 }

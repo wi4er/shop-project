@@ -8,8 +8,8 @@ export default function FooterDesktop() {
   return (
     <div className={css.root}>
       <div className={css.box}>
-        <div className={css.logo}>
-          <LogoSvg/>
+        <div className={css.top}>
+          <LogoSvg className={css.logo}/>
 
           <div className={cn(css.text, font.poppins_regular_16)}>
             Your natural candle made for your home and for your wellness.
@@ -32,6 +32,20 @@ export default function FooterDesktop() {
           />
 
           <Menu
+            title={'Info'}
+            list={[{
+              name: 'Contact us',
+              link: '/',
+            }, {
+              name: 'Privacy Policies',
+              link: '/',
+            }, {
+              name: 'Terms & Conditions',
+              link: '/',
+            }]}
+          />
+
+          <Menu
             title={'About'}
             list={[{
               name: 'Help',
@@ -45,19 +59,6 @@ export default function FooterDesktop() {
             }]}
           />
 
-          <Menu
-            title={'Info'}
-            list={[{
-              name: 'Contact us',
-              link: '/',
-            }, {
-              name: 'Privacy Policies',
-              link: '/',
-            }, {
-              name: 'Terms & Conditions',
-              link: '/',
-            }]}
-          />
         </div>
       </div>
     </div>

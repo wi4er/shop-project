@@ -1,14 +1,14 @@
 import React from 'react';
+import '../style/sizes.css';
+import '../style/color.css';
+import 'normalize.css';
+import css from './layout.module.css';
 import type { Metadata } from 'next';
 import '../style/globals.css';
 import NavigationDesktop from '@/components/NavigationDesktop';
 import FooterDesktop from '@/components/FooterDesktop';
 import NavigationMobile from '@/components/NavigationMobile';
-import FooterMobile from '@/components/FooterMobile';
 import '@fontsource/poppins';
-import '../style/color.css';
-import 'normalize.css';
-import css from './layout.module.css';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -32,7 +32,6 @@ export default function RootLayout(
 
     <footer>
       <FooterDesktop/>
-      <FooterMobile/>
     </footer>
     </body>
     </html>
