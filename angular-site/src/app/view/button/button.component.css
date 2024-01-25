@@ -1,0 +1,27 @@
+.button {
+  padding: 0 44px;
+  height: 46px;
+  background-color: var(--green, #56B280);
+  border: 1px solid var(--green, #56B280);
+  color: #fff;
+  border-radius: 4px;
+
+  transition: 175ms;
+
+  font-family: Poppins, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--white, #FFF);
+  color: var(--green, #56B280);
+}
+
+.button:disabled {
+  background-color: #D6D6D6;
+  color: var(--black, #272727);
+  border: 1px solid #D6D6D6;
+}
