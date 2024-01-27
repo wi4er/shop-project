@@ -1,0 +1,48 @@
+.bar {
+  display: flex;
+  overflow: hidden;
+
+  height: 75px;
+  align-items: center;
+
+  max-width: 1110px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  gap: 100px;
+}
+
+.item {
+  color: var(--black, #272727);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.icons {
+  display: flex;
+  gap: 20px;
+
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+
+footer {
+
+}
+
+

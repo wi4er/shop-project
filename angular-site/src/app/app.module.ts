@@ -11,6 +11,9 @@ import { RegistrationPageComponent } from './pages/registation-page/registration
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { ButtonComponent } from './view/button/button.component';
 import { InputComponent } from './view/input/input.component';
+import { NgOptimizedImage } from '@angular/common';
+import { CommonFooterComponent } from './components/common-footer/common-footer.component';
+import { ContactPageComponent } from './pages/contact-page/contact-page.component';
 
 @NgModule({
   declarations: [
@@ -22,11 +25,14 @@ import { InputComponent } from './view/input/input.component';
     RegistrationPageComponent,
     OrderPageComponent,
     ButtonComponent,
-    InputComponent
+    InputComponent,
+    CommonFooterComponent,
+    ContactPageComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgOptimizedImage,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,8 @@
 import { Meta, StoryObj } from '@storybook/angular';
 import { ButtonComponent } from './button.component';
+// @ts-ignore
+import imageUrl from '../../../assets/Button.png';
+
 
 const meta: Meta<ButtonComponent> = {
   title: 'View/Button',
@@ -8,6 +11,7 @@ const meta: Meta<ButtonComponent> = {
 };
 
 export default meta;
+
 
 export const Small: StoryObj<ButtonComponent> = {
   args: {},

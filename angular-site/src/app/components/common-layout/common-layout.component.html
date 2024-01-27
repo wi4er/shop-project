@@ -1,28 +1,51 @@
-<header>
-  HEADER HERE
+<header class="bar">
+  <a
+    routerLink="/"
+    class="logo"
+  >
+    <img
+      src="assets/svg/Logo.svg"
+      alt=""
+      height="34"
+      width="130"
+    />
+  </a>
 
-  <div>
-    <a routerLink="/">
-      TO MAIN
-    </a>
+  <div class="menu">
+    <div
+      class="item"
+      *ngFor="let item of menu"
+    >
+      <a [routerLink]="item.link">
+        {{item.name}}
 
-    <a routerLink="/personal/login">
-      TO LOGIN
-    </a>
+        <img
+          *ngIf="item.icon"
+          [ngSrc]="item.icon"
+        />
+      </a>
+    </div>
+  </div>
 
-    <a routerLink="/personal/registration">
-      TO Register
-    </a>
-
-    <a routerLink="/order">
-      TO ORDER
-    </a>
+  <div class="icons">
+    <img
+      src="assets/svg/Profile.svg"
+      height="34"
+      width="34"
+      alt=""
+    />
+    <img
+      src="assets/svg/Cart.svg"
+      height="26"
+      width="26"
+      alt=""
+    />
   </div>
 </header>
 
 <ng-content></ng-content>
 
 <footer>
-  FOOTER HERE
+  <app-common-footer></app-common-footer>
 </footer>
 

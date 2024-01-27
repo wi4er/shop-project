@@ -1,5 +1,5 @@
 .button {
-  padding: 0 44px;
+  padding: 0 43px;
   height: 46px;
   background-color: var(--green, #56B280);
   border: 1px solid var(--green, #56B280);
@@ -13,6 +13,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  letter-spacing: 1.5px;
 }
 
 .button:hover:not(:disabled) {

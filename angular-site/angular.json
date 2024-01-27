@@ -104,6 +104,9 @@
               "-d",
               "."
             ],
+            "styles": [
+              "src/styles.css"
+            ],
             "port": 6006
           }
         },
