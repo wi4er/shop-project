@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CommonLayoutComponent } from './components/common-layout/common-layout.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
@@ -14,11 +13,11 @@ import { InputComponent } from './view/input/input.component';
 import { NgOptimizedImage } from '@angular/common';
 import { CommonFooterComponent } from './components/common-footer/common-footer.component';
 import { ContactPageComponent } from './pages/contact-page/contact-page.component';
+import { CommonHeaderComponent } from './components/common-header/common-header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CommonLayoutComponent,
     MainPageComponent,
     ProductPageComponent,
     LoginPageComponent,
@@ -27,7 +26,8 @@ import { ContactPageComponent } from './pages/contact-page/contact-page.componen
     ButtonComponent,
     InputComponent,
     CommonFooterComponent,
-    ContactPageComponent
+    ContactPageComponent,
+    CommonHeaderComponent
   ],
   imports: [
     BrowserModule,

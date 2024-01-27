@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-common-layout',
-  templateUrl: './common-layout.component.html',
-  styleUrls: ['./common-layout.component.css']
+  selector: 'app-common-header',
+  templateUrl: './common-header.component.html',
+  styleUrls: ['./common-header.component.css']
 })
-export class CommonLayoutComponent {
+export class CommonHeaderComponent {
+
   menu = [{
     name: 'Discovery',
     link: '/',
@@ -18,5 +19,12 @@ export class CommonLayoutComponent {
     name: 'Contact us',
     link: '/',
     icon: '',
-  }]
+  }];
+
+  open = false;
+
+  toggleOpen() {
+    this.open = !this.open;
+  }
+
 }

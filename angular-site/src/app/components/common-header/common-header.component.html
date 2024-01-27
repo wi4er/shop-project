@@ -1,4 +1,23 @@
 <header class="bar">
+  <div
+    class="burger"
+    (click)="toggleOpen()"
+  >
+    <img
+      *ngIf="!open"
+      src="assets/svg/hamburger-menu.svg"
+      width="32"
+      height="17"
+    />
+
+    <img
+      *ngIf="open"
+      src="assets/svg/cross.svg"
+      width="32"
+      height="17"
+    />
+  </div>
+
   <a
     routerLink="/"
     class="logo"
@@ -11,11 +30,11 @@
     />
   </a>
 
-  <div class="menu">
-    <div
-      class="item"
-      *ngFor="let item of menu"
-    >
+  <div
+    [class.open]="open"
+    class="menu"
+  >
+    <div *ngFor="let item of menu">
       <a [routerLink]="item.link">
         {{item.name}}
 
@@ -42,10 +61,3 @@
     />
   </div>
 </header>
-
-<ng-content></ng-content>
-
-<footer>
-  <app-common-footer></app-common-footer>
-</footer>
-
