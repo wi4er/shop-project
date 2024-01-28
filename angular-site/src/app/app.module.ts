@@ -14,6 +14,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { CommonFooterComponent } from './components/common-footer/common-footer.component';
 import { ContactPageComponent } from './pages/contact-page/contact-page.component';
 import { CommonHeaderComponent } from './components/common-header/common-header.component';
+import { AuthFormComponent } from './components/auth-form/auth-form.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { CommonHeaderComponent } from './components/common-header/common-header.
     InputComponent,
     CommonFooterComponent,
     ContactPageComponent,
-    CommonHeaderComponent
+    CommonHeaderComponent,
+    AuthFormComponent
   ],
   imports: [
     BrowserModule,

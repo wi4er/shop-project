@@ -131,6 +131,10 @@ import { MatRadioModule } from '@angular/material/radio';
     ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  exports: [
+    AuthDialogComponent,
+    AuthFormComponent,
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

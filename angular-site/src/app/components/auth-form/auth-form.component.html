@@ -1,0 +1,30 @@
+<div class="title">
+  Authorization
+</div>
+
+<div class="form">
+  <app-input
+    [(value)]="contact"
+  ></app-input>
+
+  <app-input
+    [(value)]="password"
+    type="password"
+  ></app-input>
+
+  <div class="buttons">
+    <a
+      routerLink="/personal/registration"
+      class="registration"
+    >
+      Registration
+    </a>
+
+    <app-button
+      class="ok-button"
+      (click)="handleSend()"
+    >
+      Ok
+    </app-button>
+  </div>
+</div>
