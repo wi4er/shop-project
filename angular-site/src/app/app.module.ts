@@ -15,6 +15,8 @@ import { CommonFooterComponent } from './components/common-footer/common-footer.
 import { ContactPageComponent } from './pages/contact-page/contact-page.component';
 import { CommonHeaderComponent } from './components/common-header/common-header.component';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
+import { RegFormComponent } from './components/reg-form/reg-form.component';
+import { CheckboxComponent } from './view/checkbox/checkbox.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component';
     CommonFooterComponent,
     ContactPageComponent,
     CommonHeaderComponent,
-    AuthFormComponent
+    AuthFormComponent,
+    RegFormComponent,
+    CheckboxComponent
   ],
   imports: [
     BrowserModule,
