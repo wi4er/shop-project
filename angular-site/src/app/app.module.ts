@@ -17,6 +17,7 @@ import { CommonHeaderComponent } from './components/common-header/common-header.
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
 import { RegFormComponent } from './components/reg-form/reg-form.component';
 import { CheckboxComponent } from './view/checkbox/checkbox.component';
+import { SelectComponent } from './view/select/select.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { CheckboxComponent } from './view/checkbox/checkbox.component';
     CommonHeaderComponent,
     AuthFormComponent,
     RegFormComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    SelectComponent
   ],
   imports: [
     BrowserModule,

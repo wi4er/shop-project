@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PersonalModule } from './personal/personal.module';
 import { ContentModule } from './content/content.module';
 import { FileModule } from './file/file.module';
@@ -36,7 +35,6 @@ import { PermissionFilter } from './exception/permission/permission.filter';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_FILTER,
       useClass: WrongDataFilter,

@@ -76,17 +76,20 @@
         placeholder="Postal Code"
       ></app-input>
 
-      <app-input
+      <app-select
         class="input"
-        [(value)]="province"
-        placeholder="Province"
-      ></app-input>
+        label="Province"
+        [(current)]="province"
+        [list]="provinceList"
+      ></app-select>
     </div>
 
-    <app-input
-      [(value)]="country"
-      placeholder="Country/Region"
-    ></app-input>
+    <app-select
+      class="input"
+      [(current)]="country"
+      [list]="provinceList"
+      label="Country/Region"
+    ></app-select>
   </div>
 </div>
 

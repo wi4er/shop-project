@@ -26,7 +26,7 @@ services:
       - "./admin:/app"
 
   api:
-    container_name: shop-project-api
+    container_name: shop-project-dev-api
     image: node:20.9
     restart: always
     links:
@@ -40,6 +40,24 @@ services:
       - "./api:/app"
     environment:
       DB_HOST: postgres
+      REDIS_URL: redis://cache:6379
+
+  shop:
+    container_name: shop-project-api
+    image: node:20.9
+    restart: always
+    links:
+      - postgres
+      - cache
+    ports:
+      - "3030:3000"
+    working_dir: /app
+    command: npm run start:dev
+    volumes:
+      - "./api:/app"
+    environment:
+      DB_HOST: postgres
+      DB_DATABASE: shop_project
       REDIS_URL: redis://cache:6379
 
   cache:

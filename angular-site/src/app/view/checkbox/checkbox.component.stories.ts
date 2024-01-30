@@ -9,7 +9,6 @@ const meta: Meta<CheckboxComponent> = {
       story => `<div style="display: flex; align-items: center; justify-content: center; height: 100vh">${story}</div>`
     )
   ],
-
 };
 
 export default meta;

@@ -1,0 +1,78 @@
+:host {
+  position: relative;
+}
+
+.select {
+  display: flex;
+  border: 0.5px solid var(--green, #56B280);
+  padding: 5px 0;
+  height: 40px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 9px;
+  flex: 1;
+}
+
+.label {
+  color: #616161;
+
+  font-family: Helvetica, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.current {
+  color: var(--black, #272727);
+  font-family: Helvetica, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.open {
+  cursor: pointer;
+
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 0.25px solid rgba(137, 137, 137, 0.50);
+}
+
+.drop {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 10;
+}
+
+.inner {
+  border: 0.5px solid var(--green, #56B280);
+  margin-top: 3px;
+}
+
+.point {
+  cursor: pointer;
+  color: var(--black, #272727);
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-family: Helvetica, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 6px 9px;
+
+  transition: 175ms;
+}
+
+.point:hover {
+  background-color: #D6D6D6;
+}
+
