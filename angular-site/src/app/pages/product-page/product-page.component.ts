@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-page',
@@ -8,13 +7,4 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 })
 export class ProductPageComponent {
 
-  productId?: number;
-
-  constructor(
-    private route: ActivatedRoute,
-  ) {
-    this.route.paramMap.subscribe(params => {
-      this.productId = Number(params.get('id'));
-    });
-  }
 }

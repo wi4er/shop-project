@@ -114,6 +114,19 @@ describe('AuthController', () => {
         })
         .expect(403);
     });
+
+    test('Shouldn`t auth with wrong content type', async () => {
+      await Object.assign(new UserEntity(), {
+        login: 'USER',
+        hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
+      }).save();
+
+      const res = await request(app.getHttpServer())
+        .post('/auth')
+        .set('Content-Type', 'text/plain')
+        .send('123')
+        .expect(400);
+    });
   });
 
   describe('Session closing', () => {

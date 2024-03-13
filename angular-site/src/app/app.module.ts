@@ -3,44 +3,30 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MainPageComponent } from './pages/main-page/main-page.component';
-import { ProductPageComponent } from './pages/product-page/product-page.component';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { RegistrationPageComponent } from './pages/registation-page/registration-page.component';
-import { OrderPageComponent } from './pages/order-page/order-page.component';
-import { ButtonComponent } from './view/button/button.component';
-import { InputComponent } from './view/input/input.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
 import { NgOptimizedImage } from '@angular/common';
-import { CommonFooterComponent } from './components/common-footer/common-footer.component';
-import { ContactPageComponent } from './pages/contact-page/contact-page.component';
-import { CommonHeaderComponent } from './components/common-header/common-header.component';
-import { AuthFormComponent } from './components/auth-form/auth-form.component';
-import { RegFormComponent } from './components/reg-form/reg-form.component';
-import { CheckboxComponent } from './view/checkbox/checkbox.component';
-import { SelectComponent } from './view/select/select.component';
+import { FormsModule } from '@angular/forms';
+import { SectionPageComponent } from './pages/section-page/section-page.component';
+import { CatalogPageComponent } from './pages/catalog-page/catalog-page.component';
+import { BasketPageComponent } from './pages/basket-page/basket-page.component';
+import { AboutPageComponent } from './pages/about-page/about-page.component';
+import { TopNavComponent } from './components/top-nav/top-nav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainPageComponent,
-    ProductPageComponent,
-    LoginPageComponent,
-    RegistrationPageComponent,
-    OrderPageComponent,
-    ButtonComponent,
-    InputComponent,
-    CommonFooterComponent,
-    ContactPageComponent,
-    CommonHeaderComponent,
-    AuthFormComponent,
-    RegFormComponent,
-    CheckboxComponent,
-    SelectComponent
+    HomePageComponent,
+    SectionPageComponent,
+    CatalogPageComponent,
+    BasketPageComponent,
+    AboutPageComponent,
+    TopNavComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgOptimizedImage,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
