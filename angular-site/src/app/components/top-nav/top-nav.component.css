@@ -1,5 +1,13 @@
+:host {
+  padding: 0 26px;
+  display: block;
+}
+
 .top {
   display: flex;
+  height: 70px;
+  align-items: center;
+  padding: 0 2px;
 }
 
 .search {
@@ -7,10 +15,58 @@
 }
 
 .logo {
+  color: #22202E;
 }
 
 .icons {
   justify-content: flex-end;
   flex: 1;
   display: flex;
+  gap: 16px;
+}
+
+.mobile_only {
+  display: none;
+}
+
+.line {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bottom {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu {
+  display: flex;
+  gap: 44px;
+}
+
+.item {
+  color: #726E8D;
+}
+
+@media screen and (max-width: 1024px) {
+  :host {
+    padding: 0 22px;
+  }
+
+  .mobile_only {
+    display: block;
+  }
+
+  .bottom {
+    display: none;
+  }
+
+  .line {
+    display: none;
+  }
+
+  .search {
+    display: none;
+  }
 }

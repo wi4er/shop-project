@@ -1,0 +1,109 @@
+
+:host {
+  background-color: #2A254B;
+  color: #FFFFFF;
+  display: block;
+  padding: 0 80px;
+}
+
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  padding: 53px 0 32px;
+}
+
+.left {
+  display: flex;
+  gap: 65px;
+}
+
+.company {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.company-title {
+
+}
+
+.company-address {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social {
+  padding: 9px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.social-title {
+
+}
+
+.social-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px
+}
+
+.menu {
+  display: flex;
+  gap: 122px;
+  padding-right: 88px;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-title {
+
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-link {
+  display: block;
+}
+
+.line {
+  height: 1px;
+  background-color: #4E4D93;
+}
+
+.copyright {
+  padding: 16px 0 20px;
+}
+
+@media screen and (max-width: 1024px) {
+  :host {
+    padding: 0 24px;
+  }
+
+  .top {
+    padding: 40px 0 30px;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .menu {
+    gap: 76px;
+    padding-right: 53px;
+  }
+
+  .desktop_only {
+    display: none;
+  }
+}
+

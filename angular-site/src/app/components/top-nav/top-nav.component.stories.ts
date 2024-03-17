@@ -11,8 +11,15 @@ type Story = StoryObj<TopNavComponent>;
 
 export const DesktopBig: Story = {
   args: {
-    user: {
-      name: 'Jane Doe',
-    },
   },
+};
+
+export const MobileBig: Story = {
+  args: {
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'iphone13',
+    },
+  }
 };

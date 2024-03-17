@@ -11,6 +11,7 @@ import { CatalogPageComponent } from './pages/catalog-page/catalog-page.componen
 import { BasketPageComponent } from './pages/basket-page/basket-page.component';
 import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TopNavComponent } from './components/top-nav/top-nav.component';
     CatalogPageComponent,
     BasketPageComponent,
     AboutPageComponent,
-    TopNavComponent
+    TopNavComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
