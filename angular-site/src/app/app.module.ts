@@ -12,6 +12,7 @@ import { BasketPageComponent } from './pages/basket-page/basket-page.component';
 import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { MainFeaturesComponent } from './components/main-features/main-features.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FooterComponent } from './components/footer/footer.component';
     BasketPageComponent,
     AboutPageComponent,
     TopNavComponent,
-    FooterComponent
+    FooterComponent,
+    MainFeaturesComponent
   ],
   imports: [
     BrowserModule,

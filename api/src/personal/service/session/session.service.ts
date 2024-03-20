@@ -11,7 +11,7 @@ export class SessionService {
   ) {
     req['session']['user'] = {
       id: user.id,
-      group: user.group.map(it => it.id),
+      group: user.group.map(it => it.group.id),
     };
   }
 

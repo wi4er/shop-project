@@ -13,6 +13,19 @@
   font-weight: 400;
 }
 
+.headings_h4 {
+  font-family: "ClashDisplay-Regular", sans-serif;
+  font-size: 20px;
+  line-height: 140%;
+  font-weight: 400;
+}
+
+.body_medium {
+  font-family: "Satoshi", sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  font-weight: 400;
+}
 
 .satoshi_regular_16 {
   font-family: "Satoshi", sans-serif;

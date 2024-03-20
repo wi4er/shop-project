@@ -573,6 +573,31 @@ describe('ElementController', () => {
       expect(inst.body.permission[0].group).toBe(1);
     });
 
+    test('Shouldn`t add with wrong group', async () => {
+      const parent = await Object.assign(new UserEntity(), {
+        login: 'USER',
+        hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
+      }).save();
+
+      const {headers} = await request(app.getHttpServer())
+        .post('/auth')
+        .send({
+          login: 'USER',
+          password: 'qwerty',
+        })
+        .expect(201);
+
+      await new BlockEntity().save();
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({
+          block: 1,
+          permission: [{group: 777, method: 'READ'}],
+        })
+        .set('cookie', headers['set-cookie'])
+        .expect(400);
+    });
+
     test('Should add and get element', async () => {
       const cookie = await createSession();
 

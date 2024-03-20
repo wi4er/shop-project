@@ -100,7 +100,7 @@ export class ResultListComponent {
   toggleFlag(id: number, flag: string) {
   }
 
-  deleteList() {
+  async deleteList() {
   }
 
   deleteItem(id: string) {

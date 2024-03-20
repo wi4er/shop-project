@@ -209,6 +209,9 @@ export class ElementController {
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
+
+    console.log(group);
+
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {

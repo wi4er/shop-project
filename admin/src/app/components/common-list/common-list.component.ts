@@ -6,6 +6,7 @@ import { Flag } from '../../model/settings/flag';
 import { Property } from '../../model/settings/property';
 import { Observable } from 'rxjs';
 import { StringifiableRecord } from 'query-string/base';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-common-list',
@@ -72,6 +73,7 @@ export class CommonListComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
+    public sanitizer: DomSanitizer,
   ) {
   }
 
@@ -128,8 +130,13 @@ export class CommonListComponent implements OnInit {
     console.log(id, '>>>>>>>', flag);
   }
 
-  @Input()
   deleteList() {
+    this.onDeleteList(this.selection.selected.map(item => item['id']))
+      .then(() => this.refreshData());
+  }
+
+  @Input()
+  async onDeleteList(idList: Array<number | string>) {
   }
 
   @Input()

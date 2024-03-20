@@ -41,8 +41,6 @@ describe('MyselfController', () => {
         .get(`/myself`)
         .set('cookie', headers['set-cookie']);
 
-      console.log(res.body);
-
       expect(res.body.id).toBe(1);
       expect(res.body.login).toBe('user');
     });

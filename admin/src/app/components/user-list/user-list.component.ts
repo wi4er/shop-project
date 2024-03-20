@@ -90,7 +90,7 @@ export class UserListComponent implements OnInit {
   toggleFlag(id: number, flag: string) {
   }
 
-  deleteList() {
+  async deleteList() {
   }
 
   deleteItem(id: string) {

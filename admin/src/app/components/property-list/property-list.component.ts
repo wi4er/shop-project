@@ -62,7 +62,7 @@ export class PropertyListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = [ 'select', 'action', 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = [ 'id', 'created_at', 'updated_at', ...col ];
   }
 
   addItem(): Observable<undefined> {
@@ -93,7 +93,7 @@ export class PropertyListComponent implements OnInit {
   toggleFlag(id: number, flag: string) {
   }
 
-  deleteList() {
+  async deleteList() {
   }
 
   deleteItem(id: string) {

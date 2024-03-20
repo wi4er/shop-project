@@ -15,7 +15,7 @@ export class UserService {
   constructor(
     private apiService: ApiService,
   ) {
-    fetch('http://localhost:3001/myself', {
+    fetch('http://localhost:3030/myself', {
       credentials: 'include',
     }).then(res => {
       if (res.ok) {
@@ -30,7 +30,7 @@ export class UserService {
     login: string,
     password: string,
   ): Promise<User | null> {
-    await fetch('http://localhost:3001/auth', {
+    await fetch('http://localhost:3030/auth', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

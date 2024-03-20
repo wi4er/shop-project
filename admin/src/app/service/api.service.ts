@@ -24,7 +24,7 @@ export enum ApiEntity {
 })
 export class ApiService {
 
-  apiUrl = 'http://localhost:3001';
+  apiUrl = 'http://localhost:3030';
 
   constructor() {
   }
@@ -89,7 +89,15 @@ export class ApiService {
       query: query,
     });
 
-    const req = fetch(url)
+    const req = fetch(
+      url,
+      {
+        headers: {
+          'content-type': 'application/json',
+        },
+        credentials: 'include',
+      },
+    )
       .then(res => {
         if (!res.ok) throw new Error('Api not found!');
         return res.json();
@@ -117,6 +125,7 @@ export class ApiService {
       headers: {
         'content-type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(item),
     }).then();
 
@@ -135,6 +144,7 @@ export class ApiService {
       headers: {
         'content-type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(item),
     }).then();
 
@@ -156,6 +166,7 @@ export class ApiService {
         headers: {
           'content-type': 'application/json',
         },
+        credentials: 'include',
       }).then(res => {
         if (!res.ok) console.error(res);
         return res.json();

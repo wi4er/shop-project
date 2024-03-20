@@ -28,8 +28,7 @@ export class ElementListComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    // this.fetchList();
+    this.fetchList();
   }
 
   fetchList(args: StringifiableRecord = {}) {
@@ -49,6 +48,8 @@ export class ElementListComponent implements OnChanges {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
+
+    console.log(data);
 
     for (const item of data) {
       const line: { [key: string]: string } = {
@@ -100,7 +101,8 @@ export class ElementListComponent implements OnChanges {
     console.log(id, '>>>>>>>', flag);
   }
 
-  deleteList() {
+  async deleteList(idList: Array<number>) {
+    this.apiService.deleteList(ApiEntity.ELEMENT, idList.map(it => +it));
   }
 
   deleteItem(id: string) {

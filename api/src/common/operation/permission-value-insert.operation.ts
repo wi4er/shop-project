@@ -19,11 +19,9 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
    */
   private async checkGroup(id: number): Promise<GroupEntity> {
     const groupRepo = this.trans.getRepository(GroupEntity);
+    const group = await groupRepo.findOne({where: {id}});
 
-    const flag = await groupRepo.findOne({where: {id}});
-    WrongDataException.assert(flag, 'Wrong flag!')
-
-    return flag;
+    return WrongDataException.assert(group, `User group with id ${id} not found!`);
   }
 
   /**

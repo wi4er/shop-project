@@ -102,7 +102,7 @@ export class DocumentListComponent {
   toggleFlag(id: number, flag: string) {
   }
 
-  deleteList() {
+  async deleteList() {
   }
 
   deleteItem(id: string) {

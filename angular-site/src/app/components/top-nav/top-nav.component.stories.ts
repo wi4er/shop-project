@@ -10,13 +10,9 @@ export default meta;
 type Story = StoryObj<TopNavComponent>;
 
 export const DesktopBig: Story = {
-  args: {
-  },
 };
 
 export const MobileBig: Story = {
-  args: {
-  },
   parameters: {
     viewport: {
       defaultViewport: 'iphone13',
