@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardTileComponent } from './components/dashboard-tile/dashboard-tile.component';
-import { BlockListComponent } from './components/block-list/block-list.component';
-import { DirectoryListComponent } from './components/directory-list/directory-list.component';
-import { FlagListComponent } from './components/flag-list/flag-list.component';
-import { LangListComponent } from './components/lang-list/lang-list.component';
-import { PropertyListComponent } from './components/property-list/property-list.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { ContentPageComponent } from './components/content-page/content-page.component';
-import { FormListComponent } from './components/form-list/form-list.component';
-import { ResultListComponent } from './components/result-list/result-list.component';
-import { PermissionListComponent } from './components/permission-list/permission-list.component';
-import { UserPageComponent } from './components/user-page/user-page.component';
-import { DocumentListComponent } from './components/document-list/document-list.component';
-import { DocumentPageComponent } from './components/document-page/document-page.component';
+import { DashboardTileComponent } from './dashboard-tile/dashboard-tile.component';
+import { DirectoryListComponent } from '../directory/directory-list/directory-list.component';
+import { FlagListComponent } from '../settings/flag-list/flag-list.component';
+import { LangListComponent } from '../settings/lang-list/lang-list.component';
+import { PropertyListComponent } from '../settings/property-list/property-list.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { ContentPageComponent } from './content-page/content-page.component';
+import { FormListComponent } from '../form/form-list/form-list.component';
+import { ResultListComponent } from '../form/result-list/result-list.component';
+import { PermissionListComponent } from '../personal/permission-list/permission-list.component';
+import { UserPageComponent } from './user-page/user-page.component';
+import { DocumentListComponent } from '../document/document-list/document-list.component';
+import { DocumentPageComponent } from './document-page/document-page.component';
+import { BlockListComponent } from '../content/block-list/block-list.component';
 
 const routes: Routes = [{
   path: '',

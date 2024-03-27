@@ -1,0 +1,15 @@
+<mat-tab-group
+  animationDuration="0ms"
+  *ngIf="!!blockId"
+  class="tab-group"
+  [selectedIndex]="selected.value"
+  (selectedIndexChange)="handleChange($event)"
+>
+  <mat-tab label="Elements">
+    <content-element-list [blockId]="blockId"></content-element-list>
+  </mat-tab>
+
+  <mat-tab label="Sections">
+    <content-section-list [blockId]="blockId"></content-section-list>
+  </mat-tab>
+</mat-tab-group>

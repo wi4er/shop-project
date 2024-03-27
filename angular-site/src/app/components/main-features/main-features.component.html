@@ -7,11 +7,11 @@
     *ngFor="let item of list"
     class="feature-item"
   >
-    <img
-      [alt]="item.title"
-      [src]="item.ico"
-      class="ico"
-    />
+    <div
+      [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.icon)"
+    >
+
+    </div>
 
     <div class="title headings_h4">
       {{item.title}}

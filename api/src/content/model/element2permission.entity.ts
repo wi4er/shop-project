@@ -46,7 +46,7 @@ export class Element2permissionEntity
     type => GroupEntity,
     {
       onDelete: 'CASCADE',
-      nullable: false,
+      nullable: true,
     },
   )
   group: GroupEntity;

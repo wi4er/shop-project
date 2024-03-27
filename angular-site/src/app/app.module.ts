@@ -13,6 +13,7 @@ import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MainFeaturesComponent } from './components/main-features/main-features.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,13 +25,14 @@ import { MainFeaturesComponent } from './components/main-features/main-features.
     AboutPageComponent,
     TopNavComponent,
     FooterComponent,
-    MainFeaturesComponent
+    MainFeaturesComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgOptimizedImage,
     FormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

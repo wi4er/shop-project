@@ -1,7 +1,9 @@
-
 <app-top-nav></app-top-nav>
 
 <main>
-
+  <app-main-features
+    [list]="featureList.map(toFeature)"
+  ></app-main-features>
 </main>
+
 <app-footer></app-footer>

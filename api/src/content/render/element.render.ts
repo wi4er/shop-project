@@ -45,7 +45,7 @@ export class ElementRender {
     this.flag = item.flag.map(fl => fl.flag.id);
     this.permission = item.permission?.map(it => ({
       method: it.method,
-      group: it.group.id,
+      group: it.group?.id,
     }));
   }
 

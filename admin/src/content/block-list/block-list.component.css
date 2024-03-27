@@ -1,0 +1,22 @@
+.select {
+  width: 36px;
+}
+
+.action {
+  width: 48px;
+}
+
+.moveto {
+  width: 36px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+:host {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

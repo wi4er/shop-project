@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
@@ -27,7 +27,10 @@ export class ElementController {
     permission: {group: true},
     string: {property: true, lang: true},
     flag: {flag: true},
-    point: {point: {directory: true}, property: true},
+    point: {
+      point: {directory: true},
+      property: true,
+    },
     element: {element: true, property: true},
     section: {section: true, property: true},
   };
@@ -116,7 +119,7 @@ export class ElementController {
       where: {
         ...(filter ? this.toWhere(filter) : {}),
         permission: {
-          group: In(group),
+          group: Or(In(group), IsNull()),
           method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
@@ -209,9 +212,6 @@ export class ElementController {
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
-
-    console.log(group);
-
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {

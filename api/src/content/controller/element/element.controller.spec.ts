@@ -92,7 +92,7 @@ describe('ElementController', () => {
       expect(list.body[9].id).toBe(10);
     });
 
-    test('Should get element with permission', async () => {
+    test('Should get element with group permission', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -107,6 +107,24 @@ describe('ElementController', () => {
       const list = await request(app.getHttpServer())
         .get('/element')
         .set('cookie', cookie)
+        .expect(200);
+
+      expect(list.body).toHaveLength(5);
+    });
+
+    test('Should get element with public permission', async () => {
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        const parent = await Object.assign(new ElementEntity, {block: 1}).save();
+        if (i % 2)  await Object.assign(
+          new Element2permissionEntity(),
+          {parent, group: null, method: PermissionMethod.READ},
+        ).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/element')
         .expect(200);
 
       expect(list.body).toHaveLength(5);
