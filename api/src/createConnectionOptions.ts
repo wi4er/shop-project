@@ -64,6 +64,12 @@ import { Section2permissionEntity } from './content/model/section2permission.ent
 import { Element4sectionEntity } from './content/model/element4section.entity';
 import { User4groupEntity } from './personal/model/user4group.entity';
 import { ContentPermissionEntity } from './content/model/content-permission.entity';
+import { FileEntity } from './storage/model/file.entity';
+import { CollectionEntity } from './storage/model/collection.entity';
+import { File2flagEntity } from './storage/model/file2flag.entity';
+import { File4stringEntity } from './storage/model/file4string.entity';
+import { Collection2flagEntity } from './storage/model/collection2flag.entity';
+import { Collection4stringEntity } from './storage/model/collection4string.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -98,6 +104,8 @@ export function createConnectionOptions(): DataSourceOptions {
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
       ResultEntity,
       DocumentEntity, Document2flagEntity, Document4stringEntity,
+      FileEntity, File2flagEntity, File4stringEntity,
+      CollectionEntity, Collection2flagEntity, Collection4stringEntity,
     ],
     subscribers: [],
     migrations: [],

@@ -12,7 +12,7 @@ import { Form4stringEntity } from './form4string.entity';
 import { FormFieldEntity } from './form-field.entity';
 import { ResultEntity } from './result.entity';
 
-@Entity('form')
+@Entity('form-form')
 @Check('not_empty_id', '"id" > \'\'')
 export class FormEntity
   extends BaseEntity

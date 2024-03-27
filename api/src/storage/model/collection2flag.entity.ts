@@ -1,21 +1,20 @@
 import {
   BaseEntity,
   CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  Index, ManyToOne,
+  DeleteDateColumn, Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
+  UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
-import { FormEntity } from './form.entity';
+import { CollectionEntity } from './collection.entity';
 import { FlagEntity } from '../../settings/model/flag.entity';
 
-@Entity('form-form2flag')
+@Entity('storage-collection2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class Form2flagEntity
+export class Collection2flagEntity
   extends BaseEntity
-  implements CommonFlagEntity<FormEntity> {
+  implements CommonFlagEntity<CollectionEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,19 +32,19 @@ export class Form2flagEntity
   version: number;
 
   @ManyToOne(
-    () => FormEntity,
-    form => form.flag,
+    () => CollectionEntity,
+    file => file.flag,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: FormEntity;
+  parent: CollectionEntity;
 
   @ManyToOne(
     () => FlagEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )

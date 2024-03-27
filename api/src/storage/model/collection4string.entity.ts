@@ -1,20 +1,20 @@
 import {
   BaseEntity, Column,
   CreateDateColumn,
-  DeleteDateColumn,
-  Entity, ManyToOne,
+  DeleteDateColumn, Entity, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
+  UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { FormEntity } from './form.entity';
-import { LangEntity } from '../../settings/model/lang.entity';
 import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { CollectionEntity } from './collection.entity';
 
-@Entity('form-form4string')
-export class Form4stringEntity
+@Entity('storage-collection4string')
+export class Collection4stringEntity
   extends BaseEntity
-  implements CommonStringEntity<FormEntity> {
+  implements CommonStringEntity<CollectionEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,19 +35,19 @@ export class Form4stringEntity
   string: string;
 
   @ManyToOne(
-    () => FormEntity,
-    property => property.string,
+    () => CollectionEntity,
+    collection => collection.string,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: FormEntity;
+  parent: CollectionEntity;
 
   @ManyToOne(
     () => PropertyEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )
@@ -56,7 +56,7 @@ export class Form4stringEntity
   @ManyToOne(
     () => LangEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: true,
     },
   )

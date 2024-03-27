@@ -1,11 +1,12 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { Contact4stringEntity } from './contact4string.entity';
-import { ContactEntity, UserContactType } from './contact.entity';
+import { File4stringEntity } from './file4string.entity';
 import { PropertyEntity } from '../../settings/model/property.entity';
+import { CollectionEntity } from './collection.entity';
+import { FileEntity } from './file.entity';
 
-describe('Contact string property entity', () => {
+describe('File string property entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,9 +16,9 @@ describe('Contact string property entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Contact string fields', () => {
+  describe('File string fields', () => {
     test('Should get empty list', async () => {
-      const repo = source.getRepository(Contact4stringEntity);
+      const repo = source.getRepository(File4stringEntity);
       const list = await repo.find();
 
       expect(list).toHaveLength(0);
@@ -25,12 +26,10 @@ describe('Contact string property entity', () => {
 
     test('Should create instance', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(
-        new ContactEntity(),
-        {id: 'mail', type: UserContactType.EMAIL},
-      ).save();
+      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const parent = await Object.assign(new FileEntity(),{collection}).save();
 
-      const inst = await Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent, property}).save();
+      const inst = await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, property}).save();
 
       expect(inst.version).toBe(1);
       expect(inst.created_at).toBeDefined();
@@ -42,35 +41,31 @@ describe('Contact string property entity', () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new Contact4stringEntity(), {string: 'VALUE', property}).save(),
+        Object.assign(new File4stringEntity(), {string: 'VALUE', property}).save(),
       ).rejects.toThrow('parentId');
     });
 
     test('Shouldn`t create without property', async () => {
-      const parent = await Object.assign(
-        new ContactEntity(),
-        {id: 'mail', type: UserContactType.EMAIL},
-      ).save();
+      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const parent = await Object.assign(new FileEntity(),{collection}).save();
 
       await expect(
-        Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent}).save(),
+        Object.assign(new File4stringEntity(), {string: 'VALUE', parent}).save(),
       ).rejects.toThrow('propertyId');
     });
   });
 
-  describe('Contact with strings', () => {
-    test('Should create contact with string', async () => {
-      const repo = source.getRepository(ContactEntity);
+  describe('File with strings', () => {
+    test('Should create file with string', async () => {
+      const repo = source.getRepository(FileEntity);
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const parent = await Object.assign(
-        new ContactEntity(),
-        {id: 'NAME', type: UserContactType.EMAIL},
-      ).save();
+      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const parent = await Object.assign(new FileEntity(),{collection}).save();
 
-      await Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent, property}).save();
+      await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, property}).save();
 
       const inst = await repo.findOne({
-        where: {id: 'NAME'},
+        where: {id: 1},
         relations: {string: {property: true}},
       });
 

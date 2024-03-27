@@ -8,14 +8,14 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
-import { FormEntity } from './form.entity';
 import { FlagEntity } from '../../settings/model/flag.entity';
+import { FileEntity } from './file.entity';
 
-@Entity('form-form2flag')
+@Entity('storage-file2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class Form2flagEntity
+export class File2flagEntity
   extends BaseEntity
-  implements CommonFlagEntity<FormEntity> {
+  implements CommonFlagEntity<FileEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,19 +33,19 @@ export class Form2flagEntity
   version: number;
 
   @ManyToOne(
-    () => FormEntity,
-    form => form.flag,
+    () => FileEntity,
+    file => file.flag,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: FormEntity;
+  parent: FileEntity;
 
   @ManyToOne(
     () => FlagEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )

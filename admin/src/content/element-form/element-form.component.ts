@@ -66,8 +66,10 @@ export class ElementFormComponent {
       this.editProperties[prop.id] = {};
 
       for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [{value: ''}];
+        this.editProperties[prop.id][lang.id] = [];
       }
+
+      this.editProperties[prop.id][''] = [];
     }
 
     for (const flag of this.flagList) {
@@ -115,9 +117,7 @@ export class ElementFormComponent {
 
     for (const prop in this.editProperties) {
       for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) {
-          continue;
-        }
+        if (!this.editProperties[prop][lang]) continue;
 
         for (const value of this.editProperties[prop][lang]) {
           input.property.push({

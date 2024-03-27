@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { PersonalModule } from './personal/personal.module';
 import { ContentModule } from './content/content.module';
-import { FileModule } from './file/file.module';
+import { StorageModule } from './storage/storage.module';
 import { DirectoryModule } from './directory/directory.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,13 +18,14 @@ import { ReportModule } from './report/report.module';
 import { NoDataFilter } from './exception/no-data/no-data.filter';
 import redisPermission from './permission/redis.permission';
 import { PermissionFilter } from './exception/permission/permission.filter';
+import { ImageController } from './storage/controller/image/image.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(createConnectionOptions()),
     PersonalModule,
     ContentModule,
-    FileModule,
+    StorageModule,
     DirectoryModule,
     CommonModule,
     FormModule,
@@ -33,7 +34,7 @@ import { PermissionFilter } from './exception/permission/permission.filter';
     DocumentModule,
     ReportModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ImageController],
   providers: [
     {
       provide: APP_FILTER,

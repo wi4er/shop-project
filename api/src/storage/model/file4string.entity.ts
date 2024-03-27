@@ -7,14 +7,14 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { FormEntity } from './form.entity';
-import { LangEntity } from '../../settings/model/lang.entity';
 import { PropertyEntity } from '../../settings/model/property.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { FileEntity } from './file.entity';
 
-@Entity('form-form4string')
-export class Form4stringEntity
+@Entity('storage-file4string')
+export class File4stringEntity
   extends BaseEntity
-  implements CommonStringEntity<FormEntity> {
+  implements CommonStringEntity<FileEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,19 +35,19 @@ export class Form4stringEntity
   string: string;
 
   @ManyToOne(
-    () => FormEntity,
-    property => property.string,
+    () => FileEntity,
+    contact => contact.string,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  parent: FormEntity;
+  parent: FileEntity;
 
   @ManyToOne(
     () => PropertyEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: false,
     },
   )
@@ -56,7 +56,7 @@ export class Form4stringEntity
   @ManyToOne(
     () => LangEntity,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
       nullable: true,
     },
   )
