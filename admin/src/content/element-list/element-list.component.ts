@@ -22,6 +22,7 @@ export class ElementListComponent implements OnChanges {
   totalCount: number = 0;
   pageSize: number = 10;
   currentPage: number = 0;
+  selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
@@ -29,7 +30,6 @@ export class ElementListComponent implements OnChanges {
   columns: string[] = [];
   list: { [key: string]: string }[] = [];
 
-  selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   constructor(
     private dialog: MatDialog,

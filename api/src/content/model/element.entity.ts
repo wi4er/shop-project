@@ -19,6 +19,8 @@ import { Element2permissionEntity } from './element2permission.entity';
 import { Element4elementEntity } from './element4element.entity';
 import { Element4sectionEntity } from './element4section.entity';
 import { WithPermissionEntity } from '../../common/model/with-permission.entity';
+import { Element4fileEntity } from './element4file.entity';
+import { Element2imageEntity } from './element2image.entity';
 
 @Entity('content-element')
 export class ElementEntity
@@ -60,6 +62,12 @@ export class ElementEntity
   parent: Element2sectionEntity[];
 
   @OneToMany(
+    type => Element2imageEntity,
+    image => image.parent,
+  )
+  image: Element2imageEntity[];
+
+  @OneToMany(
     type => Element4stringEntity,
     property => property.parent,
   )
@@ -82,6 +90,12 @@ export class ElementEntity
     element => element.parent,
   )
   element: Element4elementEntity[];
+
+  @OneToMany(
+    type => Element4fileEntity,
+    file => file.parent,
+  )
+  file: Element4fileEntity[];
 
   @OneToMany(
     type => Element4sectionEntity,

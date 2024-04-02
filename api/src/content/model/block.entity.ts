@@ -16,6 +16,7 @@ import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Block4pointEntity } from './block4point.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
+import { Block4fileEntity } from './block4file.entity';
 
 @Entity('content-block')
 export class BlockEntity
@@ -62,14 +63,21 @@ export class BlockEntity
   string: Block4stringEntity[];
 
   @OneToMany(
+    type => Block4pointEntity,
+    point => point.parent,
+  )
+  point: Block4pointEntity[];
+
+  @OneToMany(
+    type => Block4fileEntity,
+    file => file.parent,
+  )
+  file: Block4fileEntity[];
+
+  @OneToMany(
     type => Block2flagEntity,
     flag => flag.parent,
   )
   flag: Block2flagEntity[];
 
-  @OneToMany(
-    type => Block4pointEntity,
-    point => point.parent,
-  )
-  point: Block4pointEntity[];
 }

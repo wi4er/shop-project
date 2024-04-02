@@ -17,6 +17,9 @@ import { Section4pointEntity } from './section4point.entity';
 import { Section2permissionEntity } from './section2permission.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 import { WithPermissionEntity } from '../../common/model/with-permission.entity';
+import { Section4fileEntity } from './section4file.entity';
+import { Element2imageEntity } from './element2image.entity';
+import { Section2imageEntity } from './section2image.entity';
 
 @Entity('content-section')
 export class SectionEntity
@@ -57,6 +60,12 @@ export class SectionEntity
   )
   children: SectionEntity[];
 
+  @OneToMany(
+    type => Section2imageEntity,
+    image => image.parent,
+  )
+  image: Section2imageEntity[];
+
   @ManyToOne(
     type => BlockEntity,
     block => block.section,
@@ -66,12 +75,6 @@ export class SectionEntity
     },
   )
   block: BlockEntity;
-
-  @OneToMany(
-    type => Section4stringEntity,
-    property => property.parent,
-  )
-  string: Section4stringEntity[];
 
   @OneToMany(
     type => Section2flagEntity,
@@ -90,6 +93,18 @@ export class SectionEntity
     point => point.parent,
   )
   point: Section4pointEntity[];
+
+  @OneToMany(
+    type => Section4stringEntity,
+    property => property.parent,
+  )
+  string: Section4stringEntity[];
+
+  @OneToMany(
+    type => Section4fileEntity,
+    file => file.parent,
+  )
+  file: Section4fileEntity[];
 
   @OneToMany(
     type => Section2permissionEntity,

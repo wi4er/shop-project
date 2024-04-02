@@ -25,23 +25,30 @@ import { LangEntity } from '../settings/model/lang.entity';
 import { Element2permissionEntity } from './model/element2permission.entity';
 import { Section2permissionEntity } from './model/section2permission.entity';
 import { Element4sectionEntity } from './model/element4section.entity';
+import { Element2imageEntity } from './model/element2image.entity';
+import { Element4fileEntity } from './model/element4file.entity';
+import { Section4fileEntity } from './model/section4file.entity';
+import { Section2imageEntity } from './model/section2image.entity';
+import { Block4fileEntity } from './model/block4file.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      ElementEntity, Element2sectionEntity, Element4stringEntity, Element4pointEntity,
-      Element4elementEntity, Element4sectionEntity,
-      Element2flagEntity, Element2permissionEntity,
-      SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, Section2permissionEntity,
-      BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, Block2permissionEntity, Block2permissionEntity,
+      ElementEntity, Element2sectionEntity, Element2flagEntity, Element2imageEntity,
+      Element2permissionEntity,
+      Element4stringEntity, Element4pointEntity, Element4elementEntity, Element4sectionEntity, Element4fileEntity,  Section4fileEntity,
+      SectionEntity, Section2flagEntity, Section2permissionEntity,Section2imageEntity,
+      Section4pointEntity, Section4stringEntity,
+      BlockEntity,
+      Block4stringEntity, Block2flagEntity, Block4pointEntity, Block2permissionEntity, Block4fileEntity,
+      Block2permissionEntity,
       UserEntity, GroupEntity,
       PropertyEntity,
       LangEntity,
     ]),
   ],
-  providers: [
-  ],
-  controllers: [ BlockController, ElementController, SectionController ],
+  providers: [],
+  controllers: [BlockController, ElementController, SectionController],
 })
 export class ContentModule {
 }

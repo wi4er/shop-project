@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Router } from '@angular/router';
-import { StringifiableRecord } from 'query-string/base';
 import { Block } from '../../app/model/content/block';
 import { BlockFormComponent } from '../block-form/block-form.component';
 import { PageEvent } from '@angular/material/paginator';
@@ -18,23 +17,17 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class BlockListComponent {
 
-
   @Input()
   list: { [key: string]: string }[] = [];
-
-  pageEvent?: PageEvent;
 
   totalCount: number = 0;
   pageSize: number = 10;
   currentPage: number = 0;
-
-  activeFlags: { [key: string]: string[] } = {};
-
-  propertyList: string[] = [];
-  flagList: string[] = [];
-
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
+  activeFlags: { [key: string]: string[] } = {};
+  propertyList: string[] = [];
+  flagList: string[] = [];
   columns: string[] = [];
 
   constructor(
@@ -67,14 +60,10 @@ export class BlockListComponent {
   }
 
   changePage(event: PageEvent) {
-    this.pageEvent = event;
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
 
-    this.fetchList({
-      limit: this.pageSize,
-      offset: this.currentPage * this.pageSize,
-    });
+    this.refreshData();
   }
 
   ngOnInit(): void {
@@ -83,36 +72,18 @@ export class BlockListComponent {
         .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
-    ]).then(() => {
-      this.fetchList({
-        limit: this.pageSize,
-        offset: this.currentPage * this.pageSize,
-      })
-    });
+    ]).then(() => this.refreshData());
   }
 
   refreshData() {
-    this.fetchList({
-      limit: this.pageSize,
-      offset: this.currentPage * this.pageSize,
-    });
-
-    this.selection.clear();
-  }
-
-  deleteList() {
-    const list = this.selection.selected.map(item => item['id']);
-
-    this.apiService.deleteList(ApiEntity.BLOCK, list)
-      .then(() => this.refreshData());
-  }
-
-  fetchList(args: StringifiableRecord) {
-    this.apiService.fetchList<Block>(ApiEntity.BLOCK, args)
-      .then(list => this.setData(list));
-
+    Promise.all([
+      this.apiService.fetchList<Block>(ApiEntity.BLOCK, {
+        limit: this.pageSize,
+        offset: this.currentPage * this.pageSize,
+      }).then(list => this.setData(list)),
     this.apiService.countData(ApiEntity.BLOCK)
-      .then(count => this.totalCount = count);
+      .then(count => this.totalCount = count),
+    ]).then(() => this.selection.clear());
   }
 
   /**
@@ -146,16 +117,13 @@ export class BlockListComponent {
   }
 
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       BlockFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed()
-      .subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   deleteItem(id: number) {
@@ -163,18 +131,22 @@ export class BlockListComponent {
       .then(() => this.refreshData());
   }
 
+  deleteList() {
+    const list = this.selection.selected.map(item => item['id']);
+
+    this.apiService.deleteList(ApiEntity.BLOCK, list)
+      .then(() => this.refreshData());
+  }
+
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       BlockFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    dialog.afterClosed()
-      .subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   onNext(id: string) {

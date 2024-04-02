@@ -70,6 +70,11 @@ import { File2flagEntity } from './storage/model/file2flag.entity';
 import { File4stringEntity } from './storage/model/file4string.entity';
 import { Collection2flagEntity } from './storage/model/collection2flag.entity';
 import { Collection4stringEntity } from './storage/model/collection4string.entity';
+import { Element2imageEntity } from './content/model/element2image.entity';
+import { Element4fileEntity } from './content/model/element4file.entity';
+import { Section4fileEntity } from './content/model/section4file.entity';
+import { Section2imageEntity } from './content/model/section2image.entity';
+import { Block4fileEntity } from './content/model/block4file.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -93,11 +98,14 @@ export function createConnectionOptions(): DataSourceOptions {
       PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,
       FlagEntity, Flag4stringEntity, Flag2flagEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
-      ElementEntity, Element2flagEntity, Element2sectionEntity,
-      Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity,
+      ElementEntity, Element2flagEntity, Element2sectionEntity, Element2imageEntity,
+      Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity, Element4fileEntity,
       Element2permissionEntity,
-      SectionEntity, Section4pointEntity, Section4stringEntity, Section2flagEntity, Section2permissionEntity,
-      BlockEntity, Block4stringEntity, Block2flagEntity, Block4pointEntity, Block2permissionEntity,
+      SectionEntity, Section2flagEntity, Section2permissionEntity, Section2imageEntity,
+      Section4fileEntity, Section4pointEntity, Section4stringEntity,
+      BlockEntity,
+      Block4stringEntity, Block2flagEntity, Block4pointEntity, Block4fileEntity,
+      Block2permissionEntity,
       ContentPermissionEntity,
       FormEntity, Form2flagEntity, Form4stringEntity,
       FormFieldEntity, FormField2flagEntity, FormField4stringEntity,

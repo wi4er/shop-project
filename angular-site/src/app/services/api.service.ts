@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Element } from '../model/Element';
+import qs from 'query-string';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
 
-  private _url: string = "http://localhost:3030/element"
+  private _url: string = 'http://localhost:3030/element';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) {
 
   }
@@ -19,7 +20,12 @@ export class ApiService {
     block: number,
     filter: Object = {},
   ) {
-    return this.http.get<Array<Element>>(this._url);
+    const url = qs.stringifyUrl({
+      url: this._url,
+      query: {'filter[block]': block},
+    });
+
+    return this.http.get<Array<Element>>(url);
   }
 
 }

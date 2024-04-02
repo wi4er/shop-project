@@ -18,6 +18,10 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -44,6 +48,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatTabsModule,
     MatButtonModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatToolbarModule,
   ],
   exports: [
     ItemMenuComponent,
