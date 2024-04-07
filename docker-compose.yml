@@ -52,7 +52,7 @@ services:
     ports:
       - "3030:3000"
     working_dir: /app
-    command: npm run start:dev
+    command: npm run start
     volumes:
       - "./api:/app"
     environment:

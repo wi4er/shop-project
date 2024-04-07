@@ -8,11 +8,14 @@ import {
 } from 'typeorm';
 import { CollectionEntity } from './collection.entity';
 import { File2flagEntity } from './file2flag.entity';
-import { Contact4stringEntity } from '../../personal/model/contact4string.entity';
 import { File4stringEntity } from './file4string.entity';
+import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with-flag.entity';
 
 @Entity('storage-file')
-export class FileEntity extends BaseEntity {
+export class FileEntity
+  extends BaseEntity
+  implements WithStringEntity<FileEntity>, WithFlagEntity<FileEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

@@ -6,6 +6,7 @@ import { PropertyInput } from '../../input/property.input';
 import { PropertyInsertOperation } from '../../operation/property-insert.operation';
 import { PropertyUpdateOperation } from '../../operation/property-update.operation';
 import { PropertyDeleteOperation } from '../../operation/property-delete.operation';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @Controller('property')
 export class PropertyController {
@@ -67,7 +68,9 @@ export class PropertyController {
     return this.propertyRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(this.toView);
+    }).then(item => this.toView(
+      NoDataException.assert(item, `Property with id ${id} not found!`)
+    ));
   }
 
   @Post()

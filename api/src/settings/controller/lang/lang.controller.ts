@@ -8,6 +8,7 @@ import { LangInsertOperation } from '../../operation/lang-insert.operation';
 import { LangUpdateOperation } from '../../operation/lang-update.operation';
 import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
 import { LangDeleteOperation } from '../../operation/lang-delete.operation';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @Controller('lang')
 export class LangController {
@@ -69,7 +70,7 @@ export class LangController {
     return this.langRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(this.toView);
+    }).then(item => this.toView(NoDataException.assert(item, `Lang with id ${id} not found!`)));
   }
 
   @Post()

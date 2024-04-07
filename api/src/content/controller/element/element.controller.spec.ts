@@ -20,6 +20,9 @@ import { User2groupEntity } from '../../../personal/model/user2group.entity';
 import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Element4elementEntity } from '../../model/element4element.entity';
+import { CollectionEntity } from '../../../storage/model/collection.entity';
+import { Element2imageEntity } from '../../model/element2image.entity';
+import { FileEntity } from '../../../storage/model/file.entity';
 
 describe('ElementController', () => {
   let source;
@@ -264,6 +267,26 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toEqual({count: 5});
+    });
+  });
+
+  describe('Content element with images', () => {
+    test('Should get element with images', async () => {
+      const cookie = await createSession();
+      const block = await new BlockEntity().save();
+      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const parent = await createElement(block.id);
+      await Object.assign(new Element2imageEntity(), {parent, image, collection}).save();
+
+      const item = await request(app.getHttpServer())
+        .get('/element/1')
+        .set('cookie', cookie)
+        .expect(200);
+
+      expect(item.body.image).toHaveLength(1);
+      expect(item.body.image[0].image).toBe(1);
+      expect(item.body.image[0].collection).toBe('SHORT');
     });
   });
 

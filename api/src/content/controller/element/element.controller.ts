@@ -25,14 +25,13 @@ export class ElementController {
     block: true,
     parent: {section: true},
     permission: {group: true},
+    image: {image: {collection: true}},
     string: {property: true, lang: true},
     flag: {flag: true},
-    point: {
-      point: {directory: true},
-      property: true,
-    },
+    point: {point: {directory: true}, property: true},
     element: {element: true, property: true},
     section: {section: true, property: true},
+    file: {file: true, property: true},
   };
 
   constructor(

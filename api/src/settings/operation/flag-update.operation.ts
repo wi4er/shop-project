@@ -6,8 +6,7 @@ import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { filterProperties } from '../../common/input/filter-properties';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
-import { PropertyInput } from '../input/property.input';
-import { LangInput } from '../input/lang.input';
+import { FlagInput } from '../input/flag.input';
 
 export class FlagUpdateOperation {
 
@@ -31,7 +30,7 @@ export class FlagUpdateOperation {
         flag: {flag: true},
       },
     });
-    NoDataException.assert(inst, 'Flag not found!');
+    NoDataException.assert(inst, `Flag with id ${id} not found!`);
 
     return inst;
   }
@@ -41,7 +40,7 @@ export class FlagUpdateOperation {
    * @param id
    * @param input
    */
-  async save(id: string, input: LangInput): Promise<string> {
+  async save(id: string, input: FlagInput): Promise<string> {
     const beforeItem = await this.checkFlag(id);
     beforeItem.id = input.id;
 

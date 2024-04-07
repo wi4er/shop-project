@@ -33,16 +33,6 @@ describe('FlagController', () => {
       expect(res.body).toHaveLength(0);
     });
 
-    test('Should get flag instance', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-
-      const res = await request(app.getHttpServer())
-        .get('/flag/ACTIVE')
-        .expect(200);
-
-      expect(res.body.id).toBe('ACTIVE');
-    });
-
     test('Should get flag with limit', async () => {
       for (let i = 0; i < 10; i++) {
         await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
@@ -69,6 +59,26 @@ describe('FlagController', () => {
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('flag_9');
+    });
+  });
+
+  describe('Flag item', () => {
+    test('Should get flag instance', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/flag/ACTIVE')
+        .expect(200);
+
+      expect(res.body.id).toBe('ACTIVE');
+    });
+
+    test('Shouldn`t get with wrong id', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/flag/WRONG')
+        .expect(404);
     });
   });
 
@@ -141,18 +151,42 @@ describe('FlagController', () => {
       expect(list.body).toHaveLength(2);
       expect(list.body[0].flag).toEqual(['FLAG']);
     });
+
+    test('Should get flag with multi flags', async () => {
+      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      for (let i = 1; i < 4; i++) {
+        const flag = await Object.assign(new FlagEntity(), {id: `FLAG_${i}`}).save();
+        await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/flag')
+        .expect(200);
+
+      expect(list.body[0].flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
+    });
   });
 
   describe('Flag addition', () => {
     test('Should add item', async () => {
       const inst = await request(app.getHttpServer())
         .post('/flag')
-        .send({
-          id: 'NEW',
-        })
+        .send({id: 'NEW'})
         .expect(201);
 
       expect(inst.body.id).toBe('NEW');
+    });
+
+    test('Shouldn`t duplicate item', async () => {
+      await request(app.getHttpServer())
+        .post('/flag')
+        .send({id: 'NEW'})
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .post('/flag')
+        .send({id: 'NEW'})
+        .expect(400);
     });
 
     test('Should add with string', async () => {
@@ -195,9 +229,7 @@ describe('FlagController', () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
       const res = await request(app.getHttpServer())
         .put('/flag/NEW')
-        .send({
-          id: 'NEW',
-        })
+        .send({id: 'NEW'})
         .expect(200);
 
       expect(res.body.id).toBe('NEW');
@@ -207,9 +239,7 @@ describe('FlagController', () => {
       await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
       const res = await request(app.getHttpServer())
         .put('/flag/OLD')
-        .send({
-          id: 'UPDATED',
-        })
+        .send({id: 'UPDATED'})
         .expect(200);
 
       expect(res.body.id).toBe('UPDATED');

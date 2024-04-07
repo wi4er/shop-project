@@ -33,16 +33,6 @@ describe('PropertyController', () => {
       expect(res.body).toHaveLength(0);
     });
 
-    test('Should get property instance', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-
-      const res = await request(app.getHttpServer())
-        .get('/property/NAME')
-        .expect(200);
-
-      expect(res.body.id).toBe('NAME');
-    });
-
     test('Should get property with limit', async () => {
       for (let i = 0; i < 10; i++) {
         await Object.assign(new PropertyEntity(), {id: `NAME_${i}`}).save();
@@ -69,6 +59,26 @@ describe('PropertyController', () => {
       expect(res.body).toHaveLength(5);
       expect(res.body[0].id).toBe('NAME_5');
       expect(res.body[4].id).toBe('NAME_9');
+    });
+  });
+
+  describe('Property item', () => {
+    test('Should get property instance', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/property/NAME')
+        .expect(200);
+
+      expect(res.body.id).toBe('NAME');
+    });
+
+    test('Shouldn`t get with wrong id', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/property/WRONG')
+        .expect(404);
     });
   });
 

@@ -33,16 +33,6 @@ describe('LangController', () => {
       expect(res.body).toHaveLength(0);
     });
 
-    test('Should get lang instance', async () => {
-      await Object.assign(new LangEntity(), {id: 'EN'}).save();
-
-      const res = await request(app.getHttpServer())
-        .get('/lang/EN')
-        .expect(200);
-
-      expect(res.body.id).toBe('EN');
-    });
-
     test('Should get lang with limit', async () => {
       for (let i = 0; i < 10; i++) {
         await Object.assign(new LangEntity(), {id: `LANG_${i}`}).save();
@@ -72,6 +62,24 @@ describe('LangController', () => {
       expect(res.body[6].id).toBe('LANG_9');
     });
   });
+
+  describe('Lang item', () => {
+    test('Should get lang instance', async () => {
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/lang/EN')
+        .expect(200);
+
+      expect(res.body.id).toBe('EN');
+    });
+
+    test('Shouldn`t get with wrong id', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/lang/WONG')
+        .expect(404);
+    });
+  })
 
   describe('Lang count', () => {
     test('Should count empty list', async () => {

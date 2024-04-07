@@ -6,6 +6,7 @@ import { FlagInput } from '../../input/flag.input';
 import { FlagInsertOperation } from '../../operation/flag-insert.operation';
 import { FlagUpdateOperation } from '../../operation/flag-update.operation';
 import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @Controller('flag')
 export class FlagController {
@@ -67,7 +68,7 @@ export class FlagController {
     return this.flagRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(this.toView);
+    }).then(item => this.toView(NoDataException.assert(item, `Flag with id ${id} not found`)));
   }
 
   @Post()

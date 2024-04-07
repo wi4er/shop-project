@@ -6,6 +6,7 @@ import { filterProperties } from '../../common/input/filter-properties';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { FlagInput } from '../input/flag.input';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class FlagInsertOperation {
 
@@ -19,7 +20,12 @@ export class FlagInsertOperation {
 
   async save(input: FlagInput): Promise<string> {
     this.created.id = input.id;
-    await this.manager.save(this.created);
+
+    try {
+      await this.manager.insert(FlagEntity, this.created)
+    } catch(err) {
+      throw new WrongDataException(err.message)
+    }
 
     const [stringList, pointList] = filterProperties(input.property);
 

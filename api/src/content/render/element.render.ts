@@ -5,6 +5,8 @@ import { ElementEntity } from '../model/element.entity';
 import { ElementPropertyRender } from '../../common/render/element-property.render';
 import { SectionPropertyRender } from '../../common/render/section-property.render';
 import { PermissionRender } from '../../common/render/permission.render';
+import { FilePropertyRender } from '../../common/render/file-property.render';
+import { ImageRender } from '../../common/render/image.render';
 
 @ApiExtraModels(
   StringPropertyRender,
@@ -22,6 +24,10 @@ export class ElementRender {
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
     this.section = item.parent.map(it => it.section.id);
+    this.image = item.image.map(it => ({
+      image: it.image.id,
+      collection: it.image.collection.id,
+    }));
     this.property = [
       ...item.string.map(str => ({
         string: str.string,
@@ -40,6 +46,10 @@ export class ElementRender {
       ...item.section.map(val => ({
         property: val.property.id,
         section: val.section.id,
+      })),
+      ...item.file.map(val => ({
+        property: val.property.id,
+        file: val.file.id,
       })),
     ];
     this.flag = item.flag.map(fl => fl.flag.id);
@@ -69,6 +79,8 @@ export class ElementRender {
   @ApiProperty()
   section: Array<number>;
 
+  image: Array<ImageRender>;
+
   @ApiProperty({
     type: 'array',
     items: {
@@ -80,7 +92,13 @@ export class ElementRender {
       ],
     },
   })
-  property: Array<StringPropertyRender | PointPropertyRender | ElementPropertyRender | SectionPropertyRender>;
+  property: Array<
+    StringPropertyRender
+    | PointPropertyRender
+    | ElementPropertyRender
+    | SectionPropertyRender
+    | FilePropertyRender
+  >;
 
   @ApiProperty()
   flag: Array<string>;
