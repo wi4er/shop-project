@@ -6,7 +6,6 @@ import { FileEntity } from '../model/file.entity';
 import { FileInput } from '../input/File.input';
 import { File4stringEntity } from '../model/file4string.entity';
 import { File2flagEntity } from '../model/file2flag.entity';
-import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { CollectionEntity } from '../model/collection.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
@@ -27,7 +26,6 @@ export class FileInsertOperation {
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
     const colRepo = this.manager.getRepository(CollectionEntity);
-
     const inst = await colRepo.findOne({where: {id}});
 
     return WrongDataException.assert(inst, `Collection with id ${id} not found!`);

@@ -7,7 +7,6 @@ import { FileEntity } from '../../model/file.entity';
 import { CollectionEntity } from '../../model/collection.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { PropertyEntity } from '../../../settings/model/property.entity';
-import { Flag4stringEntity } from '../../../settings/model/flag4string.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { File4stringEntity } from '../../model/file4string.entity';
 import { File2flagEntity } from '../../model/file2flag.entity';
@@ -81,7 +80,7 @@ describe('FileController', () => {
     });
 
     test('Shouldn`t get with wrong id', async () => {
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get('/file/888')
         .expect(404);
     });
@@ -111,7 +110,7 @@ describe('FileController', () => {
   });
 
   describe('File with strings', () => {
-    test('Should get flag with strings', async () => {
+    test('Should get file with strings', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(new FileEntity(), {collection}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
@@ -128,7 +127,7 @@ describe('FileController', () => {
       expect(res.body[0].property[0].string).toBe('VALUE');
     });
 
-    test('Should get flag with lang strings', async () => {
+    test('Should get file with lang strings', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(new FileEntity(), {collection}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
