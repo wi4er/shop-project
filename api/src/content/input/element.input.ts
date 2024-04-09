@@ -9,6 +9,8 @@ export class ElementInput
 
   block: number;
 
+  image: Array<number>;
+
   property: PropertyValueInput[];
   flag: string[];
 

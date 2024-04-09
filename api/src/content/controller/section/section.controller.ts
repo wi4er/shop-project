@@ -17,6 +17,7 @@ export class SectionController {
 
   relations = {
     parent: true,
+    image: {image: {collection: true}},
     string: {property: true, lang: true},
     block: true,
     flag: {flag: true},

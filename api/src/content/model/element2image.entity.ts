@@ -8,11 +8,13 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { FileEntity } from '../../storage/model/file.entity';
+import { CommonImageEntity } from '../../common/model/common-image.entity';
 
 @Entity('content-element2image')
 @Index(['parent', 'image'], {unique: true})
 export class Element2imageEntity
-  extends BaseEntity {
+  extends BaseEntity
+  implements CommonImageEntity<ElementEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;

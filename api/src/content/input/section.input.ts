@@ -7,6 +7,7 @@ export class SectionInput implements WithPropertyInput, WithFlagInput {
   block: number;
 
   parent?: number;
+  image: Array<number>;
 
   property: PropertyValueInput[];
 

@@ -12,7 +12,8 @@ import { filterProperties } from '../../common/input/filter-properties';
 import { PointValueUpdateOperation } from '../../common/operation/point-value-update.operation';
 import { Element4pointEntity } from '../model/element4point.entity';
 import { Element4elementUpdateOperation } from './element4element-update.operation';
-import { elementAt } from 'rxjs';
+import { Element2imageEntity } from '../model/element2image.entity';
+import { ImageUpdateOperation } from '../../common/operation/image-update.operation';
 
 export class ElementUpdateOperation {
 
@@ -43,18 +44,20 @@ export class ElementUpdateOperation {
    * @private
    */
   private async checkElement(id: number): Promise<ElementEntity> {
+    WrongDataException.assert(id, 'Element id expected!');
     const elementRepo = this.manager.getRepository(ElementEntity);
 
     const inst = await elementRepo.findOne({
       where: {id},
       relations: {
+        image: {image: true},
         string: {property: true},
         flag: {flag: true},
         point: {point: true, property: true},
         element: {element: true, property: true},
       },
     });
-    NoDataException.assert(inst, 'Element not found!');
+    NoDataException.assert(inst, `Element with id ${id} not found!`);
 
     return inst;
   }
@@ -71,6 +74,7 @@ export class ElementUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList, elemList] = filterProperties(input.property);
+    await new ImageUpdateOperation(this.manager, Element2imageEntity).save(beforeItem, input.image);
     await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
     await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList);

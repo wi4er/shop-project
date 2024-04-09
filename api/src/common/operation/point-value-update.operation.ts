@@ -8,7 +8,6 @@ import { CommonPointEntity } from '../model/common-point.entity';
 
 export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
 
-
   constructor(
     private trans: EntityManager,
     private entity: new() => CommonPointEntity<T>,

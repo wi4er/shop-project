@@ -79,6 +79,7 @@ export class ElementRender {
   @ApiProperty()
   section: Array<number>;
 
+  @ApiProperty()
   image: Array<ImageRender>;
 
   @ApiProperty({

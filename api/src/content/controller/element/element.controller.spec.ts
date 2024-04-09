@@ -766,6 +766,24 @@ describe('ElementController', () => {
 
       expect(inst.body.flag).toEqual(['ACTIVE']);
     });
+
+    test('Should add with image', async () => {
+      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      await Object.assign(new FileEntity(), {collection}).save();
+      await new BlockEntity().save();
+
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({
+          block: 1,
+          image: [1],
+        })
+        .expect(201);
+
+      expect(inst.body.image).toHaveLength(1);
+      expect(inst.body.image[0].image).toBe(1);
+      expect(inst.body.image[0].collection).toBe('SHORT');
+    });
   });
 
   describe('Content element update', () => {
@@ -1104,6 +1122,75 @@ describe('ElementController', () => {
           .expect(200);
 
         expect(item.body.flag).toEqual(['UPDATED']);
+      });
+    });
+
+    describe('Content element image update', () => {
+      test('Should add image', async () => {
+        const cookie = await createSession();
+        const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+        await Object.assign(new FileEntity(), {collection}).save();
+        await new BlockEntity().save();
+        await createElement();
+
+        const item = await request(app.getHttpServer())
+          .put('/element/1')
+          .send({
+            id: 1,
+            block: 1,
+            image: [1],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(item.body.image).toHaveLength(1);
+        expect(item.body.image[0].image).toBe(1);
+        expect(item.body.image[0].collection).toBe('DETAIL');
+      });
+
+      test('Should remove image', async () => {
+        const cookie = await createSession();
+        const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+        const image = await Object.assign(new FileEntity(), {collection}).save();
+        await new BlockEntity().save();
+        const parent = await createElement();
+        await Object.assign(new Element2imageEntity(), {parent, image}).save();
+
+        const item = await request(app.getHttpServer())
+          .put('/element/1')
+          .send({
+            id: 1,
+            block: 1,
+            image: [],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(item.body.image).toHaveLength(0);
+      });
+
+      test('Should change image', async () => {
+        const cookie = await createSession();
+        const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+        const image = await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(new FileEntity(), {collection}).save();
+        await new BlockEntity().save();
+        const parent = await createElement();
+        await Object.assign(new Element2imageEntity(), {parent, image}).save();
+
+        const item = await request(app.getHttpServer())
+          .put('/element/1')
+          .send({
+            id: 1,
+            block: 1,
+            image: [2],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(item.body.image).toHaveLength(1);
+        expect(item.body.image[0].image).toBe(2);
+        expect(item.body.image[0].collection).toBe('DETAIL')
       });
     });
   });

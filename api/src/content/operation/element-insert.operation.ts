@@ -13,6 +13,8 @@ import { filterProperties } from '../../common/input/filter-properties';
 import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
 import { Element2permissionEntity } from '../model/element2permission.entity';
 import { Element4elementInsertOperation } from './element4element-insert.operation';
+import { ImageInsertOperation } from '../../common/operation/image-insert.operation';
+import { Element2imageEntity } from '../model/element2image.entity';
 
 export class ElementInsertOperation {
 
@@ -47,11 +49,13 @@ export class ElementInsertOperation {
 
     const [stringList, pointList, elementList] = filterProperties(input.property);
 
+    await new ImageInsertOperation(this.manager, Element2imageEntity).save(this.created, input.image)
+    await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
+    await new PermissionValueInsertOperation(this.manager, Element2permissionEntity).save(this.created, input);
+
     await new StringValueInsertOperation(this.manager, Element4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Element4pointEntity).save(this.created, pointList);
-    await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
     await new Element4elementInsertOperation(this.manager).save(this.created, elementList);
-    await new PermissionValueInsertOperation(this.manager, Element2permissionEntity).save(this.created, input);
 
     return this.created.id;
   }

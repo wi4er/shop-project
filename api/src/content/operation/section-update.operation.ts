@@ -9,6 +9,8 @@ import { Section4stringEntity } from '../model/section4string.entity';
 import { Section2flagEntity } from '../model/section2flag.entity';
 import { SectionEntity } from '../model/section.entity';
 import { filterProperties } from '../../common/input/filter-properties';
+import { ImageUpdateOperation } from '../../common/operation/image-update.operation';
+import { Section2imageEntity } from '../model/section2image.entity';
 
 export class SectionUpdateOperation {
 
@@ -24,12 +26,12 @@ export class SectionUpdateOperation {
    */
   private async checkBlock(id?: number): Promise<BlockEntity> {
     WrongDataException.assert(id, 'Block id expected!');
-
     const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
-    const inst = await blockRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, 'Wrong block id!');
 
-    return inst;
+    return WrongDataException.assert(
+      await blockRepo.findOne({where: {id}}),
+      `Content block with id ${id} not found!`
+    );
   }
 
   /**
@@ -40,30 +42,26 @@ export class SectionUpdateOperation {
   private async checkSection(id: number): Promise<SectionEntity> {
     const sectionRepo = this.manager.getRepository(SectionEntity);
 
-    const inst = await sectionRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, 'Section not found!');
-
-    return inst;
+    return NoDataException.assert(
+      await sectionRepo.findOne({
+        where: {id},
+        relations: {
+          image: {image: true},
+          string: {property: true},
+          flag: {flag: true},
+        },
+      }),
+      `Section id ${id} not found!`
+    );
   }
 
-  /**
-   *
-   * @param id
-   * @private
-   */
   private async checkParent(id: number): Promise<SectionEntity> {
-    const sectionRepo = this.manager.getRepository<SectionEntity>(SectionEntity);
+    const sectionRepo = this.manager.getRepository(SectionEntity);
 
-    const inst = await sectionRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, 'Wrong parent id!');
-
-    return inst;
+    return WrongDataException.assert(
+      await sectionRepo.findOne({where: {id}}),
+      `Section id ${id} not found!`
+    );
   }
 
   /**
@@ -83,8 +81,10 @@ export class SectionUpdateOperation {
     await beforeItem.save();
 
     const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
+    await new ImageUpdateOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);
+
+    await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

@@ -21,6 +21,7 @@ import { Element4sectionEntity } from './element4section.entity';
 import { WithPermissionEntity } from '../../common/model/with-permission.entity';
 import { Element4fileEntity } from './element4file.entity';
 import { Element2imageEntity } from './element2image.entity';
+import { WithImageEntity } from '../../common/model/with-image.entity';
 
 @Entity('content-element')
 export class ElementEntity
@@ -28,7 +29,8 @@ export class ElementEntity
   implements WithStringEntity<ElementEntity>,
     WithFlagEntity<ElementEntity>,
     WithPointEntity<ElementEntity>,
-    WithPermissionEntity<ElementEntity> {
+    WithPermissionEntity<ElementEntity>,
+    WithImageEntity<ElementEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -65,7 +67,7 @@ export class ElementEntity
     type => Element2imageEntity,
     image => image.parent,
   )
-  image: Element2imageEntity[];
+  image: Array<Element2imageEntity>;
 
   @OneToMany(
     type => Element4stringEntity,

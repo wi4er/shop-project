@@ -2,6 +2,7 @@ import { SectionEntity } from '../model/section.entity';
 import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringPropertyRender } from '../../common/render/string-property.render';
 import { PointPropertyRender } from '../../common/render/point-property.render';
+import { ImageRender } from '../../common/render/image.render';
 
 @ApiExtraModels(StringPropertyRender, PointPropertyRender)
 export class SectionRender {
@@ -9,6 +10,10 @@ export class SectionRender {
   constructor(item: SectionEntity) {
     this.id = item.id;
     this.block = item.block.id;
+    this.image = item.image.map(it => ({
+      image: it.image.id,
+      collection: it.image.collection.id,
+    }));
     this.created_at = item.created_at.toISOString();
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
@@ -47,6 +52,9 @@ export class SectionRender {
 
   @ApiProperty()
   parent: number;
+
+  @ApiProperty()
+  image: Array<ImageRender>;
 
   @ApiProperty({
     type: 'array',
