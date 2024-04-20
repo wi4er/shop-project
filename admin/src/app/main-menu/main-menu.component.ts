@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../service/api.service';
 import { Block } from '../model/content/block';
 import { Form } from '../model/form/form';
+import { Collection } from '../model/storage/collection';
 
 interface MenuItem {
   title: string;
@@ -41,6 +42,11 @@ export class MainMenuComponent implements OnInit {
     child: [],
   };
 
+  collection: MenuGroup = {
+    title: '',
+    child: [],
+  };
+
   list: MenuGroup[] = [
     {
       title: '',
@@ -64,11 +70,16 @@ export class MainMenuComponent implements OnInit {
         title: 'Documents',
         link: '/document',
         icon: 'notes',
+      }, {
+        title: 'Storage',
+        link: '/storage',
+        icon: 'store',
       }],
     },
     this.content,
     this.form,
     this.document,
+    this.collection,
     {
       title: 'Settings',
       child: [{
@@ -142,17 +153,15 @@ export class MainMenuComponent implements OnInit {
         }
       });
 
-    this.apiService.fetchList<Form>(ApiEntity.DOCUMENT)
+    this.apiService.fetchList<Collection>(ApiEntity.COLLECTION)
       .then(list => {
-        if (list.length > 0) {
-          this.document.title = 'Documents';
-        }
+        if (list.length > 0) this.form.title = 'File collections';
 
         for (const item of list) {
-          this.document.child.push({
-            title: 'Document  ' + String(item.id),
-            link: `/doc/${item.id}`,
-            icon: 'notes',
+          this.form.child.push({
+            title: 'Collection ' + String(item.id),
+            link: `/collection/${item.id}`,
+            icon: 'store',
           });
         }
       });

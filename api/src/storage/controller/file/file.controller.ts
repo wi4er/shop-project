@@ -7,6 +7,14 @@ import { FileInsertOperation } from '../../operation/file-insert.operation';
 import { FileUpdateOperation } from '../../operation/file-update.operation';
 import { FileDeleteOperation } from '../../operation/file-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
+
+
+interface FileFilter {
+
+  collection?: string;
+
+}
 
 @Controller('file')
 export class FileController {
@@ -31,6 +39,9 @@ export class FileController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
+      original: item.original,
+      encoding: item.encoding,
+      mimetype: item.mimetype,
       collection: item.collection.id,
       property: [
         ...item.string.map(str => ({
@@ -43,14 +54,29 @@ export class FileController {
     };
   }
 
+  toWhere(filter: FileFilter): FindOptionsWhere<FileEntity> {
+    const where = {};
+
+    if (filter?.collection) {
+      where['collection'] = {id: filter.collection};
+    }
+
+    return where;
+  }
+
   @Get()
   getList(
     @Query('offset')
       offset?: number,
     @Query('limit')
       limit?: number,
+    @Query('filter')
+      filter?: FileFilter,
   ) {
     return this.fileRepo.find({
+      where: {
+        ...(filter ? this.toWhere(filter) : {}),
+      },
       relations: this.relations,
       take: limit,
       skip: offset,

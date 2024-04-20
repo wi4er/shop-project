@@ -5,7 +5,9 @@ import { PropertyValueInput } from '../../common/input/property-value.input';
 export class FileInput
   implements WithPropertyInput, WithFlagInput {
 
-  id?: number;
+  original: string;
+  encoding?: string;
+  mimetype: string;
   collection: string;
   property: PropertyValueInput[];
   flag: string[];

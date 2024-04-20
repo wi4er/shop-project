@@ -4,7 +4,6 @@ import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Element } from '../../app/model/content/element';
 import { BlockInput } from '../../app/model/content/block-input';
 import { Block } from '../../app/model/content/block';
 
@@ -71,7 +70,7 @@ export class BlockFormComponent {
     }
   }
 
-  toEdit(item: Element) {
+  toEdit(item: Block) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 

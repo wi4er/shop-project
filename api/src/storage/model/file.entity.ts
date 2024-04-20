@@ -1,5 +1,5 @@
 import {
-  BaseEntity,
+  BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity, ManyToOne, OneToMany,
@@ -37,6 +37,23 @@ export class FileEntity
     collection => collection.files,
   )
   collection: CollectionEntity;
+
+  @Column()
+  original: string;
+
+  @Column({
+    nullable: true,
+  })
+  encoding: string;
+
+  @Column()
+  mimetype: string;
+
+  @Column({
+    type: 'bytea',
+    nullable: true,
+  })
+  blob: Buffer;
 
   @OneToMany(
     type => File2flagEntity,

@@ -20,6 +20,7 @@ import { User2groupEntity } from './user2group.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
+import { User2imageEntity } from './user2image.entity';
 
 @Entity('personal-user')
 @Check('not_empty_login', '"login" > \'\'')
@@ -61,6 +62,12 @@ export class UserEntity
     contact => contact.parent,
   )
   group: User2groupEntity[];
+
+  @OneToMany(
+    type => User2imageEntity,
+    image => image.parent,
+  )
+  image: Array<User2imageEntity>;
 
   @OneToMany(
     type => User4stringEntity,

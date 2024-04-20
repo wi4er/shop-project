@@ -14,6 +14,8 @@ import { UserPageComponent } from './user-page/user-page.component';
 import { DocumentListComponent } from '../document/document-list/document-list.component';
 import { DocumentPageComponent } from './document-page/document-page.component';
 import { BlockListComponent } from '../content/block-list/block-list.component';
+import { StoragePageComponent } from './storage-page/storage-page.component';
+import { CollectionPageComponent } from './collection-page/collection-page.component';
 
 const routes: Routes = [{
   path: '',
@@ -54,6 +56,12 @@ const routes: Routes = [{
 }, {
   path: 'document/:id',
   component: DocumentPageComponent,
+}, {
+  path: 'storage',
+  component: StoragePageComponent,
+}, {
+  path: 'collection/:id',
+  component: CollectionPageComponent,
 }, {
   path: '**',
   component: NotFoundComponent,

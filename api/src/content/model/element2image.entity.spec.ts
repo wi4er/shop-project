@@ -61,11 +61,10 @@ describe("Element image entity", () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new ElementEntity(), {block}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const image = await Object.assign(new FileEntity(), {collection}).save();
 
-      await Object.assign(new Element2imageEntity(), {parent, property, image}).save();
+      await Object.assign(new Element2imageEntity(), {parent, image}).save();
 
       const inst = await repo.findOne({
         where: {id: 1},
@@ -80,12 +79,11 @@ describe("Element image entity", () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new ElementEntity(), {block}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
         const image = await Object.assign(new FileEntity(), {collection}).save();
-        await Object.assign(new Element2imageEntity(), {parent, property, image}).save();
+        await Object.assign(new Element2imageEntity(), {parent, image}).save();
       }
 
       const inst = await repo.findOne({

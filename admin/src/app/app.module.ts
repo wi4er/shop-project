@@ -28,6 +28,9 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatRadioModule } from '@angular/material/radio';
 import { ContentModule } from '../content/content.module';
 import { PersonalModule } from '../personal/personal.module';
+import { StorageModule } from '../storage/storage.module';
+import { StoragePageComponent } from './storage-page/storage-page.component';
+import { CollectionPageComponent } from './collection-page/collection-page.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,8 @@ import { PersonalModule } from '../personal/personal.module';
     NotFoundComponent,
     ContentPageComponent,
     UserPageComponent,
+    StoragePageComponent,
+    CollectionPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +68,7 @@ import { PersonalModule } from '../personal/personal.module';
     ReactiveFormsModule,
     ContentModule,
     PersonalModule,
+    StorageModule,
   ],
   providers: [],
   exports: [

@@ -25,10 +25,11 @@ export class FileInsertOperation {
    * @private
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
+    WrongDataException.assert(id, `Collection id expected`);
     const colRepo = this.manager.getRepository(CollectionEntity);
-    const inst = await colRepo.findOne({where: {id}});
+    const collection = await colRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Collection with id ${id} not found!`);
+    return WrongDataException.assert(collection, `Collection with id ${id} not found!`);
   }
 
   /**
@@ -36,9 +37,16 @@ export class FileInsertOperation {
    * @param input
    */
   async save(input: FileInput): Promise<number> {
-    this.created.id = input.id;
     this.created.collection = await this.checkCollection(input.collection);
-    await this.manager.save(this.created);
+    this.created.original = input.original;
+    this.created.encoding = input.encoding;
+    this.created.mimetype = input.mimetype;
+
+    try {
+      await this.manager.insert(FileEntity, this.created);
+    } catch (err) {
+      throw new WrongDataException(err);
+    }
 
     const [stringList, pointList] = filterProperties(input.property);
 

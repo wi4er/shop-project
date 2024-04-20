@@ -75,6 +75,7 @@ import { Element4fileEntity } from './content/model/element4file.entity';
 import { Section4fileEntity } from './content/model/section4file.entity';
 import { Section2imageEntity } from './content/model/section2image.entity';
 import { Block4fileEntity } from './content/model/block4file.entity';
+import { User2imageEntity } from './personal/model/user2image.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -87,7 +88,7 @@ export function createConnectionOptions(): DataSourceOptions {
     synchronize: true,
     logging: false,
     entities: [
-      UserEntity, User2flagEntity, User2contactEntity, User2groupEntity,
+      UserEntity, User2flagEntity, User2contactEntity, User2groupEntity, User2imageEntity,
       User4stringEntity, User4pointEntity, User4userEntity, User4groupEntity, User4descriptionEntity,
       ContactEntity, Contact2flagEntity,
       Contact4stringEntity,

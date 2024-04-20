@@ -16,6 +16,8 @@ export enum ApiEntity {
   CONTACT = 'contact',
   GROUP = 'group',
   DOCUMENT = 'document',
+  COLLECTION = 'collection',
+  FILE = 'file',
   MYSELF = 'myself',
 }
 

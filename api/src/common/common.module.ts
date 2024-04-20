@@ -4,4 +4,6 @@ import { PropertyInputService } from './service/property-input/property-input.se
 @Module({
   providers: [PropertyInputService]
 })
-export class CommonModule {}
+export class CommonModule {
+
+}

@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element-input';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-element-form',
@@ -30,11 +31,16 @@ export class ElementFormComponent {
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
+  editImages: Array<{
+    name: string,
+    hash: string,
+  }> = [];
 
   constructor(
     private dialogRef: MatDialogRef<ElementFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
+    private http: HttpClient,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -138,19 +144,47 @@ export class ElementFormComponent {
     return input;
   }
 
-  saveItem() {
-    if (this.data?.id) {
-      this.apiService.putData<ElementInput>(
-        ApiEntity.ELEMENT,
-        this.id,
-        this.toInput(),
-      ).then(() => this.dialogRef.close());
-    } else {
-      this.apiService.postData<ElementInput>(
-        ApiEntity.ELEMENT,
-        this.toInput(),
-      ).then(() => this.dialogRef.close());
+  onLoadImage(event: Event) {
+    const target = event.target as HTMLInputElement;
+
+    const file: File | undefined = target?.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+      const data = new FormData();
+
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.editImages.push({
+          name: file.name,
+          hash: reader.result?.toString() ?? '',
+        });
+
+        data.append('file', file);
+
+        this.http.post('http://localhost:3030/upload/10', data)
+          .subscribe(res => {
+            console.log(res);
+          })
+      };
     }
+  }
+
+  saveItem(event: Event) {
+    event.preventDefault();
+
+    // if (this.data?.id) {
+    //   this.apiService.putData<ElementInput>(
+    //     ApiEntity.ELEMENT,
+    //     this.id,
+    //     this.toInput(),
+    //   ).then(() => this.dialogRef.close());
+    // } else {
+    //   this.apiService.postData<ElementInput>(
+    //     ApiEntity.ELEMENT,
+    //     this.toInput(),
+    //   ).then(() => this.dialogRef.close());
+    // }
   }
 
 }

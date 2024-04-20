@@ -38,7 +38,11 @@ describe('FileController', () => {
     test('Should get file with limit', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(new FileEntity(), {
+          collection,
+          original: 'short.txt',
+          mimetype: 'text',
+        }).save();
       }
 
       const res = await request(app.getHttpServer())
@@ -54,7 +58,11 @@ describe('FileController', () => {
     test('Should get file with offset', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(new FileEntity(), {
+          collection,
+          original: 'short.txt',
+          mimetype: 'text',
+        }).save();
       }
 
       const res = await request(app.getHttpServer())
@@ -65,12 +73,55 @@ describe('FileController', () => {
       expect(res.body[0].id).toBe(9);
       expect(res.body[1].id).toBe(10);
     });
+
+  });
+
+  describe('File list filter', () => {
+    test('Should get list with collection filter', async () => {
+      const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new FileEntity(), {
+          collection,
+          original: 'short.txt',
+          mimetype: 'text',
+        }).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/file?filter[collection]=DETAIL')
+        .expect(200);
+
+      expect(res.body).toHaveLength(10);
+    });
+
+    test('Should get list with collection filter', async () => {
+      const collection1 = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const collection2 = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new FileEntity(), {
+          collection: i % 2 === 0 ? collection1 : collection2,
+          original: 'short.txt',
+          mimetype: 'text',
+        }).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/file?filter[collection]=DETAIL')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+    });
   });
 
   describe('File item', () => {
     test('Should get file instance', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {collection}).save();
+      await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
 
       const res = await request(app.getHttpServer())
         .get('/file/1')
@@ -98,7 +149,11 @@ describe('FileController', () => {
     test('Should get file count', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(new FileEntity(), {
+          collection,
+          original: 'short.txt',
+          mimetype: 'text',
+        }).save();
       }
 
       const res = await request(app.getHttpServer())
@@ -112,7 +167,11 @@ describe('FileController', () => {
   describe('File with strings', () => {
     test('Should get file with strings', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
+      const parent = await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(new File4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
@@ -129,7 +188,11 @@ describe('FileController', () => {
 
     test('Should get file with lang strings', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
+      const parent = await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(new File4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
@@ -147,7 +210,11 @@ describe('FileController', () => {
   describe('File with flags', () => {
     test('Should get file with flag', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
+      const parent = await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
       await Object.assign(new File2flagEntity(), {parent, flag}).save();
 
@@ -161,7 +228,12 @@ describe('FileController', () => {
 
     test('Should get flag with multi flags', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
+      const parent = await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
+
       for (let i = 1; i < 4; i++) {
         const flag = await Object.assign(new FlagEntity(), {id: `FLAG_${i}`}).save();
         await Object.assign(new File2flagEntity(), {parent, flag}).save();
@@ -180,14 +252,64 @@ describe('FileController', () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const inst = await request(app.getHttpServer())
         .post('/file')
-        .send({collection: 'SHORT'})
+        .send({
+          collection: 'SHORT',
+          original: 'short.txt',
+          mimetype: 'text',
+        })
         .expect(201);
 
       expect(inst.body.id).toBe(1);
+      expect(inst.body.original).toBe('short.txt');
+      expect(inst.body.mimetype).toBe('text');
       expect(inst.body.collection).toBe('SHORT');
       expect(inst.body.created_at).toBeDefined();
       expect(inst.body.updated_at).toBeDefined();
       expect(inst.body.version).toBe(1);
+    });
+
+    test('Shouldn`t add without original', async () => {
+      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      await request(app.getHttpServer())
+        .post('/file')
+        .send({
+          collection: 'SHORT',
+          mimetype: 'text',
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t add without mimetype', async () => {
+      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      await request(app.getHttpServer())
+        .post('/file')
+        .send({
+          collection: 'SHORT',
+          original: 'short.txt',
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t add without collection', async () => {
+      await request(app.getHttpServer())
+        .post('/file')
+        .send({
+          original: 'short.txt',
+          mimetype: 'text',
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t add with wrong collection', async () => {
+      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      await request(app.getHttpServer())
+        .post('/file')
+        .send({
+          collection: 'WRONG',
+          original: 'short.txt',
+          mimetype: 'text',
+        })
+        .expect(400);
     });
 
     test('Should add with string', async () => {
@@ -198,6 +320,8 @@ describe('FileController', () => {
         .post('/file')
         .send({
           collection: 'SHORT',
+          original: 'short.txt',
+          mimetype: 'text',
           property: [
             {property: 'NAME', string: 'VALUE'},
           ],
@@ -217,6 +341,8 @@ describe('FileController', () => {
         .post('/file')
         .send({
           collection: 'SHORT',
+          original: 'short.txt',
+          mimetype: 'text',
           flag: ['ACTIVE'],
         })
         .expect(201);
@@ -228,7 +354,11 @@ describe('FileController', () => {
   describe('File updating', () => {
     test('Should update file', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {collection: 'SHORT'}).save();
+      await Object.assign(new FileEntity(), {
+        collection: 'SHORT',
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
       const res = await request(app.getHttpServer())
         .put('/file/1')
         .send({collection: 'SHORT'})
@@ -240,7 +370,11 @@ describe('FileController', () => {
 
     test('Should add string', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {collection}).save();
+      await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
@@ -260,7 +394,11 @@ describe('FileController', () => {
 
     test('Should add flag', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {collection}).save();
+      await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const res = await request(app.getHttpServer())
@@ -278,7 +416,11 @@ describe('FileController', () => {
   describe('File deletion', () => {
     test('Should delete', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {collection}).save();
+      await Object.assign(new FileEntity(), {
+        collection,
+        original: 'short.txt',
+        mimetype: 'text',
+      }).save();
 
       const inst = await request(app.getHttpServer())
         .delete('/file/1')

@@ -18,7 +18,6 @@ import { ReportModule } from './report/report.module';
 import { NoDataFilter } from './exception/no-data/no-data.filter';
 import redisPermission from './permission/redis.permission';
 import { PermissionFilter } from './exception/permission/permission.filter';
-import { ImageController } from './storage/controller/image/image.controller';
 
 @Module({
   imports: [
@@ -34,7 +33,7 @@ import { ImageController } from './storage/controller/image/image.controller';
     DocumentModule,
     ReportModule,
   ],
-  controllers: [AppController, ImageController],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_FILTER,

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { FileController } from './controller/file/file.controller';
 import { UploadController } from './controller/upload/upload.controller';
-import { ImageController } from './controller/image/image.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileEntity } from './model/file.entity';
 import { CollectionEntity } from './model/collection.entity';
@@ -14,13 +13,14 @@ import { CollectionController } from './controller/collection/collection.control
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      FileEntity, File2flagEntity, File4stringEntity,
-      CollectionEntity, Collection2flagEntity, Collection4stringEntity,
+      FileEntity, File2flagEntity,
+      File4stringEntity,
+      CollectionEntity, Collection2flagEntity,
+      Collection4stringEntity,
     ]),
   ],
   controllers: [
     FileController,
-    ImageController,
     UploadController,
     CollectionController,
   ],
