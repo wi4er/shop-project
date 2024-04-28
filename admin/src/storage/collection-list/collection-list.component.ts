@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
@@ -14,7 +14,7 @@ import { Collection } from '../../app/model/storage/collection';
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.css']
 })
-export class CollectionListComponent implements OnChanges {
+export class CollectionListComponent implements OnInit {
 
   totalCount: number = 0;
   pageSize: number = 10;
@@ -61,7 +61,7 @@ export class CollectionListComponent implements OnChanges {
     this.refreshData();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),

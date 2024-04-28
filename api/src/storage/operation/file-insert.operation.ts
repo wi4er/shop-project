@@ -39,7 +39,6 @@ export class FileInsertOperation {
   async save(input: FileInput): Promise<number> {
     this.created.collection = await this.checkCollection(input.collection);
     this.created.original = input.original;
-    this.created.encoding = input.encoding;
     this.created.mimetype = input.mimetype;
 
     try {

@@ -41,13 +41,11 @@ export class FileEntity
   @Column()
   original: string;
 
-  @Column({
-    nullable: true,
-  })
-  encoding: string;
-
   @Column()
   mimetype: string;
+
+  @Column()
+  path: string;
 
   @Column({
     type: 'bytea',

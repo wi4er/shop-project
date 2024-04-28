@@ -9,7 +9,6 @@ import { FileDeleteOperation } from '../../operation/file-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
-
 interface FileFilter {
 
   collection?: string;
@@ -40,8 +39,8 @@ export class FileController {
       updated_at: item.updated_at,
       version: item.version,
       original: item.original,
-      encoding: item.encoding,
       mimetype: item.mimetype,
+      path: item.path,
       collection: item.collection.id,
       property: [
         ...item.string.map(str => ({

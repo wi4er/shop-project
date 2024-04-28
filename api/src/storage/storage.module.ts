@@ -9,6 +9,7 @@ import { File4stringEntity } from './model/file4string.entity';
 import { Collection2flagEntity } from './model/collection2flag.entity';
 import { Collection4stringEntity } from './model/collection4string.entity';
 import { CollectionController } from './controller/collection/collection.controller';
+import { FileNameService } from './service/file-name/file-name.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CollectionController } from './controller/collection/collection.control
     UploadController,
     CollectionController,
   ],
+  providers: [FileNameService],
 })
 export class StorageModule {
 }

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
@@ -6,18 +6,21 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FileInput } from '../../app/model/storage/file.input';
 import { File as FileEntity } from '../../app/model/storage/file';
+import { HttpClient } from '@angular/common/http';
+import { CollectionInput } from '../../app/model/storage/collection.input';
 
 @Component({
   selector: 'app-file-form',
   templateUrl: './file-form.component.html',
-  styleUrls: ['./file-form.component.css']
+  styleUrls: ['./file-form.component.css'],
 })
-export class FileFormComponent {
+export class FileFormComponent implements OnInit {
 
   original: string = '';
   mimetype: string = '';
   created_at: string = '';
   updated_at: string = '';
+  file?: File;
 
   propertyList: Property[] = [];
   langList: Lang[] = [];
@@ -34,10 +37,14 @@ export class FileFormComponent {
     private dialogRef: MatDialogRef<FileFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private http: HttpClient,
   ) {
   }
 
   ngOnInit(): void {
+
+    console.log(this.data?.id);
+
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
@@ -64,24 +71,21 @@ export class FileFormComponent {
 
   onFileLoad(event: Event) {
     const target = event.target as HTMLInputElement;
-    const file: File | undefined = target?.files?.[0];
+    this.file = target?.files?.[0];
 
-    if (file) {
+    if (this.file) {
       const reader = new FileReader();
-      const data = new FormData();
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(this.file);
       reader.onload = () => {
-        this.editFile = {
-          name: file.name,
-          hash: reader.result?.toString() ?? '',
-        };
-        this.original = file.name;
-        this.mimetype = file.type;
-
-        console.log(file);
-
-        // data.append('file', file);
+        if (this.file) {
+          this.editFile = {
+            name: this.file.name,
+            hash: reader.result?.toString() ?? '',
+          };
+          this.original = this.file.name;
+          this.mimetype = this.file.type;
+        }
       };
     }
   }
@@ -156,26 +160,30 @@ export class FileFormComponent {
   }
 
   saveItem() {
+    const data = new FormData();
 
+    if (this.data?.id) {
+      this.apiService.putData<FileInput>(
+        ApiEntity.FILE,
+        this.data.id,
+        this.toInput(),
+      ).then(() => {
+        this.dialogRef.close();
+      });
+    } else if (this.file) {
+      data.append('file', this.file);
 
-
-
-    // if (this.data?.id) {
-    //   this.apiService.putData<FileInput>(
-    //     ApiEntity.FILE,
-    //     this.data.id,
-    //     this.toInput(),
-    //   ).then(() => {
-    //     this.dialogRef.close();
-    //   });
-    // } else {
-    //   this.apiService.postData<FileInput>(
-    //     ApiEntity.FILE,
-    //     this.toInput(),
-    //   ).then(() => {
-    //     this.dialogRef.close();
-    //   });
-    // }
+      this.http.post<FileEntity>('http://localhost:3030/upload', data)
+        .subscribe(res => {
+          this.apiService.putData<FileInput>(
+            ApiEntity.FILE,
+            res.id,
+            this.toInput(),
+          ).then(res => {
+            this.dialogRef.close();
+          });
+        });
+    }
   }
 
 }

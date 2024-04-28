@@ -6,6 +6,10 @@
   width: 48px;
 }
 
+.image {
+  max-height: 48px;
+}
+
 .spacer {
   flex: 1;
 }

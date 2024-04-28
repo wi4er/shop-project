@@ -27,8 +27,6 @@
   </button>
 </mat-toolbar>
 
-<ng-content></ng-content>
-
 <table
   mat-table
   [dataSource]="list"
@@ -99,7 +97,20 @@
     </th>
 
     <td mat-cell *matCellDef="let element">
-      <span [innerHTML]="sanitizer.bypassSecurityTrustHtml(element[prop])"></span>
+      <span [innerHTML]="sanitizer.bypassSecurityTrustHtml(element[prop] ?? '')"></span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="image">
+    <th mat-header-cell *matHeaderCellDef>
+      Image
+    </th>
+
+    <td mat-cell *matCellDef="let element">
+      <img
+        class="image"
+        [src]="'http://localhost:3030/' + element['path']"
+      />
     </td>
   </ng-container>
 

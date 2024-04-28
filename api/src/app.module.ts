@@ -18,6 +18,8 @@ import { ReportModule } from './report/report.module';
 import { NoDataFilter } from './exception/no-data/no-data.filter';
 import redisPermission from './permission/redis.permission';
 import { PermissionFilter } from './exception/permission/permission.filter';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -32,6 +34,9 @@ import { PermissionFilter } from './exception/permission/permission.filter';
     SettingsModule,
     DocumentModule,
     ReportModule,
+    ServeStaticModule.forRoot({
+      rootPath: process.env.STORAGE_PATH,
+    }),
   ],
   controllers: [AppController],
   providers: [

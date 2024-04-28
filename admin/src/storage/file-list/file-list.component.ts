@@ -42,6 +42,7 @@ export class FileListComponent implements OnChanges {
       'select',
       'action',
       ...this.columns,
+      'image',
     ];
   }
 
@@ -85,6 +86,10 @@ export class FileListComponent implements OnChanges {
         'id': String(item.id),
         created_at: item.created_at,
         updated_at: item.updated_at,
+        collection: item.collection,
+        path: item.path,
+        mimetype: item.mimetype,
+        original: item.original,
       };
 
       for (const it of item.property) {
@@ -96,10 +101,10 @@ export class FileListComponent implements OnChanges {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', 'mimetype', 'original', ...col];
   }
 
-  async refreshData() {
+  refreshData(): Promise<void> {
     return Promise.all([
       this.apiService.fetchList<File>(
         ApiEntity.FILE,
@@ -110,7 +115,7 @@ export class FileListComponent implements OnChanges {
         },
       ),
       this.apiService.countData(
-        ApiEntity.COLLECTION,
+        ApiEntity.FILE,
         {['filter[collection]']: this.collectionId},
       ),
     ]).then(([data, count]) => {
@@ -118,30 +123,6 @@ export class FileListComponent implements OnChanges {
       this.totalCount = count;
       this.selection.clear();
     });
-  }
-
-  updateItem(id: number) {
-    const dialog = this.dialog.open(
-      FileFormComponent,
-      {
-        width: '1000px',
-        panelClass: 'wrapper',
-      },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
-  }
-
-  deleteList() {
-    const list = this.selection.selected.map(item => item['id']);
-
-    this.apiService.deleteList(ApiEntity.COLLECTION, list)
-      .then(() => this.refreshData());
-  }
-
-  deleteItem(id: string) {
-    this.apiService.deleteList(ApiEntity.COLLECTION, [id])
-      .then(() => this.refreshData());
   }
 
   addItem() {
@@ -154,6 +135,31 @@ export class FileListComponent implements OnChanges {
     );
 
     dialog.afterClosed().subscribe(() => this.refreshData());
+  }
+
+  updateItem(id: number) {
+    const dialog = this.dialog.open(
+      FileFormComponent,
+      {
+        data: {id},
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    );
+
+    dialog.afterClosed().subscribe(() => this.refreshData());
+  }
+
+  deleteList() {
+    const list = this.selection.selected.map(item => item['id']);
+
+    this.apiService.deleteList(ApiEntity.FILE, list)
+      .then(() => this.refreshData());
+  }
+
+  deleteItem(id: string) {
+    this.apiService.deleteList(ApiEntity.FILE, [id])
+      .then(() => this.refreshData());
   }
 
   toggleFlag(id: number, flag: string) {
