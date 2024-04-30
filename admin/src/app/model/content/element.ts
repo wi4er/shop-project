@@ -5,10 +5,12 @@ export interface Element {
   created_at: string;
   updated_at: string;
   version: number;
-  image: {
+  image: Array<{
+    original: string;
     image: number;
+    path: string;
     collection: string;
-  }
+  }>
   flag: string[];
   property: StringPropertyValue[];
 }

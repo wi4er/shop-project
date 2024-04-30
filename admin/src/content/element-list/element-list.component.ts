@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
@@ -43,6 +43,7 @@ export class ElementListComponent implements OnChanges {
       'select',
       'action',
       ...this.columns,
+      'image',
     ];
   }
 
@@ -86,6 +87,7 @@ export class ElementListComponent implements OnChanges {
         'id': String(item.id),
         created_at: item.created_at,
         updated_at: item.updated_at,
+        path: item.image[0]?.path ?? '',
       };
 
       for (const it of item.property) {

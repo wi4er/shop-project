@@ -21,6 +21,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PersonalModule } from '../personal/personal.module';
 import { HttpClientModule } from '@angular/common/http';
+import { MatCard, MatCardModule } from '@angular/material/card';
+import { StorageModule } from '../storage/storage.module';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     MatTabsModule,
+    MatCardModule,
     PersonalModule,
+    StorageModule,
   ],
 })
 export class ContentModule { }

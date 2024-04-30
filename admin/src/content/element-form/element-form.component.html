@@ -46,31 +46,13 @@
   </div>
 
   <mat-tab-group dynamicHeight>
-    <mat-tab
-      label="Images"
-    >
-      <label>
-        <input
-          class="image-input"
-          type="file"
-          (change)="onLoadImage($event)"
-        />
-
-        <div class="image-add">
-          Add
-        </div>
-      </label>
-
-      <div>
-        <div *ngFor="let item of editImages">
-          <img
-            style="max-width: 100px; max-height: 100px"
-            [src]="item.hash"
-          />
-
-          {{item.name}}
-        </div>
-      </div>
+    <mat-tab label="Images">
+      <app-image-edit
+        *ngFor="let collection of collectionList"
+        [collectionId]="collection.id"
+        [(imageList)]="imageList[collection.id]"
+        [(editList)]="editImages[collection.id]"
+      ></app-image-edit>
     </mat-tab>
 
     <mat-tab

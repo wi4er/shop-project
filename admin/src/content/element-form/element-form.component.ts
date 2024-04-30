@@ -7,6 +7,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element-input';
 import { HttpClient } from '@angular/common/http';
+import { Collection } from '../../app/model/storage/collection';
 
 @Component({
   selector: 'app-element-form',
@@ -28,13 +29,26 @@ export class ElementFormComponent {
   propertyList: Property[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
+  collectionList: Array<Collection> = [];
+
+  imageList: {
+    [collection: string]:Array<{
+      id: number,
+      path: string,
+      original: string,
+    }>
+  } = {};
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
-  editImages: Array<{
-    name: string,
-    hash: string,
-  }> = [];
+  editImages: {
+    [collection: string]: Array<{
+      id?: number,
+      file: File,
+      name: string,
+      hash: string,
+    }>
+  } = {};
 
   constructor(
     private dialogRef: MatDialogRef<ElementFormComponent>,
@@ -50,11 +64,13 @@ export class ElementFormComponent {
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
+      this.apiService.fetchList<Collection>(ApiEntity.COLLECTION),
       this.data?.id ? this.apiService.fetchItem<Element>(ApiEntity.ELEMENT, this.id) : null,
-    ]).then(([property, flag, lang, data]) => {
+    ]).then(([property, flag, lang, collection, data]) => {
       this.propertyList = property;
       this.flagList = flag;
       this.langList = lang;
+      this.collectionList = collection;
 
       this.initEditValues();
       if (data) this.toEdit(data);
@@ -68,6 +84,11 @@ export class ElementFormComponent {
   }
 
   initEditValues() {
+    for (const col of this.collectionList) {
+      this.imageList[col.id] = [];
+      this.editImages[col.id] = [];
+    }
+
     for (const prop of this.propertyList) {
       this.editProperties[prop.id] = {};
 
@@ -86,6 +107,16 @@ export class ElementFormComponent {
   toEdit(item: Element) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+
+    for (const img of item.image) {
+      if (!this.imageList[img.collection]) this.imageList[img.collection] = [];
+
+      this.imageList[img.collection].push({
+        id: img.image,
+        path: img.path,
+        original: img.original,
+      });
+    }
 
     for (const prop of item.property) {
       this.editProperties[prop.property][prop.lang ?? ''].push({
@@ -107,6 +138,7 @@ export class ElementFormComponent {
     const input: ElementInput = {
       id: this.data?.id,
       block: this.data?.block ?? 1,
+      image: [],
       property: [],
       flag: [],
       permission: [{
@@ -114,6 +146,18 @@ export class ElementFormComponent {
         method: 'ALL',
       }],
     } as ElementInput;
+
+    for (const collection in this.editImages) {
+      for (const image of this.editImages[collection]) {
+        if (image.id) input.image.push(image.id);
+      }
+    }
+
+    for (const col in this.imageList) {
+      for (const image of this.imageList[col]) {
+        input.image.push(image.id);
+      }
+    }
 
     for (const method in this.permission) {
       for (const group of this.permission[method]) {
@@ -144,47 +188,37 @@ export class ElementFormComponent {
     return input;
   }
 
-  onLoadImage(event: Event) {
-    const target = event.target as HTMLInputElement;
-
-    const file: File | undefined = target?.files?.[0];
-
-    if (file) {
-      const reader = new FileReader();
-      const data = new FormData();
-
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.editImages.push({
-          name: file.name,
-          hash: reader.result?.toString() ?? '',
-        });
-
-        data.append('file', file);
-
-        this.http.post('http://localhost:3030/upload/10', data)
-          .subscribe(res => {
-            console.log(res);
-          })
-      };
-    }
-  }
-
-  saveItem(event: Event) {
+  async saveItem(event: Event) {
     event.preventDefault();
 
-    // if (this.data?.id) {
-    //   this.apiService.putData<ElementInput>(
-    //     ApiEntity.ELEMENT,
-    //     this.id,
-    //     this.toInput(),
-    //   ).then(() => this.dialogRef.close());
-    // } else {
-    //   this.apiService.postData<ElementInput>(
-    //     ApiEntity.ELEMENT,
-    //     this.toInput(),
-    //   ).then(() => this.dialogRef.close());
-    // }
+    for (const collection in this.editImages) {
+      for (const file of this.editImages[collection]) {
+        const data = new FormData();
+        data.append('file', file.file);
+        data.append('collection', collection);
+
+        const saved = await fetch('http://localhost:3030/upload', {
+          method: 'POST',
+          credentials: 'include',
+          body: data,
+        }).then(res => res.json());
+
+        file.id = saved.id;
+      }
+    }
+
+    if (this.data?.id) {
+      this.apiService.putData<ElementInput>(
+        ApiEntity.ELEMENT,
+        this.id,
+        this.toInput(),
+      ).then(() => this.dialogRef.close());
+    } else {
+      this.apiService.postData<ElementInput>(
+        ApiEntity.ELEMENT,
+        this.toInput(),
+      ).then(() => this.dialogRef.close());
+    }
   }
 
 }

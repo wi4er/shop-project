@@ -25,7 +25,9 @@ export class ElementRender {
     this.version = item.version;
     this.section = item.parent.map(it => it.section.id);
     this.image = item.image.map(it => ({
+      original: it.image.original,
       image: it.image.id,
+      path: it.image.path,
       collection: it.image.collection.id,
     }));
     this.property = [

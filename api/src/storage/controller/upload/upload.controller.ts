@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as process from 'process';
@@ -31,6 +31,8 @@ export class UploadController {
   async postItem(
     @UploadedFile()
       file: Express.Multer.File,
+    @Body()
+      data: Object,
   ) {
     const saved = await new FileCreateOperation(process.env.STORAGE_PATH)
       .setFile(file.originalname)
@@ -41,11 +43,11 @@ export class UploadController {
     inst.mimetype = file.mimetype;
     inst.original = file.originalname;
     inst.path = saved.getPath();
-    inst.collection = await this.colRepo.findOne({where: {id: '123'}});
+    inst.collection = await this.colRepo.findOne({where: {id: data['collection']}});
 
     await inst.save();
 
-    return  {
+    return {
       id: inst.id,
       created_at: inst.created_at,
       updated_at: inst.updated_at,

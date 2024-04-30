@@ -10,6 +10,7 @@ interface PermissionInput {
 export interface ElementInput {
 
   block: number;
+  image: Array<number>;
   flag: string[];
   property: StringPropertyValue[];
   permission: PermissionInput[];

@@ -10,6 +10,10 @@
   flex: 1;
 }
 
+.image {
+  max-height: 32px;
+}
+
 :host {
   min-height: 100%;
   display: flex;

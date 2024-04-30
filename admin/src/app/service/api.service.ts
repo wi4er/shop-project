@@ -129,7 +129,7 @@ export class ApiService {
       },
       credentials: 'include',
       body: JSON.stringify(item),
-    }).then();
+    });
 
     return req;
   }

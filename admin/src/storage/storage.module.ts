@@ -17,8 +17,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FileListComponent } from './file-list/file-list.component';
 import { FileFormComponent } from './file-form/file-form.component';
-
-
+import { ImageEditComponent } from './image-edit/image-edit.component';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -26,10 +26,12 @@ import { FileFormComponent } from './file-form/file-form.component';
     CollectionFormComponent,
     FileListComponent,
     FileFormComponent,
+    ImageEditComponent,
   ],
   exports: [
     CollectionListComponent,
     FileListComponent,
+    ImageEditComponent,
   ],
   imports: [
     CommonModule,
@@ -46,6 +48,7 @@ import { FileFormComponent } from './file-form/file-form.component';
     MatFormFieldModule,
     MatInputModule,
     MatTabsModule,
+    MatCardModule,
   ],
 })
 export class StorageModule { }
