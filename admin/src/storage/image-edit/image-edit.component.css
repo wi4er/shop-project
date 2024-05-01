@@ -1,5 +1,29 @@
 
-.image-input {
+:host {
+
+}
+
+.collection {
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  overflow: scroll;
+}
+
+.image-card {
+  width: 200px;
+}
+
+.image-text {
+  flex: 1;
+  overflow-wrap: break-word;
+}
+
+.image-image {
+  max-height: 200px
+}
+
+.add-input {
   display: none;
 }
 
@@ -9,24 +33,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.image-list {
-  padding: 16px;
-  display: flex;
-  gap: 12px;
-  overflow: scroll;
-}
-
-.image-list-item {
-  width: 200px;
-}
-
-.image-list-text {
-  flex: 1;
-  overflow-wrap: break-word;
-}
-
-.image-list-image {
-  max-height: 200px
 }

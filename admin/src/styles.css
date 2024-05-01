@@ -8,3 +8,7 @@ app-root {
   display: flex;
   flex-direction: column;
 }
+
+/*.wrapper {*/
+/*  overflow: scroll;*/
+/*}*/

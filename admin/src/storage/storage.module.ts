@@ -19,6 +19,7 @@ import { FileListComponent } from './file-list/file-list.component';
 import { FileFormComponent } from './file-form/file-form.component';
 import { ImageEditComponent } from './image-edit/image-edit.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { MatCardModule } from '@angular/material/card';
     MatInputModule,
     MatTabsModule,
     MatCardModule,
+    MatDividerModule,
   ],
 })
 export class StorageModule { }
