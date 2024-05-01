@@ -8,10 +8,18 @@ import { Property } from '../../app/model/settings/property';
 import { Element } from '../../app/model/content/element';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'content-element-list',
   templateUrl: './element-list.component.html',
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*', minHeight: '120px'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
   styleUrls: ['./element-list.component.css'],
 })
 export class ElementListComponent implements OnChanges {
@@ -27,9 +35,14 @@ export class ElementListComponent implements OnChanges {
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
   flagList: string[] = [];
+  imageList: {
+    [id: number]: Array<{
+      path: string,
+    }>
+  } = {};
   columns: string[] = [];
   list: { [key: string]: string }[] = [];
-
+  expandedElement: Element | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -42,6 +55,7 @@ export class ElementListComponent implements OnChanges {
     return [
       'select',
       'action',
+      'open',
       ...this.columns,
       'image',
     ];
@@ -80,6 +94,7 @@ export class ElementListComponent implements OnChanges {
   private setData(data: Element[]) {
     const col = new Set<string>();
     this.activeFlags = {};
+    this.imageList = {};
     this.list = [];
 
     for (const item of data) {
@@ -89,6 +104,11 @@ export class ElementListComponent implements OnChanges {
         updated_at: item.updated_at,
         path: item.image[0]?.path ?? '',
       };
+
+      for (const image of item.image) {
+        if (!this.imageList[item.id]) this.imageList[item.id] = [];
+        this.imageList[item.id].push(image);
+      }
 
       for (const it of item.property) {
         col.add('property_' + it.property);
