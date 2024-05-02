@@ -6,6 +6,14 @@
   font-weight: 400;
 }
 
+
+.headings_h2 {
+  font-family: "ClashDisplay-Regular", sans-serif;
+  font-size: 32px;
+  line-height: 140%;
+  font-weight: 400;
+}
+
 .headings_h3 {
   font-family: "ClashDisplay-Regular", sans-serif;
   font-size: 24px;
@@ -17,6 +25,13 @@
   font-family: "ClashDisplay-Regular", sans-serif;
   font-size: 20px;
   line-height: 140%;
+  font-weight: 400;
+}
+
+.body_large {
+  font-family: "Satoshi", sans-serif;
+  font-size: 18px;
+  line-height: 150%;
   font-weight: 400;
 }
 

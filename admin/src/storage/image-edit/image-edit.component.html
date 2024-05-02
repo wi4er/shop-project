@@ -1,6 +1,22 @@
-<h2>
+<h3>
   {{collectionId}}
-</h2>
+
+  <input
+    class="add-input"
+    type="file"
+    #fileInput
+    (change)="onLoadImage($event)"
+  />
+
+  <button
+    mat-icon-button
+    title="Add image"
+    type="button"
+    (click)="fileInput.click()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</h3>
 
 <div class="collection">
   <mat-card
@@ -55,22 +71,4 @@
       </button>
     </mat-card-actions>
   </mat-card>
-
-  <label>
-    <input
-      class="add-input"
-      type="file"
-      #fileInput
-      (change)="onLoadImage($event)"
-    />
-
-    <button
-      mat-button
-      type="button"
-      class="image-add"
-      (click)="fileInput.click()"
-    >
-      Add
-    </button>
-  </label>
 </div>

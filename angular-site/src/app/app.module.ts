@@ -14,6 +14,7 @@ import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MainFeaturesComponent } from './components/main-features/main-features.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HeroBlocksComponent } from './components/hero-blocks/hero-blocks.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     TopNavComponent,
     FooterComponent,
     MainFeaturesComponent,
+    HeroBlocksComponent,
   ],
   imports: [
     BrowserModule,

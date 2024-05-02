@@ -21,6 +21,12 @@
   max-height: 32px;
 }
 
+.image-count {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
 .image-list {
   box-sizing: border-box;
   display: flex;

@@ -55,7 +55,6 @@ export class ElementListComponent implements OnChanges {
     return [
       'select',
       'action',
-      'open',
       ...this.columns,
       'image',
     ];
