@@ -2,7 +2,7 @@ import {
   BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, ManyToOne, OneToMany,
+  Entity, Index, ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
@@ -13,6 +13,7 @@ import { WithStringEntity } from '../../common/model/with-string.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 
 @Entity('storage-file')
+@Index(['path'], {unique: true})
 export class FileEntity
   extends BaseEntity
   implements WithStringEntity<FileEntity>, WithFlagEntity<FileEntity> {

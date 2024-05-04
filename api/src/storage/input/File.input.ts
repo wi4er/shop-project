@@ -9,6 +9,7 @@ export class FileInput
   encoding?: string;
   mimetype: string;
   collection: string;
+  path: string;
   property: PropertyValueInput[];
   flag: string[];
 

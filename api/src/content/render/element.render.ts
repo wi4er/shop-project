@@ -62,7 +62,7 @@ export class ElementRender {
   }
 
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: 'Id from content block',

@@ -34,7 +34,15 @@ describe("Section image entity", () => {
 
     test('Shouldn`t create without parent', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+          collection,
+        },
+      ).save();
 
       await expect(
         Object.assign(new Section2imageEntity(), {image}).save()
@@ -45,7 +53,15 @@ describe("Section image entity", () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+          collection,
+        },
+      ).save();
 
       await Object.assign(new Section2imageEntity(), {parent, image}).save()
 
@@ -62,7 +78,15 @@ describe("Section image entity", () => {
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+          collection,
+        },
+      ).save();
 
       await Object.assign(new Section2imageEntity(), {parent, property, image}).save();
 
@@ -83,7 +107,15 @@ describe("Section image entity", () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const image = await Object.assign(new FileEntity(), {collection}).save();
+        const image = await Object.assign(
+          new FileEntity(),
+          {
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt_${i}.txt`,
+            collection,
+          },
+        ).save();
         await Object.assign(new Section2imageEntity(), {parent, property, image}).save();
       }
 

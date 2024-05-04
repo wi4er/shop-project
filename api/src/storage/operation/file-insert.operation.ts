@@ -40,6 +40,7 @@ export class FileInsertOperation {
     this.created.collection = await this.checkCollection(input.collection);
     this.created.original = input.original;
     this.created.mimetype = input.mimetype;
+    this.created.path = input.path;
 
     try {
       await this.manager.insert(FileEntity, this.created);

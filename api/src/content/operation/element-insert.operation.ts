@@ -42,10 +42,11 @@ export class ElementInsertOperation {
    *
    * @param input
    */
-  async save(input: ElementInput): Promise<number> {
+  async save(input: ElementInput): Promise<string> {
+    this.created.id = input.id;
     this.created.block = await this.checkBlock(input.block);
 
-    await this.manager.save(this.created);
+    await this.manager.insert(ElementEntity, this.created);
 
     const [stringList, pointList, elementList] = filterProperties(input.property);
 

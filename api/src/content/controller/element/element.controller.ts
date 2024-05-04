@@ -140,7 +140,7 @@ export class ElementController {
       where: {
         ...(filter ? this.toWhere(filter) : {}),
         permission: {
-          group: In(group),
+          group: Or(In(group), IsNull()),
           method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
@@ -157,12 +157,12 @@ export class ElementController {
     @CurrentGroups()
       group: number[],
     @Param('id')
-      id: number,
+      id: string,
   ): Promise<ElementRender> {
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {
-          group: In(group),
+          group: Or(In(group), IsNull()),
           parent: {id},
           method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
@@ -207,14 +207,14 @@ export class ElementController {
     @CurrentGroups()
       group: number[],
     @Param('id')
-      id: number,
+      id: string,
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {
-          group: In(group),
+          group: Or(In(group), IsNull()),
           parent: {id},
           method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
         },
@@ -236,12 +236,12 @@ export class ElementController {
     @CurrentGroups()
       group: number[],
     @Param('id')
-      id: number,
-  ): Promise<number[]> {
+      id: string,
+  ): Promise<string[]> {
     PermissionException.assert(
       await this.permRepo.findOne({
         where: {
-          group: In(group),
+          group: Or(In(group), IsNull()),
           parent: {id},
           method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
         },

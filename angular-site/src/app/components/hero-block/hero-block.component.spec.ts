@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeroBlocksComponent } from './hero-blocks.component';
+import { HeroBlockComponent } from './hero-block.component';
 
 describe('HeroBlocksComponent', () => {
-  let component: HeroBlocksComponent;
-  let fixture: ComponentFixture<HeroBlocksComponent>;
+  let component: HeroBlockComponent;
+  let fixture: ComponentFixture<HeroBlockComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [HeroBlocksComponent]
+      declarations: [HeroBlockComponent]
     });
-    fixture = TestBed.createComponent(HeroBlocksComponent);
+    fixture = TestBed.createComponent(HeroBlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

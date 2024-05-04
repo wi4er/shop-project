@@ -19,11 +19,23 @@ describe('ElementElement entity', () => {
   describe('ElementElement fields', () => {
     test('Should create element value', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
-      const element = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'PARENT', block},
+      ).save();
+      const property = await Object.assign(
+        new PropertyEntity(),
+        {id: 'CURRENT'},
+      ).save();
+      const element = await Object.assign(
+        new ElementEntity(),
+        {id: 'CHILD', block},
+      ).save();
 
-      const inst = await Object.assign(new Element4elementEntity(), {parent, property, element}).save();
+      const inst = await Object.assign(
+        new Element4elementEntity(),
+        {parent, property, element},
+      ).save();
 
       expect(inst.id).toBe(1);
     });
@@ -37,8 +49,14 @@ describe('ElementElement entity', () => {
 
     test('Shouldn`t create without parent', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
-      const element = await Object.assign(new ElementEntity(), {block}).save();
+      const property = await Object.assign(
+        new PropertyEntity(),
+        {id: 'CURRENT'},
+      ).save();
+      const element = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
 
       const inst = Object.assign(
         new Element4elementEntity(),
@@ -50,8 +68,14 @@ describe('ElementElement entity', () => {
 
     test('Shouldn`t create without property', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
-      const element = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'PARENT', block},
+      ).save();
+      const element = await Object.assign(
+        new ElementEntity(),
+        {id: 'CHILD', block},
+      ).save();
 
       const inst = Object.assign(
         new Element4elementEntity(),
@@ -63,8 +87,14 @@ describe('ElementElement entity', () => {
 
     test('Shouldn`t create without element', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
+      const property = await Object.assign(
+        new PropertyEntity(),
+        {id: 'CURRENT'},
+      ).save();
 
       const inst = Object.assign(
         new Element4elementEntity(),

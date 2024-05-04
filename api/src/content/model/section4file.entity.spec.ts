@@ -25,7 +25,15 @@ describe('Section file property entity', () => {
 
     test('Shouldn`t create duplicate', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt1.txt`,
+        },
+      ).save();
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
@@ -49,7 +57,15 @@ describe('Section file property entity', () => {
 
     test('Shouldn`t create without parent', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt1.txt`,
+        },
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await expect(
@@ -61,7 +77,15 @@ describe('Section file property entity', () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt1.txt`,
+        },
+      ).save();
 
       await expect(
         Object.assign(new Section4fileEntity(), {parent, file}).save(),
@@ -76,7 +100,15 @@ describe('Section file property entity', () => {
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt1.txt`,
+        },
+      ).save();
 
       await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
 
@@ -97,7 +129,15 @@ describe('Section file property entity', () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const file = await Object.assign(new FileEntity(), {collection}).save();
+        const file = await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt${i}.txt`,
+          },
+        ).save();
         await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
       }
 

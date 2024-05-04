@@ -20,7 +20,10 @@ describe('Element section property entity', () => {
   describe('Element4section fields', () => {
     test('Should create element value', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const section = await Object.assign(new SectionEntity(), {block}).save();
 
@@ -41,7 +44,10 @@ describe('Element section property entity', () => {
 
     test('Shouldn`t create without property', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
       const section = await Object.assign(new SectionEntity(), {block}).save();
 
       const inst = Object.assign(new Element4sectionEntity(), {parent, section});
@@ -51,7 +57,10 @@ describe('Element section property entity', () => {
 
     test('Shouldn`t create without section', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
 
       const inst = Object.assign(new Element4sectionEntity(), {parent, property});

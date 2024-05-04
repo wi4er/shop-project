@@ -1,9 +1,9 @@
 import {
-  BaseEntity,
+  BaseEntity, Check,
   CreateDateColumn, DeleteDateColumn,
-  Entity,
+  Entity, Generated,
   ManyToOne,
-  OneToMany,
+  OneToMany, PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
@@ -24,6 +24,7 @@ import { Element2imageEntity } from './element2image.entity';
 import { WithImageEntity } from '../../common/model/with-image.entity';
 
 @Entity('content-element')
+@Check('not_empty_id', '"id" > \'\'')
 export class ElementEntity
   extends BaseEntity
   implements WithStringEntity<ElementEntity>,
@@ -32,8 +33,12 @@ export class ElementEntity
     WithPermissionEntity<ElementEntity>,
     WithImageEntity<ElementEntity> {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({
+    type: "varchar",
+    length: 50,
+    default: () => 'uuid_generate_v1()'
+  })
+  id: string;
 
   @CreateDateColumn()
   created_at: Date;

@@ -42,6 +42,7 @@ describe('FileController', () => {
           collection,
           original: 'short.txt',
           mimetype: 'text',
+          path: `txt/txt_${i}.txt`,
         }).save();
       }
 
@@ -62,6 +63,7 @@ describe('FileController', () => {
           collection,
           original: 'short.txt',
           mimetype: 'text',
+          path: `txt/txt_${i}.txt`,
         }).save();
       }
 
@@ -73,27 +75,9 @@ describe('FileController', () => {
       expect(res.body[0].id).toBe(9);
       expect(res.body[1].id).toBe(10);
     });
-
   });
 
   describe('File list filter', () => {
-    test('Should get list with collection filter', async () => {
-      const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-      for (let i = 0; i < 10; i++) {
-        await Object.assign(new FileEntity(), {
-          collection,
-          original: 'short.txt',
-          mimetype: 'text',
-        }).save();
-      }
-
-      const res = await request(app.getHttpServer())
-        .get('/file?filter[collection]=DETAIL')
-        .expect(200);
-
-      expect(res.body).toHaveLength(10);
-    });
-
     test('Should get list with collection filter', async () => {
       const collection1 = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const collection2 = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
@@ -103,6 +87,7 @@ describe('FileController', () => {
           collection: i % 2 === 0 ? collection1 : collection2,
           original: 'short.txt',
           mimetype: 'text',
+          path: `txt/txt_${i}.txt`,
         }).save();
       }
 
@@ -121,6 +106,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
 
       const res = await request(app.getHttpServer())
@@ -153,6 +139,7 @@ describe('FileController', () => {
           collection,
           original: 'short.txt',
           mimetype: 'text',
+          path: `txt/txt_${i}.txt`,
         }).save();
       }
 
@@ -171,6 +158,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       await Object.assign(new File4stringEntity(), {parent, property, string: 'VALUE'}).save();
@@ -192,6 +180,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
@@ -214,6 +203,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
       await Object.assign(new File2flagEntity(), {parent, flag}).save();
@@ -232,6 +222,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
 
       for (let i = 1; i < 4; i++) {
@@ -256,6 +247,7 @@ describe('FileController', () => {
           collection: 'SHORT',
           original: 'short.txt',
           mimetype: 'text',
+          path: 'txt/txt.txt',
         })
         .expect(201);
 
@@ -275,6 +267,7 @@ describe('FileController', () => {
         .send({
           collection: 'SHORT',
           mimetype: 'text',
+          path: 'txt/txt.txt',
         })
         .expect(400);
     });
@@ -286,6 +279,7 @@ describe('FileController', () => {
         .send({
           collection: 'SHORT',
           original: 'short.txt',
+          path: 'txt/txt.txt',
         })
         .expect(400);
     });
@@ -296,6 +290,7 @@ describe('FileController', () => {
         .send({
           original: 'short.txt',
           mimetype: 'text',
+          path: 'txt/txt.txt',
         })
         .expect(400);
     });
@@ -308,6 +303,7 @@ describe('FileController', () => {
           collection: 'WRONG',
           original: 'short.txt',
           mimetype: 'text',
+          path: 'txt/txt.txt',
         })
         .expect(400);
     });
@@ -322,6 +318,7 @@ describe('FileController', () => {
           collection: 'SHORT',
           original: 'short.txt',
           mimetype: 'text',
+          path: 'txt/txt.txt',
           property: [
             {property: 'NAME', string: 'VALUE'},
           ],
@@ -343,6 +340,7 @@ describe('FileController', () => {
           collection: 'SHORT',
           original: 'short.txt',
           mimetype: 'text',
+          path: 'txt/txt.txt',
           flag: ['ACTIVE'],
         })
         .expect(201);
@@ -358,6 +356,7 @@ describe('FileController', () => {
         collection: 'SHORT',
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
       const res = await request(app.getHttpServer())
         .put('/file/1')
@@ -374,6 +373,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
@@ -381,6 +381,10 @@ describe('FileController', () => {
         .put('/file/1')
         .send({
           id: 'NEW',
+          collection: 'SHORT',
+          original: 'short.txt',
+          mimetype: 'text',
+          path: 'txt/txt.txt',
           property: [
             {property: 'NAME', string: 'VALUE'},
           ],
@@ -398,13 +402,17 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const res = await request(app.getHttpServer())
         .put('/file/1')
         .send({
-          id: 'NEW',
+          collection: 'SHORT',
+          original: 'short.txt',
+          mimetype: 'text',
+          path: 'txt/txt.txt',
           flag: ['ACTIVE'],
         })
         .expect(200);
@@ -420,6 +428,7 @@ describe('FileController', () => {
         collection,
         original: 'short.txt',
         mimetype: 'text',
+        path: 'txt/txt.txt',
       }).save();
 
       const inst = await request(app.getHttpServer())

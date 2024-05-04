@@ -29,7 +29,7 @@ export class Element4elementUpdateOperation {
    * @param id
    * @private
    */
-  private async checkElement(id: number): Promise<ElementEntity> {
+  private async checkElement(id: string): Promise<ElementEntity> {
     const elemRepo = this.trans.getRepository(ElementEntity);
     const inst = await elemRepo.findOne({where: {id}});
 

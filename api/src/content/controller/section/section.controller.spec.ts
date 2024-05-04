@@ -307,7 +307,15 @@ describe('SectionController', () => {
     describe('Content section addition with', () => {
       test('Should add with image', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt1.txt`,
+          },
+        ).save();
         await new BlockEntity().save();
         await Object.assign(new SectionEntity(), {block: 1}).save();
 
@@ -438,7 +446,15 @@ describe('SectionController', () => {
     describe('Content section addition with image', () => {
       test('Should add with image', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt1.txt`,
+          },
+        ).save();
 
         await new BlockEntity().save();
 
@@ -454,7 +470,15 @@ describe('SectionController', () => {
 
       test('Shouldn`t add with wrong image', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt1.txt`,
+          },
+        ).save();
 
         await new BlockEntity().save();
 
@@ -521,7 +545,15 @@ describe('SectionController', () => {
     describe('Content section update with image', () => {
       test('Should add image', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-        await Object.assign(new FileEntity(), {collection}).save();
+        await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt1.txt`,
+          },
+        ).save();
         const block = await new BlockEntity().save();
         await Object.assign(new SectionEntity(), {block}).save();
 
@@ -535,7 +567,15 @@ describe('SectionController', () => {
 
       test('Should remove image', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-        const image = await Object.assign(new FileEntity(), {collection}).save();
+        const image = await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt1.txt`,
+          },
+        ).save();
         const block = await new BlockEntity().save();
         const parent = await Object.assign(new SectionEntity(), {block}).save();
         await Object.assign(new Section2imageEntity(), {parent, image}).save();

@@ -7,6 +7,7 @@ import { WithPermissionInput } from '../../common/input/with-permission.input';
 export class ElementInput
   implements WithPropertyInput, WithFlagInput, WithPermissionInput {
 
+  id: string;
   block: number;
 
   image: Array<number>;

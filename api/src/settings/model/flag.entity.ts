@@ -1,19 +1,20 @@
 import {
-  BaseEntity,
+  BaseEntity, Check,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryColumn,
-  UpdateDateColumn, VersionColumn
-} from "typeorm";
+  UpdateDateColumn, VersionColumn,
+} from 'typeorm';
 import { Flag4stringEntity } from "./flag4string.entity";
 import { Flag2flagEntity } from "./flag2flag.entity";
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 
 @Entity('settings-flag')
+@Check('not_empty_id', '"id" > \'\'')
 export class FlagEntity
   extends BaseEntity
   implements WithStringEntity<FlagEntity>, WithFlagEntity<FlagEntity> {

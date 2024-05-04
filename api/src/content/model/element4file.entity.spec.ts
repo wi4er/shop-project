@@ -25,9 +25,17 @@ describe('Element file property entity', () => {
 
     test('Shouldn`t create duplicate', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt.txt`,
+        },
+      ).save();
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await Object.assign(new Element4fileEntity(), {parent, property, file}).save();
@@ -39,7 +47,7 @@ describe('Element file property entity', () => {
 
     test('Shouldn`t create without file', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await expect(
@@ -49,7 +57,15 @@ describe('Element file property entity', () => {
 
     test('Shouldn`t create without parent', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt.txt`,
+        },
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await expect(
@@ -59,9 +75,17 @@ describe('Element file property entity', () => {
 
     test('Shouldn`t create without property', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt.txt`,
+        },
+      ).save();
 
       await expect(
         Object.assign(new Element4fileEntity(), {parent, file}).save(),
@@ -73,15 +97,23 @@ describe('Element file property entity', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-      const file = await Object.assign(new FileEntity(), {collection}).save();
+      const file = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt.txt`,
+        },
+      ).save();
 
       await Object.assign(new Element4fileEntity(), {parent, property, file}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'NAME'},
         relations: {file: {file: {collection: true}}},
       });
 
@@ -92,17 +124,26 @@ describe('Element file property entity', () => {
     test('Should create with multi file', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const file = await Object.assign(new FileEntity(), {collection}).save();
+        const file = await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt_${i}.txt`,
+
+          }
+        ).save();
         await Object.assign(new Element4fileEntity(), {parent, property, file}).save();
       }
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'NAME'},
         relations: {file: {file: {collection: true}}},
       });
 

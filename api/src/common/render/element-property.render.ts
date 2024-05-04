@@ -6,6 +6,6 @@ export class ElementPropertyRender {
   property: string
 
   @ApiProperty()
-  element: number;
+  element: string;
 
 }

@@ -43,7 +43,7 @@ export class ElementUpdateOperation {
    * @param id
    * @private
    */
-  private async checkElement(id: number): Promise<ElementEntity> {
+  private async checkElement(id: string): Promise<ElementEntity> {
     WrongDataException.assert(id, 'Element id expected!');
     const elementRepo = this.manager.getRepository(ElementEntity);
 
@@ -67,9 +67,10 @@ export class ElementUpdateOperation {
    * @param id
    * @param input
    */
-  async save(id: number, input: ElementInput): Promise<number> {
+  async save(id: string, input: ElementInput): Promise<string> {
     const beforeItem = await this.checkElement(id);
 
+    beforeItem.id = WrongDataException.assert(input.id, 'New id expected');
     beforeItem.block = await this.checkBlock(input.block);
     await beforeItem.save();
 

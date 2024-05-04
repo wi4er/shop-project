@@ -1,12 +1,12 @@
-import { DataSource } from "typeorm/data-source/DataSource";
-import { createConnection } from "typeorm";
-import { createConnectionOptions } from "../../createConnectionOptions";
-import { Element2sectionEntity } from "./element2section.entity";
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { createConnection } from 'typeorm';
+import { createConnectionOptions } from '../../createConnectionOptions';
+import { Element2sectionEntity } from './element2section.entity';
 import { ElementEntity } from './element.entity';
 import { BlockEntity } from './block.entity';
 import { SectionEntity } from './section.entity';
 
-describe("ElementSection entity", () => {
+describe('ElementSection entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -23,19 +23,25 @@ describe("ElementSection entity", () => {
 
     test('Shouldn`t create without section', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
 
       await expect(
-        Object.assign(new Element2sectionEntity(), {parent}).save()
+        Object.assign(new Element2sectionEntity(), {parent}).save(),
       ).rejects.toThrow('sectionId');
     });
 
     test('Shouldn`t create without parent', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const section = await Object.assign(new SectionEntity(), {block}).save();
+      const section = await Object.assign(
+        new SectionEntity(),
+        {block},
+      ).save();
 
       await expect(
-        Object.assign(new Element2sectionEntity(), {section}).save()
+        Object.assign(new Element2sectionEntity(), {section}).save(),
       ).rejects.toThrow('parentId');
     });
   });
@@ -45,13 +51,13 @@ describe("ElementSection entity", () => {
       const repo = source.getRepository(ElementEntity);
 
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const section = await Object.assign(new SectionEntity(), {block}).save();
 
       await Object.assign(new Element2sectionEntity(), {parent, section}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'NAME'},
         relations: {parent: {section: true}},
       });
 

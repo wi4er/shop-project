@@ -17,7 +17,7 @@ export class Element4elementInsertOperation {
    * @param id
    * @private
    */
-  private async checkElement(id: number): Promise<ElementEntity> {
+  private async checkElement(id: string): Promise<ElementEntity> {
     const propRepo = this.trans.getRepository(ElementEntity);
     const inst = await propRepo.findOne({where: {id}});
 
@@ -33,7 +33,7 @@ export class Element4elementInsertOperation {
     const propRepo = this.trans.getRepository(PropertyEntity);
     const inst = await propRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Wrong property ${id}`);
+    return WrongDataException.assert(inst, `Property with id ${id} not found!`);
   }
 
   /**

@@ -10,7 +10,7 @@ export class ElementDeleteOperation {
 
   }
 
-  async save(idList: number[]) {
+  async save(idList: string[]) {
     const elementRepo = this.manager.getRepository(ElementEntity);
 
     const result = [];

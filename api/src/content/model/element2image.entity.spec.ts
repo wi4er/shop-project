@@ -7,9 +7,8 @@ import { ElementEntity } from './element.entity';
 import { Element2imageEntity } from './element2image.entity';
 import { CollectionEntity } from '../../storage/model/collection.entity';
 import { FileEntity } from '../../storage/model/file.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
 
-describe("Element image entity", () => {
+describe('Element image entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -26,32 +25,48 @@ describe("Element image entity", () => {
 
     test('Shouldn`t create without file', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
 
       await expect(
-        Object.assign(new Element2imageEntity(), {parent}).save()
+        Object.assign(new Element2imageEntity(), {parent}).save(),
       ).rejects.toThrow('imageId');
     });
 
     test('Shouldn`t create without parent', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+          collection,
+        },
+      ).save();
 
       await expect(
-        Object.assign(new Element2sectionEntity(), {image}).save()
+        Object.assign(new Element2sectionEntity(), {image}).save(),
       ).rejects.toThrow('parentId');
     });
 
     test('Shouldn`t create duplicate', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+          collection,
+        },
+      ).save();
 
-      await Object.assign(new Element2imageEntity(), {parent, image}).save()
+      await Object.assign(new Element2imageEntity(), {parent, image}).save();
 
       await expect(
-        Object.assign(new Element2imageEntity(), {parent, image}).save()
+        Object.assign(new Element2imageEntity(), {parent, image}).save(),
       ).rejects.toThrow('duplicate');
     });
   });
@@ -60,14 +75,22 @@ describe("Element image entity", () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-      const image = await Object.assign(new FileEntity(), {collection}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+          collection,
+        },
+      ).save();
 
       await Object.assign(new Element2imageEntity(), {parent, image}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'NAME'},
         relations: {image: {image: {collection: true}}},
       });
 
@@ -78,16 +101,24 @@ describe("Element image entity", () => {
     test('Should create with multi image', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), {block}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const image = await Object.assign(new FileEntity(), {collection}).save();
+        const image = await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt_${i}.txt`,
+          }
+        ).save();
         await Object.assign(new Element2imageEntity(), {parent, image}).save();
       }
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'NAME'},
         relations: {image: {image: {collection: true}}},
       });
 

@@ -25,19 +25,19 @@ describe('ElementString entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new Element4stringEntity(), { string: 'VALUE', property }).save(),
+        Object.assign(new Element4stringEntity(), {string: 'VALUE', property}).save(),
       ).rejects.toThrow();
     });
 
     test('Shouldn`t create without property', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new ElementEntity(), { block }).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
 
       await expect(
-        Object.assign(new Element4stringEntity(), { string: 'VALUE', parent }).save(),
+        Object.assign(new Element4stringEntity(), {string: 'VALUE', parent}).save(),
       ).rejects.toThrow();
     });
   });
@@ -47,14 +47,17 @@ describe('ElementString entity', () => {
       const repo = source.getRepository(ElementEntity);
 
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
-      const parent = await Object.assign(new ElementEntity(), { block }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(
+        new ElementEntity(),
+        {id: 'NAME', block},
+      ).save();
 
-      await Object.assign(new Element4stringEntity(), { string: 'VALUE', parent, property }).save();
+      await Object.assign(new Element4stringEntity(), {string: 'VALUE', parent, property}).save();
 
       const inst = await repo.findOne({
-        where: { id: parent.id },
-        relations: { string: true },
+        where: {id: parent.id},
+        relations: {string: true},
       });
 
       expect(inst.string).toHaveLength(1);
@@ -63,18 +66,21 @@ describe('ElementString entity', () => {
 
     test('Should find with string sort', async () => {
       const block = await new BlockEntity().save();
-      const name = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
-      const gender = await Object.assign(new PropertyEntity(), { id: 'GENDER' }).save();
+      const name = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const gender = await Object.assign(new PropertyEntity(), {id: 'GENDER'}).save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, { block }).save();
-        await Object.assign(
-          new Element4stringEntity(),
-          { parent, property: name, string: `VALUE_${(Math.random()*10>>0).toString().padStart(2, '0')}` }
+        const parent = await Object.assign(
+          new ElementEntity,
+          {id: `NAME_${i}`, block}
         ).save();
         await Object.assign(
           new Element4stringEntity(),
-          { parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}` }
+          {parent, property: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
+        ).save();
+        await Object.assign(
+          new Element4stringEntity(),
+          {parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
         ).save();
       }
 
@@ -83,7 +89,7 @@ describe('ElementString entity', () => {
 
       query.select('*');
       query.from(ElementEntity, 'ce');
-      query.orderBy()
+      query.orderBy();
 
       const res = await query.getRawMany();
     });
