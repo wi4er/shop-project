@@ -36,9 +36,9 @@ export class ElementListComponent implements OnChanges {
   propertyList: string[] = [];
   flagList: string[] = [];
   imageList: {
-    [id: number]: Array<{
+    [id: string]: Array<{
       path: string,
-    }>
+    }> | null
   } = {};
   columns: string[] = [];
   list: { [key: string]: string }[] = [];
@@ -106,7 +106,7 @@ export class ElementListComponent implements OnChanges {
 
       for (const image of item.image) {
         if (!this.imageList[item.id]) this.imageList[item.id] = [];
-        this.imageList[item.id].push(image);
+        this.imageList[item.id]?.push(image);
       }
 
       for (const it of item.property) {
@@ -142,19 +142,6 @@ export class ElementListComponent implements OnChanges {
     });
   }
 
-  updateItem(id: number) {
-    const dialog = this.dialog.open(
-      ElementFormComponent,
-      {
-        width: '1000px',
-        panelClass: 'wrapper',
-        data: {block: this.blockId, id},
-      },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
-  }
-
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -171,9 +158,23 @@ export class ElementListComponent implements OnChanges {
     const dialog = this.dialog.open(
       ElementFormComponent,
       {
+        // width: '1000px',
+        panelClass: 'wrapper',
+
+        data: {block: this.blockId},
+      },
+    );
+
+    dialog.afterClosed().subscribe(() => this.refreshData());
+  }
+
+  updateItem(id: number) {
+    const dialog = this.dialog.open(
+      ElementFormComponent,
+      {
         width: '1000px',
         panelClass: 'wrapper',
-        data: {block: this.blockId},
+        data: {block: this.blockId, id},
       },
     );
 

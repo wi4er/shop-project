@@ -44,22 +44,22 @@ export class ElementUpdateOperation {
    * @private
    */
   private async checkElement(id: string): Promise<ElementEntity> {
-    WrongDataException.assert(id, 'Element id expected!');
     const elementRepo = this.manager.getRepository(ElementEntity);
 
-    const inst = await elementRepo.findOne({
-      where: {id},
-      relations: {
-        image: {image: true},
-        string: {property: true},
-        flag: {flag: true},
-        point: {point: true, property: true},
-        element: {element: true, property: true},
-      },
-    });
-    NoDataException.assert(inst, `Element with id ${id} not found!`);
-
-    return inst;
+    return NoDataException.assert(
+      await elementRepo.findOne({
+        where: {id},
+        relations: {
+          image: {image: true},
+          string: {property: true},
+          flag: {flag: true},
+          point: {point: true, property: true},
+          element: {element: true, property: true},
+          permission: {group: true},
+        },
+      }),
+      `Element with id ${id} not found!`,
+    );
   }
 
   /**
@@ -68,11 +68,16 @@ export class ElementUpdateOperation {
    * @param input
    */
   async save(id: string, input: ElementInput): Promise<string> {
-    const beforeItem = await this.checkElement(id);
+    try {
+      await this.manager.update(ElementEntity, {id}, {
+        id:  WrongDataException.assert(input.id, 'Element id expected'),
+        block: await this.checkBlock(input.block),
+      });
+    } catch (err) {
+      throw new WrongDataException(err.message);
+    }
 
-    beforeItem.id = WrongDataException.assert(input.id, 'New id expected');
-    beforeItem.block = await this.checkBlock(input.block);
-    await beforeItem.save();
+    const beforeItem = await this.checkElement(input.id);
 
     const [stringList, pointList, elemList] = filterProperties(input.property);
     await new ImageUpdateOperation(this.manager, Element2imageEntity).save(beforeItem, input.image);
@@ -81,7 +86,7 @@ export class ElementUpdateOperation {
     await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList);
     await new Element4elementUpdateOperation(this.manager).save(beforeItem, elemList);
 
-    return beforeItem.id;
+    return input.id;
   }
 
 }

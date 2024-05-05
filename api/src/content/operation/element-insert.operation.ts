@@ -46,7 +46,11 @@ export class ElementInsertOperation {
     this.created.id = input.id;
     this.created.block = await this.checkBlock(input.block);
 
-    await this.manager.insert(ElementEntity, this.created);
+    try {
+      await this.manager.insert(ElementEntity, this.created);
+    } catch(err) {
+      throw new WrongDataException(err.message);
+    }
 
     const [stringList, pointList, elementList] = filterProperties(input.property);
 

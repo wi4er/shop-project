@@ -40,6 +40,7 @@ export class Element4stringEntity
     element => element.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

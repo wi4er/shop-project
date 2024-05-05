@@ -21,8 +21,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { PersonalModule } from '../personal/personal.module';
 import { HttpClientModule } from '@angular/common/http';
-import { MatCard, MatCardModule } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { StorageModule } from '../storage/storage.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { StorageModule } from '../storage/storage.module';
     MatInputModule,
     MatTabsModule,
     MatCardModule,
+    MatSnackBarModule,
     PersonalModule,
     StorageModule,
   ],

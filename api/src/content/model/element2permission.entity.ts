@@ -37,6 +37,7 @@ export class Element2permissionEntity
     element => element.permission,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

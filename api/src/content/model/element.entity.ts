@@ -36,7 +36,7 @@ export class ElementEntity
   @PrimaryColumn({
     type: "varchar",
     length: 50,
-    default: () => 'uuid_generate_v1()'
+    default: () => 'uuid_generate_v4()',
   })
   id: string;
 

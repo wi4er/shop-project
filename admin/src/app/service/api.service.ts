@@ -116,22 +116,22 @@ export class ApiService {
    * @param entity
    * @param item
    */
-  postData<T>(entity: ApiEntity, item: T): Promise<Response> {
+  postData<T>(entity: ApiEntity, item: T): Promise<string> {
     const url = [
       this.apiUrl,
       entity,
     ].join('/');
 
-    const req = fetch(url, {
+    return fetch(url, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify(item),
-    });
-
-    return req;
+    }).then(res => res.json().then(reason => {
+      return res.ok ?reason : Promise.reject(reason.message);
+    }));
   }
 
   putData<T>(entity: ApiEntity, id: string | number, item: T): Promise<Response> {
@@ -148,7 +148,9 @@ export class ApiService {
       },
       credentials: 'include',
       body: JSON.stringify(item),
-    }).then();
+    }).then(res => res.json().then(reason => {
+      return res.ok ?reason : Promise.reject(reason.message);
+    }));
 
     return req;
   }
@@ -174,7 +176,6 @@ export class ApiService {
         return res.json();
       }));
     }
-
 
     return Promise.all(reqList);
   }

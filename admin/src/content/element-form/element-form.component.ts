@@ -6,8 +6,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element-input';
-import { HttpClient } from '@angular/common/http';
 import { Collection } from '../../app/model/storage/collection';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-element-form',
@@ -32,7 +32,7 @@ export class ElementFormComponent {
   collectionList: Array<Collection> = [];
 
   imageList: {
-    [collection: string]:Array<{
+    [collection: string]: Array<{
       id: number,
       path: string,
       original: string,
@@ -54,7 +54,7 @@ export class ElementFormComponent {
     private dialogRef: MatDialogRef<ElementFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
-    private http: HttpClient,
+    private errorBar: MatSnackBar,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -105,6 +105,7 @@ export class ElementFormComponent {
   }
 
   toEdit(item: Element) {
+    this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
@@ -136,7 +137,7 @@ export class ElementFormComponent {
 
   toInput(): ElementInput {
     const input: ElementInput = {
-      id: this.data?.id,
+      id: this.id || undefined,
       block: this.data?.block ?? 1,
       image: [],
       property: [],
@@ -180,9 +181,7 @@ export class ElementFormComponent {
     }
 
     for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
+      if (this.editFlags[flag]) input.flag.push(flag);
     }
 
     return input;
@@ -210,14 +209,22 @@ export class ElementFormComponent {
     if (this.data?.id) {
       this.apiService.putData<ElementInput>(
         ApiEntity.ELEMENT,
-        this.id,
+        this.data.id,
         this.toInput(),
-      ).then(() => this.dialogRef.close());
+      )
+        .then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
     } else {
       this.apiService.postData<ElementInput>(
         ApiEntity.ELEMENT,
         this.toInput(),
-      ).then(() => this.dialogRef.close());
+      )
+        .then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
     }
   }
 

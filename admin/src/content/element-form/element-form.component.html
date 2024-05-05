@@ -8,17 +8,13 @@
   </h2>
 
   <mat-dialog-content>
-    <mat-form-field
-      *ngIf="data?.id"
-      appearance="fill"
-    >
+    <mat-form-field appearance="fill">
       <mat-label>ID</mat-label>
 
       <input
         matInput
         name="id"
         [(ngModel)]="id"
-        disabled
       />
     </mat-form-field>
 

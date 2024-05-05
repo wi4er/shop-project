@@ -840,6 +840,25 @@ describe('ElementController', () => {
       expect(item.body.block).toBe(1);
     });
 
+    test('Should change element id', async () => {
+      const cookie = await createSession();
+      await new BlockEntity().save();
+      const parent = await createElement();
+
+      await request(app.getHttpServer())
+        .put(`/element/${parent.id}`)
+        .send({id: 'SOME', block: 1})
+        .set('cookie', cookie)
+        .expect(200);
+
+      const item = await request(app.getHttpServer())
+        .get(`/element/SOME`)
+        .set('cookie', cookie)
+        .expect(200);
+
+      expect(item.body.id).toBe('SOME');
+    });
+
     test('Should change element block', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
@@ -848,7 +867,7 @@ describe('ElementController', () => {
 
       const item = await request(app.getHttpServer())
         .put(`/element/${parent.id}`)
-        .send({id: 1, block: 2})
+        .send({id: parent.id, block: 2})
         .set('cookie', cookie)
         .expect(200);
 

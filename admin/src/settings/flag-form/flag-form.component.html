@@ -7,63 +7,63 @@
     Update flag #{{data?.id}}
   </h2>
 
-  <mat-form-field
-    appearance="fill"
-  >
-    <mat-label>ID</mat-label>
-
-    <input
-      matInput
-      name="id"
-      [(ngModel)]="id"
-    />
-  </mat-form-field>
-
-  <div *ngIf="!!data?.id">
+  <mat-dialog-content>
     <mat-form-field appearance="fill">
-      <mat-label>Created at</mat-label>
+      <mat-label>ID</mat-label>
 
       <input
         matInput
-        name="created_at"
-        [(ngModel)]="created_at"
-        disabled
+        name="id"
+        [(ngModel)]="id"
       />
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Updated at</mat-label>
+    <div *ngIf="!!data?.id">
+      <mat-form-field appearance="fill">
+        <mat-label>Created at</mat-label>
 
-      <input
-        matInput
-        name="updated_at"
-        [(ngModel)]="updated_at"
-        disabled
-      />
-    </mat-form-field>
-  </div>
+        <input
+          matInput
+          name="created_at"
+          [(ngModel)]="created_at"
+          disabled
+        />
+      </mat-form-field>
 
-  <mat-tab-group dynamicHeight>
-    <mat-tab
-      [label]="'Properties ( ' + getPropertyCount() + ' )'"
-    >
-      <app-property-edit
-        [edit]="editProperties"
-        [list]="propertyList"
-        [lang]="langList"
-      ></app-property-edit>
-    </mat-tab>
+      <mat-form-field appearance="fill">
+        <mat-label>Updated at</mat-label>
 
-    <mat-tab
-      label="Flags"
-      *ngIf="flagList.length"
-    >
-      <app-flag-edit
-        [list]="flagList"
-        [edit]="editFlags"
-      ></app-flag-edit>
-    </mat-tab>
-  </mat-tab-group>
+        <input
+          matInput
+          name="updated_at"
+          [(ngModel)]="updated_at"
+          disabled
+        />
+      </mat-form-field>
+    </div>
+
+    <mat-tab-group dynamicHeight>
+      <mat-tab
+        [label]="'Properties ( ' + getPropertyCount() + ' )'"
+      >
+        <app-property-edit
+          [edit]="editProperties"
+          [list]="propertyList"
+          [lang]="langList"
+        ></app-property-edit>
+      </mat-tab>
+
+      <mat-tab
+        label="Flags"
+        *ngIf="flagList.length"
+      >
+        <app-flag-edit
+          [list]="flagList"
+          [edit]="editFlags"
+        ></app-flag-edit>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
 
   <mat-dialog-actions align="end">
     <button
