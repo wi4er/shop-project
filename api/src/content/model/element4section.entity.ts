@@ -35,6 +35,7 @@ export class Element4sectionEntity extends BaseEntity {
     element => element.section,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -45,6 +46,7 @@ export class Element4sectionEntity extends BaseEntity {
     section => section.element,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -54,6 +56,7 @@ export class Element4sectionEntity extends BaseEntity {
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

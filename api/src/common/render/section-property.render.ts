@@ -6,6 +6,6 @@ export class SectionPropertyRender {
   property: string;
 
   @ApiProperty()
-  section: number;
+  section: string;
 
 }

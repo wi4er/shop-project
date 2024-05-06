@@ -36,6 +36,7 @@ export class Section4pointEntity
     () => PointEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -46,6 +47,7 @@ export class Section4pointEntity
     element => element.point,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -55,6 +57,7 @@ export class Section4pointEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

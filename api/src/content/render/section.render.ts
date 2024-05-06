@@ -34,7 +34,7 @@ export class SectionRender {
   }
 
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: 'Id from content block',
@@ -51,7 +51,7 @@ export class SectionRender {
   version: number;
 
   @ApiProperty()
-  parent: number;
+  parent: string;
 
   @ApiProperty()
   image: Array<ImageRender>;

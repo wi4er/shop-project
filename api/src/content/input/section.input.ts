@@ -4,9 +4,10 @@ import { WithFlagInput } from '../../common/input/with-flag.input';
 
 export class SectionInput implements WithPropertyInput, WithFlagInput {
 
+  id: string;
   block: number;
 
-  parent?: number;
+  parent?: string;
   image: Array<number>;
 
   property: PropertyValueInput[];

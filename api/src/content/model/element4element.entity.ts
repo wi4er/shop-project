@@ -31,6 +31,7 @@ export class Element4elementEntity extends BaseEntity {
     () => ElementEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -41,6 +42,7 @@ export class Element4elementEntity extends BaseEntity {
     element => element.point,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -50,6 +52,7 @@ export class Element4elementEntity extends BaseEntity {
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

@@ -17,13 +17,23 @@ describe('Section entity', () => {
   describe('Section fields', () => {
     test('Should create section', async () => {
       const block = await new BlockEntity().save();
-      const section = await Object.assign(new SectionEntity(), {block}).save();
+      const section = await Object.assign(
+        new SectionEntity(),
+        {id: 'SECTION', block}
+      ).save();
 
-      expect(section.id).toBe(1);
+      expect(section.id).toBe('SECTION');
       expect(section.created_at).toBeDefined();
       expect(section.updated_at).toBeDefined();
       expect(section.deleted_at).toBeNull();
       expect(section.version).toBe(1);
+    });
+
+    test('Should create without id', async () => {
+      const block = await new BlockEntity().save();
+      const section = await Object.assign(new SectionEntity(), {block}).save();
+
+      expect(section.id).toHaveLength(36);
     });
 
     test('Should get empty list', async () => {
@@ -37,31 +47,43 @@ describe('Section entity', () => {
       const repo = source.getRepository(SectionEntity);
 
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
-      await Object.assign(new SectionEntity(), {block, parent}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'PARENT', block},
+      ).save();
+      await Object.assign(
+        new SectionEntity(),
+        {id: 'CHILD', block, parent},
+      ).save();
 
       const inst = await repo.findOne({
-        where: {id: 2},
+        where: {id: 'CHILD'},
         relations: {parent: true},
       });
 
-      expect(inst.parent.id).toBe(1);
+      expect(inst.parent.id).toBe('PARENT');
     });
 
     test('Should create with children', async () => {
       const repo = source.getRepository(SectionEntity);
 
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
-      await Object.assign(new SectionEntity(), {block, parent}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'PARENT', block},
+      ).save();
+      await Object.assign(
+        new SectionEntity(),
+        {id: 'CHILD', block, parent},
+      ).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'PARENT'},
         relations: {children: true},
       });
 
       expect(inst.children).toHaveLength(1);
-      expect(inst.children[0].id).toBe(2);
+      expect(inst.children[0].id).toBe('CHILD');
     });
   });
 });

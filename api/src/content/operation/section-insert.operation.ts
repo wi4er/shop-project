@@ -33,7 +33,7 @@ export class SectionInsertOperation {
 
     return WrongDataException.assert(
       await blockRepo.findOne({where: {id}}),
-      `Block with id ${id} not found!`
+      `Block with id ${id} not found!`,
     );
   }
 
@@ -42,12 +42,12 @@ export class SectionInsertOperation {
    * @param id
    * @private
    */
-  private async checkSection(id: number): Promise<SectionEntity> {
+  private async checkSection(id: string): Promise<SectionEntity> {
     const sectionRepo = this.manager.getRepository<SectionEntity>(SectionEntity);
 
     return WrongDataException.assert(
       await sectionRepo.findOne({where: {id}}),
-      `Section with id ${id} not found!`
+      `Section with id ${id} not found!`,
     );
   }
 
@@ -55,17 +55,21 @@ export class SectionInsertOperation {
    *
    * @param input
    */
-  async save(input: SectionInput): Promise<number> {
+  async save(input: SectionInput): Promise<string> {
+    this.created.id = input.id;
     this.created.block = await this.checkBlock(input.block);
     if (input.parent) this.created.parent = await this.checkSection(input.parent);
 
-    await this.manager.save(this.created);
+    try {
+      await this.manager.insert(SectionEntity, this.created);
+    } catch (err) {
+      throw new WrongDataException(err.message);
+    }
 
     const [stringList, pointList] = filterProperties(input.property);
 
     await new ImageInsertOperation(this.manager, Section2imageEntity).save(this.created, input.image);
     await new FlagValueInsertOperation(this.manager, Section2flagEntity).save(this.created, input);
-
     await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pointList);
 

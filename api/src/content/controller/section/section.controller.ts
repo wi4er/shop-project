@@ -36,7 +36,6 @@ export class SectionController {
     return new SectionRender(item);
   }
 
-  @Get()
   @ApiParam({
     name: 'offset',
     required: false,
@@ -50,6 +49,7 @@ export class SectionController {
     description: 'Content section',
     type: [SectionRender],
   })
+  @Get()
   async getList(
     @Query('filter')
       filter?: SectionFilterInput,
@@ -83,24 +83,27 @@ export class SectionController {
   ): Promise<{ count: number }> {
     const where = {};
 
+    if (filter?.block) {
+      where['block'] = {id: filter.block};
+    }
+
     if (filter?.flag) {
       where['flag'] = {flag: {id: filter.flag.eq}};
     }
 
-    return this.sectionRepo.count({
-      where,
-    }).then(count => ({count}));
+    return this.sectionRepo.count({where})
+      .then(count => ({count}));
   }
 
-  @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'Content section',
     type: SectionRender,
   })
+  @Get(':id')
   async getItem(
     @Param('id')
-      id: number,
+      id: string,
   ): Promise<SectionRender> {
     return this.sectionRepo.findOne({
       where: {id},
@@ -108,12 +111,12 @@ export class SectionController {
     }).then(this.toView);
   }
 
-  @Post()
   @ApiResponse({
     status: 201,
     description: 'Content section',
     type: SectionRender,
   })
+  @Post()
   addItem(
     @Body()
       input: SectionInput,
@@ -127,15 +130,15 @@ export class SectionController {
     ).then(this.toView);
   }
 
-  @Put(':id')
   @ApiResponse({
     status: 200,
     description: 'Content section',
     type: SectionRender,
   })
+  @Put(':id')
   updateItem(
     @Param('id')
-      sectionId: number,
+      sectionId: string,
     @Body()
       input: SectionInput,
   ): Promise<SectionRender> {

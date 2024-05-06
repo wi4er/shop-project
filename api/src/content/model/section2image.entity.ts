@@ -34,6 +34,7 @@ export class Section2imageEntity
     section => section.image,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

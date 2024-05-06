@@ -97,7 +97,10 @@ describe('Section file property entity', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(SectionEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'SECTION', block},
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const file = await Object.assign(
@@ -113,7 +116,7 @@ describe('Section file property entity', () => {
       await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'SECTION'},
         relations: {file: {file: {collection: true}}},
       });
 
@@ -124,7 +127,10 @@ describe('Section file property entity', () => {
     test('Should create with multi file', async () => {
       const repo = source.getRepository(SectionEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'SECTION', block},
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
@@ -142,7 +148,7 @@ describe('Section file property entity', () => {
       }
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'SECTION'},
         relations: {file: {file: {collection: true}}},
       });
 

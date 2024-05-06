@@ -81,7 +81,7 @@ describe('Section point property entity', () => {
       await Object.assign(new Section4pointEntity(), {parent, property, point}).save();
       await expect(
         Object.assign(new Section4pointEntity(), {parent, property, point}).save(),
-      ).rejects.toThrow();
+      ).rejects.toThrow('duplicate');
     });
   });
 });

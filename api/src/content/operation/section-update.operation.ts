@@ -11,6 +11,7 @@ import { SectionEntity } from '../model/section.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { ImageUpdateOperation } from '../../common/operation/image-update.operation';
 import { Section2imageEntity } from '../model/section2image.entity';
+import { ElementEntity } from '../model/element.entity';
 
 export class SectionUpdateOperation {
 
@@ -39,7 +40,7 @@ export class SectionUpdateOperation {
    * @param id
    * @private
    */
-  private async checkSection(id: number): Promise<SectionEntity> {
+  private async checkSection(id: string): Promise<SectionEntity> {
     const sectionRepo = this.manager.getRepository(SectionEntity);
 
     return NoDataException.assert(
@@ -55,7 +56,7 @@ export class SectionUpdateOperation {
     );
   }
 
-  private async checkParent(id: number): Promise<SectionEntity> {
+  private async checkParent(id: string): Promise<SectionEntity> {
     const sectionRepo = this.manager.getRepository(SectionEntity);
 
     return WrongDataException.assert(
@@ -69,17 +70,18 @@ export class SectionUpdateOperation {
    * @param id
    * @param input
    */
-  async save(id: number, input: SectionInput): Promise<number> {
-    const beforeItem = await this.checkSection(id);
-
-    beforeItem.block = await this.checkBlock(input.block);
-    if (input.parent) {
-      beforeItem.parent = await this.checkParent(input.parent);
-    } else {
-      beforeItem.parent = null;
+  async save(id: string, input: SectionInput): Promise<string> {
+    try {
+      await this.manager.update(SectionEntity, {id}, {
+        id:  WrongDataException.assert(input.id, 'Section id expected'),
+        block: await this.checkBlock(input.block),
+        parent: input.parent ? await this.checkParent(input.parent) : null,
+      });
+    } catch (err) {
+      throw new WrongDataException(err.message);
     }
-    await beforeItem.save();
 
+    const beforeItem = await this.checkSection(input.id);
     const [stringList, pointList] = filterProperties(input.property);
     await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
     await new ImageUpdateOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);

@@ -44,6 +44,7 @@ export class Element4fileEntity
     element => element.file,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -53,6 +54,7 @@ export class Element4fileEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

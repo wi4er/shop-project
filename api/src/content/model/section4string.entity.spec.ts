@@ -25,21 +25,21 @@ describe('SectionString entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       await expect(Object.assign(
         new Section4stringEntity(),
-        { string: 'VALUE', property },
+        {string: 'VALUE', property},
       ).save()).rejects.toThrow();
     });
 
     test('Shouldn`t create without property', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), { block }).save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
 
       await expect(Object.assign(
         new Section4stringEntity(),
-        { string: 'VALUE', parent },
+        {string: 'VALUE', parent},
       ).save()).rejects.toThrow();
     });
   });
@@ -49,17 +49,17 @@ describe('SectionString entity', () => {
       const repo = source.getRepository(SectionEntity);
 
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), { id: 'NAME' }).save();
-      const parent = await Object.assign(new SectionEntity(), { block }).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
 
       await Object.assign(
         new Section4stringEntity(),
-        { string: 'VALUE', parent, property },
+        {string: 'VALUE', parent, property},
       ).save();
 
       const inst = await repo.findOne({
-        where: { id: parent.id },
-        relations: { string: true },
+        where: {id: parent.id},
+        relations: {string: true},
       });
 
       expect(inst.string).toHaveLength(1);

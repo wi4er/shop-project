@@ -36,6 +36,7 @@ export class Element2imageEntity
     element => element.image,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

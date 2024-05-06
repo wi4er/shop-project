@@ -37,6 +37,7 @@ export class Section2permissionEntity
     section => section.permission,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     }
   )

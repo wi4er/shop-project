@@ -8,7 +8,7 @@ import { PropertyEntity } from '../../settings/model/property.entity';
 import { Section2imageEntity } from './section2image.entity';
 import { SectionEntity } from './section.entity';
 
-describe("Section image entity", () => {
+describe('Section image entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -28,7 +28,7 @@ describe("Section image entity", () => {
       const parent = await Object.assign(new SectionEntity(), {block}).save();
 
       await expect(
-        Object.assign(new Section2imageEntity(), {parent}).save()
+        Object.assign(new Section2imageEntity(), {parent}).save(),
       ).rejects.toThrow('imageId');
     });
 
@@ -45,7 +45,7 @@ describe("Section image entity", () => {
       ).save();
 
       await expect(
-        Object.assign(new Section2imageEntity(), {image}).save()
+        Object.assign(new Section2imageEntity(), {image}).save(),
       ).rejects.toThrow('parentId');
     });
 
@@ -63,10 +63,10 @@ describe("Section image entity", () => {
         },
       ).save();
 
-      await Object.assign(new Section2imageEntity(), {parent, image}).save()
+      await Object.assign(new Section2imageEntity(), {parent, image}).save();
 
       await expect(
-        Object.assign(new Section2imageEntity(), {parent, image}).save()
+        Object.assign(new Section2imageEntity(), {parent, image}).save(),
       ).rejects.toThrow('duplicate');
     });
   });
@@ -75,7 +75,10 @@ describe("Section image entity", () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(SectionEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'SECTION', block},
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const image = await Object.assign(
@@ -91,7 +94,7 @@ describe("Section image entity", () => {
       await Object.assign(new Section2imageEntity(), {parent, property, image}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'SECTION'},
         relations: {image: {image: {collection: true}}},
       });
 
@@ -102,7 +105,10 @@ describe("Section image entity", () => {
     test('Should create with multi image', async () => {
       const repo = source.getRepository(SectionEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'SECTION',block}
+      ).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
@@ -120,7 +126,7 @@ describe("Section image entity", () => {
       }
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'SECTION'},
         relations: {image: {image: {collection: true}}},
       });
 

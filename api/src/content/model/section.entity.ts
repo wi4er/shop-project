@@ -3,7 +3,7 @@ import {
   CreateDateColumn, DeleteDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
+  OneToMany, PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
@@ -18,7 +18,6 @@ import { Section2permissionEntity } from './section2permission.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 import { WithPermissionEntity } from '../../common/model/with-permission.entity';
 import { Section4fileEntity } from './section4file.entity';
-import { Element2imageEntity } from './element2image.entity';
 import { Section2imageEntity } from './section2image.entity';
 
 @Entity('content-section')
@@ -29,8 +28,12 @@ export class SectionEntity
     WithPointEntity<SectionEntity>,
     WithPermissionEntity<SectionEntity> {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({
+    type: "varchar",
+    length: 50,
+    default: () => 'uuid_generate_v4()',
+  })
+  id: string;
 
   @CreateDateColumn()
   created_at: Date;

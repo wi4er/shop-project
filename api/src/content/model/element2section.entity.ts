@@ -35,6 +35,7 @@ export class Element2sectionEntity
     element => element.section,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -45,6 +46,7 @@ export class Element2sectionEntity
     section => section.element,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

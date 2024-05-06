@@ -79,7 +79,7 @@ export class ElementRender {
   version: number;
 
   @ApiProperty()
-  section: Array<number>;
+  section: Array<string>;
 
   @ApiProperty()
   image: Array<ImageRender>;

@@ -43,14 +43,14 @@ describe('SectionController', () => {
 
     test('Should get section list', async () => {
       await new BlockEntity().save();
-      await Object.assign(new SectionEntity(), {block: 1}).save();
+      await Object.assign(new SectionEntity(), {id: 'SECTION', block: 1}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].id).toBe(1);
+      expect(list.body[0].id).toBe('SECTION');
       expect(list.body[0].block).toBe(1);
     });
 
@@ -71,36 +71,44 @@ describe('SectionController', () => {
 
     test('Should get section item', async () => {
       await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block: 1}).save();
-      await Object.assign(new SectionEntity(), {block: 1, parent}).save();
+      await Object.assign(new SectionEntity(), {id: 'SECTION', block: 1}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/section/2')
+        .get('/section/SECTION')
         .expect(200);
 
-      expect(list.body.id).toBe(2);
+      expect(list.body.id).toBe('SECTION');
       expect(list.body.block).toBe(1);
-      expect(list.body.parent).toBe(1);
     });
 
     test('Should get section with parent', async () => {
       await new BlockEntity().save();
-      const parent = await Object.assign(new SectionEntity(), {block: 1}).save();
-      await Object.assign(new SectionEntity(), {block: 1, parent}).save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'PARENT', block: 1},
+      ).save();
+      await Object.assign(
+        new SectionEntity(),
+        {id: 'CHILD', block: 1, parent},
+      ).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')
         .expect(200);
 
       expect(list.body).toHaveLength(2);
-      expect(list.body[1].id).toBe(2);
-      expect(list.body[1].parent).toBe(1);
+      expect(list.body[0].id).toBe('PARENT');
+      expect(list.body[1].id).toBe('CHILD');
+      expect(list.body[1].parent).toBe('PARENT');
     });
 
     test('Should get with limit', async () => {
       await new BlockEntity().save();
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new SectionEntity(), {block: 1}).save();
+        await Object.assign(
+          new SectionEntity(),
+          {id: `SECTION_${i.toString().padStart(2, '0')}`, block: 1},
+        ).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -108,15 +116,19 @@ describe('SectionController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(3);
-      expect(list.body[0].id).toBe(1);
-      expect(list.body[2].id).toBe(3);
+      expect(list.body[0].id).toBe('SECTION_00');
+      expect(list.body[1].id).toBe('SECTION_01');
+      expect(list.body[2].id).toBe('SECTION_02');
     });
 
     test('Should get with offset', async () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new SectionEntity(), {block: 1}).save();
+        await Object.assign(
+          new SectionEntity(),
+          {id: `SECTION_${i.toString().padStart(2, '0')}`, block: 1},
+        ).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -124,12 +136,12 @@ describe('SectionController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(4);
-      expect(list.body[0].id).toBe(7);
-      expect(list.body[3].id).toBe(10);
+      expect(list.body[0].id).toBe('SECTION_06');
+      expect(list.body[3].id).toBe('SECTION_09');
     });
   });
 
-  describe('Content section count', () => {
+  describe('Content section empty count', () => {
     test('Should get empty section count', async () => {
       const list = await request(app.getHttpServer())
         .get('/section/count')
@@ -138,7 +150,7 @@ describe('SectionController', () => {
       expect(list.body).toEqual({count: 0});
     });
 
-    test('Should get empty section count', async () => {
+    test('Should get section list count', async () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
@@ -150,6 +162,21 @@ describe('SectionController', () => {
         .expect(200);
 
       expect(list.body).toEqual({count: 10});
+    });
+
+    test('Should get count with filter', async () => {
+      await Object.assign(new BlockEntity(), {}).save();
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new SectionEntity(), {block: i % 2 + 1}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section/count?filter[block]=1')
+        .expect(200);
+
+      expect(list.body).toEqual({count: 5});
     });
   });
 
@@ -165,7 +192,6 @@ describe('SectionController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].id).toBe(1);
       expect(list.body[0].property).toHaveLength(1);
       expect(list.body[0].property[0].string).toBe('VALUE');
       expect(list.body[0].property[0].property).toBe('NAME');
@@ -183,7 +209,6 @@ describe('SectionController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].id).toBe(1);
       expect(list.body[0].property).toHaveLength(1);
       expect(list.body[0].property[0].string).toBe('WITH_LANG');
       expect(list.body[0].property[0].property).toBe('NAME');
@@ -204,6 +229,22 @@ describe('SectionController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['ACTIVE']);
+    });
+
+    test('Should get with flag list', async () => {
+      const block = await new BlockEntity().save();
+      const parent = await Object.assign(new SectionEntity(), {block}).save();
+      for (let i = 1; i <= 5; i++) {
+        const flag = await Object.assign(new FlagEntity(), {id: `ACTIVE_${i}`}).save();
+        await Object.assign(new Section2flagEntity(), {parent, flag}).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section')
+        .expect(200);
+
+      expect(list.body).toHaveLength(1);
+      expect(list.body[0].flag).toEqual(['ACTIVE_1', 'ACTIVE_2', 'ACTIVE_3', 'ACTIVE_4', 'ACTIVE_5']);
     });
   });
 
@@ -269,16 +310,16 @@ describe('SectionController', () => {
     describe('Content section addition with parent', () => {
       test('Should add with parent', async () => {
         await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block: 1}).save();
+        await Object.assign(new SectionEntity(), {id: 'PARENT', block: 1}).save();
 
         const inst = await request(app.getHttpServer())
           .post('/section')
-          .send({block: 1, parent: 1})
+          .send({id: 'SECTION', block: 1, parent: 'PARENT'})
           .expect(201);
 
-        expect(inst.body['id']).toBe(2);
-        expect(inst.body['block']).toBe(1);
-        expect(inst.body['parent']).toBe(1);
+        expect(inst.body.id).toBe('SECTION');
+        expect(inst.body.block).toBe(1);
+        expect(inst.body.parent).toBe('PARENT');
       });
 
       test('Should add without parent', async () => {
@@ -289,8 +330,6 @@ describe('SectionController', () => {
           .send({block: 1})
           .expect(201);
 
-        expect(inst.body['id']).toBe(1);
-        expect(inst.body['block']).toBe(1);
         expect(inst.body['parent']).toBeUndefined();
       });
 
@@ -299,7 +338,7 @@ describe('SectionController', () => {
 
         await request(app.getHttpServer())
           .post('/section')
-          .send({block: 1, parent: 777})
+          .send({block: 1, parent: 'WRONG'})
           .expect(400);
       });
     });
@@ -508,35 +547,59 @@ describe('SectionController', () => {
   });
 
   describe('Content section updating', () => {
+    describe('Content section id update', () => {
+      test('Should update id', async () => {
+        const block = await new BlockEntity().save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
+
+        const inst = await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({id: 'UPDATED', block: 1})
+          .expect(200);
+
+        expect(inst.body.id).toEqual('UPDATED');
+      });
+
+      test('Shouldn`t update to blank', async () => {
+        const block = await new BlockEntity().save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
+
+        const item = await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({id: '', block: 1})
+          .expect(400);
+      });
+    });
+
     describe('Content section update with block', () => {
       test('Should update item', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
-          .send({block: 1})
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1})
           .expect(200);
 
-        expect(inst.body.id).toEqual(1);
+        expect(inst.body.id).toEqual('SECTION');
       });
 
       test('Shouldn`t update without block', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
+          .put('/section/SECTION')
           .send({})
           .expect(400);
       });
 
       test('Shouldn`t update with wrong block', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
+          .put('/section/SECTION')
           .send({block: 999})
           .expect(400);
       });
@@ -555,11 +618,11 @@ describe('SectionController', () => {
           },
         ).save();
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
-          .send({block: 1, image: [1]})
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1, image: [1]})
           .expect(200);
 
         expect(inst.body.image).toHaveLength(1);
@@ -577,12 +640,15 @@ describe('SectionController', () => {
           },
         ).save();
         const block = await new BlockEntity().save();
-        const parent = await Object.assign(new SectionEntity(), {block}).save();
+        const parent = await Object.assign(
+          new SectionEntity(),
+          {id: 'SECTION', block},
+        ).save();
         await Object.assign(new Section2imageEntity(), {parent, image}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
-          .send({block: 1, image: []})
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1, image: []})
           .expect(200);
 
         expect(inst.body.image).toHaveLength(0);
@@ -592,25 +658,25 @@ describe('SectionController', () => {
     describe('Content section update with parent', () => {
       test('Should update parent', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'PARENT', block}).save();
+        await Object.assign(new SectionEntity(), {id: 'CHILD', block}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
-          .send({id: 1, block: 1, parent: 2})
+          .put('/section/CHILD')
+          .send({id: 'CHILD', block: 1, parent: 'PARENT'})
           .expect(200);
 
-        expect(inst.body.id).toBe(1);
-        expect(inst.body.parent).toBe(2);
+        expect(inst.body.id).toBe('CHILD');
+        expect(inst.body.parent).toBe('PARENT');
       });
 
       test('Shouldn`t update with wrong parent', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
         await request(app.getHttpServer())
-          .put('/section/1')
-          .send({id: 1, block: 1, parent: 777})
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1, parent: 'WRONG'})
           .expect(400);
       });
     });
@@ -618,12 +684,13 @@ describe('SectionController', () => {
     describe('Content section with strings', () => {
       test('Should add strings', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block}).save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
         await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
+          .put('/section/SECTION')
           .send({
+            id: 'SECTION',
             block: 1,
             property: [
               {property: 'NAME', string: 'VALUE'},
@@ -638,13 +705,17 @@ describe('SectionController', () => {
 
       test('Should remove strings', async () => {
         const block = await new BlockEntity().save();
-        const parent = await Object.assign(new SectionEntity(), {block}).save();
+        const parent = await Object.assign(
+          new SectionEntity(),
+          {id: 'SECTION', block},
+        ).save();
         const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
         await Object.assign(new Section4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
         const inst = await request(app.getHttpServer())
-          .put('/section/1')
+          .put('/section/SECTION')
           .send({
+            id: 'SECTION',
             block: 1,
             property: [],
           })
@@ -656,12 +727,13 @@ describe('SectionController', () => {
 
     test('Should add flag', async () => {
       const block = await new BlockEntity().save();
-      await Object.assign(new SectionEntity(), {block}).save();
+      await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/section/1')
+        .put('/section/SECTION')
         .send({
+          id: 'SECTION',
           block: 1,
           flag: ['NEW'],
         })

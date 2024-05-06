@@ -38,8 +38,9 @@ export class Section4stringEntity
     () => SectionEntity,
     section => section.string,
     {
-      nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      nullable: false,
     },
   )
   parent: SectionEntity;
@@ -48,6 +49,7 @@ export class Section4stringEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

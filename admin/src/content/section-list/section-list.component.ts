@@ -7,8 +7,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Section } from '../../app/model/content/section';
-import { Element } from '../../app/model/content/element';
-import { ElementFormComponent } from '../element-form/element-form.component';
 import { SectionFormComponent } from '../section-form/section-form.component';
 
 @Component({

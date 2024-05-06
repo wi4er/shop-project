@@ -44,6 +44,7 @@ export class Section4fileEntity
     section => section.file,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -53,6 +54,7 @@ export class Section4fileEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
