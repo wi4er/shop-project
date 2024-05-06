@@ -52,9 +52,7 @@
         ></app-image-edit>
       </mat-tab>
 
-      <mat-tab
-        [label]="'Properties ( ' + getPropertyCount() + ' )'"
-      >
+      <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
         <app-property-edit
           [edit]="editProperties"
           [list]="propertyList"
@@ -64,7 +62,6 @@
 
       <mat-tab
         label="Flags"
-        *ngIf="flagList.length"
       >
         <app-flag-edit
           [list]="flagList"

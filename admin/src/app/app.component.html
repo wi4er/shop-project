@@ -17,15 +17,34 @@
     class="example-icon favorite-icon"
     aria-label="Example icon-button with heart icon"
   >
-    <mat-icon>favorite</mat-icon>
+    <mat-icon>settings</mat-icon>
   </button>
 
   <button
     mat-icon-button
     class="example-icon"
     aria-label="Example icon-button with share icon"
+    [matMenuTriggerFor]="menu"
   >
-    <mat-icon>share</mat-icon>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        (click)="handlePersonal()"
+      >
+        <mat-icon>edit</mat-icon>
+        <span>Edit personal data</span>
+      </button>
+
+      <button
+        mat-menu-item
+        (click)="handleLogout()"
+      >
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+
+    <mat-icon>person</mat-icon>
   </button>
 </mat-toolbar>
 

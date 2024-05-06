@@ -44,5 +44,8 @@ export class UserService {
     return null;
   }
 
+  async logOutUser() {
+    console.log('LOGOUT');
+  }
 
 }

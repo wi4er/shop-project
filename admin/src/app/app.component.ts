@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from './service/user.service';
-import { ApiService } from './service/api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +13,24 @@ export class AppComponent {
   title = 'admin';
 
   constructor(
-    userService: UserService,
+    private dialog: MatDialog,
+    private userService: UserService,
   ) {
 
+  }
+
+  handlePersonal() {
+    this.dialog.open(
+      PersonalPopupComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      }
+    );
+  }
+
+  handleLogout() {
+    this.userService.logOutUser()
   }
 
 }

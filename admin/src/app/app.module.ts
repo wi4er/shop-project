@@ -31,6 +31,7 @@ import { PersonalModule } from '../personal/personal.module';
 import { StorageModule } from '../storage/storage.module';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
+import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { CollectionPageComponent } from './collection-page/collection-page.compo
     UserPageComponent,
     StoragePageComponent,
     CollectionPageComponent,
+    PersonalPopupComponent,
   ],
   imports: [
     BrowserModule,
