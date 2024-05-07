@@ -11,7 +11,9 @@ export class SectionRender {
     this.id = item.id;
     this.block = item.block.id;
     this.image = item.image.map(it => ({
+      original: it.image.original,
       image: it.image.id,
+      path: it.image.path,
       collection: it.image.collection.id,
     }));
     this.created_at = item.created_at.toISOString();

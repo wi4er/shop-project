@@ -1,3 +1,10 @@
+:host {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .select {
   width: 36px;
 }
@@ -10,9 +17,23 @@
   flex: 1;
 }
 
-:host {
-  min-height: 100%;
+.image {
+  max-height: 32px;
+}
+
+.image-count {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  height: 100%;
+  align-items: center;
+}
+
+.image-list {
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+}
+
+.example-detail-row {
+  height: 0;
 }

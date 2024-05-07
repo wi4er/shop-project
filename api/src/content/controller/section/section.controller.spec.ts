@@ -216,6 +216,36 @@ describe('SectionController', () => {
     });
   });
 
+  describe('Content section with images', () => {
+    test('Should get section with image', async () => {
+      const block = await new BlockEntity().save();
+      const parent = await Object.assign(
+        new SectionEntity(),
+        {id: 'SECTION', block}
+      ).save();
+      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const image = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: `txt/txt.txt`,
+        },
+      ).save();
+      await Object.assign(new Section2imageEntity(), {parent, image}).save();
+
+      const item = await request(app.getHttpServer())
+        .get('/section/SECTION')
+        .expect(200);
+
+      expect(item.body.image).toHaveLength(1);
+      expect(item.body.image[0].original).toBe('name.txt')
+      expect(item.body.image[0].collection).toBe('SHORT')
+      expect(item.body.image[0].path).toBe('txt/txt.txt')
+    });
+  });
+
   describe('Content section with flags', () => {
     test('Should get section with flag', async () => {
       const block = await new BlockEntity().save();
@@ -491,7 +521,7 @@ describe('SectionController', () => {
             collection,
             original: 'name.txt',
             mimetype: 'image/jpeg',
-            path: `txt/txt1.txt`,
+            path: `txt/txt.txt`,
           },
         ).save();
 
@@ -505,6 +535,7 @@ describe('SectionController', () => {
         expect(inst.body.image).toHaveLength(1);
         expect(inst.body.image[0].image).toBe(1);
         expect(inst.body.image[0].collection).toBe('SHORT');
+        expect(inst.body.image[0].path).toBe('txt/txt.txt');
       });
 
       test('Shouldn`t add with wrong image', async () => {
@@ -521,7 +552,7 @@ describe('SectionController', () => {
 
         await new BlockEntity().save();
 
-        const inst = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .post('/section')
           .send({block: 1, image: [555]})
           .expect(400);
@@ -614,7 +645,7 @@ describe('SectionController', () => {
             collection,
             original: 'name.txt',
             mimetype: 'image/jpeg',
-            path: `txt/txt1.txt`,
+            path: `txt/txt.txt`,
           },
         ).save();
         const block = await new BlockEntity().save();
@@ -626,6 +657,8 @@ describe('SectionController', () => {
           .expect(200);
 
         expect(inst.body.image).toHaveLength(1);
+        expect(inst.body.image[0].original).toBe('name.txt');
+        expect(inst.body.image[0].path).toBe('txt/txt.txt');
       });
 
       test('Should remove image', async () => {
@@ -636,7 +669,7 @@ describe('SectionController', () => {
             collection,
             original: 'name.txt',
             mimetype: 'image/jpeg',
-            path: `txt/txt1.txt`,
+            path: `txt/txt.txt`,
           },
         ).save();
         const block = await new BlockEntity().save();

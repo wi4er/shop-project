@@ -8,10 +8,19 @@ import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Section } from '../../app/model/content/section';
 import { SectionFormComponent } from '../section-form/section-form.component';
+import { Element } from '../../app/model/content/element';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'content-section-list',
   templateUrl: './section-list.component.html',
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*', minHeight: '120px'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
   styleUrls: ['./section-list.component.css']
 })
 export class SectionListComponent {
@@ -31,9 +40,15 @@ export class SectionListComponent {
 
   propertyList: string[] = [];
   flagList: string[] = [];
+  imageList: {
+    [id: string]: Array<{
+      path: string,
+    }> | null
+  } = {};
   columns: string[] = [];
 
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
+  expandedElement: Element | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -47,6 +62,7 @@ export class SectionListComponent {
       'select',
       'action',
       ...this.columns,
+      'image',
     ];
   }
 
@@ -111,6 +127,11 @@ export class SectionListComponent {
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
+
+      for (const image of item.image) {
+        if (!this.imageList[item.id]) this.imageList[item.id] = [];
+        this.imageList[item.id]?.push(image);
+      }
 
       for (const it of item.property) {
         col.add('property_' + it.property);
