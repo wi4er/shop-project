@@ -30,6 +30,7 @@ describe('Element entity', () => {
       ).save();
 
       expect(item.id).toBe('NAME');
+      expect(item.sort).toBe(100);
       expect(item.created_at).toBeDefined();
       expect(item.updated_at).toBeDefined();
       expect(item.deleted_at).toBeNull();

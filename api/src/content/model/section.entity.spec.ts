@@ -19,21 +19,32 @@ describe('Section entity', () => {
       const block = await new BlockEntity().save();
       const section = await Object.assign(
         new SectionEntity(),
-        {id: 'SECTION', block}
+        {id: 'SECTION', block},
       ).save();
 
       expect(section.id).toBe('SECTION');
+      expect(section.sort).toBe(100);
       expect(section.created_at).toBeDefined();
       expect(section.updated_at).toBeDefined();
       expect(section.deleted_at).toBeNull();
       expect(section.version).toBe(1);
     });
 
-    test('Should create without id', async () => {
+    test('Shouldn`t create without id', async () => {
       const block = await new BlockEntity().save();
       const section = await Object.assign(new SectionEntity(), {block}).save();
 
       expect(section.id).toHaveLength(36);
+    });
+
+    test('Shouldn`t create with blank id', async () => {
+      const block = await new BlockEntity().save();
+      const section = Object.assign(
+        new SectionEntity(),
+        {id: '', block},
+      );
+
+      await expect(section.save()).rejects.toThrow('not_empty_id');
     });
 
     test('Should get empty list', async () => {

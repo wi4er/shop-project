@@ -6,8 +6,6 @@ import { Collection } from '../../app/model/storage/collection';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Element } from '../../app/model/content/element';
-import { ElementInput } from '../../app/model/content/element-input';
 import { Section } from '../../app/model/content/section';
 import { SectionInput } from '../../app/model/content/section-input';
 
@@ -21,6 +19,7 @@ export class SectionFormComponent {
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
+  sort: number = 100;
   permission: { [method: string]: number[] } = {
     READ: [],
     WRITE: [],
@@ -108,6 +107,7 @@ export class SectionFormComponent {
 
   toEdit(item: Section) {
     this.id = item.id;
+    this.sort = item.sort;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
@@ -140,6 +140,7 @@ export class SectionFormComponent {
   toInput(): SectionInput {
     const input: SectionInput = {
       id: this.id || undefined,
+      sort: this.sort,
       block: this.data?.block ?? 1,
       image: [],
       property: [],

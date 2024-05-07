@@ -28,6 +28,7 @@ describe('Flag entity', () => {
 
       expect(list).toHaveLength(1);
       expect(list[0].id).toBe('ACTIVE');
+      expect(list[0].sort).toBe(100);
       expect(list[0].created_at).toBeDefined();
       expect(list[0].updated_at).toBeDefined();
       expect(list[0].deleted_at).toBeNull();

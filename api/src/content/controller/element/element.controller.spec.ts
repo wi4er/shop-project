@@ -193,6 +193,10 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(item.body.id).toBe(parent.id);
+      expect(item.body.created_at).toBeDefined();
+      expect(item.body.updated_at).toBeDefined();
+      expect(item.body.version).toBe(1);
+      expect(item.body.sort).toBe(100);
       expect(item.body.block).toBe(1);
     });
 
@@ -642,6 +646,22 @@ describe('ElementController', () => {
       expect(inst.body.permission[0].group).toBe(1);
     });
 
+    test('Should add with sort', async () => {
+      const cookie = await createSession();
+
+      await new BlockEntity().save();
+      const inst = await request(app.getHttpServer())
+        .post('/element')
+        .send({
+          block: 1,
+          sort: 777,
+        })
+        .set('cookie', cookie)
+        .expect(201);
+
+      expect(inst.body.sort).toBe(777);
+    });
+
     test('Shouldn`t add with wrong group', async () => {
       await Object.assign(new UserEntity(), {
         login: 'USER',
@@ -857,6 +877,25 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(item.body.id).toBe('SOME');
+    });
+
+    test('Should change element sort', async () => {
+      const cookie = await createSession();
+      await new BlockEntity().save();
+      const parent = await createElement();
+
+      await request(app.getHttpServer())
+        .put(`/element/${parent.id}`)
+        .send({id: 'SOME', block: 1, sort: 333})
+        .set('cookie', cookie)
+        .expect(200);
+
+      const item = await request(app.getHttpServer())
+        .get(`/element/SOME`)
+        .set('cookie', cookie)
+        .expect(200);
+
+      expect(item.body.sort).toBe(333);
     });
 
     test('Should change element block', async () => {

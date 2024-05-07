@@ -1,7 +1,7 @@
 import {
-  BaseEntity,
+  BaseEntity, Check, Column,
   CreateDateColumn, DeleteDateColumn,
-  Entity,
+  Entity, Index,
   ManyToOne,
   OneToMany, PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -21,6 +21,8 @@ import { Section4fileEntity } from './section4file.entity';
 import { Section2imageEntity } from './section2image.entity';
 
 @Entity('content-section')
+@Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class SectionEntity
   extends BaseEntity
   implements WithFlagEntity<SectionEntity>,
@@ -47,6 +49,9 @@ export class SectionEntity
   @VersionColumn()
   version: number;
 
+  @Column()
+  sort: number = 100;
+
   @ManyToOne(
     type => SectionEntity,
     section => section.children,
@@ -56,6 +61,16 @@ export class SectionEntity
     },
   )
   parent: SectionEntity;
+
+  @ManyToOne(
+    type => BlockEntity,
+    block => block.section,
+    {
+      onDelete: 'CASCADE',
+      nullable: false,
+    },
+  )
+  block: BlockEntity;
 
   @OneToMany(
     type => SectionEntity,
@@ -68,16 +83,6 @@ export class SectionEntity
     image => image.parent,
   )
   image: Section2imageEntity[];
-
-  @ManyToOne(
-    type => BlockEntity,
-    block => block.section,
-    {
-      onDelete: 'CASCADE',
-      nullable: false,
-    },
-  )
-  block: BlockEntity;
 
   @OneToMany(
     type => Section2flagEntity,

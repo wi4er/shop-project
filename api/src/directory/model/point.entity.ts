@@ -1,7 +1,7 @@
 import {
-  BaseEntity, Check,
+  BaseEntity, Check, Column,
   CreateDateColumn, DeleteDateColumn,
-  Entity,
+  Entity, Index,
   ManyToOne,
   OneToMany,
   PrimaryColumn,
@@ -17,12 +17,15 @@ import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('directory-point')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class PointEntity
   extends BaseEntity
   implements WithFlagEntity<PointEntity>, WithStringEntity<PointEntity>, WithPointEntity<PointEntity> {
 
   @PrimaryColumn({
     type: 'varchar',
+    length: 50,
+    default: () => 'uuid_generate_v4()',
   })
   id: string;
 
@@ -38,6 +41,9 @@ export class PointEntity
   @VersionColumn()
   version: number;
 
+  @Column()
+  sort: number = 100;
+
   @OneToMany(
     type => Point4stringEntity,
     string => string.parent,
@@ -49,6 +55,7 @@ export class PointEntity
     directory => directory.point,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

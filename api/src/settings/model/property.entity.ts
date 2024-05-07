@@ -1,9 +1,9 @@
 import {
   BaseEntity,
-  Check,
+  Check, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity,
+  Entity, Index,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
@@ -15,6 +15,7 @@ import { WithStringEntity } from '../../common/model/with-string.entity';
 
 @Entity('settings-property')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class PropertyEntity extends BaseEntity
   implements WithFlagEntity<PropertyEntity>, WithStringEntity<PropertyEntity> {
 
@@ -35,6 +36,9 @@ export class PropertyEntity extends BaseEntity
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Property4stringEntity,

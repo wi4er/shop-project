@@ -18,6 +18,16 @@
       />
     </mat-form-field>
 
+    <mat-form-field appearance="fill">
+      <mat-label>Sort</mat-label>
+
+      <input
+        matInput
+        name="sort"
+        [(ngModel)]="sort"
+      />
+    </mat-form-field>
+
     <div *ngIf="!!data?.id">
       <mat-form-field appearance="fill">
         <mat-label>Created at</mat-label>

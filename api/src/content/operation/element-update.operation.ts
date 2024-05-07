@@ -71,6 +71,7 @@ export class ElementUpdateOperation {
     try {
       await this.manager.update(ElementEntity, {id}, {
         id:  WrongDataException.assert(input.id, 'Element id expected'),
+        sort: input.sort,
         block: await this.checkBlock(input.block),
       });
     } catch (err) {

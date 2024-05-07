@@ -23,6 +23,7 @@ export class ElementRender {
     this.created_at = item.created_at.toISOString();
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
+    this.sort = item.sort;
     this.section = item.parent.map(it => it.section.id);
     this.image = item.image.map(it => ({
       original: it.image.original,
@@ -77,6 +78,9 @@ export class ElementRender {
 
   @ApiProperty()
   version: number;
+
+  @ApiProperty()
+  sort: number;
 
   @ApiProperty()
   section: Array<string>;

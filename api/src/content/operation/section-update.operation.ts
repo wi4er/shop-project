@@ -75,6 +75,7 @@ export class SectionUpdateOperation {
       await this.manager.update(SectionEntity, {id}, {
         id:  WrongDataException.assert(input.id, 'Section id expected'),
         block: await this.checkBlock(input.block),
+        sort: input.sort,
         parent: input.parent ? await this.checkParent(input.parent) : null,
       });
     } catch (err) {

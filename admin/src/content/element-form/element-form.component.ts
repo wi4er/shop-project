@@ -19,6 +19,7 @@ export class ElementFormComponent {
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
+  sort: number = 100;
   permission: { [method: string]: number[] } = {
     READ: [],
     WRITE: [],
@@ -108,6 +109,7 @@ export class ElementFormComponent {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+    this.sort = item.sort;
 
     for (const img of item.image) {
       if (!this.imageList[img.collection]) this.imageList[img.collection] = [];
@@ -139,6 +141,7 @@ export class ElementFormComponent {
     const input: ElementInput = {
       id: this.id || undefined,
       block: this.data?.block ?? 1,
+      sort: this.sort,
       image: [],
       property: [],
       flag: [],

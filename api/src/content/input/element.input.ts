@@ -9,9 +9,9 @@ export class ElementInput
 
   id: string;
   block: number;
+  sort: number;
 
   image: Array<number>;
-
   property: PropertyValueInput[];
   flag: string[];
 

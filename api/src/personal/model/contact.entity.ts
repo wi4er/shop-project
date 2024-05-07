@@ -2,9 +2,9 @@ import {
   BaseEntity, Check, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, OneToMany, PrimaryColumn,
-  UpdateDateColumn, VersionColumn
-} from "typeorm";
+  Entity, Index, OneToMany, PrimaryColumn,
+  UpdateDateColumn, VersionColumn,
+} from 'typeorm';
 import { Contact2flagEntity } from "./contact2flag.entity";
 import { Contact4stringEntity } from "./contact4string.entity";
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
@@ -21,6 +21,7 @@ export enum UserContactType {
 
 @Entity('personal-contact')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class ContactEntity
   extends BaseEntity
   implements WithFlagEntity<ContactEntity>, WithStringEntity<ContactEntity> {
@@ -49,6 +50,9 @@ export class ContactEntity
     nullable: false,
   })
   type: UserContactType;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Contact4stringEntity,

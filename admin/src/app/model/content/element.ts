@@ -5,6 +5,7 @@ export interface Element {
   created_at: string;
   updated_at: string;
   version: number;
+  sort: number;
   image: Array<{
     original: string;
     image: number;

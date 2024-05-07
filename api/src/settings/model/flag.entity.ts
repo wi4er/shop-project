@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity,
+  Entity, Index,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
@@ -15,6 +15,7 @@ import { WithFlagEntity } from '../../common/model/with-flag.entity';
 
 @Entity('settings-flag')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class FlagEntity
   extends BaseEntity
   implements WithStringEntity<FlagEntity>, WithFlagEntity<FlagEntity> {
@@ -36,6 +37,9 @@ export class FlagEntity
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Flag4stringEntity,

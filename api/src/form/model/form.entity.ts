@@ -1,8 +1,8 @@
 import {
-  BaseEntity, Check,
+  BaseEntity, Check, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, OneToMany, PrimaryColumn,
+  Entity, Index, OneToMany, PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
@@ -14,6 +14,7 @@ import { ResultEntity } from './result.entity';
 
 @Entity('form-form')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class FormEntity
   extends BaseEntity
   implements WithFlagEntity<FormEntity>, WithStringEntity<FormEntity> {
@@ -35,6 +36,9 @@ export class FormEntity
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Form4stringEntity,

@@ -1,8 +1,8 @@
 import {
-  BaseEntity,
+  BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity,
+  Entity, Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
@@ -19,6 +19,7 @@ import { WithPointEntity } from '../../common/model/with-point.entity';
 import { Block4fileEntity } from './block4file.entity';
 
 @Entity('content-block')
+@Index(['sort'])
 export class BlockEntity
   extends BaseEntity
   implements WithFlagEntity<BlockEntity>, WithStringEntity<BlockEntity>, WithPointEntity<BlockEntity> {
@@ -37,6 +38,9 @@ export class BlockEntity
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Block2permissionEntity,

@@ -58,6 +58,7 @@ export class SectionInsertOperation {
   async save(input: SectionInput): Promise<string> {
     this.created.id = input.id;
     this.created.block = await this.checkBlock(input.block);
+    this.created.sort = input.sort;
     if (input.parent) this.created.parent = await this.checkSection(input.parent);
 
     try {

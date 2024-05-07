@@ -21,6 +21,8 @@ describe('Contact entity', () => {
 
       await inst.save();
 
+      expect(inst.id).toBe('mail');
+      expect(inst.sort).toBe(100);
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();
       expect(inst.deleted_at).toBeNull();
@@ -59,7 +61,7 @@ describe('Contact entity', () => {
       const inst = new ContactEntity();
       inst.id = 'mail';
 
-      await expect(inst.save()).rejects.toThrow();
+      await expect(inst.save()).rejects.toThrow('type');
     });
   });
 });

@@ -1,7 +1,7 @@
 import {
-  BaseEntity, Check,
+  BaseEntity, Check, Column,
   CreateDateColumn, DeleteDateColumn,
-  Entity,
+  Entity, Index,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
@@ -16,15 +16,15 @@ import { WithPointEntity } from '../../common/model/with-point.entity';
 
 @Entity('directory')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class DirectoryEntity
   extends BaseEntity
   implements WithFlagEntity<DirectoryEntity>, WithStringEntity<DirectoryEntity>, WithPointEntity<DirectoryEntity> {
 
   @PrimaryColumn({
     type: 'varchar',
-    nullable: false,
-    unique: true,
-    length: 100,
+    length: 50,
+    default: () => 'uuid_generate_v4()',
   })
   id: string;
 
@@ -39,6 +39,9 @@ export class DirectoryEntity
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Directory4stringEntity,

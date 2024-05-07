@@ -1,8 +1,8 @@
 import {
-  BaseEntity, Check,
+  BaseEntity, Check, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, OneToMany,
+  Entity, Index, OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
   VersionColumn,
@@ -12,6 +12,7 @@ import { Lang2flagEntity } from './lang2flag.entity';
 
 @Entity('settings-lang')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class LangEntity extends BaseEntity {
 
   @PrimaryColumn({
@@ -31,6 +32,9 @@ export class LangEntity extends BaseEntity {
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @OneToMany(
     type => Lang4stringEntity,

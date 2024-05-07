@@ -148,18 +148,18 @@ describe('AuthController', () => {
 
       const res = await request(app.getHttpServer())
         .delete('/auth')
-        .set('cookie', cookie);
+        .set('cookie', cookie)
+        .expect(200);
 
       expect(res.body).toBe(true);
-      expect(res.status).toBe(200);
     });
 
     test('Shouldn`t close without session', async () => {
       const res = await request(app.getHttpServer())
-        .delete('/auth');
+        .delete('/auth')
+        .expect(400);
 
       expect(res.body).toBe(false);
-      expect(res.status).toBe(400);
     });
   });
 });

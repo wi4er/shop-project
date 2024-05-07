@@ -1,10 +1,9 @@
 import {
-  BaseEntity, Check,
+  BaseEntity, Check, Column,
   CreateDateColumn, DeleteDateColumn,
-  Entity, Generated,
+  Entity, Index,
   ManyToOne,
   OneToMany, PrimaryColumn,
-  PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { Element2sectionEntity } from './element2section.entity';
@@ -25,6 +24,7 @@ import { WithImageEntity } from '../../common/model/with-image.entity';
 
 @Entity('content-element')
 @Check('not_empty_id', '"id" > \'\'')
+@Index(['sort'])
 export class ElementEntity
   extends BaseEntity
   implements WithStringEntity<ElementEntity>,
@@ -51,6 +51,9 @@ export class ElementEntity
 
   @VersionColumn()
   version: number;
+
+  @Column()
+  sort: number = 100;
 
   @ManyToOne(
     type => BlockEntity,

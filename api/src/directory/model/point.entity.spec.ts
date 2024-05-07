@@ -28,7 +28,22 @@ describe('Value entity', () => {
         directory: 'LIST',
       }).save();
 
-      expect(inst['id']).toBe('NAME');
+      expect(inst.id).toBe('NAME');
+      expect(inst.directory).toBe('LIST');
+      expect(inst.sort).toBe(100);
+      expect(inst.created_at).toBeDefined();
+      expect(inst.updated_at).toBeDefined();
+      expect(inst.deleted_at).toBeNull();
+      expect(inst.version).toBe(1);
+    });
+
+    test('Should add without id', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'LIST'}).save();
+      const inst = await Object.assign(new PointEntity(), {
+        directory: 'LIST',
+      }).save();
+
+      expect(inst.id).toHaveLength(36);
     });
 
     test('Shouldn`t add with blank id', async () => {

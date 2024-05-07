@@ -10,16 +10,17 @@ export class SectionRender {
   constructor(item: SectionEntity) {
     this.id = item.id;
     this.block = item.block.id;
+    this.created_at = item.created_at.toISOString();
+    this.updated_at = item.updated_at.toISOString();
+    this.version = item.version;
+    this.sort = item.sort;
+    this.parent = item.parent?.id;
     this.image = item.image.map(it => ({
       original: it.image.original,
       image: it.image.id,
       path: it.image.path,
       collection: it.image.collection.id,
     }));
-    this.created_at = item.created_at.toISOString();
-    this.updated_at = item.updated_at.toISOString();
-    this.version = item.version;
-    this.parent = item.parent?.id;
     this.property = [
       ...item.string.map(str => ({
         string: str.string,
@@ -54,6 +55,9 @@ export class SectionRender {
 
   @ApiProperty()
   parent: string;
+
+  @ApiProperty()
+  sort: number;
 
   @ApiProperty()
   image: Array<ImageRender>;

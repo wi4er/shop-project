@@ -52,6 +52,7 @@ describe('SectionController', () => {
       expect(list.body).toHaveLength(1);
       expect(list.body[0].id).toBe('SECTION');
       expect(list.body[0].block).toBe(1);
+      expect(list.body[0].sort).toBe(100);
     });
 
     test('Should get list with block filter', async () => {
@@ -338,6 +339,17 @@ describe('SectionController', () => {
 
   describe('Content section addition', () => {
     describe('Content section addition with parent', () => {
+      test('Should add item', async () => {
+        await new BlockEntity().save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/section')
+          .send({block: 1})
+          .expect(201);
+
+        expect(inst.body['parent']).toBeUndefined();
+      });
+
       test('Should add with parent', async () => {
         await new BlockEntity().save();
         await Object.assign(new SectionEntity(), {id: 'PARENT', block: 1}).save();
@@ -352,15 +364,15 @@ describe('SectionController', () => {
         expect(inst.body.parent).toBe('PARENT');
       });
 
-      test('Should add without parent', async () => {
+      test('Should add with sort', async () => {
         await new BlockEntity().save();
 
         const inst = await request(app.getHttpServer())
           .post('/section')
-          .send({block: 1})
+          .send({sort: 888, block: 1})
           .expect(201);
 
-        expect(inst.body['parent']).toBeUndefined();
+        expect(inst.body.sort).toBe(888);
       });
 
       test('Shouldn`t add with wrong parent', async () => {
@@ -578,7 +590,7 @@ describe('SectionController', () => {
   });
 
   describe('Content section updating', () => {
-    describe('Content section id update', () => {
+    describe('Content section fields update', () => {
       test('Should update id', async () => {
         const block = await new BlockEntity().save();
         await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
@@ -600,6 +612,18 @@ describe('SectionController', () => {
           .send({id: '', block: 1})
           .expect(400);
       });
+
+      test('Should update sort', async () => {
+        const block = await new BlockEntity().save();
+        await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
+
+        const inst = await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({id: 'SECTION', sort: 777, block: 1})
+          .expect(200);
+
+        expect(inst.body.sort).toBe(777);
+      });
     });
 
     describe('Content section update with block', () => {
@@ -619,7 +643,7 @@ describe('SectionController', () => {
         const block = await new BlockEntity().save();
         await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
-        const inst = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .put('/section/SECTION')
           .send({})
           .expect(400);
@@ -629,7 +653,7 @@ describe('SectionController', () => {
         const block = await new BlockEntity().save();
         await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
-        const inst = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .put('/section/SECTION')
           .send({block: 999})
           .expect(400);

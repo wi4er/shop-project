@@ -20,10 +20,21 @@ describe('Lang entity', () => {
       await inst.save();
 
       expect(inst.id).toBe('EN');
+      expect(inst.sort).toBe(100);
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();
       expect(inst.deleted_at).toBeNull();
       expect(inst.version).toBe(1);
+    });
+
+    test('Should add item with sort', async () => {
+      const inst = new LangEntity();
+      inst.id = 'EN';
+      inst.sort = 500;
+
+      await inst.save();
+
+      expect(inst.sort).toBe(500);
     });
 
     test('Shouldn`t add with blank id', async () => {

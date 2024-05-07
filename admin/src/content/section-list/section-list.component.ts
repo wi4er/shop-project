@@ -30,8 +30,6 @@ export class SectionListComponent {
 
   list: { [key: string]: string }[] = [];
 
-  pageEvent?: PageEvent;
-
   totalCount: number = 0;
   pageSize: number = 10;
   currentPage: number = 0;
@@ -123,7 +121,8 @@ export class SectionListComponent {
 
     for (const item of data) {
       const line: { [key: string]: string } = {
-        'id': String(item.id),
+        id: String(item.id),
+        sort: String(item.sort),
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
@@ -143,7 +142,7 @@ export class SectionListComponent {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', 'sort', ...col];
   }
 
   deleteList() {

@@ -6,6 +6,7 @@ export class SectionInput implements WithPropertyInput, WithFlagInput {
 
   id: string;
   block: number;
+  sort: number;
 
   parent?: string;
   image: Array<number>;

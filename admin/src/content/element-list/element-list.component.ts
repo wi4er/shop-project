@@ -98,7 +98,8 @@ export class ElementListComponent implements OnChanges {
 
     for (const item of data) {
       const line: { [key: string]: string } = {
-        'id': String(item.id),
+        id: String(item.id),
+        sort: String(item.sort),
         created_at: item.created_at,
         updated_at: item.updated_at,
         path: item.image[0]?.path ?? '',
@@ -118,7 +119,7 @@ export class ElementListComponent implements OnChanges {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', 'sort', ...col];
   }
 
   async refreshData() {

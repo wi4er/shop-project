@@ -8,9 +8,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class UserService {
 
-  private dataSubject = new BehaviorSubject<User | null | undefined>(undefined);
+  private userSubject = new BehaviorSubject<User | null | undefined>(undefined);
 
-  user: Observable<User | null | undefined> = this.dataSubject.asObservable();
+  user: Observable<User | null | undefined> = this.userSubject.asObservable();
 
   constructor(
     private apiService: ApiService,
@@ -19,9 +19,9 @@ export class UserService {
       credentials: 'include',
     }).then(res => {
       if (res.ok) {
-        res.json().then(res => this.dataSubject.next(res));
+        res.json().then(res => this.userSubject.next(res));
       } else {
-        this.dataSubject.next(null)
+        this.userSubject.next(null)
       }
     });
   }
@@ -38,14 +38,23 @@ export class UserService {
       body: JSON.stringify({login, password}),
       credentials: 'include',
     }).then(res => {
-      if (res.ok) res.json().then(res => this.dataSubject.next(res));
+      if (res.ok) res.json().then(res => this.userSubject.next(res));
     });
 
     return null;
   }
 
+
   async logOutUser() {
-    console.log('LOGOUT');
+    await fetch('http://localhost:3030/auth', {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      credentials: 'include',
+    }).then(res => {
+      if (res.ok) this.userSubject.next(null);
+    });
   }
 
 }

@@ -27,6 +27,7 @@ describe('Form entity', () => {
       await inst.save();
 
       expect(inst.id).toBe('NAME');
+      expect(inst.sort).toBe(100);
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();
       expect(inst.deleted_at).toBeNull();

@@ -44,6 +44,7 @@ export class ElementInsertOperation {
    */
   async save(input: ElementInput): Promise<string> {
     this.created.id = input.id;
+    this.created.sort = input.sort;
     this.created.block = await this.checkBlock(input.block);
 
     try {
