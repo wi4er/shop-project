@@ -142,6 +142,30 @@ describe('SectionController', () => {
     });
   });
 
+  describe('Content section sorting', () => {
+    test('Should get with offset', async () => {
+      await new BlockEntity().save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(
+          new SectionEntity(),
+          {
+            id: `SECTION_${i.toString().padStart(2, '0')}`,
+            sort: 1000 - i * 100,
+            block: 1
+          },
+        ).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/section?sort[sort]=asc')
+        .expect(200);
+
+      expect(list.body[0].sort).toBe(100);
+      expect(list.body[9].sort).toBe(1000);
+    });
+  });
+
   describe('Content section empty count', () => {
     test('Should get empty section count', async () => {
       const list = await request(app.getHttpServer())

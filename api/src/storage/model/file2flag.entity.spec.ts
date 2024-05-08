@@ -18,8 +18,16 @@ describe('File 2 flag entity', () => {
   describe('File2flag fields', () => {
     test('Should create file flag', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const inst = new File2flagEntity();
       inst.parent = parent;
@@ -34,7 +42,15 @@ describe('File 2 flag entity', () => {
 
     test('Shouldn`t create without flag', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
 
       const inst = new File2flagEntity();
       inst.parent = parent;
@@ -43,7 +59,7 @@ describe('File 2 flag entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const inst = new File2flagEntity();
       inst.flag = flag;
@@ -57,11 +73,19 @@ describe('File 2 flag entity', () => {
       const repo = source.getRepository(FileEntity);
 
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new File2flagEntity(), { parent, flag }).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new File2flagEntity(), {parent, flag}).save();
 
-      const inst = await repo.findOne({ where: { id: 1 }, relations: { flag: { flag: true } } });
+      const inst = await repo.findOne({where: {id: 1}, relations: {flag: {flag: true}}});
 
       expect(inst.flag).toHaveLength(1);
       expect(inst.flag[0].id).toBe(1);
@@ -70,12 +94,20 @@ describe('File 2 flag entity', () => {
 
     test('Shouldn`t create duplicate flag', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(), {collection}).save();
-      const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
-      await Object.assign(new File2flagEntity(), { parent, flag }).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await Object.assign(new File2flagEntity(), {parent, flag}).save();
 
       await expect(
-        Object.assign(new File2flagEntity(), { parent, flag }).save()
+        Object.assign(new File2flagEntity(), {parent, flag}).save(),
       ).rejects.toThrow('duplicate key');
     });
   });

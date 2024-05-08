@@ -75,9 +75,7 @@ export class ElementController {
   toOrder(sort: ElementOrderSchema[]): FindOptionsOrder<ElementEntity> {
     const order = {};
 
-    if (!Array.isArray(sort)) {
-      sort = [sort];
-    }
+    if (!Array.isArray(sort)) sort = [sort];
 
     for (const item of sort) {
       for (const key in item) {
@@ -90,18 +88,30 @@ export class ElementController {
         if (key === 'string') {
           order['string'] = {string: 'asc'};
         }
+
+        if (key === 'created_at') {
+          order['created_at'] = item[key];
+        }
+
+        if (key === 'sort') {
+          order['sort'] = item[key]
+        }
+
+        if (key === 'version') {
+          order['version'] = item[key]
+        }
       }
     }
 
     return order;
   }
 
-  @Get()
   @ApiResponse({
     status: 200,
     description: 'Content element',
     type: [ElementRender],
   })
+  @Get()
   async getList(
     @CurrentGroups()
       group: number[],

@@ -1,3 +1,4 @@
+
 enum OrderDirection {
 
   DESC = 'desc',
@@ -5,9 +6,7 @@ enum OrderDirection {
 
 }
 
-export class ElementOrderSchema {
-
-  value: OrderDirection;
+export class SectionOrderInput {
 
   sort: OrderDirection;
 

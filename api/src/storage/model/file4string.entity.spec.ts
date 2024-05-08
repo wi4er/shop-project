@@ -27,7 +27,15 @@ describe('File string property entity', () => {
     test('Should create instance', async () => {
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(),{collection}).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
 
       const inst = await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, property}).save();
 
@@ -47,7 +55,15 @@ describe('File string property entity', () => {
 
     test('Shouldn`t create without property', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(),{collection}).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
 
       await expect(
         Object.assign(new File4stringEntity(), {string: 'VALUE', parent}).save(),
@@ -60,7 +76,15 @@ describe('File string property entity', () => {
       const repo = source.getRepository(FileEntity);
       const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const parent = await Object.assign(new FileEntity(),{collection}).save();
+      const parent = await Object.assign(
+        new FileEntity(),
+        {
+          collection,
+          original: 'name.txt',
+          mimetype: 'image/jpeg',
+          path: 'txt/txt.txt',
+        },
+      ).save();
 
       await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, property}).save();
 

@@ -40,7 +40,7 @@ export class ApiService {
     const url = qs.stringifyUrl({
       url: [this.apiUrl, entity].join('/'),
       query: query,
-    });
+    }, {sort: false});
 
     const req = fetch(url, {
       headers: {

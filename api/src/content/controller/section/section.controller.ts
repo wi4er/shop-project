@@ -9,6 +9,9 @@ import { SectionUpdateOperation } from '../../operation/section-update.operation
 import { SectionDeleteOperation } from '../../operation/section-delete.operation';
 import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SectionRender } from '../../render/section.render';
+import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
+import { ElementEntity } from '../../model/element.entity';
+import { SectionOrderInput } from '../../input/section-order.input';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
@@ -36,6 +39,30 @@ export class SectionController {
     return new SectionRender(item);
   }
 
+  toOrder(sort: SectionOrderInput[]): FindOptionsOrder<ElementEntity> {
+    const order = {};
+
+    if (!Array.isArray(sort)) sort = [sort];
+
+    for (const item of sort) {
+      for (const key in item) {
+        if (key === 'sort') {
+          order['sort'] = item[key]
+        }
+
+        if (key === 'created_at') {
+          order['created_at'] = item[key];
+        }
+
+        if (key === 'version') {
+          order['version'] = item[key]
+        }
+      }
+    }
+
+    return order;
+  }
+
   @ApiParam({
     name: 'offset',
     required: false,
@@ -53,6 +80,8 @@ export class SectionController {
   async getList(
     @Query('filter')
       filter?: SectionFilterInput,
+    @Query('sort')
+      sort?: SectionOrderInput[],
     @Query('offset')
       offset?: number,
     @Query('limit')
@@ -70,6 +99,7 @@ export class SectionController {
 
     return this.sectionRepo.find({
       where,
+      order: sort ? this.toOrder(sort) : null,
       relations: this.relations,
       take: limit,
       skip: offset,

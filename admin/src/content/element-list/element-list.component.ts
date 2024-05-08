@@ -127,7 +127,9 @@ export class ElementListComponent implements OnChanges {
       this.apiService.fetchList<Element>(
         ApiEntity.ELEMENT,
         {
-          ['filter[block]']: this.blockId,
+          'filter[block]': this.blockId,
+          'sort[sort]': 'desc',
+          'sort[created_at]': 'desc',
           limit: this.pageSize,
           offset: this.currentPage * this.pageSize,
         },

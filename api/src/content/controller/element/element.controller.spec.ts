@@ -181,6 +181,36 @@ describe('ElementController', () => {
     });
   });
 
+  describe('Content element sorting', () => {
+    test('Should get with sort order', async () => {
+      const cookie = await createSession();
+      const block = await new BlockEntity().save();
+
+      for (let i = 1; i <= 10; i++) {
+        const parent = await Object.assign(
+          new ElementEntity,
+          {block, sort: 1000 - i * 100, version: i % 2 ? 1 : 10}
+        ).save();
+        await Object.assign(
+          new Element2permissionEntity(),
+          {parent, method: PermissionMethod.ALL},
+        ).save();
+      }
+
+      const list = await request(app.getHttpServer())
+        .get('/element?sort[version]=asc&sort[sort]=desc')
+        .set('cookie', cookie)
+        .expect(200);
+
+      expect(list.body).toHaveLength(10);
+      expect(list.body[0].sort).toBe(900);
+      expect(list.body[1].sort).toBe(700);
+      expect(list.body[2].sort).toBe(500);
+      expect(list.body[3].sort).toBe(300);
+      expect(list.body[4].sort).toBe(100);
+    });
+  });
+
   describe('Content element item', () => {
     test('Should get element item', async () => {
       const cookie = await createSession();
