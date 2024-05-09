@@ -11,6 +11,7 @@ describe('Lang entity', () => {
   });
 
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('Lang fields', () => {
     test('Should add item with id', async () => {

@@ -11,6 +11,7 @@ describe('Property entity', () => {
   });
 
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('Property fields', () => {
     test('Should get empty list', async () => {

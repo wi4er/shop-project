@@ -13,6 +13,7 @@ describe('Flag entity', () => {
   });
 
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('Flag with flag', () => {
     test('Should add item with flag', async () => {

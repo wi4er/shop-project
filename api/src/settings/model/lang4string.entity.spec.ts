@@ -13,6 +13,7 @@ describe('Lang string property entity', () => {
   });
 
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('Lang string fields', () => {
     test('Should create item', async () => {

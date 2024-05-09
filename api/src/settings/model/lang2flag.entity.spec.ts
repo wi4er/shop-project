@@ -13,6 +13,7 @@ describe('LangFlag entity', () => {
   });
 
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('LangFlag fields', () => {
     test('Should add item', async () => {
