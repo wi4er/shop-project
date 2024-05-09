@@ -6,6 +6,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { GroupEntity } from '../../model/group.entity';
 import { User2groupEntity } from '../../model/user2group.entity';
+import * as process from 'process';
 
 describe('MyselfController', () => {
   let source;
@@ -119,7 +120,7 @@ describe('MyselfController', () => {
   });
 
   describe('User registration', () => {
-    test('Should register', async () => {
+    test('Should register user', async () => {
       const res = await request(app.getHttpServer())
         .post('/myself')
         .send({
@@ -128,8 +129,26 @@ describe('MyselfController', () => {
         })
         .expect(201);
 
-      expect(res.body['id']).toBe(1);
-      expect(res.body['login']).toBe('user');
+      expect(res.body.id).toBe(1);
+      expect(res.body.login).toBe('user');
+      expect(res.body.group).toEqual([]);
+    });
+
+    test('Should register with public group', async () => {
+      const group = await Object.assign(new GroupEntity(), {}).save();
+      process.env.PUBLICK_GROUP = String(group.id);
+
+      const res = await request(app.getHttpServer())
+        .post('/myself')
+        .send({
+          login: 'user',
+          password: 'qwerty123',
+        })
+        .expect(201);
+
+      expect(res.body.id).toBe(1);
+      expect(res.body.login).toBe('user');
+      expect(res.body.group).toEqual([1]);
     });
 
     test('Shouldn`t create with same login', async () => {

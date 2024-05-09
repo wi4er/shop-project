@@ -12,6 +12,8 @@ import { User2userGroupInsertOperation } from './user2user-group-insert.operatio
 import { ContactEntity } from '../model/contact.entity';
 import { AuthInput } from '../input/auth.input';
 import { EncodeService } from '../service/encode/encode.service';
+import { User2groupEntity } from '../model/user2group.entity';
+import { GroupEntity } from '../model/group.entity';
 
 export class MyselfInsertOperation {
 
@@ -52,6 +54,34 @@ export class MyselfInsertOperation {
 
   /**
    *
+   * @param id
+   * @private
+   */
+  private async checkGroup(id: number): Promise<GroupEntity> {
+    const groupRepo = this.trans.getRepository(GroupEntity);
+
+    return WrongDataException.assert(
+      await groupRepo.findOne({where: {id}}),
+      `Wrong user group ${id}!`,
+    );
+  }
+
+  /**
+   *
+   * @private
+   */
+  private async checkPublicGroup() {
+    if (!process.env.PUBLICK_GROUP) return;
+
+    const inst = new User2groupEntity();
+    inst.group = await this.checkGroup(+process.env.PUBLICK_GROUP);
+    inst.parent = this.created;
+
+    return this.trans.save(inst);
+  }
+
+  /**
+   *
    * @param input
    */
   async save(input: AuthInput): Promise<number> {
@@ -59,6 +89,7 @@ export class MyselfInsertOperation {
     this.created.hash = await this.checkPassword(input.password);
 
     await this.trans.save(this.created);
+    await this.checkPublicGroup();
 
     return this.created.id;
   }
