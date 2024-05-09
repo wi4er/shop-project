@@ -52,7 +52,7 @@ services:
     ports:
       - "3030:3000"
     working_dir: /app
-    command: npm run start
+    command: npm run start:dev
     volumes:
       - "./api:/app"
       - "./data/storage:/storage"
@@ -60,6 +60,7 @@ services:
       DB_HOST: postgres
       DB_DATABASE: shop_project
       REDIS_URL: redis://cache:6379
+      ADMIN_GROUP: 1
       STORAGE_PATH: /storage
 
   cache:

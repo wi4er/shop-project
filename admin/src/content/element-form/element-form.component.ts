@@ -145,10 +145,7 @@ export class ElementFormComponent {
       image: [],
       property: [],
       flag: [],
-      permission: [{
-        group: 1,
-        method: 'ALL',
-      }],
+      permission: [],
     } as ElementInput;
 
     for (const collection in this.editImages) {
