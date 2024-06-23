@@ -136,7 +136,7 @@ describe('MyselfController', () => {
 
     test('Should register with public group', async () => {
       const group = await Object.assign(new GroupEntity(), {}).save();
-      process.env.PUBLICK_GROUP = String(group.id);
+      process.env.PUBLIC_GROUP = String(group.id);
 
       const res = await request(app.getHttpServer())
         .post('/myself')

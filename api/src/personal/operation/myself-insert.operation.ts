@@ -71,10 +71,10 @@ export class MyselfInsertOperation {
    * @private
    */
   private async checkPublicGroup() {
-    if (!process.env.PUBLICK_GROUP) return;
+    if (!process.env.PUBLIC_GROUP) return;
 
     const inst = new User2groupEntity();
-    inst.group = await this.checkGroup(+process.env.PUBLICK_GROUP);
+    inst.group = await this.checkGroup(+process.env.PUBLIC_GROUP);
     inst.parent = this.created;
 
     return this.trans.save(inst);

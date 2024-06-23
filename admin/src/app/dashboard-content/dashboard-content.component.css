@@ -1,0 +1,24 @@
+:host {
+  background-color: lightblue;
+  min-width: 100%;
+  min-height: 100%;
+  display: block;
+}
+
+.box {
+  padding: 8px 12px 0 ;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.text {
+  flex: 1;
+}
+
+.item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}

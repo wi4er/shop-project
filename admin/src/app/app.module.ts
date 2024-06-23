@@ -32,6 +32,15 @@ import { StorageModule } from '../storage/storage.module';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
 import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
+import { DashboardContentComponent } from './dashboard-content/dashboard-content.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { DashboardCollectionComponent } from './dashboard-collection/dashboard-collection.component';
+import { DashboardDirectoryComponent } from './dashboard-directory/dashboard-directory.component';
+import { DashboardPropertyComponent } from './dashboard-property/dashboard-property.component';
+import { DashboardFlagComponent } from './dashboard-flag/dashboard-flag.component';
+import { DashboardLangComponent } from './dashboard-lang/dashboard-lang.component';
+import { DashboardConfigComponent } from './dashboard-config/dashboard-config.component';
+import { DashboardPersonalComponent } from './dashboard-personal/dashboard-personal.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +53,14 @@ import { PersonalPopupComponent } from './personal-popup/personal-popup.componen
     StoragePageComponent,
     CollectionPageComponent,
     PersonalPopupComponent,
+    DashboardContentComponent,
+    DashboardCollectionComponent,
+    DashboardDirectoryComponent,
+    DashboardPropertyComponent,
+    DashboardFlagComponent,
+    DashboardLangComponent,
+    DashboardConfigComponent,
+    DashboardPersonalComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +88,7 @@ import { PersonalPopupComponent } from './personal-popup/personal-popup.componen
     ContentModule,
     PersonalModule,
     StorageModule,
+    MatGridListModule,
   ],
   providers: [],
   exports: [

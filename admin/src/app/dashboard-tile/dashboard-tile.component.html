@@ -1,2 +1,71 @@
-<p>dashboard-tile works!</p>
+<h1>Dashboard</h1>
 
+<mat-grid-list
+  cols="5"
+  rowHeight="1:1"
+  gutterSize="8"
+>
+  <mat-grid-tile
+    colspan="1"
+    rowspan="5"
+  >
+    <app-dashboard-content></app-dashboard-content>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="4"
+    rowspan="1"
+    class="green"
+  >
+    <app-dashboard-collection></app-dashboard-collection>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="1"
+    rowspan="1"
+    class="green"
+  >
+    <app-dashboard-property></app-dashboard-property>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="1"
+    rowspan="1"
+    class="green"
+  >
+    <app-dashboard-flag></app-dashboard-flag>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="1"
+    rowspan="1"
+    class="green"
+  >
+    <app-dashboard-lang></app-dashboard-lang>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="1"
+    rowspan="1"
+    class="green"
+  >
+    <app-dashboard-config></app-dashboard-config>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="4"
+    rowspan="1"
+    class="red"
+  >
+    <app-dashboard-directory></app-dashboard-directory>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    colspan="4"
+    rowspan="1"
+    class="red"
+  >
+    <app-dashboard-personal></app-dashboard-personal>
+  </mat-grid-tile>
+
+</mat-grid-list>
