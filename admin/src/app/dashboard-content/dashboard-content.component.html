@@ -1,15 +1,15 @@
-<div class="box">
-  <h3 class="title">
-    <span class="text">Content blocks</span>
+<mat-toolbar color="primary">
+  Content blocks
 
-    <button
-      mat-icon-button
-      (click)="handleEdit()"
-    >
-      <mat-icon>settings</mat-icon>
-    </button>
-  </h3>
-</div>
+  <span style="flex: 1"></span>
+
+  <button
+    mat-icon-button
+    (click)="handleEdit()"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+</mat-toolbar>
 
 <mat-list role="list">
   <mat-list-item
@@ -17,11 +17,11 @@
     class="item"
     *ngFor="let block of list"
   >
-    <div matListItemTitle>Block {{block.id}}</div>
-    <div matListItemLine>Element {{block.count}}</div>
-    <div matListItemLine>Section {{block.count}}</div>
+    <div matListItemTitle>Block {{ block.id }}</div>
+    <div matListItemLine>Element {{ block.count }}</div>
+    <div matListItemLine>Section {{ block.count }}</div>
 
-    <div  matListItemMeta>
+    <div matListItemMeta>
       <button
         mat-icon-button
         (click)="handleMove(block.id)"
@@ -29,18 +29,5 @@
         <mat-icon>forward icon</mat-icon>
       </button>
     </div>
-
-<!--    <div class="title">-->
-<!--      <div class="text">-->
-<!--        Block {{ block.id }}-->
-<!--      </div>-->
-
-<!--      <button-->
-<!--        mat-icon-button-->
-<!--        (click)="handleMove(block.id)"-->
-<!--      >-->
-<!--        <mat-icon>forward icon</mat-icon>-->
-<!--      </button>-->
-<!--    </div>-->
   </mat-list-item>
 </mat-list>

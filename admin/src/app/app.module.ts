@@ -41,6 +41,7 @@ import { DashboardFlagComponent } from './dashboard-flag/dashboard-flag.componen
 import { DashboardLangComponent } from './dashboard-lang/dashboard-lang.component';
 import { DashboardConfigComponent } from './dashboard-config/dashboard-config.component';
 import { DashboardPersonalComponent } from './dashboard-personal/dashboard-personal.component';
+import { DashboardArchiveComponent } from './dashboard-archive/dashboard-archive.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { DashboardPersonalComponent } from './dashboard-personal/dashboard-perso
     DashboardLangComponent,
     DashboardConfigComponent,
     DashboardPersonalComponent,
+    DashboardArchiveComponent,
   ],
   imports: [
     BrowserModule,

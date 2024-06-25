@@ -149,6 +149,26 @@ describe('FileController', () => {
 
       expect(res.body).toEqual({count: 10});
     });
+
+    test('Should get count with collection filter', async () => {
+      const short = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+      const detail = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(new FileEntity(), {
+          collection: i % 2 ? detail : short ,
+          original: 'short.txt',
+          mimetype: 'text',
+          path: `txt/txt_${i}.txt`,
+        }).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/file/count?filter[collection]=DETAIL')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 5});
+    });
   });
 
   describe('File with strings', () => {

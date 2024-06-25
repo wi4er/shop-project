@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 })
 export class DashboardContentComponent implements OnInit {
 
-
   list: Array<{
     id: number;
     count: number;

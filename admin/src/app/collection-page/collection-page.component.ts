@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './collection-page.component.html',
   styleUrls: ['./collection-page.component.css']
 })
-export class CollectionPageComponent {
+export class CollectionPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
@@ -17,4 +17,11 @@ export class CollectionPageComponent {
 
   collectionId?: string;
 
+
+  ngOnInit() {
+    this.route.paramMap
+      .subscribe(value => {
+        this.collectionId = value.get('id') ?? '';
+      });
+  }
 }

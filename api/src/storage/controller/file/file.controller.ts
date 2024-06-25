@@ -83,8 +83,15 @@ export class FileController {
   }
 
   @Get('count')
-  getCount() {
-    return this.fileRepo.count().then(count => ({count}));
+  getCount(
+    @Query('filter')
+      filter?: FileFilter,
+  ) {
+    return this.fileRepo.count({
+      where: {
+        ...(filter ? this.toWhere(filter) : {}),
+      },
+    }).then(count => ({count}));
   }
 
   @Get(':id')

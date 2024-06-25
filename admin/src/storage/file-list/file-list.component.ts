@@ -66,6 +66,9 @@ export class FileListComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
+    console.log(this.collectionId);
+
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
