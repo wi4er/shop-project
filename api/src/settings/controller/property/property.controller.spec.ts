@@ -161,6 +161,18 @@ describe('PropertyController', () => {
       expect(item.body.id).toBe('NAME');
     });
 
+    test('Shouldn`t add with duplicate id', async () => {
+      await request(app.getHttpServer())
+        .post('/property')
+        .send({id: 'NAME'})
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .post('/property')
+        .send({id: 'NAME'})
+        .expect(400);
+    });
+
     test('Should add with strings', async () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
@@ -202,6 +214,24 @@ describe('PropertyController', () => {
         .expect(200);
 
       expect(item.body.id).toBe('NAME');
+    });
+
+    test('Should update id', async () => {
+      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/property/NAME')
+        .send({id: 'UPDATE'})
+        .expect(200);
+
+      const count = await request(app.getHttpServer())
+        .get('/property/count')
+        .send({id: 'UPDATE'})
+        .expect(200);
+
+
+      expect(item.body.id).toBe('UPDATE');
+      expect(count.body.count).toBe(1);
     });
 
     test('Should add strings', async () => {

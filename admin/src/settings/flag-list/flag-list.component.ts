@@ -4,7 +4,9 @@ import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Flag } from '../../app/model/settings/flag';
 import { Observable } from 'rxjs';
-import { StringifiableRecord } from 'query-string/base';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SelectionModel } from '@angular/cdk/collections';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-flag-list',
@@ -13,26 +15,69 @@ import { StringifiableRecord } from 'query-string/base';
 })
 export class FlagListComponent implements OnInit {
 
+  totalCount: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
+  selection = new SelectionModel<{ [key: string]: string }>(true, []);
+
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  totalCount: number = 0;
+  flagList: string[] = [];
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
+    public sanitizer: DomSanitizer,
   ) {
   }
 
   ngOnInit(): void {
+    this.refreshData();
   }
 
-  fetchList(args: StringifiableRecord) {
-    this.apiService.fetchList<Flag>(ApiEntity.FLAG, args)
-      .then(list => this.setData(list));
+  isAllSelected() {
+    return this.selection.selected.length === this.list.length;
+  }
 
-    this.apiService.countData(ApiEntity.FLAG)
-      .then(count => this.totalCount = count);
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.list);
+    }
+  }
+
+  changePage(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    this.refreshData();
+  }
+
+  getColumns() {
+    return [
+      'select',
+      'action',
+      ...this.columns,
+    ];
+  }
+
+  async refreshData() {
+    return Promise.all([
+      this.apiService.fetchList<Flag>(
+        ApiEntity.FLAG,
+        {
+          limit: this.pageSize,
+          offset: this.currentPage * this.pageSize,
+        },
+      ),
+      this.apiService.countData(ApiEntity.FLAG),
+    ]).then(([data, count]) => {
+      this.setData(data);
+      this.totalCount = count;
+      this.selection.clear();
+    });
   }
 
   /**
@@ -62,10 +107,10 @@ export class FlagListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem(): Observable<undefined> {
+  addItem() {
     const dialog = this.dialog.open(
       FlagFormComponent,
       {
@@ -74,10 +119,10 @@ export class FlagListComponent implements OnInit {
       },
     );
 
-    return dialog.afterClosed();
+    dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
-  updateItem(id: number): Observable<undefined> {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
       FlagFormComponent,
       {
@@ -87,16 +132,22 @@ export class FlagListComponent implements OnInit {
       },
     );
 
-    return dialog.afterClosed();
+    dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
   toggleFlag(id: number, flag: string) {
   }
 
   async deleteList() {
+    const list = this.selection.selected.map(item => item['id']);
+
+    this.apiService.deleteList(ApiEntity.FLAG, list)
+      .then(() => this.refreshData());
   }
 
   deleteItem(id: string) {
+    this.apiService.deleteList(ApiEntity.FLAG, [id])
+      .then(() => this.refreshData());
   }
 
 }

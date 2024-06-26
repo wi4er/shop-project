@@ -10,10 +10,13 @@ import { Router } from '@angular/router';
 })
 export class DashboardContentComponent implements OnInit {
 
-  list: Array<{
-    id: number;
-    count: number;
-  }> =  [];
+  list: {
+    [id: string]: {
+      id: number;
+      section: number;
+      element: number;
+    }
+  } = {};
 
   constructor(
     private apiService: ApiService,
@@ -22,7 +25,14 @@ export class DashboardContentComponent implements OnInit {
   }
 
   handleEdit() {
-    console.log("EDIT");
+    this.router.navigate(
+      ['/content'],
+      {},
+    );
+  }
+
+  handleSettings() {
+    console.log('EDIT');
   }
 
   handleMove(id: number) {
@@ -35,12 +45,19 @@ export class DashboardContentComponent implements OnInit {
   ngOnInit() {
     this.apiService.fetchList<Block>(ApiEntity.BLOCK)
       .then(list => list.forEach(it => {
-        this.list.push({
+        this.list[it.id] = {
           id: it.id,
-          count: 0,
-        })
+          section: 0,
+          element: 0,
+        };
 
+        this.apiService.countData(ApiEntity.SECTION, {['filter[block]']: it.id})
+          .then(count => this.list[it.id].section = count);
+        this.apiService.countData(ApiEntity.ELEMENT, {['filter[block]']: it.id})
+          .then(count => this.list[it.id].element = count);
       }));
   }
+
+  protected readonly Object = Object;
 
 }

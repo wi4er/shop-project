@@ -242,7 +242,12 @@ describe('FlagController', () => {
         .send({id: 'UPDATED'})
         .expect(200);
 
+      const count = await request(app.getHttpServer())
+        .get('/flag/count')
+        .expect(200);
+
       expect(res.body.id).toBe('UPDATED');
+      expect(count.body.count).toBe(1);
     });
 
     test('Should add string', async () => {

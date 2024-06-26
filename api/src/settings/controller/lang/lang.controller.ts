@@ -6,7 +6,6 @@ import { FlagInput } from '../../input/flag.input';
 import { LangInput } from '../../input/lang.input';
 import { LangInsertOperation } from '../../operation/lang-insert.operation';
 import { LangUpdateOperation } from '../../operation/lang-update.operation';
-import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
 import { LangDeleteOperation } from '../../operation/lang-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 

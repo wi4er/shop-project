@@ -7,6 +7,13 @@
     mat-icon-button
     (click)="handleEdit()"
   >
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    (click)="handleSettings()"
+  >
     <mat-icon>settings</mat-icon>
   </button>
 </mat-toolbar>
@@ -15,11 +22,11 @@
   <mat-list-item
     role="listitem"
     class="item"
-    *ngFor="let block of list"
+    *ngFor="let block of Object.values(list)"
   >
     <div matListItemTitle>Block {{ block.id }}</div>
-    <div matListItemLine>Element {{ block.count }}</div>
-    <div matListItemLine>Section {{ block.count }}</div>
+    <div matListItemLine>Elements: {{ block.element }}</div>
+    <div matListItemLine>Sections: {{ block.section }}</div>
 
     <div matListItemMeta>
       <button

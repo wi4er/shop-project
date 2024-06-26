@@ -1,1 +1,39 @@
-<p>dashboard-flag works!</p>
+<mat-toolbar color="primary">
+  Flag ({{ Object.keys(list).length }})
+
+  <span style="flex: 1"></span>
+
+  <button
+    mat-icon-button
+    (click)="handleEdit()"
+  >
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    (click)="handleSettings()"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-list class="list">
+  <mat-list-item
+    role="listitem"
+    class="item"
+    *ngFor="let property of Object.values(list)"
+  >
+    <div matListItemTitle>Flag {{ property.id }}</div>
+    <!--    <div matListItemLine>Count: {{ property }}</div>-->
+
+    <div matListItemMeta>
+      <button
+        mat-icon-button
+        (click)="handleMove(property.id)"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+  </mat-list-item>
+</mat-list>

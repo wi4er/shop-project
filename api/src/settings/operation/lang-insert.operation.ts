@@ -6,6 +6,7 @@ import { LangEntity } from '../model/lang.entity';
 import { LangInput } from '../input/lang.input';
 import { Lang4stringEntity } from '../model/lang4string.entity';
 import { Lang2flagEntity } from '../model/lang2flag.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class LangInsertOperation {
 
@@ -19,7 +20,12 @@ export class LangInsertOperation {
 
   async save(input: LangInput): Promise<string> {
     this.created.id = input.id;
-    await this.manager.save(this.created);
+
+    try {
+      await this.manager.insert(LangEntity, this.created);
+    } catch(err) {
+      throw new WrongDataException(err.message)
+    }
 
     const [stringList, pointList] = filterProperties(input.property);
 

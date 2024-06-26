@@ -7,6 +7,8 @@ import { filterProperties } from '../../common/input/filter-properties';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { FlagInput } from '../input/flag.input';
+import { PropertyEntity } from '../model/property.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class FlagUpdateOperation {
 
@@ -41,10 +43,15 @@ export class FlagUpdateOperation {
    * @param input
    */
   async save(id: string, input: FlagInput): Promise<string> {
-    const beforeItem = await this.checkFlag(id);
-    beforeItem.id = input.id;
+    try {
+      await this.manager.update(FlagEntity, {id}, {
+        id:  WrongDataException.assert(input.id, 'Flag id expected'),
+      });
+    } catch (err) {
+      throw new WrongDataException(err.message);
+    }
 
-    await beforeItem.save();
+    const beforeItem = await this.checkFlag(input.id);
 
     const [stringList, pointList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, stringList);

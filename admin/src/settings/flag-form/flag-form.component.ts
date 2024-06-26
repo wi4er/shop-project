@@ -5,6 +5,7 @@ import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FlagInput } from '../../app/model/settings/flag.input';
+import { PropertyInput } from '../../app/model/settings/property.input';
 
 @Component({
   selector: 'app-flag-form',
@@ -104,7 +105,11 @@ export class FlagFormComponent {
 
   saveItem() {
     if (this.data?.id) {
-
+      this.apiService.putData<FlagInput>(
+        ApiEntity.FLAG,
+        this.data.id,
+        this.toInput(),
+      ).then(() => this.dialogRef.close());
     } else {
       this.apiService.postData<FlagInput>(
         ApiEntity.FLAG,

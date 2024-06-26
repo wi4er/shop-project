@@ -7,6 +7,8 @@ import { LangEntity } from '../model/lang.entity';
 import { LangInput } from '../input/lang.input';
 import { Lang4stringEntity } from '../model/lang4string.entity';
 import { Lang2flagEntity } from '../model/lang2flag.entity';
+import { PropertyEntity } from '../model/property.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class LangUpdateOperation {
 
@@ -30,9 +32,8 @@ export class LangUpdateOperation {
         flag: {flag: true},
       },
     });
-    NoDataException.assert(inst, 'Lang not found!');
 
-    return inst;
+    return NoDataException.assert(inst, `Lang with id ${id} not found!`);
   }
 
   /**
@@ -41,10 +42,15 @@ export class LangUpdateOperation {
    * @param input
    */
   async save(id: string, input: LangInput): Promise<string> {
-    const beforeItem = await this.checkFlag(id);
-    beforeItem.id = input.id;
+    try {
+      await this.manager.update(LangEntity, {id}, {
+        id:  WrongDataException.assert(input.id, 'Lang id expected'),
+      });
+    } catch (err) {
+      throw new WrongDataException(err.message);
+    }
 
-    await beforeItem.save();
+    const beforeItem = await this.checkFlag(input.id);
 
     const [stringList, pointList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Lang4stringEntity).save(beforeItem, stringList);

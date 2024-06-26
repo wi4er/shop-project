@@ -79,7 +79,7 @@ describe('LangController', () => {
         .get('/lang/WONG')
         .expect(404);
     });
-  })
+  });
 
   describe('Lang count', () => {
     test('Should count empty list', async () => {
@@ -171,6 +171,18 @@ describe('LangController', () => {
       expect(res.body.id).toBe('EN');
     });
 
+    test('Shouldn`t add with duplicate id', async () => {
+      await request(app.getHttpServer())
+        .post('/lang')
+        .send({id: 'EN'})
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .post('/lang')
+        .send({id: 'EN'})
+        .expect(400);
+    });
+
     test('Should add with strings', async () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
@@ -203,7 +215,7 @@ describe('LangController', () => {
   });
 
   describe('Lang update', () => {
-    test('Should add item', async () => {
+    test('Should update item', async () => {
       await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
       const res = await request(app.getHttpServer())
@@ -212,6 +224,17 @@ describe('LangController', () => {
         .expect(200);
 
       expect(res.body.id).toBe('EN');
+    });
+
+    test('Should update id', async () => {
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/lang/EN')
+        .send({id: 'GR'})
+        .expect(200);
+
+      expect(res.body.id).toBe('GR');
     });
   });
 });

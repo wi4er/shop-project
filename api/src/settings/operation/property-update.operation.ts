@@ -7,6 +7,7 @@ import { PropertyInput } from '../input/property.input';
 import { PropertyEntity } from '../model/property.entity';
 import { Property4stringEntity } from '../model/property4string.entity';
 import { Property2flagEntity } from '../model/property2flag.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class PropertyUpdateOperation {
 
@@ -41,10 +42,15 @@ export class PropertyUpdateOperation {
    * @param input
    */
   async save(id: string, input: PropertyInput): Promise<string> {
-    const beforeItem = await this.checkProperty(id);
-    beforeItem.id = input.id;
+    try {
+      await this.manager.update(PropertyEntity, {id}, {
+        id:  WrongDataException.assert(input.id, 'Property id expected'),
+      });
+    } catch (err) {
+      throw new WrongDataException(err.message);
+    }
 
-    await beforeItem.save();
+    const beforeItem = await this.checkProperty(input.id);
 
     const [stringList, pointList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Property4stringEntity).save(beforeItem, stringList);
