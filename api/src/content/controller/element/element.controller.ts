@@ -6,8 +6,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { ElementInput } from '../../input/element.input';
-import { ElementFilterSchema } from '../../schema/element-filter.schema';
-import { ElementOrderSchema } from '../../schema/element-order.schema';
+import { ElementFilterInput } from '../../input/element-filter.input';
+import { ElementOrder } from '../../input/element.order';
 import { ElementInsertOperation } from '../../operation/element-insert.operation';
 import { ElementUpdateOperation } from '../../operation/element-update.operation';
 import { ElementDeleteOperation } from '../../operation/element-delete.operation';
@@ -48,7 +48,7 @@ export class ElementController {
     return new ElementRender(item);
   }
 
-  toWhere(filter: ElementFilterSchema): FindOptionsWhere<ElementEntity> {
+  toWhere(filter: ElementFilterInput): FindOptionsWhere<ElementEntity> {
     const where = {};
 
     if (filter?.block) {
@@ -72,7 +72,7 @@ export class ElementController {
     return where;
   }
 
-  toOrder(sort: ElementOrderSchema[]): FindOptionsOrder<ElementEntity> {
+  toOrder(sort: ElementOrder[]): FindOptionsOrder<ElementEntity> {
     const order = {};
 
     if (!Array.isArray(sort)) sort = [sort];
@@ -116,9 +116,9 @@ export class ElementController {
     @CurrentGroups()
       group: number[],
     @Query('filter')
-      filter?: ElementFilterSchema,
+      filter?: ElementFilterInput,
     @Query('sort')
-      sort?: ElementOrderSchema[],
+      sort?: ElementOrder[],
     @Query('offset')
       offset?: number,
     @Query('limit')
@@ -144,7 +144,7 @@ export class ElementController {
     @CurrentGroups()
       group: number[],
     @Query('filter')
-      filter?: ElementFilterSchema,
+      filter?: ElementFilterInput,
   ): Promise<{ count: number }> {
     return this.elementRepo.count({
       where: {

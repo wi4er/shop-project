@@ -1,0 +1,37 @@
+<div class="image">
+  <img [src]="item.image" alt=""/>
+</div>
+
+<div class="card">
+  <div class="top">
+    <div class="profile">
+      <div class="profile-image">
+        <img [src]="item.profile.image" alt=""/>
+      </div>
+
+      <div class="profile-name inter-400">
+        {{ item.profile.name }}
+      </div>
+    </div>
+
+    <div class="date inter-400">
+      {{ item.date | date: "dd MMM yyyy"}}
+    </div>
+  </div>
+
+  <div class="title inter-600">
+    {{ item.title }}
+  </div>
+
+  <div class="text inter-400">
+    {{ item.text }}
+  </div>
+
+  <div class="more inter-500">
+    Learn More
+    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 12.8435H4" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15.0001 17.8438C15.0001 17.8438 20 14.1614 20 12.8438C20 11.5261 15 7.84375 15 7.84375" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>

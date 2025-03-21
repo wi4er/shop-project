@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <div class="title inter-600">
+    Explore Our Latest Blog Posts
+  </div>
+
+  <div class="subtitle inter-400">
+    Dive into a wide range of topics, from productivity tips and goal setting to the latest trends in remote work.
+  </div>
+</div>
+
+
+<div class="blog-list">
+  <app-blog-item
+    *ngFor="let item of blogList"
+    [item]="item"
+  ></app-blog-item>
+</div>

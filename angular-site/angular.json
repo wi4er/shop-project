@@ -26,9 +26,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/clash-display.font.css",
-              "src/assets/satoshi.font.css",
-              "src/assets/text-styles.css"
+              "src/assets/Inter/inter.font.css",
+              "src/assets/text-style.css"
             ],
             "scripts": []
           },
@@ -91,9 +90,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/clash-display.font.css",
-              "src/assets/satoshi.font.css",
-              "src/assets/text-styles.css"
+              "src/assets/Inter/inter.font.css",
+              "src/assets/text-style.css"
             ],
             "scripts": []
           }
@@ -112,9 +110,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/clash-display.font.css",
-              "src/assets/satoshi.font.css",
-              "src/assets/text-styles.css"
+              "src/assets/Inter/inter.font.css",
+              "src/assets/text-style.css"
             ],
             "port": 6006
           }

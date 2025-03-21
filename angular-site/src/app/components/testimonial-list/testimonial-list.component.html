@@ -1,0 +1,50 @@
+<div class="wrapper">
+  <div class="title inter-600">
+    What Our Users Are Saying
+  </div>
+
+  <div class="subtitle inter-400">
+    Discover how our time tracking solution is making a difference for professionals across various industries.
+    Real feedback from real users highlights our impact on productivity and efficiency.
+  </div>
+</div>
+
+<div class="testimonial-list">
+  <app-testimonial-item
+    *ngFor="let item of itemList"
+    [item]="item"
+    [current]="item.id === current"
+  ></app-testimonial-item>
+</div>
+
+<div class="icon-list">
+  <div
+    class="icon-item to-left"
+    (click)="handleNext(-1)"
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        class="arrow"
+        d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+
+  <div
+    class="icon-item to-right"
+    (click)="handleNext(1)"
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        class="arrow"
+        d="M9 6C9 6 15 10.4189 15 12C15 13.5812 9 18 9 18"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div
+  class="item"
+  [class.current]="current"
+>
+  <div class="image">
+    <img [src]="item.image" [alt]="item.name"/>
+  </div>
+
+  <div class="name inter-700">
+    {{ item.name }}
+  </div>
+
+  <div class="position inter-400">
+    {{ item.position }}
+  </div>
+
+  <div class="text inter-400">
+    {{ item.text }}
+  </div>
+</div>

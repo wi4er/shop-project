@@ -42,6 +42,7 @@ import { DashboardLangComponent } from './dashboard-lang/dashboard-lang.componen
 import { DashboardConfigComponent } from './dashboard-config/dashboard-config.component';
 import { DashboardPersonalComponent } from './dashboard-personal/dashboard-personal.component';
 import { DashboardArchiveComponent } from './dashboard-archive/dashboard-archive.component';
+import { DirectoryModule } from '../directory/directory.module';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { DashboardArchiveComponent } from './dashboard-archive/dashboard-archive
     MatCheckboxModule,
     ReactiveFormsModule,
     ContentModule,
+    DirectoryModule,
     PersonalModule,
     StorageModule,
     MatGridListModule,

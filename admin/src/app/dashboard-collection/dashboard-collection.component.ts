@@ -50,4 +50,5 @@ export class DashboardCollectionComponent implements OnInit {
   }
 
   protected readonly Object = Object;
+
 }

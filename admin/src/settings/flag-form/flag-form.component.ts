@@ -5,7 +5,6 @@ import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FlagInput } from '../../app/model/settings/flag.input';
-import { PropertyInput } from '../../app/model/settings/property.input';
 
 @Component({
   selector: 'app-flag-form',

@@ -4,7 +4,7 @@ import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { BlockInput } from '../../app/model/content/block-input';
+import { BlockInput } from '../../app/model/content/block.input';
 import { Block } from '../../app/model/content/block';
 
 @Component({

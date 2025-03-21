@@ -10,6 +10,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { SettingsModule } from '../settings/settings.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -18,6 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
   ],
   imports: [
     CommonModule,
+    SettingsModule,
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
@@ -26,7 +32,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCheckboxModule,
     MatMenuModule,
     MatToolbarModule,
-    SettingsModule,
+    MatIconModule,
+    FormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTabsModule,
   ],
   exports: [
     DirectoryListComponent,

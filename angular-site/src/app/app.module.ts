@@ -3,33 +3,27 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomePageComponent } from './pages/home-page/home-page.component';
 import { NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SectionPageComponent } from './pages/section-page/section-page.component';
-import { CatalogPageComponent } from './pages/catalog-page/catalog-page.component';
-import { BasketPageComponent } from './pages/basket-page/basket-page.component';
-import { AboutPageComponent } from './pages/about-page/about-page.component';
-import { TopNavComponent } from './components/top-nav/top-nav.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { MainFeaturesComponent } from './components/main-features/main-features.component';
 import { HttpClientModule } from '@angular/common/http';
-import { HeroBlockComponent } from './components/hero-block/hero-block.component';
-import { FeatureBlockComponent } from './components/feature-block/feature-block.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+import { TestimonialListComponent } from './components/testimonial-list/testimonial-list.component';
+import { TestimonialItemComponent } from './components/testimonial-item/testimonial-item.component';
+import { InsightListComponent } from './components/insight-list/insight-list.component';
+import { InsightItemComponent } from './components/insight-item/insight-item.component';
+import { BlogListComponent } from './components/blog-list/blog-list.component';
+import { BlogItemComponent } from './components/blog-item/blog-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomePageComponent,
-    SectionPageComponent,
-    CatalogPageComponent,
-    BasketPageComponent,
-    AboutPageComponent,
-    TopNavComponent,
-    FooterComponent,
-    MainFeaturesComponent,
-    HeroBlockComponent,
-    FeatureBlockComponent,
+    MainPageComponent,
+    TestimonialListComponent,
+    TestimonialItemComponent,
+    InsightListComponent,
+    InsightItemComponent,
+    BlogListComponent,
+    BlogItemComponent,
   ],
   imports: [
     BrowserModule,

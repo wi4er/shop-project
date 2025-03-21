@@ -8,6 +8,10 @@ import { StringifiableRecord } from 'query-string/base';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Router } from '@angular/router';
+import { Property } from '../../app/model/settings/property';
+import { Flag } from '../../app/model/settings/flag';
+import { Lang } from '../../app/model/settings/lang';
 
 @Component({
   selector: 'app-directory-list',
@@ -19,15 +23,11 @@ export class DirectoryListComponent implements OnInit {
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  totalCount: number = 0;
-  pageEvent?: PageEvent;
-
-  pageSize: number = 10;
-  currentPage: number = 0;
-
-  propertyList: string[] = [];
   flagList: string[] = [];
 
+  totalCount: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
 
@@ -35,6 +35,7 @@ export class DirectoryListComponent implements OnInit {
     private dialog: MatDialog,
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
+    private router: Router,
   ) {
   }
 
@@ -42,6 +43,7 @@ export class DirectoryListComponent implements OnInit {
     return [
       'select',
       'action',
+      'moveto',
       ...this.columns,
     ];
   }
@@ -59,7 +61,6 @@ export class DirectoryListComponent implements OnInit {
   }
 
   changePage(event: PageEvent) {
-    this.pageEvent = event;
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
 
@@ -70,6 +71,24 @@ export class DirectoryListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.refreshData();
+  }
+
+  async refreshData() {
+    return Promise.all([
+      this.apiService.fetchList<Directory>(
+        ApiEntity.DIRECTORY,
+        {
+          limit: this.pageSize,
+          offset: this.currentPage * this.pageSize,
+        },
+      ),
+      this.apiService.countData(ApiEntity.DIRECTORY),
+    ]).then(([data, count]) => {
+      this.setData(data);
+      this.totalCount = count;
+      this.selection.clear();
+    });
   }
 
   fetchList(args: StringifiableRecord) {
@@ -107,10 +126,10 @@ export class DirectoryListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = [ 'id', 'created_at', 'updated_at', ...col ];
   }
 
-  addItem(): Observable<undefined> {
+  addItem() {
     const dialog = this.dialog.open(
       DirectoryFormComponent,
       {
@@ -119,10 +138,10 @@ export class DirectoryListComponent implements OnInit {
       },
     );
 
-    return dialog.afterClosed();
+    dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
-  updateItem(id: number): Observable<undefined> {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
       DirectoryFormComponent,
       {
@@ -132,18 +151,29 @@ export class DirectoryListComponent implements OnInit {
       },
     );
 
-    return dialog.afterClosed();
+    dialog.afterClosed().subscribe(() => this.refreshData());
+  }
+
+  onNext(id: string) {
+    this.router.navigate(
+      ['/directory', id],
+      {},
+    );
   }
 
   toggleFlag(id: number, flag: string) {
   }
 
   async deleteList() {
+    const list = this.selection.selected.map(item => item['id']);
+
+    this.apiService.deleteList(ApiEntity.DIRECTORY, list)
+      .then(() => this.refreshData());
   }
 
   deleteItem(id: string) {
-
+    this.apiService.deleteList(ApiEntity.DIRECTORY, [id])
+      .then(() => this.refreshData());
   }
 
-  protected readonly Event = Event;
 }

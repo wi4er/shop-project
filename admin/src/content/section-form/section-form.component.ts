@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Section } from '../../app/model/content/section';
-import { SectionInput } from '../../app/model/content/section-input';
+import { SectionInput } from '../../app/model/content/section.input';
 
 @Component({
   selector: 'app-section-form',

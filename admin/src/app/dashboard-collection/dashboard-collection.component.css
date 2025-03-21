@@ -6,7 +6,7 @@
   flex-direction: column;
 }
 
-.list {
+.testimonial-list {
   flex: 1;
   overflow: scroll;
 }

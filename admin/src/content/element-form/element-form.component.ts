@@ -5,7 +5,7 @@ import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
-import { ElementInput } from '../../app/model/content/element-input';
+import { ElementInput } from '../../app/model/content/element.input';
 import { Collection } from '../../app/model/storage/collection';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

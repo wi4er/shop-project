@@ -1,0 +1,20 @@
+<div class="body">
+  <div class="wrapper">
+    <div class="title inter-600">
+      Insights & Strategies for Success
+    </div>
+
+    <div class="subtitle inter-400">
+      Explore expert articles on productivity, resource management, and time tracking.
+      Our industry professionals share their knowledge to help you stay ahead and achieve your goals.
+    </div>
+  </div>
+
+  <div class="insight-list">
+    <app-insight-item
+      *ngFor="let item of insList"
+      [item]="item"
+    ></app-insight-item>
+  </div>
+</div>
+

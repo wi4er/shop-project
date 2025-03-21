@@ -9,7 +9,7 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.list {
+.testimonial-list {
   flex: 1;
   overflow: scroll;
 }

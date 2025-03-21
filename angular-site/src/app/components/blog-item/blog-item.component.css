@@ -1,0 +1,67 @@
+:host {
+  flex: 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.image {
+  max-height: 220px;
+  overflow: hidden;
+
+  & img {
+    max-width: 100%;
+  }
+
+  @media (width > 1080px) {
+    max-height: 270px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  .top {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @media (width > 1080px) {
+      gap: 18px;
+    }
+
+    .title {
+      line-height: 120%;
+      color: #FFFFFF;
+      font-size: 18px;
+      letter-spacing: 0;
+
+      @media (width > 1080px) {
+        font-size: 24px;
+      }
+    }
+
+    .text {
+      line-height: 120%;
+      color: #908F9A;
+      letter-spacing: 0;
+
+      @media (width > 1080px) {
+        line-height: 140%;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+.learn {
+  display: flex;
+  align-items: center;
+  color: #14C88C;
+
+  font-size: 18px;
+  letter-spacing: 0;
+  gap: 6px;
+}
