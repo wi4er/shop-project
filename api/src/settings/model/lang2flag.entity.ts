@@ -33,6 +33,7 @@ export class Lang2flagEntity extends BaseEntity {
     lang => lang.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -42,6 +43,7 @@ export class Lang2flagEntity extends BaseEntity {
     () => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

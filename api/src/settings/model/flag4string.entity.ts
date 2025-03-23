@@ -40,6 +40,7 @@ export class Flag4stringEntity
     flag => flag.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -49,6 +50,7 @@ export class Flag4stringEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -58,6 +60,7 @@ export class Flag4stringEntity
     () => LangEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: true,
     },
   )

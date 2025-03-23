@@ -36,6 +36,7 @@ export class Property2flagEntity
     property => property.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -45,6 +46,7 @@ export class Property2flagEntity
     () => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

@@ -1,5 +1,5 @@
 <mat-toolbar *ngIf="list.length">
-  <span>Element {{blockId}} </span>
+  <span>{{ blockName ?? "Element " + blockId }} </span>
 
   <span class="spacer"></span>
 
@@ -143,6 +143,7 @@
             <img
               style="max-width: 100px; max-height: 100px"
               [src]="'http://localhost:3030/' + image.path"
+              alt=""
             />
           </div>
         </div>
@@ -177,5 +178,5 @@
 <app-add-button
   [onClick]="addItem.bind(this)"
   *ngIf="!list.length"
-  name="Element"
+  [name]="(blockName ?? '') + ' Element'"
 ></app-add-button>

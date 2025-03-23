@@ -250,6 +250,44 @@ describe('FlagController', () => {
       expect(count.body.count).toBe(1);
     });
 
+    test('Should change id with string', async () => {
+      const parent = await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Flag4stringEntity(), {parent, property, string: 'VALUE'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/flag/OLD')
+        .send({id: 'UPDATED', property: [{property: 'NAME', string: 'VALUE'}]})
+        .expect(200);
+
+      const count = await request(app.getHttpServer())
+        .get('/flag/count')
+        .expect(200);
+
+      expect(res.body.id).toBe('UPDATED');
+      expect(res.body.property).toEqual([{property: 'NAME', string: 'VALUE'}]);
+      expect(count.body.count).toBe(1);
+    });
+
+    test('Should change id with flag', async () => {
+      const parent = await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+      await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/flag/OLD')
+        .send({id: 'UPDATED', flag: ['FLAG']})
+        .expect(200);
+
+      const count = await request(app.getHttpServer())
+        .get('/flag/count')
+        .expect(200);
+
+      expect(res.body.id).toBe('UPDATED');
+      expect(res.body.flag).toEqual(['FLAG']);
+      expect(count.body.count).toBe(2);
+    });
+
     test('Should add string', async () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();

@@ -236,5 +236,33 @@ describe('LangController', () => {
 
       expect(res.body.id).toBe('GR');
     });
+
+    test('Should update id with string', async () => {
+      const parent = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Lang4stringEntity(), {parent, property, string: 'English'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/lang/EN')
+        .send({id: 'GR', property: [{property: 'NAME', string: 'English'}]})
+        .expect(200);
+
+      expect(res.body.id).toBe('GR');
+      expect(res.body.property).toEqual([{property: 'NAME', string: 'English'}]);
+    });
+
+    test('Should update id with flag', async () => {
+      const parent = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+      await Object.assign(new Lang2flagEntity(), {parent, flag}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/lang/EN')
+        .send({id: 'GR', flag: ['FLAG']})
+        .expect(200);
+
+      expect(res.body.id).toBe('GR');
+      expect(res.body.flag).toEqual(['FLAG']);
+    });
   });
 });

@@ -36,6 +36,7 @@ export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<
     () => LangEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: true,
     },
   )
@@ -46,6 +47,7 @@ export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<
     lang => lang.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -55,6 +57,7 @@ export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

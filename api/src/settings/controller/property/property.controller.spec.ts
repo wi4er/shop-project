@@ -226,11 +226,46 @@ describe('PropertyController', () => {
 
       const count = await request(app.getHttpServer())
         .get('/property/count')
-        .send({id: 'UPDATE'})
         .expect(200);
 
 
       expect(item.body.id).toBe('UPDATE');
+      expect(count.body.count).toBe(1);
+    });
+
+    test('Should update id with string', async () => {
+      const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Property4stringEntity(), {parent, property: parent, string: 'VALUE'}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/property/NAME')
+        .send({id: 'UPDATE', property: [{string: 'VALUE', property: 'UPDATE'}]})
+        .expect(200);
+      const count = await request(app.getHttpServer())
+        .get('/property/count')
+        .expect(200);
+
+      expect(item.body.id).toBe('UPDATE');
+      expect(item.body.property).toEqual([{property: 'UPDATE', string: 'VALUE'}]);
+      expect(count.body.count).toBe(1);
+    });
+
+    test('Should update id with flag', async () => {
+      const parent = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+      await Object.assign(new Property2flagEntity(), {parent, flag}).save();
+
+      const item = await request(app.getHttpServer())
+        .put('/property/NAME')
+        .send({id: 'UPDATE', flag: ['FLAG']})
+        .expect(200);
+
+      const count = await request(app.getHttpServer())
+        .get('/property/count')
+        .expect(200);
+
+      expect(item.body.id).toBe('UPDATE');
+      expect(item.body.flag).toEqual(['FLAG']);
       expect(count.body.count).toBe(1);
     });
 

@@ -31,9 +31,8 @@ export class PropertyUpdateOperation {
         flag: {flag: true},
       },
     });
-    NoDataException.assert(inst, 'Property not found!');
 
-    return inst;
+    return NoDataException.assert(inst, `Property > ${inst.id} < not found!`);
   }
 
   /**

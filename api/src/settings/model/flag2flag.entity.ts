@@ -36,6 +36,7 @@ export class Flag2flagEntity
     flag => flag.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -45,6 +46,7 @@ export class Flag2flagEntity
     () => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

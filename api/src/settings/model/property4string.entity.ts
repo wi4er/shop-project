@@ -39,6 +39,7 @@ export class Property4stringEntity
     property => property.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -48,6 +49,7 @@ export class Property4stringEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -57,6 +59,7 @@ export class Property4stringEntity
     () => LangEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: true,
     },
   )

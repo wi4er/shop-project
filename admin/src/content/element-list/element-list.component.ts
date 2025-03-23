@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
@@ -9,6 +9,7 @@ import { Element } from '../../app/model/content/element';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Block } from '../../app/model/content/block';
 
 @Component({
   selector: 'content-element-list',
@@ -26,6 +27,7 @@ export class ElementListComponent implements OnChanges {
 
   @Input()
   blockId?: number;
+  blockName?: string;
 
   totalCount: number = 0;
   pageSize: number = 10;
@@ -79,14 +81,16 @@ export class ElementListComponent implements OnChanges {
     this.refreshData();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.blockId ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, String(this.blockId)) : null,
       this.refreshData(),
-    ]).then(([flagList, propertyList]) => {
+    ]).then(([flagList, propertyList, blockItem]) => {
       this.flagList = flagList.map((it: { id: string }) => it.id);
       this.propertyList = propertyList.map((item: { id: string }) => item.id);
+      this.blockName = blockItem?.property.find(item => item.property === 'NAME')?.string;
     });
   }
 

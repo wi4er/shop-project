@@ -5,6 +5,7 @@ import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { PropertyInput } from '../../app/model/settings/property.input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-property-form',
@@ -28,6 +29,7 @@ export class PropertyFormComponent {
     private dialogRef: MatDialogRef<PropertyFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private errorBar: MatSnackBar,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -118,18 +120,29 @@ export class PropertyFormComponent {
     return input;
   }
 
+  /**
+   *
+   */
   saveItem() {
     if (this.data?.id) {
       this.apiService.putData<PropertyInput>(
         ApiEntity.PROPERTY,
         this.data.id,
         this.toInput(),
-      ).then(() => this.dialogRef.close());
+      )
+        .then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
     } else {
       this.apiService.postData<PropertyInput>(
         ApiEntity.PROPERTY,
         this.toInput(),
-      ).then(() => this.dialogRef.close());
+      )
+        .then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
     }
   }
 

@@ -33,7 +33,6 @@ export class SectionListComponent {
   totalCount: number = 0;
   pageSize: number = 10;
   currentPage: number = 0;
-
   activeFlags: { [key: string]: string[] } = {};
 
   propertyList: string[] = [];
@@ -150,15 +149,23 @@ export class SectionListComponent {
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
-    this.apiService.deleteList(ApiEntity.ELEMENT, list)
+    this.apiService.deleteList(ApiEntity.SECTION, list)
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   * @param id
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.ELEMENT, [id])
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   * @param id
+   */
   updateItem(id: number) {
     const dialog = this.dialog.open(
       SectionFormComponent,
@@ -172,6 +179,9 @@ export class SectionListComponent {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   addItem() {
     const dialog = this.dialog.open(
       SectionFormComponent,
@@ -185,6 +195,11 @@ export class SectionListComponent {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   * @param id
+   * @param flag
+   */
   toggleFlag(id: number, flag: string) {
     console.log(id, '>>>>>>>', flag);
   }
