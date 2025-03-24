@@ -25,6 +25,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { ContactEditComponent } from './contact-edit/contact-edit.component';
+import { UserContactSettingsComponent } from './user-contact-settings/user-contact-settings.component';
 
 
 
@@ -41,6 +43,8 @@ import { UserSettingsComponent } from './user-settings/user-settings.component';
     UserFormComponent,
     UserListComponent,
     UserSettingsComponent,
+    ContactEditComponent,
+    UserContactSettingsComponent,
   ],
   exports: [
     AuthDialogComponent,

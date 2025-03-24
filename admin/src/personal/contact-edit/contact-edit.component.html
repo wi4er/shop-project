@@ -1,0 +1,22 @@
+<div *ngFor="let item of list">
+  <mat-form-field appearance="fill">
+    <mat-label>
+      No lang
+    </mat-label>
+
+    <input
+      matInput
+      [(ngModel)]="edit[item.id].value"
+    />
+
+    <button
+      matSuffix
+      type="button"
+      mat-icon-button
+      aria-label="add"
+      (click)="clearEdit(item.id)"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>

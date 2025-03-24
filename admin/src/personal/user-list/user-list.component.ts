@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserFormComponent } from '../user-form/user-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Observable } from 'rxjs';
 import { User } from '../../app/model/user/user';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -25,7 +24,6 @@ export class UserListComponent implements OnInit {
   pageSize: number = 10;
   currentPage: number = 0;
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
-
 
   constructor(
     private dialog: MatDialog,
@@ -50,6 +48,9 @@ export class UserListComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -57,6 +58,9 @@ export class UserListComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -112,31 +116,27 @@ export class UserListComponent implements OnInit {
    *
    */
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       UserFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   /**
    *
    */
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       UserFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   toggleFlag(id: number, flag: string) {
@@ -147,10 +147,10 @@ export class UserListComponent implements OnInit {
    *
    */
   async deleteList() {
-    const list = this.selection.selected.map(item => item['id']);
-
-    this.apiService.deleteList(ApiEntity.USER, list)
-      .then(() => this.refreshData());
+    this.apiService.deleteList(
+      ApiEntity.USER,
+      this.selection.selected.map(item => item['id']),
+    ).then(() => this.refreshData());
   }
 
   /**
@@ -158,7 +158,7 @@ export class UserListComponent implements OnInit {
    * @param id
    */
   deleteItem(id: string) {
-    this.apiService.deleteList(ApiEntity.ELEMENT, [id])
+    this.apiService.deleteList(ApiEntity.USER, [id])
       .then(() => this.refreshData());
   }
 

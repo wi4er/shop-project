@@ -24,8 +24,6 @@ export class PropertyEditComponent {
   addEdit(id: string, lang: string) {
     if (!this.edit[id][lang]) this.edit[id][lang] = [];
 
-    console.log(this.edit[id]);
-
     this.edit[id][lang].push({
       value: '',
       error: '',

@@ -7,8 +7,8 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { UserInput } from '../../app/model/user/user.input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../app/model/user/user';
-import { Element } from '../../app/model/content/element';
-import { ElementInput } from '../../app/model/content/element.input';
+import { Group } from '../../app/model/user/group';
+import { Contact } from '../../app/model/user/contact';
 
 @Component({
   selector: 'app-user-form',
@@ -22,11 +22,14 @@ export class UserFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
+  propertyList: Array<Property> = [];
+  langList: Array<Lang> = [];
+  flagList: Array<Flag> = [];
+  groupList: Array<Group> = []
+  contactList: Array<Contact> = [];
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editContact: { [property: string]: { value: string, error?: string } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -46,11 +49,15 @@ export class UserFormComponent implements OnInit {
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
+      this.apiService.fetchList<Group>(ApiEntity.GROUP),
+      this.apiService.fetchList<Contact>(ApiEntity.CONTACT),
       this.data?.id ? this.apiService.fetchItem<User>(ApiEntity.USER, this.id) : null,
-    ]).then(([property, flag, lang, data]) => {
+    ]).then(([property, flag, lang, group, contact, data]) => {
       this.propertyList = property;
       this.flagList = flag;
       this.langList = lang;
+      this.groupList = group;
+      this.contactList = contact;
 
       this.initEditValues();
       if (data) this.toEdit(data);
@@ -159,11 +166,11 @@ export class UserFormComponent implements OnInit {
       this.apiService.postData<UserInput>(
         ApiEntity.USER,
         this.toInput(),
-      ).then(() => this.dialogRef.close())
+      )
+        .then(() => this.dialogRef.close())
         .catch((err: string) => {
           this.errorBar.open(err, 'close', {duration: 5000});
         });
-      ;
     }
   }
 
