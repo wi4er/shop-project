@@ -285,9 +285,45 @@ describe('UserController', () => {
       expect(res.body.property[0].string).toBe('VALUE');
     });
 
-    test('Should add strings', async () => {
+    test('Should update strings', async () => {
+      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const property = await Object.assign(new PropertyEntity(), {id: 'OLD'}).save();
+      await Object.assign(new PropertyEntity(), {id: 'NEW'}).save();
+      await Object.assign(new User4stringEntity(), {parent, property, string: 'OLD'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/user/1')
+        .send({
+          login: 'user',
+          property: [{property: 'NEW', string: 'NEW'}],
+        })
+        .expect(200);
+
+      expect(res.body.property).toHaveLength(1);
+      expect(res.body.property[0].property).toBe('NEW');
+      expect(res.body.property[0].string).toBe('NEW');
+    });
+
+    test('Should add flag', async () => {
       await Object.assign(new UserEntity(), {login: 'user'}).save();
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const res = await request(app.getHttpServer())
+        .put('/user/1')
+        .send({
+          login: 'user',
+          flag: ['NEW'],
+        })
+        .expect(200);
+
+      expect(res.body.flag).toEqual(['NEW']);
+    });
+
+    test('Should update flag', async () => {
+      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+      await Object.assign(new User2flagEntity(), {parent, flag}).save();
 
       const res = await request(app.getHttpServer())
         .put('/user/1')

@@ -20,6 +20,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
 
 
 
@@ -35,6 +40,7 @@ import { MatIconModule } from '@angular/material/icon';
     UserContactListComponent,
     UserFormComponent,
     UserListComponent,
+    UserSettingsComponent,
   ],
   exports: [
     AuthDialogComponent,
@@ -56,6 +62,10 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     MatCheckboxModule,
     MatIconModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatToolbarModule,
   ],
 })
 export class PersonalModule { }

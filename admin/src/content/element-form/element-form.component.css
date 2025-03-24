@@ -1,4 +1,9 @@
 
+.top {
+  display: flex;
+  gap: 24px;
+}
+
 .add-input {
   display: none;
 }

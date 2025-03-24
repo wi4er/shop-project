@@ -23,16 +23,18 @@ export class UserUpdateOperation {
    */
   private async checkUser(id: number): Promise<UserEntity> {
     const userRepo = this.trans.getRepository<UserEntity>(UserEntity);
-    const inst = await userRepo.findOne({
-      where: {id},
-      relations: {
-        string: true,
-        flag: true,
-        contact: {contact: true},
-      }
-    });
 
-    return WrongDataException.assert(inst, `User id ${id} not found!`);
+    return WrongDataException.assert(
+      await userRepo.findOne({
+        where: {id},
+        relations: {
+          contact: {contact: true},
+          string: {property: true},
+          flag: {flag: true},
+        },
+      }),
+      `User with id >> ${id} << not found!`,
+    );
   }
 
   /**

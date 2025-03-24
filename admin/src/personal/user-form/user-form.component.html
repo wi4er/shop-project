@@ -8,30 +8,36 @@
   </h2>
 
   <mat-dialog-content>
-    <mat-form-field
+    <div class="line">
+      <mat-form-field
+        *ngIf="!!data?.id"
+        appearance="fill"
+      >
+        <mat-label>ID</mat-label>
+
+        <input
+          matInput
+          name="id"
+          [(ngModel)]="id"
+          disabled
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Login</mat-label>
+
+        <input
+          matInput
+          name="login"
+          [(ngModel)]="login"
+        />
+      </mat-form-field>
+    </div>
+
+    <div
+      class="line"
       *ngIf="!!data?.id"
-      appearance="fill"
     >
-      <mat-label>ID</mat-label>
-
-      <input
-        matInput
-        name="id"
-        [(ngModel)]="id"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Login</mat-label>
-
-      <input
-        matInput
-        name="login"
-        [(ngModel)]="login"
-      />
-    </mat-form-field>
-
-    <div *ngIf="!!data?.id">
       <mat-form-field appearance="fill">
         <mat-label>Created at</mat-label>
 
@@ -65,8 +71,7 @@
       </mat-tab>
 
       <mat-tab
-        label="Flags"
-        *ngIf="flagList.length"
+        [label]="'Flags'"
       >
         <app-flag-edit
           [list]="flagList"

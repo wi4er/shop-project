@@ -1,17 +1,21 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { UserInput } from '../../app/model/user/user.input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from '../../app/model/user/user';
+import { Element } from '../../app/model/content/element';
+import { ElementInput } from '../../app/model/content/element.input';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.css']
+  styleUrls: ['./user-form.component.css'],
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
 
   id: string = '';
   login: string = '';
@@ -29,44 +33,51 @@ export class UserFormComponent {
     private dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private errorBar: MatSnackBar,
   ) {
     if (data?.id) this.id = data.id;
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, flag, lang]) => {
+      this.data?.id ? this.apiService.fetchItem<User>(ApiEntity.USER, this.id) : null,
+    ]).then(([property, flag, lang, data]) => {
       this.propertyList = property;
       this.flagList = flag;
       this.langList = lang;
 
       this.initEditValues();
+      if (data) this.toEdit(data);
     });
-
-    if (this.data?.id) {
-      this.apiService.fetchItem<Property>(ApiEntity.USER, this.data.id)
-        .then(res => {
-          this.toEdit(res);
-        });
-    }
   }
 
+  /**
+   *
+   */
   getPropertyCount() {
     return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
+  /**
+   *
+   */
   initEditValues() {
     for (const prop of this.propertyList) {
       this.editProperties[prop.id] = {};
 
       for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [{value: ''}];
+        this.editProperties[prop.id][lang.id] = [];
       }
+
+      this.editProperties[prop.id][''] = [];
     }
 
     for (const flag of this.flagList) {
@@ -74,15 +85,31 @@ export class UserFormComponent {
     }
   }
 
-  toEdit(item: Property) {
+  /**
+   *
+   * @param item
+   */
+  toEdit(item: User) {
+    this.id = item.id;
+    this.login = item.login;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    // for (const flag of item.flag) {
-    //   this.editFlags[flag] = true;
-    // }
+    for (const prop of item.property) {
+      this.editProperties[prop.property][prop.lang ?? ''].push({
+        value: prop.string,
+        error: '',
+      });
+    }
+
+    for (const flag of item.flag) {
+      this.editFlags[flag] = true;
+    }
   }
 
+  /**
+   *
+   */
   toInput(): UserInput {
     const input: UserInput = {
       id: +this.id,
@@ -93,8 +120,14 @@ export class UserFormComponent {
 
     for (const prop in this.editProperties) {
       for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) {
-          continue;
+        if (!this.editProperties[prop][lang]) continue;
+
+        for (const value of this.editProperties[prop][lang]) {
+          input.property.push({
+            property: prop,
+            string: value.value,
+            lang: lang || undefined,
+          });
         }
       }
     }
@@ -108,16 +141,29 @@ export class UserFormComponent {
     return input;
   }
 
+  /**
+   *
+   */
   saveItem() {
     if (this.data?.id) {
-
+      this.apiService.putData<UserInput>(
+        ApiEntity.USER,
+        this.data.id,
+        this.toInput(),
+      )
+        .then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
     } else {
       this.apiService.postData<UserInput>(
         ApiEntity.USER,
         this.toInput(),
-      ).then(() => {
-        this.dialogRef.close()
-      });
+      ).then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
+      ;
     }
   }
 

@@ -1,0 +1,46 @@
+<form (submit)="saveData()">
+  <mat-dialog-content>
+    <mat-tab-group
+      animationDuration="450ms"
+      class="tab-group"
+      [selectedIndex]="selected.value"
+    >
+      <mat-tab label="Properties">
+        Properties HERE
+      </mat-tab>
+
+      <mat-tab label="Flags">
+        <mat-selection-list >
+          <mat-list-option
+
+            *ngFor="let flag of flagList"
+          >
+            {{ flag.id }}
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-tab>
+
+      <mat-tab label="Sorts">
+        ORDERS HERE
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      type="button"
+    >
+      Cancel
+    </button>
+
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>

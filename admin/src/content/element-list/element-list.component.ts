@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Block } from '../../app/model/content/block';
+import { ElementSettingsComponent } from '../element-settings/element-settings.component';
 
 @Component({
   selector: 'content-element-list',
@@ -132,7 +133,7 @@ export class ElementListComponent implements OnChanges {
         ApiEntity.ELEMENT,
         {
           'filter[block]': this.blockId,
-          'sort[sort]': 'desc',
+          'sort[sort]': 'asc',
           'sort[created_at]': 'desc',
           limit: this.pageSize,
           offset: this.currentPage * this.pageSize,
@@ -190,6 +191,19 @@ export class ElementListComponent implements OnChanges {
 
   toggleFlag(id: number, flag: string) {
     console.log(id, '>>>>>>>', flag);
+  }
+
+  openSettings() {
+    const dialog = this.dialog.open(
+      ElementSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {block: this.blockId},
+      },
+    );
+
+    dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
 }

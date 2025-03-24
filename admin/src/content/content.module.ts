@@ -24,6 +24,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { StorageModule } from '../storage/storage.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ElementSettingsComponent } from './element-settings/element-settings.component';
+import { MatList, MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     SectionFormComponent,
     BlockListComponent,
     BlockFormComponent,
+    ElementSettingsComponent,
   ],
   exports: [
     ElementListComponent,
@@ -57,6 +60,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatTabsModule,
     MatCardModule,
     MatSnackBarModule,
+    MatListModule,
     PersonalModule,
     StorageModule,
   ],

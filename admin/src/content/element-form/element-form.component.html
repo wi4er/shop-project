@@ -8,26 +8,27 @@
   </h2>
 
   <mat-dialog-content>
-    <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
+    <div class="top">
+      <mat-form-field appearance="fill">
+        <mat-label>ID</mat-label>
 
-      <input
-        matInput
-        name="id"
-        [(ngModel)]="id"
-      />
-    </mat-form-field>
+        <input
+          matInput
+          name="id"
+          [(ngModel)]="id"
+        />
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Sort</mat-label>
+      <mat-form-field appearance="fill">
+        <mat-label>Sort</mat-label>
 
-      <input
-        matInput
-        name="sort"
-        [(ngModel)]="sort"
-      />
-    </mat-form-field>
-
+        <input
+          matInput
+          name="sort"
+          [(ngModel)]="sort"
+        />
+      </mat-form-field>
+    </div>
 
     <div *ngIf="!!data?.id">
       <mat-form-field appearance="fill">

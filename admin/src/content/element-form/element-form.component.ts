@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './element-form.component.html',
   styleUrls: ['./element-form.component.css'],
 })
-export class ElementFormComponent {
+export class ElementFormComponent implements OnInit {
 
   id: string = '';
   created_at: string = '';

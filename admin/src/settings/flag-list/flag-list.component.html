@@ -14,6 +14,7 @@
   <button
     mat-icon-button
     (click)="deleteList()"
+    [disabled]="selection.isEmpty()"
     title="delete item"
   >
     <mat-icon>delete</mat-icon>
