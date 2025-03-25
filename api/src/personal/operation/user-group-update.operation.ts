@@ -20,7 +20,7 @@ export class UserGroupUpdateOperation {
    * @param id
    * @private
    */
-  private async checkGroup(id: number): Promise<GroupEntity> {
+  private async checkGroup(id: string): Promise<GroupEntity> {
     const groupRepo = this.trans.getRepository(GroupEntity);
     const inst = await groupRepo.findOne({
       where: {id},
@@ -38,7 +38,7 @@ export class UserGroupUpdateOperation {
    * @param id
    * @param input
    */
-  async save(id: number, input: UserGroupInput): Promise<number> {
+  async save(id: string, input: UserGroupInput): Promise<string> {
     const beforeItem = await this.checkGroup(id);
     beforeItem.parent = await this.checkGroup(input.parent);
 

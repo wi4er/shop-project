@@ -46,6 +46,7 @@ export class User2flagEntity
     () => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

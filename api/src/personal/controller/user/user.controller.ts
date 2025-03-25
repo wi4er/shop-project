@@ -66,25 +66,21 @@ export class UserController {
   ) {
     return this.userRepo.find({
       relations: this.relations,
+      order: {created_at: 'asc'},
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));
   }
 
   @Get('count')
-  async getCount(
-    @Query('offset')
-      offset?: number,
-    @Query('limit')
-      limit?: number,
-  ) {
+  async getCount() {
     return this.userRepo.count().then(count => ({count}));
   }
 
   @Get(':id')
   async getItem(
     @Param('id')
-      id: number,
+      id: string,
   ) {
     return this.userRepo.findOne({
       where: {id},
@@ -112,7 +108,7 @@ export class UserController {
     @Body()
       input: UserInput,
     @Param('id')
-      id: number,
+      id: string,
   ) {
     return this.entityManager.transaction(
       trans => new UserUpdateOperation(this.entityManager).save(id, input)
@@ -126,7 +122,7 @@ export class UserController {
   @Delete(':id')
   async deleteUser(
     @Param('id')
-      id: number,
+      id: string,
   ) {
     return this.entityManager.transaction(
       trans => new UserDeleteOperation(trans).save([id]),

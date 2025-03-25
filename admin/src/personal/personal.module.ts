@@ -27,6 +27,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { ContactEditComponent } from './contact-edit/contact-edit.component';
 import { UserContactSettingsComponent } from './user-contact-settings/user-contact-settings.component';
+import { GroupSettingsComponent } from './group-settings/group-settings.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -45,6 +47,7 @@ import { UserContactSettingsComponent } from './user-contact-settings/user-conta
     UserSettingsComponent,
     ContactEditComponent,
     UserContactSettingsComponent,
+    GroupSettingsComponent,
   ],
   exports: [
     AuthDialogComponent,
@@ -70,6 +73,7 @@ import { UserContactSettingsComponent } from './user-contact-settings/user-conta
     MatPaginatorModule,
     MatTableModule,
     MatToolbarModule,
+    MatSelectModule,
   ],
 })
 export class PersonalModule { }

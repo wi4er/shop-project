@@ -29,6 +29,7 @@ export class ContactEntity
   @PrimaryColumn({
     type: "varchar",
     length: 50,
+    nullable: false,
   })
   id: string;
 

@@ -5,10 +5,10 @@ import { PropertyValueInput } from '../../common/input/property-value.input';
 
 export class UserInput implements WithPropertyInput, WithFlagInput {
 
-  id: number;
+  id: string;
   login: string;
   contact: User2userContactInput[];
-  group?: number[];
+  group?: string[];
   property: PropertyValueInput[];
   flag: string[];
 

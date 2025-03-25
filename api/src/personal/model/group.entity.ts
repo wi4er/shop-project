@@ -1,9 +1,8 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   BaseEntity,
   CreateDateColumn,
-  UpdateDateColumn, DeleteDateColumn, VersionColumn, OneToMany, ManyToOne,
+  UpdateDateColumn, DeleteDateColumn, VersionColumn, OneToMany, ManyToOne, PrimaryColumn,
 } from 'typeorm';
 import { Group4stringEntity } from './group4string.entity';
 import { Group2flagEntity } from './group2flag.entity';
@@ -16,8 +15,12 @@ export class GroupEntity
   extends BaseEntity
   implements WithFlagEntity<GroupEntity>, WithStringEntity<GroupEntity> {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({
+    type: "varchar",
+    length: 36,
+    default: () => 'uuid_generate_v4()',
+  })
+  id: string;
 
   @CreateDateColumn()
   created_at: Date;

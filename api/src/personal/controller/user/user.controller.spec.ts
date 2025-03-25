@@ -29,7 +29,7 @@ describe('UserController', () => {
   afterAll(() => source.destroy());
 
   describe('User fields', () => {
-    test('Should get user list', async () => {
+    test('Should get empty list', async () => {
       await Object.assign(new UserEntity(), {login: 'USER'}).save();
 
       const res = await request(app.getHttpServer())
@@ -37,29 +37,29 @@ describe('UserController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe(1);
+      expect(res.body[0].id).toHaveLength(36);
       expect(res.body[0].login).toBe('USER');
     });
 
     test('Should get user item', async () => {
-      await Object.assign(new UserEntity(), {login: 'USER'}).save();
+      await Object.assign(new UserEntity(), {id: '222', login: 'USER'}).save();
 
       const res = await request(app.getHttpServer())
-        .get(`/user/1`)
+        .get(`/user/222`)
         .expect(200);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('222');
       expect(res.body.login).toBe('USER');
     });
 
     test('Should get user list', async () => {
-      await Object.assign(new UserEntity(), {login: 'USER'}).save();
+      await Object.assign(new UserEntity(), {id: '111', login: 'USER'}).save();
 
       const res = await request(app.getHttpServer())
         .get(`/user`)
         .expect(200);
 
-      expect(res.body[0].id).toBe(1);
+      expect(res.body[0].id).toBe('111');
       expect(res.body[0].login).toBe('USER');
     });
 
@@ -127,10 +127,8 @@ describe('UserController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].id).toBe(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('John');
-      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].id).toHaveLength(36);
+      expect(list.body[0].property).toEqual([{property: 'NAME', string: 'John'}]);
     });
   });
 
@@ -177,7 +175,7 @@ describe('UserController', () => {
         .send({login: 'user'})
         .expect(201);
 
-      expect(inst.body.id).toBe(1);
+      expect(inst.body.id).toHaveLength(36)
       expect(inst.body.login).toBe('user');
     });
 
@@ -249,32 +247,32 @@ describe('UserController', () => {
 
   describe('User update', () => {
     test('Should update', async () => {
-      await Object.assign(new UserEntity(), {login: 'user'}).save();
+      await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/1')
+        .put('/user/111')
         .send({login: 'user'})
         .expect(200);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('111');
       expect(res.body.login).toBe('user');
     });
 
-    test('Shouldn`t update with login', async () => {
-      await Object.assign(new UserEntity(), {login: 'user'}).save();
+    test('Shouldn`t update without login', async () => {
+      await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
 
       await request(app.getHttpServer())
-        .put('/user/1')
+        .put('/user/111')
         .send({})
         .expect(400);
     });
 
     test('Should add strings', async () => {
-      await Object.assign(new UserEntity(), {login: 'user'}).save();
+      await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/1')
+        .put('/user/111')
         .send({
           login: 'user',
           property: [{property: 'NAME', string: 'VALUE'}],
@@ -286,13 +284,13 @@ describe('UserController', () => {
     });
 
     test('Should update strings', async () => {
-      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const parent = await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
       const property = await Object.assign(new PropertyEntity(), {id: 'OLD'}).save();
       await Object.assign(new PropertyEntity(), {id: 'NEW'}).save();
       await Object.assign(new User4stringEntity(), {parent, property, string: 'OLD'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/1')
+        .put('/user/111')
         .send({
           login: 'user',
           property: [{property: 'NEW', string: 'NEW'}],
@@ -305,11 +303,11 @@ describe('UserController', () => {
     });
 
     test('Should add flag', async () => {
-      await Object.assign(new UserEntity(), {login: 'user'}).save();
+      await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/1')
+        .put('/user/111')
         .send({
           login: 'user',
           flag: ['NEW'],
@@ -320,13 +318,13 @@ describe('UserController', () => {
     });
 
     test('Should update flag', async () => {
-      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const parent = await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
       await Object.assign(new User2flagEntity(), {parent, flag}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/1')
+        .put('/user/111')
         .send({
           login: 'user',
           flag: ['NEW'],

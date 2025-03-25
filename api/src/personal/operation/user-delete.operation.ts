@@ -15,7 +15,7 @@ export class UserDeleteOperation {
    * @param id
    * @private
    */
-  private async checkUser(id: number): Promise<UserEntity> {
+  private async checkUser(id: string): Promise<UserEntity> {
     const userRepo = this.manager.getRepository<UserEntity>(UserEntity);
     const inst = await userRepo.findOne({where: {id}});
 
@@ -26,7 +26,7 @@ export class UserDeleteOperation {
    *
    * @param idList
    */
-  async save(idList: number[]) {
+  async save(idList: string[]) {
     const userRepo = this.manager.getRepository(UserEntity);
 
     const result = [];

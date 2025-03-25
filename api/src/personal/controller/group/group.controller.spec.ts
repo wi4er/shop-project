@@ -35,32 +35,32 @@ describe('GroupController', () => {
     });
 
     test('Should get group instance', async () => {
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/group/1')
+        .get('/group/111')
         .expect(200);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('111');
     });
 
     test('Should get group with parent', async () => {
-      const parent = await new GroupEntity().save();
-      await Object.assign(new GroupEntity(), {parent}).save();
+      const parent = await Object.assign(new GroupEntity(), {id: '111'}).save();
+      await Object.assign(new GroupEntity(), {id: '222', parent}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/group/2')
+        .get('/group/222')
         .expect(200);
 
-      expect(res.body.id).toBe(2);
-      expect(res.body.parent).toBe(1);
+      expect(res.body.id).toBe('222');
+      expect(res.body.parent).toBe('111');
     });
 
     test('Should get list with parent', async () => {
-      const parent = await new GroupEntity().save();
+      const parent = await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       for (let i = 0; i < 4; i++) {
-        await Object.assign(new GroupEntity(), {parent: i % 2 ? parent: null}).save();
+        await Object.assign(new GroupEntity(), {parent: i % 2 ? parent : null}).save();
       }
 
       const res = await request(app.getHttpServer())
@@ -69,14 +69,14 @@ describe('GroupController', () => {
 
       expect(res.body).toHaveLength(5);
       expect(res.body[1].parent).toBeUndefined();
-      expect(res.body[2].parent).toBe(1);
+      expect(res.body[2].parent).toBe('111');
       expect(res.body[3].parent).toBeUndefined();
-      expect(res.body[4].parent).toBe(1);
+      expect(res.body[4].parent).toBe('111');
     });
 
     test('Should get group with limit', async () => {
       for (let i = 0; i < 10; i++) {
-        await new GroupEntity().save();
+        await Object.assign(new GroupEntity(), {id: String(i)}).save();
       }
 
       const res = await request(app.getHttpServer())
@@ -84,13 +84,13 @@ describe('GroupController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(2);
-      expect(res.body[0].id).toBe(1);
-      expect(res.body[1].id).toBe(2);
+      expect(res.body[0].id).toBe('0');
+      expect(res.body[1].id).toBe('1');
     });
 
     test('Should get group with offset', async () => {
       for (let i = 0; i < 10; i++) {
-        await new GroupEntity().save();
+        await Object.assign(new GroupEntity(), {id: String(i)}).save();
       }
 
       const res = await request(app.getHttpServer())
@@ -98,8 +98,8 @@ describe('GroupController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(8);
-      expect(res.body[0].id).toBe(3);
-      expect(res.body[7].id).toBe(10);
+      expect(res.body[0].id).toBe('2');
+      expect(res.body[7].id).toBe('9');
     });
   });
 
@@ -136,7 +136,6 @@ describe('GroupController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe(1);
       expect(res.body[0].property).toHaveLength(1);
       expect(res.body[0].property[0].property).toBe('NAME');
       expect(res.body[0].property[0].lang).toBeUndefined();
@@ -180,18 +179,18 @@ describe('GroupController', () => {
         .post('/group')
         .expect(201);
 
-      expect(inst.body.id).toBe(1);
+      expect(inst.body.id).toHaveLength(36);
     });
 
     test('Should add with parent', async () => {
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
       const inst = await request(app.getHttpServer())
         .post('/group')
-        .send({parent: 1})
+        .send({parent: '111'})
         .expect(201);
 
-      expect(inst.body.id).toBe(2);
-      expect(inst.body.parent).toBe(1);
+      expect(inst.body.id).toHaveLength(36);
+      expect(inst.body.parent).toBe('111');
     });
 
     test('Shouldn`t add with wrong parent', async () => {
@@ -199,7 +198,7 @@ describe('GroupController', () => {
       const inst = await request(app.getHttpServer())
         .post('/group')
         .send({
-          parent: 777
+          parent: 777,
         })
         .expect(400);
     });
@@ -255,45 +254,45 @@ describe('GroupController', () => {
 
   describe('Group update', () => {
     test('Should update group', async () => {
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
       const inst = await request(app.getHttpServer())
-        .put('/group/1')
+        .put('/group/111')
         .expect(200);
 
-      expect(inst.body.id).toBe(1);
+      expect(inst.body.id).toBe('111');
     });
 
     test('Should add parent to group', async () => {
-      await new GroupEntity().save();
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
+      await Object.assign(new GroupEntity(), {id: '222'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/group/2')
-        .send({parent: 1})
+        .put('/group/222')
+        .send({parent: '111'})
         .expect(200);
 
-      expect(inst.body.id).toBe(2);
-      expect(inst.body.parent).toBe(1);
+      expect(inst.body.id).toBe('222');
+      expect(inst.body.parent).toBe('111');
     });
 
     test('Shouldn`t add wrong parent', async () => {
-      await new GroupEntity().save();
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
+      await Object.assign(new GroupEntity(), {id: '222'}).save();
 
-      const inst = await request(app.getHttpServer())
-        .put('/group/2')
-        .send({parent: 777})
+      await request(app.getHttpServer())
+        .put('/group/222')
+        .send({parent: '777'})
         .expect(400);
     });
 
     test('Should add strings', async () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/group/1')
+        .put('/group/111')
         .send({
-          property: [{property: 'NAME', string: 'VALUE'}]
+          property: [{property: 'NAME', string: 'VALUE'}],
         })
         .expect(200);
 
@@ -301,27 +300,25 @@ describe('GroupController', () => {
       expect(inst.body.property[0].string).toBe('VALUE');
     });
 
-    test('Shouldn`t add with wrong property', async () => {
+    test('Shouldn`t update wrong property', async () => {
       await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
 
-      const inst = await request(app.getHttpServer())
-        .put('/group/1')
+      await request(app.getHttpServer())
+        .put('/group/111')
         .send({
-          property: [{property: 'WRONG', string: 'VALUE'}]
+          property: [{property: 'WRONG', string: 'VALUE'}],
         })
         .expect(400);
     });
 
     test('Should add flag', async () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/group/1')
-        .send({
-          flag: ['NEW']
-        })
+        .put('/group/111')
+        .send({flag: ['NEW']})
         .expect(200);
 
       expect(inst.body.flag).toEqual(['NEW']);
@@ -329,30 +326,28 @@ describe('GroupController', () => {
 
     test('Shouldn`t add wrong flag', async () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
 
-      const inst = await request(app.getHttpServer())
-        .put('/group/1')
-        .send({
-          flag: ['WRONG']
-        })
+      await request(app.getHttpServer())
+        .put('/group/111')
+        .send({flag: ['WRONG']})
         .expect(400);
     });
   });
 
   describe('Group delete', () => {
     test('Should delete group', async () => {
-      await new GroupEntity().save();
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
       const inst = await request(app.getHttpServer())
-        .delete('/group/1')
+        .delete('/group/111')
         .expect(200);
 
-      expect(inst.body).toEqual([1]);
+      expect(inst.body).toEqual(['111']);
     });
 
     test('Shouldn`t delete with wrong group', async () => {
-      await new GroupEntity().save();
-      const inst = await request(app.getHttpServer())
+      await Object.assign(new GroupEntity(), {id: '111'}).save();
+      await request(app.getHttpServer())
         .delete('/group/777')
         .expect(404);
     });

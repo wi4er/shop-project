@@ -22,7 +22,7 @@ export class UserGroupInsertOperation {
    *
    * @param id
    */
-  async checkGroup(id: number): Promise<GroupEntity> {
+  async checkGroup(id: string): Promise<GroupEntity> {
     const groupRepo = this.trans.getRepository<GroupEntity>(GroupEntity);
     const inst = await groupRepo.findOne({where: {id}});
 
@@ -33,7 +33,7 @@ export class UserGroupInsertOperation {
    *
    * @param input
    */
-  async save(input: UserGroupInput): Promise<number> {
+  async save(input: UserGroupInput): Promise<string> {
     this.created.parent = input.parent ? await this.checkGroup(input.parent) : null;
 
     await this.trans.save(this.created);

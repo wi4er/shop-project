@@ -6,10 +6,8 @@ import { PropertyValueInput } from '../../common/input/property-value.input';
 export class UserGroupInput implements WithPropertyInput, WithFlagInput {
 
   @ApiProperty()
-  id?: number | null;
-
-  parent: number | null;
-
+  id?: string | null;
+  parent: string | null;
   property: PropertyValueInput[];
 
   @ApiProperty({ type: [ String ] })

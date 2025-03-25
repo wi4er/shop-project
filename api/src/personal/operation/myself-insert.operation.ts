@@ -57,7 +57,7 @@ export class MyselfInsertOperation {
    * @param id
    * @private
    */
-  private async checkGroup(id: number): Promise<GroupEntity> {
+  private async checkGroup(id: string): Promise<GroupEntity> {
     const groupRepo = this.trans.getRepository(GroupEntity);
 
     return WrongDataException.assert(
@@ -74,7 +74,7 @@ export class MyselfInsertOperation {
     if (!process.env.PUBLIC_GROUP) return;
 
     const inst = new User2groupEntity();
-    inst.group = await this.checkGroup(+process.env.PUBLIC_GROUP);
+    inst.group = await this.checkGroup(process.env.PUBLIC_GROUP);
     inst.parent = this.created;
 
     return this.trans.save(inst);
@@ -84,7 +84,7 @@ export class MyselfInsertOperation {
    *
    * @param input
    */
-  async save(input: AuthInput): Promise<number> {
+  async save(input: AuthInput): Promise<string> {
     this.created.login = await this.checkLogin(input.login);
     this.created.hash = await this.checkPassword(input.password);
 

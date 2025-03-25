@@ -47,7 +47,7 @@ export class GroupController {
   @Get(':id')
   async getItem(
     @Param('id')
-      id: number,
+      id: string,
   ) {
     return this.groupRepo.findOne({
       where: {id},
@@ -72,7 +72,7 @@ export class GroupController {
   @Put(':id')
   async updateItem(
     @Param('id')
-      id: number,
+      id: string,
     @Body()
       input: UserGroupInput,
   ) {
@@ -88,10 +88,10 @@ export class GroupController {
   @Delete(':id')
   async deleteItem(
     @Param('id')
-      id: number,
-  ): Promise<number[]> {
+      id: string,
+  ): Promise<string[]> {
     return this.entityManager.transaction(
-      trans => new UserGroupDeleteOperation(this.entityManager).save([id]),
+      trans => new UserGroupDeleteOperation(trans).save([id]),
     );
   }
 

@@ -108,7 +108,7 @@ export class ContactController {
       id: string,
   ) {
     return this.entityManager.transaction(
-      trans => new UserContactDeleteOperation(this.entityManager).save([id]),
+      trans => new UserContactDeleteOperation(trans).save([id]),
     );
   }
 

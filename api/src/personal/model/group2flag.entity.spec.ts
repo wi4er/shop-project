@@ -8,11 +8,9 @@ import { FlagEntity } from '../../settings/model/flag.entity';
 describe('UserGroup 2 flag entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('UserGroup2flag fields', () => {
     test('Should create user contact flag', async () => {
@@ -53,11 +51,11 @@ describe('UserGroup 2 flag entity', () => {
     test('Should create user contact with flag', async () => {
       const repo = source.getRepository(GroupEntity);
 
-      const parent = await new GroupEntity().save();
+      const parent = await await Object.assign(new GroupEntity(), {id: '222'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       await Object.assign(new Group2flagEntity(), {parent, flag}).save();
 
-      const inst = await repo.findOne({where: {id: 1}, relations: {flag: {flag: true}}});
+      const inst = await repo.findOne({where: {id: '222'}, relations: {flag: {flag: true}}});
 
       expect(inst.flag).toHaveLength(1);
       expect(inst.flag[0].id).toBe(1);

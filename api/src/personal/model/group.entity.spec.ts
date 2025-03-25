@@ -18,7 +18,7 @@ describe('UserGroup entity', () => {
 
       await inst.save();
 
-      expect(inst.id).toBe(1);
+      expect(inst.id).toHaveLength(36);
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();
       expect(inst.deleted_at).toBeNull();
@@ -45,13 +45,14 @@ describe('UserGroup entity', () => {
       const parent = await new GroupEntity().save();
 
       const inst = new GroupEntity();
+      inst.id = '222';
       inst.parent = parent;
       await inst.save();
 
       const some = await repo.findOne({where: {id: parent.id}, relations: {children: true}});
 
       expect(some.children).toHaveLength(1);
-      expect(some.children[0].id).toBe(2);
+      expect(some.children[0].id).toBe('222');
     });
   });
 });

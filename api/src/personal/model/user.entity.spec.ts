@@ -6,11 +6,9 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 describe('User entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('User fields', () => {
     test('Should find empty list', async () => {
@@ -60,9 +58,7 @@ describe('User entity', () => {
 
       const user = Object.assign(new UserEntity(), { login: 'TEST' });
 
-      await expect(user.save()).rejects.toThrow(
-        'duplicate key value violates unique constraint',
-      );
+      await expect(user.save()).rejects.toThrow('duplicate key');
     });
   });
 });

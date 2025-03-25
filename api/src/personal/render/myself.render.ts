@@ -9,9 +9,9 @@ export class MyselfRender {
     this.group = item.group.map(it => it.group.id);
   }
 
-  id: number;
+  id: string;
   created_at: string;
   login: string;
-  group: number[];
+  group: string[];
 
 }

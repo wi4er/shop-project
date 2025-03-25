@@ -1,39 +1,90 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Observable } from 'rxjs';
 import { Group } from '../../app/model/user/group';
 import { GroupFormComponent } from '../group-form/group-form.component';
 import { StringifiableRecord } from 'query-string/base';
+import { SelectionModel } from '@angular/cdk/collections';
+import { DomSanitizer } from '@angular/platform-browser';
+import { PageEvent } from '@angular/material/paginator';
+import { Contact } from '../../app/model/user/contact';
+import { UserContactFormComponent } from '../user-contact-form/user-contact-form.component';
+import { UserContactSettingsComponent } from '../user-contact-settings/user-contact-settings.component';
+import { GroupSettingsComponent } from '../group-settings/group-settings.component';
 
 @Component({
   selector: 'app-user-group-list',
   templateUrl: './group-list.component.html',
   styleUrls: ['./group-list.component.css']
 })
-export class GroupListComponent {
+export class GroupListComponent implements OnInit {
 
-  list: { [key: string]: string }[] = [];
+  contactList: { [key: string]: string }[] = [];
+  flagList: string[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
+
   totalCount: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
+  selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
+    public sanitizer: DomSanitizer,
   ) {
   }
 
   ngOnInit(): void {
-
+    this.refreshData();
   }
 
-  fetchList(args: StringifiableRecord) {
-    this.apiService.fetchList<Group>(ApiEntity.GROUP, args)
-      .then(list => this.setData(list));
+  isAllSelected() {
+    return this.selection.selected.length === this.contactList.length;
+  }
 
-    this.apiService.countData(ApiEntity.GROUP)
-      .then(count => this.totalCount = count);
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.contactList);
+    }
+  }
+
+  /**
+   *
+   */
+  changePage(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    this.refreshData();
+  }
+
+  /**
+   *
+   */
+  getColumns() {
+    return [
+      'select',
+      'action',
+      ...this.columns,
+    ];
+  }
+
+  /**
+   *
+   */
+  async refreshData() {
+    return Promise.all([
+      this.apiService.fetchList<Group>(ApiEntity.GROUP),
+      this.apiService.countData(ApiEntity.GROUP),
+    ]).then(([contacts, count]) => {
+      this.setData(contacts);
+      this.totalCount = count;
+    });
   }
 
   /**
@@ -44,12 +95,11 @@ export class GroupListComponent {
   private setData(data: Group[]) {
     const col = new Set<string>();
     this.activeFlags = {};
-    this.list = [];
+    this.contactList = [];
 
     for (const item of data) {
       const line: { [key: string]: string } = {
-        id: String(item.id),
-        parent: String(item.parent ?? ''),
+        'id': String(item.id),
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
@@ -58,49 +108,75 @@ export class GroupListComponent {
         col.add('property_' + it.property);
         line['property_' + it.property] = it.string;
       }
-      this.activeFlags[item.id] = item.flag;
 
-      this.list.push(line);
+      this.activeFlags[item.id] = item.flag;
+      this.contactList.push(line);
     }
 
-    this.columns = ['id', 'parent', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', 'created_at', 'updated_at', ...col];
   }
 
-  addItem(): Observable<undefined> {
-    const dialog = this.dialog.open(
+  /**
+   *
+   */
+  addItem() {
+    this.dialog.open(
       GroupFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    return dialog.afterClosed();
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
-  updateItem(id: number): Observable<undefined> {
-    const dialog = this.dialog.open(
+  /**
+   *
+   */
+  updateItem(id: number) {
+    this.dialog.open(
       GroupFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    return dialog.afterClosed();
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   toggleFlag(id: number, flag: string) {
+
   }
 
+  /**
+   *
+   */
   async deleteList() {
+    this.apiService.deleteList(
+      ApiEntity.GROUP,
+      this.selection.selected.map(item => item['id']),
+    ).then(() => this.refreshData());
   }
 
+  /**
+   *
+   * @param id
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.GROUP, [id])
-      .then(res => {
-        console.log(res);
-      })
+      .then(() => this.refreshData());
   }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      GroupSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
 }

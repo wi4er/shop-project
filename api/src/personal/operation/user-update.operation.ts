@@ -21,7 +21,7 @@ export class UserUpdateOperation {
    * @param id
    * @private
    */
-  private async checkUser(id: number): Promise<UserEntity> {
+  private async checkUser(id: string): Promise<UserEntity> {
     const userRepo = this.trans.getRepository<UserEntity>(UserEntity);
 
     return WrongDataException.assert(
@@ -42,7 +42,7 @@ export class UserUpdateOperation {
    * @param id
    * @param input
    */
-  async save(id: number, input: UserInput): Promise<number> {
+  async save(id: string, input: UserInput): Promise<string> {
     const beforeItem = await this.checkUser(id);
 
     beforeItem.login = WrongDataException.assert(input.login, 'User login expected');

@@ -6,6 +6,6 @@ export class PermissionRender {
   method: string;
 
   @ApiProperty()
-  group: number;
+  group: string;
 
 }

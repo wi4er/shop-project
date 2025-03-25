@@ -32,7 +32,7 @@ export class MyselfController {
   @Get()
   async getMyself(
     @CurrentUser()
-      id: number | null,
+      id: string | null,
   ) {
     PermissionException.assert(id, 'Authorization required!');
 
@@ -66,7 +66,7 @@ export class MyselfController {
   @ApiUnauthorizedResponse({description: 'There is no current session'})
   async updateMyself(
     @CurrentUser()
-      id: number | null,
+      id: string | null,
     @Body()
       user: UserInput,
   ): Promise<MyselfRender> {

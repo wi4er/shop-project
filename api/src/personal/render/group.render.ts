@@ -26,11 +26,11 @@ export class GroupRender {
     this.flag = item.flag.map(fl => fl.flag.id);
   }
 
-  id: number;
+  id: string;
   created_at: string;
   updated_at: string;
   version: number;
-  parent?: number;
+  parent?: string;
   property: GroupPropertyRender[];
   flag: string[];
 

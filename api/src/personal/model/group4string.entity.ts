@@ -48,6 +48,7 @@ export class Group4stringEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -57,6 +58,7 @@ export class Group4stringEntity
     () => LangEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: true,
     },
   )

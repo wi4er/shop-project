@@ -46,6 +46,7 @@ export class Group2flagEntity
     () => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

@@ -19,7 +19,7 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
    * @param id
    * @private
    */
-  private async checkGroup(id: number): Promise<GroupEntity> {
+  private async checkGroup(id: string): Promise<GroupEntity> {
     const groupRepo = this.trans.getRepository(GroupEntity);
     const group = await groupRepo.findOne({where: {id}});
 
@@ -31,7 +31,7 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
 
     const inst = new this.entity();
     inst.parent = created;
-    inst.group = await this.checkGroup(+process.env.ADMIN_GROUP);
+    inst.group = await this.checkGroup(process.env.ADMIN_GROUP);
     inst.method = PermissionMethod.ALL;
 
     await this.trans.save(inst);

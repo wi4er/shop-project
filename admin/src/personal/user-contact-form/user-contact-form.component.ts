@@ -7,7 +7,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { ContactInput } from '../../app/model/user/contact.input';
 import { Contact } from '../../app/model/user/contact';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserInput } from '../../app/model/user/user.input';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-user-contact-form',
@@ -17,7 +17,6 @@ import { UserInput } from '../../app/model/user/user.input';
 export class UserContactFormComponent implements OnInit {
 
   id: string = '';
-  type: string = '';
   created_at: string = '';
   updated_at: string = '';
 
@@ -27,6 +26,10 @@ export class UserContactFormComponent implements OnInit {
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
+  typeSelect = new FormControl(
+    'EMAIL',
+    [Validators.required, Validators.pattern('valid')]
+  );
 
   constructor(
     private dialogRef: MatDialogRef<UserContactFormComponent>,
@@ -89,7 +92,7 @@ export class UserContactFormComponent implements OnInit {
    */
   toEdit(item: Contact) {
     this.id = item.id;
-    this.type = item.type;
+    this.typeSelect.setValue(item.type);
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
@@ -111,7 +114,7 @@ export class UserContactFormComponent implements OnInit {
   toInput(): ContactInput {
     const input: ContactInput = {
       id: this.id,
-      type: this.type,
+      type: this.typeSelect.value,
       property: [],
       flag: [],
     } as ContactInput;
@@ -164,4 +167,5 @@ export class UserContactFormComponent implements OnInit {
         });
     }
   }
+
 }

@@ -1,14 +1,13 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   OneToMany,
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   VersionColumn,
-  Check,
+  Check, PrimaryColumn,
 } from 'typeorm';
 import { User4stringEntity } from './user4string.entity';
 import { User2flagEntity } from './user2flag.entity';
@@ -28,8 +27,12 @@ export class UserEntity
   extends BaseEntity
   implements WithFlagEntity<UserEntity>, WithStringEntity<UserEntity>, WithPointEntity<UserEntity> {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({
+    type: "varchar",
+    length: 36,
+    default: () => 'uuid_generate_v4()',
+  })
+  id: string;
 
   @CreateDateColumn()
   created_at: Date;

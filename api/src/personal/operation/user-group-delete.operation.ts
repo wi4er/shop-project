@@ -1,6 +1,4 @@
 import { EntityManager } from 'typeorm';
-import { UserEntity } from '../model/user.entity';
-import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { GroupEntity } from '../model/group.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
 
@@ -9,7 +7,6 @@ export class UserGroupDeleteOperation {
   constructor(
     private manager: EntityManager,
   ) {
-
   }
 
   /**
@@ -17,26 +14,25 @@ export class UserGroupDeleteOperation {
    * @param id
    * @private
    */
-  private async checkGroup(id: number): Promise<GroupEntity> {
+  private async checkGroup(id: string): Promise<GroupEntity> {
     const groupRepo = this.manager.getRepository<GroupEntity>(GroupEntity);
     const inst = await groupRepo.findOne({where: {id}});
 
-    return NoDataException.assert(inst, `Group id ${id} not found!`);
+    return NoDataException.assert(inst, `Group id >> ${id} << not found!`);
   }
 
   /**
    *
    * @param idList
    */
-  async save(idList: number[]) {
+  async save(idList: string[]) {
     const groupRepo = this.manager.getRepository(GroupEntity);
-
     const result = [];
 
     for (const item of idList) {
-      await this.checkGroup(item)
+      await this.checkGroup(item);
       await groupRepo.delete(item);
-      result.push(+item);
+      result.push(item);
     }
 
     return result;
