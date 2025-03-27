@@ -4,7 +4,7 @@
   </h2>
 
   <h2 *ngIf="data?.id" mat-dialog-title>
-    Update contact #{{data?.id}}
+    Update contact #{{ data?.id }}
   </h2>
 
   <mat-dialog-content>
@@ -19,12 +19,15 @@
         />
       </mat-form-field>
 
-      <mat-select [formControl]="typeSelect">
-        <mat-option value="EMAIL">EMAIL</mat-option>
-        <mat-option value="PHONE">PHONE</mat-option>
-        <mat-option value="GOOGLE">GOOGLE</mat-option>
-        <mat-option value="APPLE">GOOGLE</mat-option>
-      </mat-select>
+      <mat-form-field>
+        <mat-label>Contact type</mat-label>
+        <mat-select [formControl]="typeSelect">
+          <mat-option value="EMAIL">EMAIL</mat-option>
+          <mat-option value="PHONE">PHONE</mat-option>
+          <mat-option value="GOOGLE">GOOGLE</mat-option>
+          <mat-option value="APPLE">APPLE</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div *ngIf="!!data?.id">

@@ -77,6 +77,7 @@ import { Section2imageEntity } from './content/model/section2image.entity';
 import { Block4fileEntity } from './content/model/block4file.entity';
 import { User2imageEntity } from './personal/model/user2image.entity';
 import { ConfigurationEntity } from './settings/model/configuration.entity';
+import { SettingsPermissionEntity } from './settings/model/settings-permission.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -101,6 +102,7 @@ export function createConnectionOptions(): DataSourceOptions {
       PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,
       FlagEntity, Flag4stringEntity, Flag2flagEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
+      SettingsPermissionEntity,
       ElementEntity, Element2flagEntity, Element2sectionEntity, Element2imageEntity,
       Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity, Element4fileEntity,
       Element2permissionEntity,

@@ -14,6 +14,7 @@ import { PropertyController } from './controller/property/property.controller';
 import { FlagController } from './controller/flag/flag.controller';
 import { ConfigurationEntity } from './model/configuration.entity';
 import { ConfigurationController } from './controller/configuration/configuration.controller';
+import { SettingsPermissionEntity } from './model/settings-permission.entity';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigurationController } from './controller/configuration/configuratio
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       FlagEntity, Flag2flagEntity, Flag4stringEntity,
       ConfigurationEntity,
+      SettingsPermissionEntity,
     ]),
   ],
   providers: [
