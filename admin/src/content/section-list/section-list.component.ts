@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Flag } from '../../app/model/settings/flag';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Property } from '../../app/model/settings/property';
@@ -10,6 +10,7 @@ import { Section } from '../../app/model/content/section';
 import { SectionFormComponent } from '../section-form/section-form.component';
 import { Element } from '../../app/model/content/element';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SectionSettingsComponent } from '../section-settings/section-settings.component';
 
 @Component({
   selector: 'content-section-list',
@@ -23,7 +24,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ],
   styleUrls: ['./section-list.component.css']
 })
-export class SectionListComponent {
+export class SectionListComponent implements OnChanges {
 
   @Input()
   blockId?: number;
@@ -54,6 +55,9 @@ export class SectionListComponent {
   ) {
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -63,10 +67,16 @@ export class SectionListComponent {
     ];
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -75,6 +85,9 @@ export class SectionListComponent {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -82,7 +95,10 @@ export class SectionListComponent {
     this.refreshData();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  /**
+   *
+   */
+  ngOnChanges() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
@@ -93,6 +109,9 @@ export class SectionListComponent {
     });
   }
 
+  /**
+   *
+   */
   async refreshData() {
     return Promise.all([
       this.apiService.fetchList<Section>(
@@ -115,6 +134,9 @@ export class SectionListComponent {
     });
   }
 
+  /**
+   *
+   */
   private setData(data: Section[]) {
     const col = new Set<string>();
     this.activeFlags = {};
@@ -146,6 +168,9 @@ export class SectionListComponent {
     this.columns = ['id', 'created_at', 'updated_at', 'sort', ...col];
   }
 
+  /**
+   *
+   */
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -155,7 +180,6 @@ export class SectionListComponent {
 
   /**
    *
-   * @param id
    */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.ELEMENT, [id])
@@ -164,7 +188,6 @@ export class SectionListComponent {
 
   /**
    *
-   * @param id
    */
   updateItem(id: number) {
     const dialog = this.dialog.open(
@@ -197,11 +220,25 @@ export class SectionListComponent {
 
   /**
    *
-   * @param id
-   * @param flag
    */
   toggleFlag(id: number, flag: string) {
     console.log(id, '>>>>>>>', flag);
+  }
+
+
+  /**
+   *
+   */
+  openSettings() {
+    const dialog = this.dialog.open(
+      SectionSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    );
+
+    dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
 }

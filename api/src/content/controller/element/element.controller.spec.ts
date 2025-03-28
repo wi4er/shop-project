@@ -40,12 +40,13 @@ describe('ElementController', () => {
   afterAll(() => source.destroy());
 
   async function createSession(): Promise<string> {
-    const group = await Object.assign(new GroupEntity(), {}).save();
+    const group = await Object.assign(new GroupEntity(), {id: '1'}).save();
     const parent = await Object.assign(new UserEntity(), {
+      id: '1',
       login: 'USER',
       hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
     }).save();
-    await Object.assign(new User2groupEntity(), {group, parent}).save();
+    await Object.assign(new User2groupEntity(), {id: '1', group, parent}).save();
 
     const res = await request(app.getHttpServer())
       .post('/auth')
@@ -62,7 +63,7 @@ describe('ElementController', () => {
     const parent = await Object.assign(new ElementEntity, {block}).save();
     await Object.assign(
       new Element2permissionEntity(),
-      {parent, group: 1, method: PermissionMethod.ALL},
+      {parent, group: '1', method: PermissionMethod.ALL},
     ).save();
 
     return parent;
@@ -189,7 +190,7 @@ describe('ElementController', () => {
       for (let i = 1; i <= 10; i++) {
         const parent = await Object.assign(
           new ElementEntity,
-          {block, sort: 1000 - i * 100, version: i % 2 ? 1 : 10}
+          {block, sort: 1000 - i * 100, version: i % 2 ? 1 : 10},
         ).save();
         await Object.assign(
           new Element2permissionEntity(),
@@ -479,7 +480,7 @@ describe('ElementController', () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
       const parent = await createElement();
-      const section = await Object.assign(new SectionEntity(), {block}).save();
+      const section = await Object.assign(new SectionEntity(), {id: '1', block}).save();
       await Object.assign(new Element2sectionEntity(), {parent, section}).save();
 
       const list = await request(app.getHttpServer())
@@ -489,7 +490,7 @@ describe('ElementController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].section).toHaveLength(1);
-      expect(list.body[0].section[0]).toBe(1);
+      expect(list.body[0].section[0]).toBe('1');
     });
 
     test('Should get elements list with sections', async () => {
@@ -497,8 +498,8 @@ describe('ElementController', () => {
       const block = await new BlockEntity().save();
       const parent1 = await createElement();
       const parent2 = await createElement();
-      const section1 = await Object.assign(new SectionEntity(), {block}).save();
-      const section2 = await Object.assign(new SectionEntity(), {block}).save();
+      const section1 = await Object.assign(new SectionEntity(), {id: '1', block}).save();
+      const section2 = await Object.assign(new SectionEntity(), {id: '2', block}).save();
 
       await Object.assign(new Element2sectionEntity(), {parent: parent1, section: section1}).save();
       await Object.assign(new Element2sectionEntity(), {parent: parent1, section: section2}).save();
@@ -512,8 +513,8 @@ describe('ElementController', () => {
 
       expect(list.body).toHaveLength(2);
       expect(list.body[0].section).toHaveLength(2);
-      expect(list.body[0].section[0]).toBe(1);
-      expect(list.body[0].section[1]).toBe(2);
+      expect(list.body[0].section[0]).toBe('1');
+      expect(list.body[0].section[1]).toBe('2');
     });
   });
 
@@ -673,7 +674,7 @@ describe('ElementController', () => {
       expect(inst.body.block).toBe(1);
       expect(inst.body.id).toHaveLength(36);
       expect(inst.body.permission[0].method).toBe('READ');
-      expect(inst.body.permission[0].group).toBe(1);
+      expect(inst.body.permission[0].group).toBe('1');
     });
 
     test('Should add with sort', async () => {
@@ -875,108 +876,110 @@ describe('ElementController', () => {
   });
 
   describe('Content element update', () => {
-    test('Should update item', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      const parent = await createElement();
+    describe('Content element fields update', () => {
+      test('Should update item', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
 
-      const item = await request(app.getHttpServer())
-        .put(`/element/${parent.id}`)
-        .send({id: 'UPDATED', block: 1})
-        .set('cookie', cookie)
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({id: 'UPDATED', block: 1})
+          .set('cookie', cookie)
+          .expect(200);
 
-      expect(item.body.id).toBe('UPDATED');
-      expect(item.body.block).toBe(1);
-    });
+        expect(item.body.id).toBe('UPDATED');
+        expect(item.body.block).toBe(1);
+      });
 
-    test('Should change element id', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      const parent = await createElement();
+      test('Should change element id', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
 
-      await request(app.getHttpServer())
-        .put(`/element/${parent.id}`)
-        .send({id: 'SOME', block: 1})
-        .set('cookie', cookie)
-        .expect(200);
+        await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({id: 'SOME', block: 1})
+          .set('cookie', cookie)
+          .expect(200);
 
-      const item = await request(app.getHttpServer())
-        .get(`/element/SOME`)
-        .set('cookie', cookie)
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .get(`/element/SOME`)
+          .set('cookie', cookie)
+          .expect(200);
 
-      expect(item.body.id).toBe('SOME');
-    });
+        expect(item.body.id).toBe('SOME');
+      });
 
-    test('Should change element sort', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      const parent = await createElement();
+      test('Should change element sort', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
 
-      await request(app.getHttpServer())
-        .put(`/element/${parent.id}`)
-        .send({id: 'SOME', block: 1, sort: 333})
-        .set('cookie', cookie)
-        .expect(200);
+        await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({id: 'SOME', block: 1, sort: 333})
+          .set('cookie', cookie)
+          .expect(200);
 
-      const item = await request(app.getHttpServer())
-        .get(`/element/SOME`)
-        .set('cookie', cookie)
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .get(`/element/SOME`)
+          .set('cookie', cookie)
+          .expect(200);
 
-      expect(item.body.sort).toBe(333);
-    });
+        expect(item.body.sort).toBe(333);
+      });
 
-    test('Should change element block', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      await new BlockEntity().save();
-      const parent = await createElement();
+      test('Should change element block', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        await new BlockEntity().save();
+        const parent = await createElement();
 
-      const item = await request(app.getHttpServer())
-        .put(`/element/${parent.id}`)
-        .send({id: parent.id, block: 2})
-        .set('cookie', cookie)
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({id: parent.id, block: 2})
+          .set('cookie', cookie)
+          .expect(200);
 
-      expect(item.body.block).toBe(2);
-    });
+        expect(item.body.block).toBe(2);
+      });
 
-    test('Should`t update without block', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      const parent = await createElement();
+      test('Should`t update without block', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
 
-      await request(app.getHttpServer())
-        .put(`/element/${parent.id}`)
-        .send({id: 1})
-        .set('cookie', cookie)
-        .expect(400);
-    });
+        await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({id: 1})
+          .set('cookie', cookie)
+          .expect(400);
+      });
 
-    test('Shouldn`t change with wrong id', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      await createElement();
+      test('Shouldn`t change with wrong id', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        await createElement();
 
-      await request(app.getHttpServer())
-        .put(`/element/WRONG`)
-        .send({id: 'WRONG'})
-        .set('cookie', cookie)
-        .expect(403);
-    });
+        await request(app.getHttpServer())
+          .put(`/element/WRONG`)
+          .send({id: 'WRONG'})
+          .set('cookie', cookie)
+          .expect(403);
+      });
 
-    test('Shouldn`t update without id', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      await createElement();
+      test('Shouldn`t update without id', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        await createElement();
 
-      const item = await request(app.getHttpServer())
-        .put('/element')
-        .send({id: 1})
-        .set('cookie', cookie)
-        .expect(404);
+        const item = await request(app.getHttpServer())
+          .put('/element')
+          .send({id: 1})
+          .set('cookie', cookie)
+          .expect(404);
+      });
     });
 
     describe('Content element string update', () => {

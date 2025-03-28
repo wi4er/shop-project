@@ -20,6 +20,7 @@ import { FileFormComponent } from './file-form/file-form.component';
 import { ImageEditComponent } from './image-edit/image-edit.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { ArchiveListComponent } from './archive-list/archive-list.component';
 
 @NgModule({
   declarations: [
@@ -28,11 +29,13 @@ import { MatDividerModule } from '@angular/material/divider';
     FileListComponent,
     FileFormComponent,
     ImageEditComponent,
+    ArchiveListComponent,
   ],
   exports: [
     CollectionListComponent,
     FileListComponent,
     ImageEditComponent,
+    ArchiveListComponent,
   ],
   imports: [
     CommonModule,

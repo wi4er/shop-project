@@ -193,6 +193,9 @@ export class ElementListComponent implements OnChanges {
     console.log(id, '>>>>>>>', flag);
   }
 
+  /**
+   *
+   */
   openSettings() {
     const dialog = this.dialog.open(
       ElementSettingsComponent,

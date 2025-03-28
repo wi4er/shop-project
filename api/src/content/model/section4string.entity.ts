@@ -59,6 +59,7 @@ export class Section4stringEntity
     () => LangEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: true,
     },
   )

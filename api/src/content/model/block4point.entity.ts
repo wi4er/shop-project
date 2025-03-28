@@ -36,6 +36,7 @@ export class Block4pointEntity
     () => PointEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -55,6 +56,7 @@ export class Block4pointEntity
     () => PropertyEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

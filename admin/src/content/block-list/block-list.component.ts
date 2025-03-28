@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Router } from '@angular/router';
@@ -9,13 +9,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Flag } from '../../app/model/settings/flag';
 import { Property } from '../../app/model/settings/property';
 import { DomSanitizer } from '@angular/platform-browser';
+import { BlockSettingsComponent } from '../block-settings/block-settings.component';
 
 @Component({
   selector: 'app-block-list',
   templateUrl: './block-list.component.html',
   styleUrls: ['./block-list.component.css']
 })
-export class BlockListComponent {
+export class BlockListComponent implements OnInit {
 
   @Input()
   list: { [key: string]: string }[] = [];
@@ -43,14 +44,22 @@ export class BlockListComponent {
       'select',
       'action',
       'moveto',
+      'created_at',
+      'updated_at',
       ...this.columns,
     ];
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -59,6 +68,9 @@ export class BlockListComponent {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -66,6 +78,9 @@ export class BlockListComponent {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG)
@@ -75,6 +90,9 @@ export class BlockListComponent {
     ]).then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   refreshData() {
     Promise.all([
       this.apiService.fetchList<Block>(ApiEntity.BLOCK, {
@@ -88,8 +106,6 @@ export class BlockListComponent {
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: Block[]) {
     const col = new Set<string>();
@@ -113,9 +129,12 @@ export class BlockListComponent {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id',  ...col];
   }
 
+  /**
+   *
+   */
   addItem() {
     this.dialog.open(
       BlockFormComponent,
@@ -126,11 +145,17 @@ export class BlockListComponent {
     ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: number) {
     this.apiService.deleteList(ApiEntity.BLOCK, [id])
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -138,6 +163,9 @@ export class BlockListComponent {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
     this.dialog.open(
       BlockFormComponent,
@@ -149,6 +177,9 @@ export class BlockListComponent {
     ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   onNext(id: string) {
     this.router.navigate(
       ['/content', id],
@@ -156,8 +187,25 @@ export class BlockListComponent {
     );
   }
 
-
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    const dialog = this.dialog.open(
+      BlockSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    );
+
+    dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
 }

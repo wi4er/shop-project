@@ -43,6 +43,7 @@ export class ContentPermissionEntity
     type => GroupEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-storage-page',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./storage-page.component.css']
 })
 export class StoragePageComponent {
+
+  pages: { [key: number]: string } = {
+    0: 'element',
+    1: 'section',
+  };
+
+  selected = new FormControl(0);
 
 }

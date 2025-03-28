@@ -26,6 +26,8 @@ import { StorageModule } from '../storage/storage.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ElementSettingsComponent } from './element-settings/element-settings.component';
 import { MatList, MatListModule } from '@angular/material/list';
+import { BlockSettingsComponent } from './block-settings/block-settings.component';
+import { SectionSettingsComponent } from './section-settings/section-settings.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { MatList, MatListModule } from '@angular/material/list';
     BlockListComponent,
     BlockFormComponent,
     ElementSettingsComponent,
+    BlockSettingsComponent,
+    SectionSettingsComponent,
   ],
   exports: [
     ElementListComponent,
