@@ -16,32 +16,30 @@ export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkProperty(id: string): Promise<PropertyEntity> {
     const propRepo = this.trans.getRepository(PropertyEntity);
-    const inst = await propRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Property id ${id} not found!`);
+    return WrongDataException.assert(
+      await propRepo.findOne({where: {id}}),
+      `Property with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkPoint(id: string): Promise<PointEntity> {
     const propRepo = this.trans.getRepository(PointEntity);
-    const inst = await propRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Point id ${id} not found!`);
+    return WrongDataException.assert(
+      propRepo.findOne({where: {id}}),
+      `Point with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param beforeItem
-   * @param list
    */
   async save(beforeItem: T, list: PropertyPointInput[]) {
     const current: { [key: string]: Array<CommonPointEntity<BaseEntity>> } = {};

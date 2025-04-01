@@ -28,8 +28,6 @@ export class ElementInsertOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkBlock(id: number): Promise<BlockEntity> {
     const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
@@ -40,7 +38,6 @@ export class ElementInsertOperation {
 
   /**
    *
-   * @param input
    */
   async save(input: ElementInput): Promise<string> {
     this.created.id = input.id;

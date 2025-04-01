@@ -6,15 +6,24 @@
       [selectedIndex]="selected.value"
     >
       <mat-tab label="Properties">
-        Properties HERE
+        <div class="line">
+          <mat-selection-list >
+            <mat-list-option *ngFor="let prop of propertyList">
+              {{ prop.id }}
+            </mat-list-option>
+          </mat-selection-list>
+
+          <mat-selection-list >
+            <mat-list-option *ngFor="let prop of propertyList">
+              {{ prop.id }}
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
       </mat-tab>
 
       <mat-tab label="Flags">
         <mat-selection-list >
-          <mat-list-option
-
-            *ngFor="let flag of flagList"
-          >
+          <mat-list-option *ngFor="let flag of flagList">
             {{ flag.id }}
           </mat-list-option>
         </mat-selection-list>

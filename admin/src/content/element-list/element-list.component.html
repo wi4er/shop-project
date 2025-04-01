@@ -97,7 +97,8 @@
     <th
       mat-header-cell
       *matHeaderCellDef
-    >Images
+    >
+      Images
     </th>
 
     <td
@@ -130,7 +131,46 @@
     </th>
 
     <td mat-cell *matCellDef="let element">
-      <span [innerHTML]="sanitizer.bypassSecurityTrustHtml(element[prop] ?? '')"></span>
+      <span
+        class="row"
+        [innerHTML]="sanitizer.bypassSecurityTrustHtml(element[prop] ?? '')"
+      ></span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="created_at">
+    <th
+      class="date"
+      mat-header-cell
+      *matHeaderCellDef
+    >
+      <span>Created at</span>
+    </th>
+
+    <td
+      class="date"
+      mat-cell
+      *matCellDef="let element"
+    >
+      <span [innerHTML]="element.created_at | date:'dd MMM y, HH:mm:ss'"></span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="updated_at">
+    <th
+      class="date"
+      mat-header-cell
+      *matHeaderCellDef
+    >
+      <span>Updated at</span>
+    </th>
+
+    <td
+      class="date"
+      mat-cell
+      *matCellDef="let element"
+    >
+      <span [innerHTML]="element.updated_at | date:'dd MMM y, HH:mm:ss'"></span>
     </td>
   </ng-container>
 
@@ -141,12 +181,17 @@
           *ngIf="element == expandedElement"
           class="image-list"
         >
-          <div *ngFor="let image of imageList[element.id]">
+          <div
+            *ngFor="let image of imageList[element.id]"
+            class="image-item"
+          >
             <img
               style="max-width: 100px; max-height: 100px"
               [src]="'http://localhost:3030/' + image.path"
               alt=""
             />
+
+            {{ image.collection }}
           </div>
         </div>
       </div>

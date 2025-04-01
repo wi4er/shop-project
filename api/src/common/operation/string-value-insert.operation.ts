@@ -16,38 +16,34 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkProperty(id: string): Promise<PropertyEntity> {
     const propRepo = this.trans.getRepository(PropertyEntity);
-    const inst = await propRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Wrong property ${id}`);
+    return WrongDataException.assert(
+      await propRepo.findOne({where: {id}}),
+      `Property with id >> ${id} << not found`
+    );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkLang(id?: string): Promise<LangEntity> {
     if (!id) return null;
 
     const langRepo = this.trans.getRepository(LangEntity);
-    const inst = await langRepo.findOne({where: {id}});
 
-    WrongDataException.assert(inst, `Wrong language ${id}`);
-
-    return inst;
+    return WrongDataException.assert(
+      await langRepo.findOne({where: {id}}),
+      `Language with id >> ${id} << not found`
+    );
   }
 
   /**
    *
-   * @param created
-   * @param list
    */
-  async save(created: T, list: PropertyStringInput[]) {
+  async save(created: T, list: PropertyStringInput[]): Promise<undefined> {
     for (const item of list ?? []) {
       const inst = new this.entity();
       inst.parent = created;

@@ -32,7 +32,7 @@ export class SectionEntity
 
   @PrimaryColumn({
     type: "varchar",
-    length: 50,
+    length: 36,
     default: () => 'uuid_generate_v4()',
   })
   id: string;

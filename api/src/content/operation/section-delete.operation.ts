@@ -8,7 +8,7 @@ export class SectionDeleteOperation {
   ) {
   }
 
-  async save(idList: number[]) {
+  async save(idList: string[]) {
     const sectionRepo = this.manager.getRepository(SectionEntity);
 
     const result = [];

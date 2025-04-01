@@ -658,220 +658,308 @@ describe('ElementController', () => {
   });
 
   describe('Content element addition', () => {
-    test('Should add element', async () => {
-      const cookie = await createSession();
+    describe('Element addition with fields', () => {
+      test('Should add element', async () => {
+        const cookie = await createSession();
 
-      await new BlockEntity().save();
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          permission: [{group: 1, method: 'READ'}],
-        })
-        .set('cookie', cookie)
-        .expect(201);
+        await new BlockEntity().save();
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            permission: [{group: 1, method: 'READ'}],
+          })
+          .set('cookie', cookie)
+          .expect(201);
 
-      expect(inst.body.block).toBe(1);
-      expect(inst.body.id).toHaveLength(36);
-      expect(inst.body.permission[0].method).toBe('READ');
-      expect(inst.body.permission[0].group).toBe('1');
+        expect(inst.body.block).toBe(1);
+        expect(inst.body.id).toHaveLength(36);
+        expect(inst.body.permission[0].method).toBe('READ');
+        expect(inst.body.permission[0].group).toBe('1');
+      });
+
+      test('Should add with sort', async () => {
+        const cookie = await createSession();
+
+        await new BlockEntity().save();
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            sort: 777,
+          })
+          .set('cookie', cookie)
+          .expect(201);
+
+        expect(inst.body.sort).toBe(777);
+      });
+
+      test('Should add and get element', async () => {
+        const cookie = await createSession();
+
+        await new BlockEntity().save();
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            id: 'ELEMENT',
+            block: 1,
+            permission: [{group: 1, method: 'READ'}],
+          })
+          .set('cookie', cookie)
+          .expect(201);
+
+        const inst = await request(app.getHttpServer())
+          .get('/element/ELEMENT')
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(inst.body.id).toBe('ELEMENT');
+        expect(inst.body.block).toBe(1);
+      });
+
+      test('Shouldn`t add without block', async () => {
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with wrong block', async () => {
+        await new BlockEntity().save();
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({block: 2})
+          .expect(400)
+          .expect({message: 'Block with id 2 not found!'});
+      });
     });
 
-    test('Should add with sort', async () => {
-      const cookie = await createSession();
+    describe('Element addition with permission', () => {
+      test('Should add with permission', async () => {
+        await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
 
-      await new BlockEntity().save();
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          sort: 777,
-        })
-        .set('cookie', cookie)
-        .expect(201);
+        await new BlockEntity().save();
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            permission: [{group: 'NEW', method: 'READ'}],
+          })
+          .expect(201);
+      });
 
-      expect(inst.body.sort).toBe(777);
+      test('Shouldn`t add with wrong group', async () => {
+        await new BlockEntity().save();
+
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            permission: [{group: 777, method: 'READ'}],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add with wrong method', async () => {
+        await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
+        await new BlockEntity().save();
+
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            permission: [{group: 'NEW', method: 'WRONG'}],
+          })
+          .expect(400);
+      });
     });
 
-    test('Shouldn`t add with wrong group', async () => {
-      await Object.assign(new UserEntity(), {
-        login: 'USER',
-        hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
-      }).save();
+    describe('Element addition with string', () => {
+      test('Should add with strings', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
 
-      const {headers} = await request(app.getHttpServer())
-        .post('/auth')
-        .send({
-          login: 'USER',
-          password: 'qwerty',
-        })
-        .expect(201);
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            property: [
+              {property: 'NAME', string: 'VALUE'},
+            ],
+          })
+          .expect(201);
 
-      await new BlockEntity().save();
-      await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          permission: [{group: 777, method: 'READ'}],
-        })
-        .set('cookie', headers['set-cookie'])
-        .expect(400);
+        expect(inst.body.property).toHaveLength(1);
+        expect(inst.body.property[0].property).toBe('NAME');
+        expect(inst.body.property[0].string).toBe('VALUE');
+      });
+
+      test('Shouldn`t add with wrong property', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            property: [
+              {property: 'WRONG', string: 'VALUE'},
+            ],
+          })
+          .expect(400);
+      });
     });
 
-    test('Should add and get element', async () => {
-      const cookie = await createSession();
+    describe('Element addition with point', () => {
+      test('Should add with point', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await new BlockEntity().save();
-      await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          id: 'ELEMENT',
-          block: 1,
-          permission: [{group: 1, method: 'READ'}],
-        })
-        .set('cookie', cookie)
-        .expect(201);
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            property: [
+              {property: 'NAME', point: 'LONDON'},
+            ],
+          })
+          .expect(201);
 
-      const inst = await request(app.getHttpServer())
-        .get('/element/ELEMENT')
-        .set('cookie', cookie)
-        .expect(200);
+        expect(inst.body.property).toHaveLength(1);
+        expect(inst.body.property[0].property).toBe('NAME');
+        expect(inst.body.property[0].point).toBe('LONDON');
+        expect(inst.body.property[0].directory).toBe('CITY');
+      });
 
-      expect(inst.body.id).toBe('ELEMENT');
-      expect(inst.body.block).toBe(1);
+      test('Shouldn`t add with wrong point', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            property: [
+              {property: 'NAME', point: 'WRONG'},
+            ],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add with duplicate point', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            property: [
+              {property: 'NAME', point: 'LONDON'},
+              {property: 'NAME', point: 'LONDON'},
+            ],
+          })
+          .expect(400);
+      });
     });
 
-    test('Shouldn`t add without block', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({})
-        .expect(400);
+    describe('Element addition with element', () => {
+      test('Should add with element', async () => {
+        const block = await new BlockEntity().save();
+        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new ElementEntity(), {id: 'CHILD', block}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            property: [
+              {property: 'NAME', element: 'CHILD'},
+            ],
+          })
+          .expect(201);
+
+        expect(inst.body.property).toHaveLength(1);
+        expect(inst.body.property[0].property).toBe('NAME');
+        expect(inst.body.property[0].element).toBe('CHILD');
+      });
     });
 
-    test('Shouldn`t add with wrong block', async () => {
-      await new BlockEntity().save();
-      await request(app.getHttpServer())
-        .post('/element')
-        .send({block: 2})
-        .expect(400)
-        .expect({message: 'Block with id 2 not found!'});
+    describe('Element addition with flag', () => {
+      test('Should add with flag', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            flag: ['ACTIVE'],
+          })
+          .expect(201);
+
+        expect(inst.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Shouldn`t add with wrong flag', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            flag: ['WRONG'],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add with duplicate flag', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            flag: ['ACTIVE', 'ACTIVE'],
+          })
+          .expect(400);
+
+        console.log(inst.body);
+      });
     });
 
-    test('Should add with strings', async () => {
-      await new BlockEntity().save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+    describe('Element addition with image', () => {
+      test('Should add with image', async () => {
+        const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+        await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt.txt`,
+          },
+        ).save();
+        await new BlockEntity().save();
 
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          property: [
-            {property: 'NAME', string: 'VALUE'},
-          ],
-        })
-        .expect(201);
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            image: [1],
+          })
+          .expect(201);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
-    });
-
-    test('Should add with point', async () => {
-      await new BlockEntity().save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          property: [
-            {property: 'NAME', point: 'LONDON'},
-          ],
-        })
-        .expect(201);
-
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].point).toBe('LONDON');
-      expect(inst.body.property[0].directory).toBe('CITY');
-    });
-
-    test('Should add with element', async () => {
-      const block = await new BlockEntity().save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new ElementEntity(), {id: 'CHILD', block}).save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          property: [
-            {property: 'NAME', element: 'CHILD'},
-          ],
-        })
-        .expect(201);
-
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].element).toBe('CHILD');
-    });
-
-    test('Shouldn`t add with wrong property', async () => {
-      await new BlockEntity().save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          property: [
-            {property: 'WRONG', string: 'VALUE'},
-          ],
-        })
-        .expect(400);
-    });
-
-    test('Should add with flag', async () => {
-      await new BlockEntity().save();
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          flag: ['ACTIVE'],
-        })
-        .expect(201);
-
-      expect(inst.body.flag).toEqual(['ACTIVE']);
-    });
-
-    test('Should add with image', async () => {
-      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(
-        new FileEntity(),
-        {
-          collection,
-          original: 'name.txt',
-          mimetype: 'image/jpeg',
-          path: `txt/txt.txt`,
-        },
-      ).save();
-      await new BlockEntity().save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/element')
-        .send({
-          block: 1,
-          image: [1],
-        })
-        .expect(201);
-
-      expect(inst.body.image).toHaveLength(1);
-      expect(inst.body.image[0].image).toBe(1);
-      expect(inst.body.image[0].collection).toBe('SHORT');
+        expect(inst.body.image).toHaveLength(1);
+        expect(inst.body.image[0].image).toBe(1);
+        expect(inst.body.image[0].collection).toBe('SHORT');
+      });
     });
   });
 
@@ -899,7 +987,7 @@ describe('ElementController', () => {
 
         await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
-          .send({id: 'SOME', block: 1})
+          .send({id: 'SOME', block: 1, permission: [{method: 'ALL', group: '1'}]})
           .set('cookie', cookie)
           .expect(200);
 
@@ -918,7 +1006,7 @@ describe('ElementController', () => {
 
         await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
-          .send({id: 'SOME', block: 1, sort: 333})
+          .send({id: 'SOME', block: 1, sort: 333, permission: [{method: 'ALL', group: '1'}]})
           .set('cookie', cookie)
           .expect(200);
 
@@ -974,11 +1062,81 @@ describe('ElementController', () => {
         await new BlockEntity().save();
         await createElement();
 
-        const item = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .put('/element')
           .send({id: 1})
           .set('cookie', cookie)
           .expect(404);
+      });
+    });
+
+    describe('Content element permission update', () => {
+      test('Should add permission', async () => {
+        const cookie = await createSession();
+        await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
+        await new BlockEntity().save();
+        const parent = await createElement();
+
+        const inst = await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({
+            id: parent.id,
+            block: 1,
+            permission: [
+              {group: 'NEW', method: 'READ'},
+              {group: '1', method: 'ALL'},
+            ],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(inst.body.permission).toEqual([
+          {group: '1', method: 'ALL'},
+          {group: 'NEW', method: 'READ'},
+        ]);
+      });
+
+      test('Shouldn`t add with wrong method', async () => {
+        const cookie = await createSession();
+        await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
+        await new BlockEntity().save();
+        const parent = await createElement();
+
+        await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({
+            id: parent.id,
+            block: 1,
+            permission: [
+              {group: 'NEW', method: 'WRONG'},
+            ],
+          })
+          .set('cookie', cookie)
+          .expect(400);
+      });
+
+      test('Should remove permission', async () => {
+        const cookie = await createSession();
+        await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
+        await new BlockEntity().save();
+        const parent = await createElement();
+        await Object.assign(new Element2permissionEntity(), {parent, method: 'READ', group: 'NEW'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({
+            id: parent.id,
+            block: 1,
+            permission: [
+              {group: '1', method: 'ALL'},
+            ],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(inst.body.permission).toEqual([
+          {group: '1', method: 'ALL'},
+        ]);
       });
     });
 
@@ -1210,6 +1368,23 @@ describe('ElementController', () => {
           .expect(200);
 
         expect(item.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Shouldn`t add duplicate flag', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({
+            id: parent.id,
+            block: 1,
+            flag: ['ACTIVE', 'ACTIVE'],
+          })
+          .set('cookie', cookie)
+          .expect(400);
       });
 
       test('Should remove flag', async () => {

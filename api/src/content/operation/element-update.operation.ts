@@ -14,6 +14,8 @@ import { Element4pointEntity } from '../model/element4point.entity';
 import { Element4elementUpdateOperation } from './element4element-update.operation';
 import { Element2imageEntity } from '../model/element2image.entity';
 import { ImageUpdateOperation } from '../../common/operation/image-update.operation';
+import { PermissionValueUpdateOperation } from '../../common/operation/permission-value-update.operation';
+import { Element2permissionEntity } from '../model/element2permission.entity';
 
 export class ElementUpdateOperation {
 
@@ -24,8 +26,6 @@ export class ElementUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkBlock(id?: number): Promise<BlockEntity> {
     WrongDataException.assert(id, 'Block id expected!');
@@ -34,14 +34,12 @@ export class ElementUpdateOperation {
       await this.manager
         .getRepository<BlockEntity>(BlockEntity)
         .findOne({where: {id}}),
-      `Block id ${id} not found!`,
+      `Block with id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkElement(id: string): Promise<ElementEntity> {
     const elementRepo = this.manager.getRepository(ElementEntity);
@@ -58,14 +56,12 @@ export class ElementUpdateOperation {
           permission: {group: true},
         },
       }),
-      `Element with id ${id} not found!`,
+      `Element with id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param id
-   * @param input
    */
   async save(id: string, input: ElementInput): Promise<string> {
     try {
@@ -80,10 +76,12 @@ export class ElementUpdateOperation {
 
     const beforeItem = await this.checkElement(input.id);
 
-    const [stringList, pointList, elemList] = filterProperties(input.property);
     await new ImageUpdateOperation(this.manager, Element2imageEntity).save(beforeItem, input.image);
-    await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
+    await new PermissionValueUpdateOperation(this.manager, Element2permissionEntity).save(beforeItem, input);
+
+    const [stringList, pointList, elemList] = filterProperties(input.property);
+    await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList);
     await new Element4elementUpdateOperation(this.manager).save(beforeItem, elemList);
 

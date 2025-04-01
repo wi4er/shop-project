@@ -15,24 +15,20 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
     const flagRepo = this.trans.getRepository(FlagEntity);
-    const flag = await flagRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(flag, `Flag ${id} not found!`);
+    return WrongDataException.assert(
+      await flagRepo.findOne({where: {id}}),
+      `Flag with if >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param beforeItem
-   * @param input
    */
   async save(beforeItem: T, input: WithFlagInput) {
-    const flagRepo = this.trans.getRepository(FlagEntity);
-
     const current: Array<string> = beforeItem.flag.map(it => it.flag.id);
 
     for (const item of input.flag ?? []) {
@@ -43,7 +39,10 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
         inst.parent = beforeItem;
         inst.flag = await this.checkFlag(item);
 
-        await this.trans.save(inst);
+        await this.trans.save(inst)
+          .catch(err => {
+            throw new WrongDataException(err.detail);
+          });
       }
     }
 

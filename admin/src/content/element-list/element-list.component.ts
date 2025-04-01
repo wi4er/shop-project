@@ -41,6 +41,7 @@ export class ElementListComponent implements OnChanges {
   imageList: {
     [id: string]: Array<{
       path: string,
+      collection: string,
     }> | null
   } = {};
   columns: string[] = [];
@@ -58,15 +59,23 @@ export class ElementListComponent implements OnChanges {
     return [
       'select',
       'action',
+      'created_at',
+      'updated_at',
       ...this.columns,
       'image',
     ];
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -75,6 +84,9 @@ export class ElementListComponent implements OnChanges {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -82,6 +94,9 @@ export class ElementListComponent implements OnChanges {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   ngOnChanges() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
@@ -95,6 +110,9 @@ export class ElementListComponent implements OnChanges {
     });
   }
 
+  /**
+   *
+   */
   private setData(data: Element[]) {
     const col = new Set<string>();
     this.activeFlags = {};
@@ -124,9 +142,12 @@ export class ElementListComponent implements OnChanges {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', 'sort', ...col];
+    this.columns = ['id', 'sort', ...col];
   }
 
+  /**
+   *
+   */
   async refreshData() {
     return Promise.all([
       this.apiService.fetchList<Element>(
@@ -150,6 +171,9 @@ export class ElementListComponent implements OnChanges {
     });
   }
 
+  /**
+   *
+   */
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -157,11 +181,17 @@ export class ElementListComponent implements OnChanges {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.ELEMENT, [id])
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   addItem() {
     const dialog = this.dialog.open(
       ElementFormComponent,
@@ -176,6 +206,9 @@ export class ElementListComponent implements OnChanges {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
     const dialog = this.dialog.open(
       ElementFormComponent,
@@ -189,6 +222,9 @@ export class ElementListComponent implements OnChanges {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
     console.log(id, '>>>>>>>', flag);
   }
@@ -200,7 +236,7 @@ export class ElementListComponent implements OnChanges {
     const dialog = this.dialog.open(
       ElementSettingsComponent,
       {
-        width: '1000px',
+        width: '500px',
         panelClass: 'wrapper',
         data: {block: this.blockId},
       },

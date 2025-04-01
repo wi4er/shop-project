@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
 import { SectionFilterInput } from '../../input/section-filter.input';
 import { SectionInput } from '../../input/section.input';
@@ -12,6 +12,11 @@ import { SectionRender } from '../../render/section.render';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { ElementEntity } from '../../model/element.entity';
 import { SectionOrderInput } from '../../input/section-order.input';
+import { PermissionException } from '../../../exception/permission/permission.exception';
+import { PermissionMethod } from '../../../permission/model/permission-method';
+import { Element2permissionEntity } from '../../model/element2permission.entity';
+import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
+import { Section2permissionEntity } from '../../model/section2permission.entity';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
@@ -32,6 +37,8 @@ export class SectionController {
     private entityManager: EntityManager,
     @InjectRepository(SectionEntity)
     private sectionRepo: Repository<SectionEntity>,
+    @InjectRepository(Element2permissionEntity)
+    private permRepo: Repository<Section2permissionEntity>,
   ) {
   }
 
@@ -182,10 +189,23 @@ export class SectionController {
   }
 
   @Delete(':id')
-  deleteItem(
+  async deleteItem(
+    @CurrentGroups()
+      group: number[],
     @Param('id')
-      id: number,
+      id: string,
   ): Promise<number[]> {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: Or(In(group), IsNull()),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
     return this.entityManager.transaction(
       trans => new SectionDeleteOperation(trans).save([id]),
     );

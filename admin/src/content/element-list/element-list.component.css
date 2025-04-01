@@ -5,6 +5,12 @@
   flex: 1;
 }
 
+.row {
+  display: block;
+  max-height: 61px;
+  overflow: hidden;
+}
+
 .select {
   width: 36px;
 }
@@ -15,6 +21,10 @@
 
 .spacer {
   flex: 1;
+}
+
+.date {
+  width: 120px;
 }
 
 .image {
@@ -32,6 +42,12 @@
   display: flex;
   gap: 8px;
   padding: 8px;
+}
+
+.image-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .example-detail-row {

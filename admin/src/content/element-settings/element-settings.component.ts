@@ -27,9 +27,11 @@ export class ElementSettingsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { block: number } | null,
     private apiService: ApiService,
   ) {
-
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),

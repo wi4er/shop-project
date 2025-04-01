@@ -14,20 +14,16 @@ export class FlagValueInsertOperation<T extends BaseEntity> {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
     const flagRepo = this.trans.getRepository(FlagEntity);
     const flag = await flagRepo.findOne({where: {id}});
 
-    return  WrongDataException.assert(flag, `Flag with id ${id} not found!`);
+    return WrongDataException.assert(flag, `Flag with id ${id} not found!`);
   }
 
   /**
    *
-   * @param created
-   * @param input
    */
   async save(created: T, input: WithFlagInput) {
     for (const item of input.flag ?? []) {
@@ -35,7 +31,10 @@ export class FlagValueInsertOperation<T extends BaseEntity> {
       inst.parent = created;
       inst.flag = await this.checkFlag(item);
 
-      await this.trans.save(inst);
+      await this.trans.save(inst)
+        .catch(err => {
+          throw new WrongDataException(err.detail);
+        });
     }
   }
 

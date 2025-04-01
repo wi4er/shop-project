@@ -16,34 +16,28 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkProperty(id: string): Promise<PropertyEntity> {
-    const propRepo = this.trans.getRepository(PropertyEntity);
-    const inst = await propRepo.findOne({where: {id}});
-
-    return WrongDataException.assert(inst, `Property id ${id} not found!`);
+    return WrongDataException.assert(
+      await this.trans.getRepository(PropertyEntity).findOne({where: {id}}),
+      `Property with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkLang(id?: string): Promise<LangEntity> {
     if (!id) return null;
 
     return WrongDataException.assert(
       await this.trans.getRepository(LangEntity).findOne({where: {id}}),
-      `Language id ${id} not found!`,
+      `Language with id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param beforeItem
-   * @param list
    */
   async save(beforeItem: T, list: PropertyStringInput[]) {
     const current: { [key: string]: Array<CommonStringEntity<BaseEntity>> } = {};

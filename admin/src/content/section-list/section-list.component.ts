@@ -182,7 +182,7 @@ export class SectionListComponent implements OnChanges {
    *
    */
   deleteItem(id: string) {
-    this.apiService.deleteList(ApiEntity.ELEMENT, [id])
+    this.apiService.deleteList(ApiEntity.SECTION, [id])
       .then(() => this.refreshData());
   }
 

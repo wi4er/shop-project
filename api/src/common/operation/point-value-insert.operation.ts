@@ -55,7 +55,10 @@ export class PointValueInsertOperation<T extends WithPointEntity<T>> {
       inst.property = await this.checkProperty(item.property);
       inst.point = await this.checkPoint(item.point);
 
-      await this.trans.save(inst);
+      await this.trans.save(inst)
+        .catch(err => {
+          throw new WrongDataException(err.detail);
+        });
     }
   }
 

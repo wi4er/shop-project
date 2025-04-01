@@ -4,7 +4,6 @@ import { WithPermissionInput } from '../input/with-permission.input';
 import { GroupEntity } from '../../personal/model/group.entity';
 import { CommonPermissionEntity } from '../model/common-permission.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
-import * as process from 'process';
 
 export class PermissionValueInsertOperation<T extends BaseEntity> {
 
@@ -16,16 +15,20 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkGroup(id: string): Promise<GroupEntity> {
     const groupRepo = this.trans.getRepository(GroupEntity);
-    const group = await groupRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(group, `User group with id ${id} not found!`);
+    return WrongDataException.assert(
+      await groupRepo.findOne({where: {id}}),
+      `User group with id >> ${id} << not found!`,
+    );
   }
 
+  /**
+   *
+   * Добавляет доступ для админа
+   */
   private async insertAdmin(created: T) {
     if (!process.env.ADMIN_GROUP) return;
 
@@ -39,8 +42,6 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
 
   /**
    *
-   * @param created
-   * @param input
    */
   async save(created: T, input: WithPermissionInput) {
     await this.insertAdmin(created);
@@ -51,7 +52,10 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
       inst.group = await this.checkGroup(item.group);
       inst.method = item.method;
 
-      await this.trans.save(inst);
+      await this.trans.save(inst)
+        .catch(err => {
+          throw new WrongDataException(err.detail);
+        });
     }
   }
 
