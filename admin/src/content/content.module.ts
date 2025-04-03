@@ -28,6 +28,7 @@ import { ElementSettingsComponent } from './element-settings/element-settings.co
 import { MatList, MatListModule } from '@angular/material/list';
 import { BlockSettingsComponent } from './block-settings/block-settings.component';
 import { SectionSettingsComponent } from './section-settings/section-settings.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { SectionSettingsComponent } from './section-settings/section-settings.co
     MatCardModule,
     MatSnackBarModule,
     MatListModule,
+    MatProgressSpinnerModule,
     PersonalModule,
     StorageModule,
   ],

@@ -134,7 +134,7 @@ export class ApiService {
     }));
   }
 
-  putData<T>(entity: ApiEntity, id: string | number, item: T): Promise<Response> {
+  putData<T>(entity: ApiEntity, id: string | number, item: T): Promise<string> {
     const url = [
       this.apiUrl,
       entity,

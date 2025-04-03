@@ -8,6 +8,7 @@ import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element.input';
 import { Collection } from '../../app/model/storage/collection';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PropertyValueService } from '../../app/service/property-value.service';
 
 @Component({
   selector: 'app-element-form',
@@ -16,16 +17,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ElementFormComponent implements OnInit {
 
+  loading = true;
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
   sort: number = 100;
-  permission: { [method: string]: number[] } = {
-    READ: [],
-    WRITE: [],
-    DELETE: [],
-    ALL: [],
-  };
 
   propertyList: Property[] = [];
   langList: Lang[] = [];
@@ -50,16 +46,23 @@ export class ElementFormComponent implements OnInit {
       hash: string,
     }>
   } = {};
+  editPermission: {
+    [groupId: string]: { [method: string]: boolean }
+  } = {};
 
   constructor(
     private dialogRef: MatDialogRef<ElementFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
+    private propertyValueService: PropertyValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
@@ -75,15 +78,23 @@ export class ElementFormComponent implements OnInit {
 
       this.initEditValues();
       if (data) this.toEdit(data);
+
+      this.loading = false;
     });
   }
 
+  /**
+   *
+   */
   getPropertyCount() {
     return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
+  /**
+   *
+   */
   initEditValues() {
     for (const col of this.collectionList) {
       this.imageList[col.id] = [];
@@ -105,6 +116,9 @@ export class ElementFormComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   toEdit(item: Element) {
     this.id = item.id;
     this.created_at = item.created_at;
@@ -121,22 +135,21 @@ export class ElementFormComponent implements OnInit {
       });
     }
 
-    for (const prop of item.property) {
-      this.editProperties[prop.property][prop.lang ?? ''].push({
-        value: prop.string,
-        error: '',
-      });
-    }
+    this.propertyValueService.toEdit(item.property,  this.editProperties);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
     }
+
+    for (const perm of item.permission) {
+      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {}
+      this.editPermission[perm.group ?? ''][perm.method] = true;
+    }
   }
 
-  handleChangePermission = (method: string) => (id: number[]) => {
-    this.permission[method] = id;
-  };
-
+  /**
+   *
+   */
   toInput(): ElementInput {
     const input: ElementInput = {
       id: this.id || undefined,
@@ -160,33 +173,42 @@ export class ElementFormComponent implements OnInit {
       }
     }
 
-    for (const method in this.permission) {
-      for (const group of this.permission[method]) {
-        input.permission.push({method, group});
-      }
-    }
-
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) continue;
-
-        for (const value of this.editProperties[prop][lang]) {
-          input.property.push({
-            property: prop,
-            string: value.value,
-            lang: lang || undefined,
-          });
-        }
-      }
-    }
+    input.property = this.propertyValueService.toInput(this.editProperties);
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) input.flag.push(flag);
     }
 
+    for (const group in this.editPermission) {
+      for (const method in this.editPermission[group]) {
+        if (this.editPermission[group][method]) input.permission.push({method, group: group ? group : undefined});
+      }
+    }
+
     return input;
   }
 
+  /**
+   *
+   */
+  async sendItem(): Promise<string> {
+    if (this.data?.id) {
+      return this.apiService.putData<ElementInput>(
+        ApiEntity.ELEMENT,
+        this.data.id,
+        this.toInput(),
+      )
+    } else {
+      return this.apiService.postData<ElementInput>(
+        ApiEntity.ELEMENT,
+        this.toInput(),
+      )
+    }
+  }
+
+  /**
+   *
+   */
   async saveItem(event: Event) {
     event.preventDefault();
 
@@ -206,26 +228,11 @@ export class ElementFormComponent implements OnInit {
       }
     }
 
-    if (this.data?.id) {
-      this.apiService.putData<ElementInput>(
-        ApiEntity.ELEMENT,
-        this.data.id,
-        this.toInput(),
-      )
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
-    } else {
-      this.apiService.postData<ElementInput>(
-        ApiEntity.ELEMENT,
-        this.toInput(),
-      )
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
-    }
+    this.sendItem()
+      .then(() => this.dialogRef.close())
+      .catch((err: string) => {
+        this.errorBar.open(err, 'close', {duration: 5000});
+      });
   }
 
 }

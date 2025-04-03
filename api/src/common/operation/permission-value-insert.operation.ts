@@ -16,7 +16,8 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
   /**
    *
    */
-  private async checkGroup(id: string): Promise<GroupEntity> {
+  private async checkGroup(id?: string): Promise<GroupEntity | null> {
+    if (!id) return null;
     const groupRepo = this.trans.getRepository(GroupEntity);
 
     return WrongDataException.assert(

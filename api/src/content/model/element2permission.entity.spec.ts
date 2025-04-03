@@ -10,10 +10,7 @@ import { PermissionMethod } from '../../permission/model/permission-method';
 describe('Element permission entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -34,6 +31,22 @@ describe('Element permission entity', () => {
         new Element2permissionEntity(),
         {parent, group, method: PermissionMethod.ALL},
       ).save();
+    });
+
+    test('Shouldn`t create duplicate instance', async () => {
+      const group = await Object.assign(new GroupEntity(), {}).save();
+      const block = await Object.assign(new BlockEntity(), {}).save();
+      const parent = await Object.assign(new ElementEntity(), {block}).save();
+
+      await Object.assign(
+        new Element2permissionEntity(),
+        {parent, group, method: PermissionMethod.ALL},
+      ).save();
+
+      await expect(Object.assign(
+        new Element2permissionEntity(),
+        {parent, group, method: PermissionMethod.ALL},
+      ).save()).rejects.toThrow('duplicate');
     });
 
     test('Should create without group', async () => {

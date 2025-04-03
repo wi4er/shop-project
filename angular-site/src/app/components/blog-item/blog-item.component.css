@@ -23,7 +23,7 @@
   flex-direction: column;
   gap: 22px;
 
-  .top {
+  .line {
     display: flex;
     flex-direction: column;
     gap: 16px;

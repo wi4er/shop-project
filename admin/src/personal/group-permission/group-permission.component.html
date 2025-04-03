@@ -1,0 +1,27 @@
+<table
+  *ngIf="!loading"
+  mat-table
+  [dataSource]="getList()"
+>
+  <ng-container matColumnDef="groupId">
+    <th mat-header-cell *matHeaderCellDef> No.</th>
+    <td mat-cell *matCellDef="let element"> {{ element.id ?? 'Public' }}</td>
+  </ng-container>
+
+  <ng-container
+    *ngFor="let method of methodList"
+    [matColumnDef]="method"
+  >
+    <th mat-header-cell *matHeaderCellDef> {{ method }}</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-checkbox
+        [checked]="permission[element.id]?.[method] ?? false"
+        (change)="handleChange(element.id, method)"
+      >
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

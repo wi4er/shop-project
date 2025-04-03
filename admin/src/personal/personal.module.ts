@@ -4,7 +4,6 @@ import { AuthDialogComponent } from './auth-dialog/auth-dialog.component';
 import { AuthFormComponent } from './auth-form/auth-form.component';
 import { GroupFormComponent } from './group-form/group-form.component';
 import { GroupListComponent } from './group-list/group-list.component';
-import { GroupTreeComponent } from './group-tree/group-tree.component';
 import { PermissionListComponent } from './permission-list/permission-list.component';
 import { UserContactFormComponent } from './user-contact-form/user-contact-form.component';
 import { UserContactListComponent } from './user-contact-list/user-contact-list.component';
@@ -29,6 +28,7 @@ import { ContactEditComponent } from './contact-edit/contact-edit.component';
 import { UserContactSettingsComponent } from './user-contact-settings/user-contact-settings.component';
 import { GroupSettingsComponent } from './group-settings/group-settings.component';
 import { MatSelectModule } from '@angular/material/select';
+import { GroupPermissionComponent } from './group-permission/group-permission.component';
 
 
 
@@ -38,7 +38,6 @@ import { MatSelectModule } from '@angular/material/select';
     AuthFormComponent,
     GroupFormComponent,
     GroupListComponent,
-    GroupTreeComponent,
     PermissionListComponent,
     UserContactFormComponent,
     UserContactListComponent,
@@ -48,13 +47,14 @@ import { MatSelectModule } from '@angular/material/select';
     ContactEditComponent,
     UserContactSettingsComponent,
     GroupSettingsComponent,
+    GroupPermissionComponent,
   ],
   exports: [
     AuthDialogComponent,
     GroupListComponent,
     UserListComponent,
     UserContactListComponent,
-    GroupTreeComponent,
+    GroupPermissionComponent,
   ],
   imports: [
     CommonModule,

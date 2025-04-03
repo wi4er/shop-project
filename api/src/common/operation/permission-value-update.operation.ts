@@ -17,7 +17,8 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
   /**
    *
    */
-  private async checkGroup(id: string): Promise<GroupEntity> {
+  private async checkGroup(id?: string): Promise<GroupEntity | null> {
+    if (!id) return null;
     const groupRepo = this.trans.getRepository(GroupEntity);
 
     return WrongDataException.assert(
@@ -33,7 +34,7 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
     const current: { [key: string]: Array<PermissionMethod> } = {};
 
     for (const item of beforeItem.permission) {
-      const {id} = item.group;
+      const {id} = item.group ?? {};
 
       if (current[id]) current[id].push(item.method);
       else current[id] = [item.method];

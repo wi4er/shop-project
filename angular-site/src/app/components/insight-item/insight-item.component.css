@@ -30,7 +30,7 @@
   flex-direction: column;
   gap: 17px;
 
-  .top {
+  .line {
     display: flex;
     justify-content: space-between;
   }

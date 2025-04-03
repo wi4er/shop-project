@@ -746,6 +746,21 @@ describe('ElementController', () => {
             permission: [{group: 'NEW', method: 'READ'}],
           })
           .expect(201);
+
+        expect(inst.body.permission).toEqual([{group: 'NEW', method: 'READ'}]);
+      });
+
+      test('Should add without group', async () => {
+        await new BlockEntity().save();
+        const inst = await request(app.getHttpServer())
+          .post('/element')
+          .send({
+            block: 1,
+            permission: [{method: 'READ'}],
+          })
+          .expect(201);
+
+        expect(inst.body.permission).toEqual([{method: 'READ'}]);
       });
 
       test('Shouldn`t add with wrong group', async () => {
@@ -1084,16 +1099,32 @@ describe('ElementController', () => {
             block: 1,
             permission: [
               {group: 'NEW', method: 'READ'},
-              {group: '1', method: 'ALL'},
             ],
           })
           .set('cookie', cookie)
           .expect(200);
 
         expect(inst.body.permission).toEqual([
-          {group: '1', method: 'ALL'},
           {group: 'NEW', method: 'READ'},
         ]);
+      });
+
+      test('Should add without group', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
+
+        const inst = await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({
+            id: parent.id,
+            block: 1,
+            permission: [{method: 'READ'}],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(inst.body.permission).toEqual([{method: 'READ'}]);
       });
 
       test('Shouldn`t add with wrong method', async () => {
@@ -1109,6 +1140,25 @@ describe('ElementController', () => {
             block: 1,
             permission: [
               {group: 'NEW', method: 'WRONG'},
+            ],
+          })
+          .set('cookie', cookie)
+          .expect(400);
+      });
+
+      test('Shouldn`t add with wrong group', async () => {
+        const cookie = await createSession();
+        await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
+        await new BlockEntity().save();
+        const parent = await createElement();
+
+        await request(app.getHttpServer())
+          .put(`/element/${parent.id}`)
+          .send({
+            id: parent.id,
+            block: 1,
+            permission: [
+              {group: 'WRONG', method: 'READ'},
             ],
           })
           .set('cookie', cookie)

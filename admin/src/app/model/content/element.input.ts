@@ -1,13 +1,14 @@
 import { StringPropertyValue } from '../string-property-value';
+import { WithPropertyInput } from '../settings/with-property.input';
 
 interface PermissionInput {
 
   method: string;
-  group: number;
+  group?: string;
 
 }
 
-export interface ElementInput {
+export interface ElementInput extends WithPropertyInput {
 
   id: string;
   block: number;

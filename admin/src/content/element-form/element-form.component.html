@@ -1,4 +1,14 @@
-<form (submit)="saveItem($event)">
+<div
+  *ngIf="loading"
+  class="loader"
+>
+  <mat-spinner></mat-spinner>
+</div>
+
+<form
+  *ngIf="!loading"
+  (submit)="saveItem($event)"
+>
   <h2 *ngIf="!data?.id" mat-dialog-title>
     Create new content element
   </h2>
@@ -8,7 +18,7 @@
   </h2>
 
   <mat-dialog-content>
-    <div class="top">
+    <div class="line">
       <mat-form-field appearance="fill">
         <mat-label>ID</mat-label>
 
@@ -30,7 +40,10 @@
       </mat-form-field>
     </div>
 
-    <div *ngIf="!!data?.id">
+    <div
+      *ngIf="!!data?.id"
+      class="line"
+    >
       <mat-form-field appearance="fill">
         <mat-label>Created at</mat-label>
 
@@ -72,9 +85,7 @@
         ></app-property-edit>
       </mat-tab>
 
-      <mat-tab
-        label="Flags"
-      >
+      <mat-tab label="Flags">
         <app-flag-edit
           [list]="flagList"
           [edit]="editFlags"
@@ -82,35 +93,9 @@
       </mat-tab>
 
       <mat-tab label="Permissions">
-        <mat-tab-group dynamicHeight>
-          <mat-tab label="READ">
-            <app-group-tree
-              [onChange]="handleChangePermission('READ')"
-              [multiple]="true"
-            ></app-group-tree>
-          </mat-tab>
-
-          <mat-tab label="WRITE">
-            <app-group-tree
-              [onChange]="handleChangePermission('WRITE')"
-              [multiple]="true"
-            ></app-group-tree>
-          </mat-tab>
-
-          <mat-tab label="DELETE">
-            <app-group-tree
-              [onChange]="handleChangePermission('DELETE')"
-              [multiple]="true"
-            ></app-group-tree>
-          </mat-tab>
-
-          <mat-tab label="ALL">
-            <app-group-tree
-              [onChange]="handleChangePermission('ALL')"
-              [multiple]="true"
-            ></app-group-tree>
-          </mat-tab>
-        </mat-tab-group>
+        <app-group-permission
+          [permission]="editPermission"
+        ></app-group-permission>
       </mat-tab>
     </mat-tab-group>
   </mat-dialog-content>
