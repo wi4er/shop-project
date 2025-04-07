@@ -1,5 +1,13 @@
 import { StringProperty } from './StringProperty';
 
+
+export interface ContentImage {
+
+  path: string;
+  collection: string;
+
+}
+
 export interface ContentElement {
 
   id: string;
@@ -8,5 +16,6 @@ export interface ContentElement {
   version: number;
   sort: number;
   property: Array<StringProperty>;
+  image: Array<ContentImage>;
 
 }

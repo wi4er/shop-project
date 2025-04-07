@@ -24,7 +24,7 @@ export class BlogListComponent implements OnInit {
       .subscribe(item => this.blog = item);
     this.blogService.getElements()
       .subscribe(list => {
-
+        this.blogList = list;
       })
   }
 

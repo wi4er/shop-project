@@ -12,6 +12,7 @@ import { Blog } from '../model/Blog';
 export class BlogService {
 
   private apiUrl = 'http://localhost:3030';
+  private storageUrl = 'http://localhost:3030/';
   private blogId = 1;
 
   constructor(
@@ -40,17 +41,15 @@ export class BlogService {
    *
    */
   getElements(): Observable<Array<Blog>> {
-    return this.http.get<Array<ContentElement>>(this.apiUrl + '/element')
+    return this.http.get<Array<ContentElement>>(this.apiUrl + '/element?filter[block]=1')
       .pipe(map(items => {
-
-        console.log(items);
         return items.map(elem => ({
           id: elem.id,
           title: elem.property.find(it => it.property === 'NAME')?.string ?? '',
           text: elem.property.find(it => it.property === 'TEXT')?.string ?? '',
           link: elem.property.find(it => it.property === 'LINK')?.string ?? '',
-          image: ''
-        }))
+          image: this.storageUrl + elem.image.find(it => it.collection === 'PREVIEW')?.path ?? '',
+        }));
       }))
   }
 
