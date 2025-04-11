@@ -13,6 +13,15 @@ import { InsightListComponent } from './components/insight-list/insight-list.com
 import { InsightItemComponent } from './components/insight-item/insight-item.component';
 import { BlogListComponent } from './components/blog-list/blog-list.component';
 import { BlogItemComponent } from './components/blog-item/blog-item.component';
+import { HeaderBarComponent } from './components/header-bar/header-bar.component';
+import { FooterBarComponent } from './components/footer-bar/footer-bar.component';
+import { ButtonComponent } from './widgets/button/button.component';
+import { AboutPageComponent } from './pages/about-page/about-page.component';
+import { BlogPageComponent } from './pages/blog-page/blog-page.component';
+import { TermsPageComponent } from './pages/terms-page/terms-page.component';
+import { PrivacyPageComponent } from './pages/privacy-page/privacy-page.component';
+import { TeamListComponent } from './components/team-list/team-list.component';
+import { TeamItemComponent } from './components/team-item/team-item.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +33,15 @@ import { BlogItemComponent } from './components/blog-item/blog-item.component';
     InsightItemComponent,
     BlogListComponent,
     BlogItemComponent,
+    HeaderBarComponent,
+    FooterBarComponent,
+    ButtonComponent,
+    AboutPageComponent,
+    BlogPageComponent,
+    TermsPageComponent,
+    PrivacyPageComponent,
+    TeamListComponent,
+    TeamItemComponent,
   ],
   imports: [
     BrowserModule,

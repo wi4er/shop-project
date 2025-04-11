@@ -11,6 +11,7 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    'storybook-addon-mock/register',
   ],
   framework: {
     name: '@storybook/angular',

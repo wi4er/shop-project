@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Blog } from '../../model/Blog';
-import list from "./mock/list";
-import { BlogService } from '../../sevices/blog.service';
+import list from './mock/list';
+import { BlogService } from '../../services/blog.service';
 import { BlogBlock } from '../../model/BlogBlock';
 
 @Component({
   selector: 'app-blog-list',
   templateUrl: './blog-list.component.html',
-  styleUrls: ['./blog-list.component.css']
+  styleUrls: ['./blog-list.component.css'],
 })
 export class BlogListComponent implements OnInit {
 
   blogList: Array<Blog> = list;
-  blog?: BlogBlock
+  blog?: BlogBlock;
 
   constructor(
-    private blogService: BlogService
+    private blogService: BlogService,
   ) {
   }
 
@@ -25,7 +25,7 @@ export class BlogListComponent implements OnInit {
     this.blogService.getElements()
       .subscribe(list => {
         this.blogList = list;
-      })
+      });
   }
 
 }

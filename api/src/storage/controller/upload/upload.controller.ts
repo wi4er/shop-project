@@ -1,7 +1,5 @@
-import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
-import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
+import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import * as process from 'process';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,8 +11,6 @@ import { FileCreateOperation } from '../../service/file-name/file-name.service';
 export class UploadController {
 
   constructor(
-    @InjectRepository(FileEntity)
-    private fileRepo: Repository<FileEntity>,
     @InjectRepository(CollectionEntity)
     private colRepo: Repository<CollectionEntity>,
   ) {

@@ -1,0 +1,18 @@
+<div class="wrapper">
+  <div class="title inter-600">
+    {{ teamBlock?.title ?? '' }}
+  </div>
+
+  <div class="subtitle inter-400">
+    {{ teamBlock?.text ?? '' }}
+  </div>
+</div>
+
+<div class="item-wrap">
+  <div class="team-list">
+    <app-team-item
+      *ngFor="let item of teamList"
+      [item]="item"
+    ></app-team-item>
+  </div>
+</div>
