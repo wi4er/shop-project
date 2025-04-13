@@ -1,9 +1,11 @@
-<mat-toolbar color="primary">
+<mat-toolbar
+  color="primary"
+  *ngIf="userService.authorize"
+>
   <button
     mat-icon-button
-    class="example-icon"
     aria-label="Example icon-button with menu icon"
-    (click)="drawer.toggle()"
+    (click)="drawer?.toggle()"
   >
     <mat-icon>menu</mat-icon>
   </button>
@@ -14,16 +16,13 @@
 
   <button
     mat-icon-button
-    class="example-icon favorite-icon"
-    aria-label="Example icon-button with heart icon"
+    class="favorite-icon"
   >
     <mat-icon>settings</mat-icon>
   </button>
 
   <button
     mat-icon-button
-    class="example-icon"
-    aria-label="Example icon-button with share icon"
     [matMenuTriggerFor]="menu"
   >
     <mat-menu #menu="matMenu">
@@ -48,12 +47,18 @@
   </button>
 </mat-toolbar>
 
-<mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav" mode="side">
+<mat-drawer-container autosize>
+  <mat-drawer
+    #drawer
+    mode="side"
+    *ngIf="userService.authorize"
+  >
     <app-main-menu></app-main-menu>
   </mat-drawer>
 
-  <router-outlet></router-outlet>
+  <router-outlet
+    *ngIf="userService.authorize"
+  ></router-outlet>
 </mat-drawer-container>
 
 <app-auth-dialog></app-auth-dialog>

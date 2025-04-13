@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-import { WithPropertyInput } from '../model/settings/with-property.input';
 import { StringPropertyValue } from '../model/string-property-value';
 
-
 export interface PropertyEdit {
-  [property: string]: { [lang: string]: { value: string, error?: string }[] }
+  [property: string]: { [lang: string]: { value: string, error?: string }[] };
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PropertyValueService {
 
-  constructor() { }
+  constructor() {
+  }
 
 
   toInput(
-    editProperties: PropertyEdit
+    editProperties: PropertyEdit,
   ): StringPropertyValue[] {
     const property: StringPropertyValue[] = [];
 
@@ -25,6 +24,8 @@ export class PropertyValueService {
         if (!editProperties[prop][lang]) continue;
 
         for (const value of editProperties[prop][lang]) {
+          if (!value.value) continue;
+
           property.push({
             property: prop,
             string: value.value,
@@ -42,8 +43,8 @@ export class PropertyValueService {
    */
   toEdit(
     list: StringPropertyValue[],
-    edit: PropertyEdit
-  ): PropertyEdit  {
+    edit: PropertyEdit,
+  ): PropertyEdit {
     for (const prop of list) {
       edit[prop.property][prop.lang ?? ''].push({
         value: prop.string,

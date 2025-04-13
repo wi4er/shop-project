@@ -13,7 +13,7 @@ export class TeamService {
 
   private apiUrl = 'http://localhost:3030';
   private storageUrl = 'http://localhost:3030/';
-  private blogId = 1;
+  private teamId = 10;
 
   constructor(
     private http: HttpClient,
@@ -24,12 +24,12 @@ export class TeamService {
    *
    */
   getBlock(): Observable<BlogBlock> {
-    return this.http.get<ContentBlock>(`${this.apiUrl}/block/${this.blogId}`)
+    return this.http.get<ContentBlock>(`${this.apiUrl}/block/${this.teamId}`)
       .pipe(
         map(item => {
           return {
             id: item.id,
-            title: item.property.find(it => it.property === 'TITLE')?.string ?? '',
+            title: item.property.find(it => it.property === 'NAME')?.string ?? '',
             text: item.property.find(it => it.property === 'TEXT')?.string ?? '',
           };
         }),
@@ -40,11 +40,11 @@ export class TeamService {
    *
    */
   getElements(): Observable<Array<Team>> {
-    return this.http.get<Array<ContentElement>>(this.apiUrl + '/element?filter[block]=1')
+    return this.http.get<Array<ContentElement>>(`${this.apiUrl}/element?filter[block]=${this.teamId}`)
       .pipe(map(items => {
         return items.map(elem => ({
           id: elem.id,
-          name: elem.property.find(it => it.property === 'TITLE')?.string ?? '',
+          name: elem.property.find(it => it.property === 'NAME')?.string ?? '',
           position: elem.property.find(it => it.property === 'TITLE')?.string ?? '',
           image: this.storageUrl + elem.image.find(it => it.collection === 'PREVIEW')?.path ?? '',
         }));

@@ -40,7 +40,7 @@ export class BlogService {
    *
    */
   getElements(): Observable<Array<Blog>> {
-    return this.http.get<Array<ContentElement>>(this.apiUrl + '/element?filter[block]=1')
+    return this.http.get<Array<ContentElement>>(`${this.apiUrl}/element?filter[block]=${this.blogId}`)
       .pipe(map(items => {
         return items.map(elem => ({
           id: elem.id,

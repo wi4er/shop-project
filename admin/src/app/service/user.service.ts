@@ -9,8 +9,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class UserService {
 
   private userSubject = new BehaviorSubject<User | null | undefined>(undefined);
-
   user: Observable<User | null | undefined> = this.userSubject.asObservable();
+
+  authorize: boolean = false;
 
   constructor(
     private apiService: ApiService,
@@ -20,12 +21,16 @@ export class UserService {
     }).then(res => {
       if (res.ok) {
         res.json().then(res => this.userSubject.next(res));
+        this.authorize = true;
       } else {
-        this.userSubject.next(null)
+        this.userSubject.next(null);
       }
     });
   }
 
+  /**
+   *
+   */
   async authUser(
     login: string,
     password: string,
@@ -38,13 +43,18 @@ export class UserService {
       body: JSON.stringify({login, password}),
       credentials: 'include',
     }).then(res => {
-      if (res.ok) res.json().then(res => this.userSubject.next(res));
+      if (res.ok) {
+        res.json().then(res => this.userSubject.next(res));
+        this.authorize = true;
+      }
     });
 
     return null;
   }
 
-
+  /**
+   *
+   */
   async logOutUser() {
     await fetch('http://localhost:3030/auth', {
       method: 'DELETE',
@@ -53,7 +63,10 @@ export class UserService {
       },
       credentials: 'include',
     }).then(res => {
-      if (res.ok) this.userSubject.next(null);
+      if (res.ok) {
+        this.userSubject.next(null);
+        this.authorize = false;
+      }
     });
   }
 

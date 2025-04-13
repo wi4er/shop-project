@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from './service/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +11,12 @@ import { PersonalPopupComponent } from './personal-popup/personal-popup.componen
 })
 export class AppComponent {
 
-  title = 'admin';
+  drawer?: MatDrawer;
 
   constructor(
     private dialog: MatDialog,
-    private userService: UserService,
+    public userService: UserService,
   ) {
-
   }
 
   handlePersonal() {
