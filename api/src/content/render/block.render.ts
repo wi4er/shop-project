@@ -30,6 +30,10 @@ export class BlockRender {
       })),
     ];
     this.flag = item.flag.map(fl => fl.flag.id);
+    this.permission = item.permission?.map(it => ({
+      method: it.method,
+      group: it.group?.id,
+    })) ?? [];
   }
 
   @ApiProperty()
@@ -60,5 +64,7 @@ export class BlockRender {
 
   @ApiProperty()
   flag: Array<string>;
+
+  permission: Array<PermissionRender>
 
 }

@@ -1,4 +1,4 @@
-import { BaseEntity, EntityManager } from 'typeorm';
+import { BaseEntity, EntityManager, IsNull } from 'typeorm';
 import { CommonPermissionEntity } from '../model/common-permission.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
@@ -19,6 +19,7 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
    */
   private async checkGroup(id?: string): Promise<GroupEntity | null> {
     if (!id) return null;
+
     const groupRepo = this.trans.getRepository(GroupEntity);
 
     return WrongDataException.assert(
@@ -34,7 +35,7 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
     const current: { [key: string]: Array<PermissionMethod> } = {};
 
     for (const item of beforeItem.permission) {
-      const {id} = item.group ?? {};
+      const {id = ''} = item.group ?? {};
 
       if (current[id]) current[id].push(item.method);
       else current[id] = [item.method];
@@ -61,7 +62,7 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
         await this.trans.delete(this.entity, {
           parent: beforeItem,
           method: method,
-          group: group,
+          group: group || IsNull(),
         });
       }
     }

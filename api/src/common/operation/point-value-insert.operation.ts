@@ -13,40 +13,33 @@ export class PointValueInsertOperation<T extends WithPointEntity<T>> {
     private entity: new() => CommonPointEntity<T>,
   ) {
   }
+
   /**
    *
-   * @param id
-   * @private
    */
   private async checkProperty(id?: string): Promise<PropertyEntity> {
-    WrongDataException.assert(id, `Property id expected`);
-
     const propRepo = this.trans.getRepository(PropertyEntity);
-    const inst = await propRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, `Wrong property ${id}`);
 
-    return inst;
+    return WrongDataException.assert(
+      await propRepo.findOne({where: {id}}),
+      `Property with id >> ${id} << not found`
+    );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkPoint(id?: string): Promise<PointEntity> {
-    WrongDataException.assert(id, `Point id expected`);
-
     const pointRepo = this.trans.getRepository(PointEntity);
-    const inst = await pointRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, `Wrong point ${id}`);
 
-    return inst;
+    return  WrongDataException.assert(
+      await pointRepo.findOne({where: {id}}),
+      `Point with id >> ${id} << not found`
+    );
   }
 
   /**
    *
-   * @param created
-   * @param list
    */
   async save(created: T, list: PropertyPointInput[]) {
     for (const item of list) {

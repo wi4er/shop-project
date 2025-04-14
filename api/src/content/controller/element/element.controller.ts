@@ -253,7 +253,7 @@ export class ElementController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
         },
       }),
       `Permission denied!`,

@@ -31,9 +31,11 @@ export class ElementInsertOperation {
    */
   private async checkBlock(id: number): Promise<BlockEntity> {
     const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
-    const inst = await blockRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Block with id ${id} not found!`);
+    return WrongDataException.assert(
+      await blockRepo.findOne({where: {id}}),
+      `Block with id >> ${id} << not found!`,
+    );
   }
 
   /**
@@ -46,16 +48,15 @@ export class ElementInsertOperation {
 
     try {
       await this.manager.insert(ElementEntity, this.created);
-    } catch(err) {
+    } catch (err) {
       throw new WrongDataException(err.message);
     }
 
-    const [stringList, pointList, elementList] = filterProperties(input.property);
-
-    await new ImageInsertOperation(this.manager, Element2imageEntity).save(this.created, input.image)
+    await new ImageInsertOperation(this.manager, Element2imageEntity).save(this.created, input.image);
     await new FlagValueInsertOperation(this.manager, Element2flagEntity).save(this.created, input);
     await new PermissionValueInsertOperation(this.manager, Element2permissionEntity).save(this.created, input);
 
+    const [stringList, pointList, elementList] = filterProperties(input.property);
     await new StringValueInsertOperation(this.manager, Element4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Element4pointEntity).save(this.created, pointList);
     await new Element4elementInsertOperation(this.manager).save(this.created, elementList);

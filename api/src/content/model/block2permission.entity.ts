@@ -38,6 +38,7 @@ export class Block2permissionEntity
     block => block.permission,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -47,7 +48,8 @@ export class Block2permissionEntity
     type => GroupEntity,
     {
       onDelete: 'CASCADE',
-      nullable: false,
+      onUpdate: 'CASCADE',
+      nullable: true,
     },
   )
   group: GroupEntity;
