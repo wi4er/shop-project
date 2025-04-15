@@ -1,4 +1,4 @@
-.example-spacer {
+.spacer {
   flex: 1 1 auto;
 }
 
@@ -7,10 +7,10 @@ footer {
   color: white;
 }
 
-mat-drawer-container {
+mat-sidenav-container {
   flex: 1;
 }
 
-mat-drawer {
+mat-sidenav {
   padding-right: 16px;
 }

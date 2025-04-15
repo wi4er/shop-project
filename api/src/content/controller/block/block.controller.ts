@@ -21,7 +21,7 @@ export class BlockController {
     string: {property: true, lang: true},
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
-    permission: true,
+    permission: {group: true},
   };
 
   constructor(

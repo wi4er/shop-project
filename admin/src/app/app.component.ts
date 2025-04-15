@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { UserService } from './service/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
-import { MatDrawer } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,8 @@ import { MatDrawer } from '@angular/material/sidenav';
 })
 export class AppComponent {
 
-  drawer?: MatDrawer;
+  @ViewChild(MatSidenav)
+  drawer?: MatSidenav;
 
   constructor(
     private dialog: MatDialog,
@@ -19,6 +20,16 @@ export class AppComponent {
   ) {
   }
 
+  /**
+   *
+   */
+  openDrawer() {
+    this.drawer?.toggle()
+  }
+
+  /**
+   *
+   */
   handlePersonal() {
     this.dialog.open(
       PersonalPopupComponent,
@@ -29,6 +40,9 @@ export class AppComponent {
     );
   }
 
+  /**
+   *
+   */
   handleLogout() {
     this.userService.logOutUser()
   }

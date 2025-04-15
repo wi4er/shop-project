@@ -18,6 +18,7 @@ import { PropertyValueService } from '../../app/service/property-value.service';
 export class ElementFormComponent implements OnInit {
 
   loading = true;
+
   id: string = '';
   created_at: string = '';
   updated_at: string = '';

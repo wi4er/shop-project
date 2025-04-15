@@ -32,7 +32,7 @@ export class BlockUpdateOperation {
           string: {property: true},
           point: {property: true, point: true},
           flag: {flag: true},
-          permission: true,
+          permission: {group: true},
         },
       }),
       `Block with id >> ${id} << not found!`,

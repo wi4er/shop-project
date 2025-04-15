@@ -42,12 +42,14 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
     }
 
     for (const item of input?.permission ?? []) {
-      if (current[item.group]?.includes(item.method)) {
-        current[item.group].splice(current[item.group].indexOf(item.method), 1);
+      const group = item.group ?? '';
+
+      if (current[group]?.includes(item.method)) {
+        current[group].splice(current[group].indexOf(item.method), 1);
       } else {
         const inst = new this.entity();
         inst.parent = beforeItem;
-        inst.group = await this.checkGroup(item.group);
+        group ? inst.group = await this.checkGroup(group) : null;
         inst.method = item.method;
 
         await this.trans.save(inst)

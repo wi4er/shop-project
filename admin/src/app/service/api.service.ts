@@ -130,7 +130,7 @@ export class ApiService {
       credentials: 'include',
       body: JSON.stringify(item),
     }).then(res => res.json().then(reason => {
-      return res.ok ?reason : Promise.reject(reason.message);
+      return res.ok ? reason : Promise.reject(reason.message);
     }));
   }
 
@@ -149,7 +149,7 @@ export class ApiService {
       credentials: 'include',
       body: JSON.stringify(item),
     }).then(res => res.json().then(reason => {
-      return res.ok ?reason : Promise.reject(reason.message);
+      return res.ok ? reason : Promise.reject(reason.message);
     }));
 
     return req;

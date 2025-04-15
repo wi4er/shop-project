@@ -14,6 +14,7 @@ import { FlagEntity } from '../../../settings/model/flag.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
+import { GroupEntity } from '../../../personal/model/group.entity';
 
 describe('BlockController', () => {
   let source;
@@ -442,7 +443,7 @@ describe('BlockController', () => {
     test('Shouldn`t add wrong flag', async () => {
       const parent = await createBlock();
 
-      const inst = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .put(`/block/${parent.id}`)
         .send({flag: ['WRONG']})
         .expect(400);
@@ -459,6 +460,30 @@ describe('BlockController', () => {
         .expect(200);
 
       expect(inst.body.flag).toEqual([]);
+    });
+  });
+
+  describe('Content block update with permission', () => {
+    test('Should update permissions', async () => {
+      await Object.assign(new GroupEntity(), {id: '222'}).save();
+
+      const parent = await new BlockEntity().save();
+      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put(`/block/${parent.id}`)
+        .send({
+          permission: [
+            {method: 'READ'},
+            {method: 'WRITE'},
+            {method: 'DELETE'},
+            {method: 'ALL'},
+          ]
+        })
+        .expect(200);
+
+      expect(inst.body.permission).toHaveLength(4);
     });
   });
 

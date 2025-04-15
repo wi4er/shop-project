@@ -9,11 +9,17 @@
   *ngIf="!loading"
   (submit)="saveItem($event)"
 >
-  <h2 *ngIf="!data?.id" mat-dialog-title>
+  <h2
+    *ngIf="!data?.id"
+    mat-dialog-title
+  >
     Create new content element
   </h2>
 
-  <h2 *ngIf="data?.id" mat-dialog-title>
+  <h2
+    *ngIf="data?.id"
+    mat-dialog-title
+  >
     Update content element #{{data?.id}}
   </h2>
 

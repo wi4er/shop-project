@@ -4,15 +4,14 @@
 >
   <button
     mat-icon-button
-    aria-label="Example icon-button with menu icon"
-    (click)="drawer?.toggle()"
+    (click)="openDrawer()"
   >
     <mat-icon>menu</mat-icon>
   </button>
 
   <a routerLink="/">My App</a>
 
-  <span class="example-spacer"></span>
+  <span class="spacer"></span>
 
   <button
     mat-icon-button
@@ -47,19 +46,18 @@
   </button>
 </mat-toolbar>
 
-<mat-drawer-container autosize>
-  <mat-drawer
-    #drawer
-    mode="side"
-    *ngIf="userService.authorize"
-  >
+<mat-sidenav-container
+  autosize
+  *ngIf="userService.authorize"
+>
+  <mat-sidenav mode="side">
     <app-main-menu></app-main-menu>
-  </mat-drawer>
+  </mat-sidenav>
 
-  <router-outlet
-    *ngIf="userService.authorize"
-  ></router-outlet>
-</mat-drawer-container>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
 <app-auth-dialog></app-auth-dialog>
 

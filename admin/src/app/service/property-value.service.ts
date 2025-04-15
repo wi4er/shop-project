@@ -13,7 +13,9 @@ export class PropertyValueService {
   constructor() {
   }
 
-
+  /**
+   *
+   */
   toInput(
     editProperties: PropertyEdit,
   ): StringPropertyValue[] {
