@@ -1,9 +1,25 @@
-<form (submit)="saveItem()">
-  <h2 *ngIf="!data?.id" mat-dialog-title>
+<div
+  *ngIf="loading"
+  class="loader"
+>
+  <mat-spinner></mat-spinner>
+</div>
+
+<form
+  *ngIf="!loading"
+  (submit)="saveItem()"
+>
+  <h2
+    *ngIf="!data?.id"
+    mat-dialog-title
+  >
     Create new flag
   </h2>
 
-  <h2 *ngIf="data?.id" mat-dialog-title>
+  <h2
+    *ngIf="data?.id"
+    mat-dialog-title
+  >
     Update flag #{{data?.id}}
   </h2>
 

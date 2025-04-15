@@ -432,9 +432,19 @@ describe('BlockController', () => {
 
       const inst = await request(app.getHttpServer())
         .put(`/block/${parent.id}`)
-        .send({
-          flag: ['NEW'],
-        })
+        .send({flag: ['NEW']})
+        .expect(200);
+
+      expect(inst.body.flag).toEqual(['NEW']);
+    });
+
+    test('Should update only flags', async () => {
+      const parent = await createBlock();
+      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .patch(`/block/${parent.id}`)
+        .send({flag: ['NEW']})
         .expect(200);
 
       expect(inst.body.flag).toEqual(['NEW']);

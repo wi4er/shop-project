@@ -1420,6 +1420,41 @@ describe('ElementController', () => {
         expect(item.body.flag).toEqual(['ACTIVE']);
       });
 
+      test('Should update flag only', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        const parent = await createElement();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const item = await request(app.getHttpServer())
+          .patch(`/element/${parent.id}`)
+          .send({
+            flag: ['ACTIVE'],
+          })
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(item.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Should multiple update flag', async () => {
+        const cookie = await createSession();
+        await new BlockEntity().save();
+        await createElement();
+        await createElement();
+        const parent = await createElement();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const item = await request(app.getHttpServer())
+          .patch(`/element/${parent.id}`)
+          .send({flag: ['ACTIVE']})
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(item.body.id).toEqual(parent.id);
+        expect(item.body.flag).toEqual(['ACTIVE']);
+      });
+
       test('Shouldn`t add duplicate flag', async () => {
         const cookie = await createSession();
         await new BlockEntity().save();

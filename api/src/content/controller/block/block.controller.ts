@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { BlockEntity } from '../../model/block.entity';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
@@ -12,6 +12,7 @@ import { Block2permissionEntity } from '../../model/block2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { PermissionException } from '../../../exception/permission/permission.exception';
+import { BlockPatchOperation } from '../../operation/block-patch.operation';
 
 @ApiTags('Content block')
 @Controller('block')
@@ -157,6 +158,35 @@ export class BlockController {
 
     return this.entityManager.transaction(
       trans => new BlockUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(BlockEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Patch(':id')
+  async updateField(
+    @CurrentGroups()
+      group: string[],
+    @Param('id')
+      id: number,
+    @Body()
+      input: BlockInput,
+  ) {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: Or(In(group), IsNull()),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied for element ${id}`,
+    );
+
+    return this.entityManager.transaction(
+      trans => new BlockPatchOperation(trans).save(id, input)
         .then(id => trans.getRepository(BlockEntity).findOne({
           where: {id},
           relations: this.relations,

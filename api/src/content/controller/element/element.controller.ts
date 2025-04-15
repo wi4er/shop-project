@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { ElementEntity } from '../../model/element.entity';
@@ -16,6 +16,7 @@ import { PermissionMethod } from '../../../permission/model/permission-method';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { ElementRender } from '../../render/element.render';
+import { ElementPatchOperation } from '../../operation/element-patch.operation';
 
 @ApiTags('Content element')
 @Controller('element')
@@ -234,6 +235,40 @@ export class ElementController {
 
     return this.entityManager.transaction(
       trans => new ElementUpdateOperation(trans).save(id, input)
+        .then(updatedId => trans.getRepository(ElementEntity).findOne({
+          where: {id: updatedId},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Patch(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Content element updated successfully',
+    type: ElementRender,
+  })
+  async updateField(
+    @CurrentGroups()
+      group: number[],
+    @Param('id')
+      id: string,
+    @Body()
+      input: ElementInput,
+  ): Promise<ElementRender> {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: Or(In(group), IsNull()),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
+    return this.entityManager.transaction(
+      trans => new ElementPatchOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(ElementEntity).findOne({
           where: {id: updatedId},
           relations: this.relations,

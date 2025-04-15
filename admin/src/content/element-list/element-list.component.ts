@@ -55,6 +55,9 @@ export class ElementListComponent implements OnChanges {
   ) {
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -226,7 +229,17 @@ export class ElementListComponent implements OnChanges {
    *
    */
   toggleFlag(id: number, flag: string) {
-    console.log(id, '>>>>>>>', flag);
+    const list: Array<string> = [...this.activeFlags[id]];
+
+    const index = this.activeFlags[id].indexOf(flag);
+    if (~index) {
+      list.splice(index, 1);
+    } else {
+      list.push(flag);
+    }
+
+    this.apiService.patchData(ApiEntity.ELEMENT, id, {flag: list})
+      .then(() => this.refreshData());
   }
 
   /**

@@ -14,7 +14,7 @@ import { BlockSettingsComponent } from '../block-settings/block-settings.compone
 @Component({
   selector: 'app-block-list',
   templateUrl: './block-list.component.html',
-  styleUrls: ['./block-list.component.css']
+  styleUrls: ['./block-list.component.css'],
 })
 export class BlockListComponent implements OnInit {
 
@@ -99,8 +99,8 @@ export class BlockListComponent implements OnInit {
         limit: this.pageSize,
         offset: this.currentPage * this.pageSize,
       }).then(list => this.setData(list)),
-    this.apiService.countData(ApiEntity.BLOCK)
-      .then(count => this.totalCount = count),
+      this.apiService.countData(ApiEntity.BLOCK)
+        .then(count => this.totalCount = count),
     ]).then(() => this.selection.clear());
   }
 
@@ -129,7 +129,7 @@ export class BlockListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['id',  ...col];
+    this.columns = ['id', ...col];
   }
 
   /**
@@ -191,6 +191,17 @@ export class BlockListComponent implements OnInit {
    *
    */
   toggleFlag(id: number, flag: string) {
+    const list: Array<string> = [...this.activeFlags[id]];
+
+    const index = this.activeFlags[id].indexOf(flag);
+    if (~index) {
+      list.splice(index, 1);
+    } else {
+      list.push(flag);
+    }
+
+    this.apiService.patchData(ApiEntity.BLOCK, id, {flag: list})
+      .then(() => this.refreshData());
   }
 
   /**

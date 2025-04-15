@@ -59,8 +59,6 @@ export class ApiService {
 
   /**
    *
-   * @param entity
-   * @param id
    */
   fetchItem<T>(entity: ApiEntity, id?: string): Promise<T> {
     const req = fetch(
@@ -82,8 +80,6 @@ export class ApiService {
 
   /**
    *
-   * @param entity
-   * @param query
    */
   countData(entity: ApiEntity, query?: StringifiableRecord) {
     const url = qs.stringifyUrl({
@@ -113,8 +109,6 @@ export class ApiService {
 
   /**
    *
-   * @param entity
-   * @param item
    */
   postData<T>(entity: ApiEntity, item: T): Promise<string> {
     const url = [
@@ -134,7 +128,12 @@ export class ApiService {
     }));
   }
 
-  putData<T>(entity: ApiEntity, id: string | number, item: T): Promise<string> {
+  /**
+   *
+   */
+  putData<T>(
+    entity: ApiEntity,
+    id: string | number, item: T): Promise<string> {
     const url = [
       this.apiUrl,
       entity,
@@ -155,7 +154,39 @@ export class ApiService {
     return req;
   }
 
-  deleteList(entity: ApiEntity, idList: string[] | number[]) {
+  /**
+   *
+   */
+  patchData<T>(
+    entity: ApiEntity,
+    id: string | number, item: T): Promise<string> {
+    const url = [
+      this.apiUrl,
+      entity,
+      id.toString(),
+    ].join('/');
+
+    const req = fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(item),
+    }).then(res => res.json().then(reason => {
+      return res.ok ? reason : Promise.reject(reason.message);
+    }));
+
+    return req;
+  }
+
+  /**
+   *
+   */
+  deleteList(
+    entity: ApiEntity,
+    idList: string[] | number[]
+  ) {
     const reqList = [];
 
     for (const id of idList) {

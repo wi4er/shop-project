@@ -9,7 +9,6 @@ export class BlockInput
 
   property: PropertyValueInput[];
   flag: string[];
-
   permission: PermissionValueInput[];
 
 }

@@ -22,6 +22,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -52,6 +53,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatPaginatorModule,
     MatTableModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     ItemMenuComponent,
