@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Block } from '../model/content/block';
-import { ApiEntity, ApiService } from '../service/api.service';
 import { Router } from '@angular/router';
+import { ApiEntity, ApiService } from '../../app/service/api.service';
+import { Block } from '../../app/model/content/block';
 
 @Component({
   selector: 'app-dashboard-content',

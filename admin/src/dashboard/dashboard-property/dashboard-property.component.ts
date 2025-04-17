@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiEntity, ApiService } from '../service/api.service';
 import { Router } from '@angular/router';
-import { Property } from '../model/settings/property';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyFormComponent } from '../../settings/property-form/property-form.component';
+import { ApiEntity, ApiService } from '../../app/service/api.service';
+import { Property } from '../../app/model/settings/property';
 
 @Component({
   selector: 'app-dashboard-property',

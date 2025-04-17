@@ -26,6 +26,8 @@ import { ElementSettingsComponent } from '../element-settings/element-settings.c
 })
 export class ElementListComponent implements OnChanges {
 
+  loading: boolean = true;
+
   @Input()
   blockId?: number;
   blockName?: string;
@@ -110,6 +112,8 @@ export class ElementListComponent implements OnChanges {
       this.flagList = flagList.map((it: { id: string }) => it.id);
       this.propertyList = propertyList.map((item: { id: string }) => item.id);
       this.blockName = blockItem?.property.find(item => item.property === 'NAME')?.string;
+
+      this.loading = false;
     });
   }
 

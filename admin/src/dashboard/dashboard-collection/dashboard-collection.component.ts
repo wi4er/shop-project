@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiEntity, ApiService } from '../service/api.service';
 import { Router } from '@angular/router';
-import { Collection } from '../model/storage/collection';
+import { ApiEntity, ApiService } from '../../app/service/api.service';
+import { Collection } from '../../app/model/storage/collection';
 
 @Component({
   selector: 'app-dashboard-collection',

@@ -1,3 +1,10 @@
+<div
+  *ngIf="loading"
+  class="loader"
+>
+  <mat-spinner></mat-spinner>
+</div>
+
 <mat-toolbar *ngIf="list.length">
   <span>{{ blockName ?? "Element " + blockId }} </span>
 
@@ -35,7 +42,7 @@
   mat-table
   multiTemplateDataRows
   [dataSource]="list"
-  *ngIf="list.length"
+  *ngIf="list.length && !loading"
 >
   <ng-container matColumnDef="select">
     <th
@@ -212,7 +219,7 @@
 </table>
 
 <mat-paginator
-  *ngIf="list.length"
+  *ngIf="list.length && !loading"
   [length]="totalCount"
   [pageSize]="pageSize"
   [pageIndex]="currentPage"
@@ -224,6 +231,6 @@
 
 <app-add-button
   [onClick]="addItem.bind(this)"
-  *ngIf="!list.length"
+  *ngIf="!list.length && !loading"
   [name]="(blockName ?? '') + ' Element'"
 ></app-add-button>

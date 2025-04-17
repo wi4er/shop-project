@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardTileComponent } from './dashboard-tile/dashboard-tile.component';
 import { DirectoryListComponent } from '../directory/directory-list/directory-list.component';
 import { FlagListComponent } from '../settings/flag-list/flag-list.component';
 import { LangListComponent } from '../settings/lang-list/lang-list.component';
@@ -16,6 +15,7 @@ import { DocumentPageComponent } from './document-page/document-page.component';
 import { BlockListComponent } from '../content/block-list/block-list.component';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
+import { DashboardTileComponent } from '../dashboard/dashboard-tile/dashboard-tile.component';
 
 const routes: Routes = [{
   path: '',

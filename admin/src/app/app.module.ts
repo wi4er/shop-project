@@ -10,12 +10,11 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { MatListModule } from "@angular/material/list";
-import { MatDivider, MatDividerModule } from "@angular/material/divider";
-import { DashboardTileComponent } from './dashboard-tile/dashboard-tile.component';
+import { MatDividerModule } from "@angular/material/divider";
 import { NotFoundComponent } from './not-found/not-found.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ContentPageComponent } from './content-page/content-page.component';
@@ -32,41 +31,24 @@ import { StorageModule } from '../storage/storage.module';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
 import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
-import { DashboardContentComponent } from './dashboard-content/dashboard-content.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { DashboardCollectionComponent } from './dashboard-collection/dashboard-collection.component';
-import { DashboardDirectoryComponent } from './dashboard-directory/dashboard-directory.component';
-import { DashboardPropertyComponent } from './dashboard-property/dashboard-property.component';
-import { DashboardFlagComponent } from './dashboard-flag/dashboard-flag.component';
-import { DashboardLangComponent } from './dashboard-lang/dashboard-lang.component';
-import { DashboardConfigComponent } from './dashboard-config/dashboard-config.component';
-import { DashboardPersonalComponent } from './dashboard-personal/dashboard-personal.component';
-import { DashboardArchiveComponent } from './dashboard-archive/dashboard-archive.component';
 import { DirectoryModule } from '../directory/directory.module';
+import { DashboardModule } from '../dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainMenuComponent,
-    DashboardTileComponent,
     NotFoundComponent,
     ContentPageComponent,
     UserPageComponent,
     StoragePageComponent,
     CollectionPageComponent,
     PersonalPopupComponent,
-    DashboardContentComponent,
-    DashboardCollectionComponent,
-    DashboardDirectoryComponent,
-    DashboardPropertyComponent,
-    DashboardFlagComponent,
-    DashboardLangComponent,
-    DashboardConfigComponent,
-    DashboardPersonalComponent,
-    DashboardArchiveComponent,
   ],
   imports: [
     BrowserModule,
+    DashboardModule,
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -92,7 +74,6 @@ import { DirectoryModule } from '../directory/directory.module';
     DirectoryModule,
     PersonalModule,
     StorageModule,
-    MatGridListModule,
   ],
   providers: [],
   exports: [

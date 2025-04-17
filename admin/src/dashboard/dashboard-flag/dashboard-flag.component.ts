@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiEntity, ApiService } from '../service/api.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Flag } from '../model/settings/flag';
 import { FlagFormComponent } from '../../settings/flag-form/flag-form.component';
+import { ApiEntity, ApiService } from '../../app/service/api.service';
+import { Flag } from '../../app/model/settings/flag';
 
 @Component({
   selector: 'app-dashboard-flag',
