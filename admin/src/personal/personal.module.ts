@@ -28,9 +28,7 @@ import { ContactEditComponent } from './contact-edit/contact-edit.component';
 import { UserContactSettingsComponent } from './user-contact-settings/user-contact-settings.component';
 import { GroupSettingsComponent } from './group-settings/group-settings.component';
 import { MatSelectModule } from '@angular/material/select';
-import { GroupPermissionComponent } from './group-permission/group-permission.component';
-
-
+import { EditModule } from '../edit/edit.module';
 
 @NgModule({
   declarations: [
@@ -47,17 +45,16 @@ import { GroupPermissionComponent } from './group-permission/group-permission.co
     ContactEditComponent,
     UserContactSettingsComponent,
     GroupSettingsComponent,
-    GroupPermissionComponent,
   ],
   exports: [
     AuthDialogComponent,
     GroupListComponent,
     UserListComponent,
     UserContactListComponent,
-    GroupPermissionComponent,
   ],
   imports: [
     CommonModule,
+    EditModule,
     MatDialogModule,
     MatFormFieldModule,
     FormsModule,

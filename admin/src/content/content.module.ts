@@ -29,6 +29,7 @@ import { MatList, MatListModule } from '@angular/material/list';
 import { BlockSettingsComponent } from './block-settings/block-settings.component';
 import { SectionSettingsComponent } from './section-settings/section-settings.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { EditModule } from '../edit/edit.module';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     SectionListComponent,
   ],
   imports: [
+    EditModule,
     CommonModule,
     HttpClientModule,
     SettingsModule,

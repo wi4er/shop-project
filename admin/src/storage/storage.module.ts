@@ -21,6 +21,9 @@ import { ImageEditComponent } from './image-edit/image-edit.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { ArchiveListComponent } from './archive-list/archive-list.component';
+import { EditModule } from '../edit/edit.module';
+import { CollectionSettingsComponent } from './collection-settings/collection-settings.component';
+import { FileSettingsComponent } from './file-settings/file-settings.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,8 @@ import { ArchiveListComponent } from './archive-list/archive-list.component';
     FileFormComponent,
     ImageEditComponent,
     ArchiveListComponent,
+    CollectionSettingsComponent,
+    FileSettingsComponent,
   ],
   exports: [
     CollectionListComponent,
@@ -39,6 +44,7 @@ import { ArchiveListComponent } from './archive-list/archive-list.component';
   ],
   imports: [
     CommonModule,
+    EditModule,
     MatButtonModule,
     MatCheckboxModule,
     MatIconModule,

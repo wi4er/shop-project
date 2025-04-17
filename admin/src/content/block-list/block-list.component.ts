@@ -208,15 +208,13 @@ export class BlockListComponent implements OnInit {
    *
    */
   openSettings() {
-    const dialog = this.dialog.open(
+   this.dialog.open(
       BlockSettingsComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

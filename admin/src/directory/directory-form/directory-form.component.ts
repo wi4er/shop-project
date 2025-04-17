@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
@@ -6,13 +6,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DirectoryInput } from '../../app/model/directory/directory.input';
 import { Directory } from '../../app/model/directory';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PropertyValueService } from '../../app/service/property-value.service';
 
 @Component({
   selector: 'app-directory-form',
   templateUrl: './directory-form.component.html',
   styleUrls: ['./directory-form.component.css']
 })
-export class DirectoryFormComponent {
+export class DirectoryFormComponent implements OnInit {
+
+  loading = true;
 
   id: string = '';
   created_at: string = '';
@@ -29,37 +33,45 @@ export class DirectoryFormComponent {
     private dialogRef: MatDialogRef<DirectoryFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private errorBar: MatSnackBar,
+    private propertyValueService: PropertyValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, flag, lang]) => {
+      this.data?.id ? this.apiService.fetchItem<Directory>(ApiEntity.DIRECTORY, this.data.id) : null,
+    ]).then(([property, flag, lang, data]) => {
       this.propertyList = property;
       this.flagList = flag;
       this.langList = lang;
 
       this.initEditValues();
-    });
+      if (data) this.toEdit(data);
 
-    if (this.data?.id) {
-      this.apiService.fetchItem<Directory>(ApiEntity.DIRECTORY, this.data.id)
-        .then(res => {
-          this.toEdit(res);
-        });
-    }
+      this.loading = false;
+    });
   }
 
+  /**
+   *
+   */
   getPropertyCount() {
     return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
+  /**
+   *
+   */
   initEditValues() {
     for (const prop of this.propertyList) {
       this.editProperties[prop.id] = {};
@@ -74,12 +86,24 @@ export class DirectoryFormComponent {
     }
   }
 
+  /**
+   *
+   */
   toEdit(item: Directory) {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+
+    this.propertyValueService.toEdit(item.property,  this.editProperties);
+
+    for (const flag of item.flag) {
+      this.editFlags[flag] = true;
+    }
   }
 
+  /**
+   *
+   */
   toInput(): DirectoryInput {
     const input = {
       id: this.id,
@@ -87,19 +111,7 @@ export class DirectoryFormComponent {
       flag: [],
     } as DirectoryInput;
 
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) continue;
-
-        for (const value of this.editProperties[prop][lang]) {
-          input.property.push({
-            property: prop,
-            string: value.value,
-            lang: lang || undefined,
-          });
-        }
-      }
-    }
+    input.property = this.propertyValueService.toInput(this.editProperties);
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) input.flag.push(flag);
@@ -108,21 +120,33 @@ export class DirectoryFormComponent {
     return input;
   }
 
-  saveItem() {
+  /**
+   *
+   */
+  async sendItem(): Promise<string> {
     if (this.data?.id) {
-      this.apiService.putData<DirectoryInput>(
+      return this.apiService.putData<DirectoryInput>(
         ApiEntity.DIRECTORY,
         this.data.id,
         this.toInput(),
-      ).then(() => this.dialogRef.close());
+      );
     } else {
-      this.apiService.postData<DirectoryInput>(
+      return this.apiService.postData<DirectoryInput>(
         ApiEntity.DIRECTORY,
         this.toInput(),
-      ).then(() => {
-        this.dialogRef.close()
-      });
+      )
     }
+  }
+
+    /**
+   *
+   */
+  saveItem() {
+      this.sendItem()
+        .then(() => this.dialogRef.close())
+        .catch((err: string) => {
+          this.errorBar.open(err, 'close', {duration: 5000});
+        });
   }
 
 }

@@ -8,6 +8,7 @@ import { Flag } from '../../app/model/settings/flag';
 import { Property } from '../../app/model/settings/property';
 import { CollectionFormComponent } from '../collection-form/collection-form.component';
 import { Collection } from '../../app/model/storage/collection';
+import { CollectionSettingsComponent } from '../collection-settings/collection-settings.component';
 
 @Component({
   selector: 'app-collection-list',
@@ -34,6 +35,9 @@ export class CollectionListComponent implements OnInit {
   ) {
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -42,10 +46,16 @@ export class CollectionListComponent implements OnInit {
     ];
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -54,6 +64,9 @@ export class CollectionListComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -61,6 +74,9 @@ export class CollectionListComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   ngOnInit() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
@@ -72,6 +88,9 @@ export class CollectionListComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   */
   private setData(data: Collection[]) {
     const col = new Set<string>();
     this.activeFlags = {};
@@ -96,6 +115,9 @@ export class CollectionListComponent implements OnInit {
     this.columns = ['id', 'created_at', 'updated_at', ...col];
   }
 
+  /**
+   *
+   */
   async refreshData() {
     return Promise.all([
       this.apiService.fetchList<Collection>(
@@ -113,6 +135,9 @@ export class CollectionListComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
     const dialog = this.dialog.open(
       CollectionFormComponent,
@@ -125,6 +150,9 @@ export class CollectionListComponent implements OnInit {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -132,25 +160,45 @@ export class CollectionListComponent implements OnInit {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.COLLECTION, [id])
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       CollectionFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
     console.log(id, '>>>>>>>', flag);
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      CollectionSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

@@ -8,6 +8,7 @@ import { Flag } from '../../app/model/settings/flag';
 import { Property } from '../../app/model/settings/property';
 import { FileFormComponent } from '../file-form/file-form.component';
 import { File } from '../../app/model/storage/file';
+import { FileSettingsComponent } from '../file-settings/file-settings.component';
 
 @Component({
   selector: 'app-file-list',
@@ -37,6 +38,9 @@ export class FileListComponent implements OnChanges {
   ) {
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -46,10 +50,16 @@ export class FileListComponent implements OnChanges {
     ];
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -58,6 +68,9 @@ export class FileListComponent implements OnChanges {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -65,10 +78,10 @@ export class FileListComponent implements OnChanges {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   ngOnChanges(changes: SimpleChanges) {
-
-    console.log(this.collectionId);
-
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
@@ -79,6 +92,9 @@ export class FileListComponent implements OnChanges {
     });
   }
 
+  /**
+   *
+   */
   private setData(data: File[]) {
     const col = new Set<string>();
     this.activeFlags = {};
@@ -107,6 +123,9 @@ export class FileListComponent implements OnChanges {
     this.columns = ['id', 'created_at', 'updated_at', 'mimetype', 'original', ...col];
   }
 
+  /**
+   *
+   */
   refreshData(): Promise<void> {
     return Promise.all([
       this.apiService.fetchList<File>(
@@ -128,6 +147,9 @@ export class FileListComponent implements OnChanges {
     });
   }
 
+  /**
+   *
+   */
   addItem() {
     const dialog = this.dialog.open(
       FileFormComponent,
@@ -140,19 +162,23 @@ export class FileListComponent implements OnChanges {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       FileFormComponent,
       {
         data: {id},
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -160,13 +186,32 @@ export class FileListComponent implements OnChanges {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.FILE, [id])
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
     console.log(id, '>>>>>>>', flag);
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      FileSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

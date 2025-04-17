@@ -3,15 +3,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { DirectoryFormComponent } from '../directory-form/directory-form.component';
 import { Directory } from '../../app/model/directory';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Observable } from 'rxjs';
 import { StringifiableRecord } from 'query-string/base';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
-import { Property } from '../../app/model/settings/property';
 import { Flag } from '../../app/model/settings/flag';
-import { Lang } from '../../app/model/settings/lang';
+import { Property } from '../../app/model/settings/property';
+import { BlockSettingsComponent } from '../../content/block-settings/block-settings.component';
+import { DirectorySettingsComponent } from '../directory-settings/directory-settings.component';
 
 @Component({
   selector: 'app-directory-list',
@@ -21,15 +21,16 @@ import { Lang } from '../../app/model/settings/lang';
 export class DirectoryListComponent implements OnInit {
 
   list: { [key: string]: string }[] = [];
-  activeFlags: { [key: string]: string[] } = {};
-  columns: string[] = [];
-  flagList: string[] = [];
 
   totalCount: number = 0;
   pageSize: number = 10;
   currentPage: number = 0;
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
+  activeFlags: { [key: string]: string[] } = {};
+  flagList: string[] = [];
+  propertyList: string[] = [];
+  columns: string[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -48,10 +49,16 @@ export class DirectoryListComponent implements OnInit {
     ];
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -60,6 +67,9 @@ export class DirectoryListComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -70,10 +80,21 @@ export class DirectoryListComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
-    this.refreshData();
+    Promise.all([
+      this.apiService.fetchList<Flag>(ApiEntity.FLAG)
+        .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
+      this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
+        .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
+    ]).then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   async refreshData() {
     return Promise.all([
       this.apiService.fetchList<Directory>(
@@ -91,6 +112,9 @@ export class DirectoryListComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   */
   fetchList(args: StringifiableRecord) {
     this.apiService.fetchList<Directory>(ApiEntity.DIRECTORY, args)
       .then(list => this.setData(list));
@@ -101,8 +125,6 @@ export class DirectoryListComponent implements OnInit {
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: Directory[]) {
     const col = new Set<string>();
@@ -129,31 +151,36 @@ export class DirectoryListComponent implements OnInit {
     this.columns = [ 'id', 'created_at', 'updated_at', ...col ];
   }
 
+  /**
+   *
+   */
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       DirectoryFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       DirectoryFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   onNext(id: string) {
     this.router.navigate(
       ['/directory', id],
@@ -161,9 +188,15 @@ export class DirectoryListComponent implements OnInit {
     );
   }
 
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
   }
 
+  /**
+   *
+   */
   async deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -171,9 +204,25 @@ export class DirectoryListComponent implements OnInit {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.DIRECTORY, [id])
       .then(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      DirectorySettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }
