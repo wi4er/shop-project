@@ -4,6 +4,8 @@ import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { ElementInput } from '../input/element.input';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { Element2flagEntity } from '../model/element2flag.entity';
+import { PermissionValueUpdateOperation } from '../../common/operation/permission-value-update.operation';
+import { Element2permissionEntity } from '../model/element2permission.entity';
 
 export class ElementPatchOperation {
 
@@ -41,6 +43,7 @@ export class ElementPatchOperation {
     const beforeItem = await this.checkElement(id);
 
     if (input.flag) await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
+    if (input.permission) await new PermissionValueUpdateOperation(this.manager, Element2permissionEntity).save(beforeItem, input);
 
     return id;
   }

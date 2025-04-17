@@ -11,6 +11,9 @@ import { ElementFormComponent } from '../element-form/element-form.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Block } from '../../app/model/content/block';
 import { ElementSettingsComponent } from '../element-settings/element-settings.component';
+import { PermissionValue } from '../../app/model/permission/permission-value';
+import { PermissionMethod } from '../../app/model/permission/permission-method';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'content-element-list',
@@ -40,6 +43,7 @@ export class ElementListComponent implements OnChanges {
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
   flagList: string[] = [];
+  permissionList: { [key: string]: Array<PermissionValue> } = {};
   imageList: {
     [id: string]: Array<{
       path: string,
@@ -54,6 +58,7 @@ export class ElementListComponent implements OnChanges {
     private dialog: MatDialog,
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
+    private messageBar: MatSnackBar,
   ) {
   }
 
@@ -64,6 +69,7 @@ export class ElementListComponent implements OnChanges {
     return [
       'select',
       'action',
+      'publish',
       'created_at',
       'updated_at',
       ...this.columns,
@@ -146,6 +152,7 @@ export class ElementListComponent implements OnChanges {
       }
 
       this.activeFlags[item.id] = item.flag;
+      this.permissionList[item.id] = item.permission;
       this.list.push(line);
     }
 
@@ -200,7 +207,7 @@ export class ElementListComponent implements OnChanges {
    *
    */
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       ElementFormComponent,
       {
         // width: '1000px',
@@ -208,25 +215,21 @@ export class ElementListComponent implements OnChanges {
 
         data: {block: this.blockId},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   /**
    *
    */
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       ElementFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {block: this.blockId, id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   /**
@@ -243,23 +246,49 @@ export class ElementListComponent implements OnChanges {
     }
 
     this.apiService.patchData(ApiEntity.ELEMENT, id, {flag: list})
-      .then(() => this.refreshData());
+      .then(() => {
+        this.messageBar.open(`Changing flag ${flag} for ${id}`, 'close', {duration: 3000});
+        return this.refreshData();
+      });
+  }
+
+  /**
+   *
+   */
+  publishItem(id: string) {
+    this.apiService.patchData(
+      ApiEntity.ELEMENT,
+      id,
+      {permission: [...this.permissionList[id], {method: PermissionMethod.READ}]},
+    ).then(() => {
+      this.messageBar.open(`Published ${id}`, 'close', {duration: 1500});
+      return this.refreshData();
+    }).catch(err => {
+      this.messageBar.open(err, 'close', {duration: 5000});
+    });
+  }
+
+  /**
+   *
+   */
+  canPublishItem(id: string) {
+    return !!this.permissionList[id].find(it => {
+      return it.method === 'READ' && !it.group;
+    });
   }
 
   /**
    *
    */
   openSettings() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       ElementSettingsComponent,
       {
         width: '500px',
         panelClass: 'wrapper',
         data: {block: this.blockId},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }
