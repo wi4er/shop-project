@@ -1,4 +1,15 @@
-<form (submit)="saveItem($event)">
+<div
+  *ngIf="loading"
+  class="loader"
+>
+  <mat-spinner></mat-spinner>
+</div>
+
+
+<form
+  *ngIf="!loading"
+  (submit)="saveItem($event)"
+>
   <h2
     *ngIf="!data?.id"
     mat-dialog-title
@@ -89,9 +100,9 @@
       </mat-tab>
 
       <mat-tab label="Permissions">
-        <mat-tab-group dynamicHeight>
-
-        </mat-tab-group>
+        <app-group-permission
+          [permission]="editPermission"
+        ></app-group-permission>
       </mat-tab>
     </mat-tab-group>
   </mat-dialog-content>

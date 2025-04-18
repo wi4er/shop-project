@@ -1,6 +1,8 @@
 import { StringPropertyValue } from '../string-property-value';
+import { PermissionValue } from '../permission/permission-value';
 
 export interface Section {
+
   id: string;
   created_at: string;
   updated_at: string;
@@ -13,4 +15,6 @@ export interface Section {
   }>
   flag: string[];
   property: StringPropertyValue[];
+  permission: PermissionValue[];
+
 }

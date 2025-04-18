@@ -17,16 +17,12 @@ import { PropertyValueService } from '../../edit/property-value/property-value.s
 })
 export class SectionFormComponent implements OnInit {
 
+  loading = true;
+
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
   sort: number = 100;
-  permission: { [method: string]: number[] } = {
-    READ: [],
-    WRITE: [],
-    DELETE: [],
-    ALL: [],
-  };
 
   propertyList: Property[] = [];
   langList: Lang[] = [];
@@ -50,6 +46,9 @@ export class SectionFormComponent implements OnInit {
       name: string,
       hash: string,
     }>
+  } = {};
+  editPermission: {
+    [groupId: string]: { [method: string]: boolean }
   } = {};
 
   constructor(
@@ -80,6 +79,8 @@ export class SectionFormComponent implements OnInit {
 
       this.initEditValues();
       if (data) this.toEdit(data);
+
+      this.loading = false;
     });
   }
 
@@ -140,14 +141,12 @@ export class SectionFormComponent implements OnInit {
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
     }
-  }
 
-  /**
-   *
-   */
-  handleChangePermission = (method: string) => (id: number[]) => {
-    this.permission[method] = id;
-  };
+    for (const perm of item.permission) {
+      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {}
+      this.editPermission[perm.group ?? ''][perm.method] = true;
+    }
+  }
 
   /**
    *
@@ -160,10 +159,7 @@ export class SectionFormComponent implements OnInit {
       image: [],
       property: [],
       flag: [],
-      permission: [{
-        group: 1,
-        method: 'ALL',
-      }],
+      permission: [],
     } as SectionInput;
 
     for (const collection in this.editImages) {
@@ -182,6 +178,12 @@ export class SectionFormComponent implements OnInit {
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) input.flag.push(flag);
+    }
+
+    for (const group in this.editPermission) {
+      for (const method in this.editPermission[group]) {
+        if (this.editPermission[group][method]) input.permission.push({method, group: group ? group : undefined});
+      }
     }
 
     return input;

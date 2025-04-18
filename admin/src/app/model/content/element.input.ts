@@ -6,6 +6,7 @@ export interface ElementInput extends WithPropertyInput {
 
   id: string;
   block: number;
+
   image: Array<number>;
   flag: string[];
   property: StringPropertyValue[];
