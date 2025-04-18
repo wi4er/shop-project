@@ -47,10 +47,11 @@ export class Section2permissionEntity
     type => GroupEntity,
     {
       onDelete: 'CASCADE',
-      nullable: false,
+      onUpdate: 'CASCADE',
+      nullable: true,
     }
   )
-  group: GroupEntity;
+  group: GroupEntity | null;
 
   @Column({
     type: 'enum',

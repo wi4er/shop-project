@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
@@ -10,13 +10,12 @@ import { SectionDeleteOperation } from '../../operation/section-delete.operation
 import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SectionRender } from '../../render/section.render';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
-import { ElementEntity } from '../../model/element.entity';
 import { SectionOrderInput } from '../../input/section-order.input';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
+import { SectionPatchOperation } from '../../operation/section-patch.operation';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
@@ -37,7 +36,7 @@ export class SectionController {
     private entityManager: EntityManager,
     @InjectRepository(SectionEntity)
     private sectionRepo: Repository<SectionEntity>,
-    @InjectRepository(Element2permissionEntity)
+    @InjectRepository(Section2permissionEntity)
     private permRepo: Repository<Section2permissionEntity>,
   ) {
   }
@@ -46,7 +45,7 @@ export class SectionController {
     return new SectionRender(item);
   }
 
-  toOrder(sort: SectionOrderInput[]): FindOptionsOrder<ElementEntity> {
+  toOrder(sort: SectionOrderInput[]): FindOptionsOrder<SectionEntity> {
     const order = {};
 
     if (!Array.isArray(sort)) sort = [sort];
@@ -54,7 +53,7 @@ export class SectionController {
     for (const item of sort) {
       for (const key in item) {
         if (key === 'sort') {
-          order['sort'] = item[key]
+          order['sort'] = item[key];
         }
 
         if (key === 'created_at') {
@@ -62,7 +61,7 @@ export class SectionController {
         }
 
         if (key === 'version') {
-          order['version'] = item[key]
+          order['version'] = item[key];
         }
       }
     }
@@ -139,9 +138,22 @@ export class SectionController {
   })
   @Get(':id')
   async getItem(
+    @CurrentGroups()
+      group: string[],
     @Param('id')
       id: string,
   ): Promise<SectionRender> {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: Or(In(group), IsNull()),
+          parent: {id},
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
     return this.sectionRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -154,7 +166,7 @@ export class SectionController {
     type: SectionRender,
   })
   @Post()
-  addItem(
+  async addItem(
     @Body()
       input: SectionInput,
   ): Promise<SectionRender> {
@@ -173,14 +185,61 @@ export class SectionController {
     type: SectionRender,
   })
   @Put(':id')
-  updateItem(
+  async updateItem(
+    @CurrentGroups()
+      group: string[],
     @Param('id')
-      sectionId: string,
+      id: string,
     @Body()
       input: SectionInput,
   ): Promise<SectionRender> {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: Or(In(group), IsNull()),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
     return this.entityManager.transaction(
-      trans => new SectionUpdateOperation(trans).save(sectionId, input)
+      trans => new SectionUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(SectionEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Content section',
+    type: SectionRender,
+  })
+  @Patch(':id')
+  async updateFields(
+    @CurrentGroups()
+      group: string[],
+    @Param('id')
+      id: string,
+    @Body()
+      input: SectionInput,
+  ): Promise<SectionRender> {
+    PermissionException.assert(
+      await this.permRepo.findOne({
+        where: {
+          group: Or(In(group), IsNull()),
+          parent: {id},
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+        },
+      }),
+      `Permission denied!`,
+    );
+
+    return this.entityManager.transaction(
+      trans => new SectionPatchOperation(trans).save(id, input)
         .then(id => trans.getRepository(SectionEntity).findOne({
           where: {id},
           relations: this.relations,
@@ -191,7 +250,7 @@ export class SectionController {
   @Delete(':id')
   async deleteItem(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Param('id')
       id: string,
   ): Promise<number[]> {
@@ -200,7 +259,7 @@ export class SectionController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
         },
       }),
       `Permission denied!`,

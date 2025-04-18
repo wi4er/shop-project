@@ -11,6 +11,7 @@ import { SectionFormComponent } from '../section-form/section-form.component';
 import { Element } from '../../app/model/content/element';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SectionSettingsComponent } from '../section-settings/section-settings.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'content-section-list',
@@ -22,13 +23,14 @@ import { SectionSettingsComponent } from '../section-settings/section-settings.c
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  styleUrls: ['./section-list.component.css']
+  styleUrls: ['./section-list.component.css'],
 })
 export class SectionListComponent implements OnChanges {
 
+  loading: boolean = true;
+
   @Input()
   blockId?: number;
-
   list: { [key: string]: string }[] = [];
 
   totalCount: number = 0;
@@ -52,6 +54,7 @@ export class SectionListComponent implements OnChanges {
     private dialog: MatDialog,
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
+    private messageBar: MatSnackBar,
   ) {
   }
 
@@ -106,6 +109,8 @@ export class SectionListComponent implements OnChanges {
     ]).then(([flagList, propertyList]) => {
       this.flagList = flagList.map((it: { id: string }) => it.id);
       this.propertyList = propertyList.map((item: { id: string }) => item.id);
+
+      this.loading = false;
     });
   }
 
@@ -222,9 +227,21 @@ export class SectionListComponent implements OnChanges {
    *
    */
   toggleFlag(id: number, flag: string) {
-    console.log(id, '>>>>>>>', flag);
-  }
+    const list: Array<string> = [...this.activeFlags[id]];
 
+    const index = this.activeFlags[id].indexOf(flag);
+    if (~index) {
+      list.splice(index, 1);
+    } else {
+      list.push(flag);
+    }
+
+    this.apiService.patchData(ApiEntity.SECTION, id, {flag: list})
+      .then(() => {
+        this.messageBar.open(`Changing flag ${flag} for ${id}`, 'close', {duration: 3000});
+        return this.refreshData();
+      });
+  }
 
   /**
    *

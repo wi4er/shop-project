@@ -11,7 +11,6 @@ import { SectionEntity } from '../model/section.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { ImageUpdateOperation } from '../../common/operation/image-update.operation';
 import { Section2imageEntity } from '../model/section2image.entity';
-import { ElementEntity } from '../model/element.entity';
 
 export class SectionUpdateOperation {
 
@@ -22,23 +21,20 @@ export class SectionUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkBlock(id?: number): Promise<BlockEntity> {
     WrongDataException.assert(id, 'Block id expected!');
-    const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
 
     return WrongDataException.assert(
-      await blockRepo.findOne({where: {id}}),
-      `Content block with id ${id} not found!`
+      await this.manager
+        .getRepository<BlockEntity>(BlockEntity)
+        .findOne({where: {id}}),
+      `Content block with id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkSection(id: string): Promise<SectionEntity> {
     const sectionRepo = this.manager.getRepository(SectionEntity);
@@ -52,28 +48,29 @@ export class SectionUpdateOperation {
           flag: {flag: true},
         },
       }),
-      `Section id ${id} not found!`
-    );
-  }
-
-  private async checkParent(id: string): Promise<SectionEntity> {
-    const sectionRepo = this.manager.getRepository(SectionEntity);
-
-    return WrongDataException.assert(
-      await sectionRepo.findOne({where: {id}}),
-      `Section id ${id} not found!`
+      `Section id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param id
-   * @param input
+   */
+  private async checkParent(id: string): Promise<SectionEntity> {
+    return WrongDataException.assert(
+      await this.manager
+        .getRepository(SectionEntity)
+        .findOne({where: {id}}),
+      `Section id >> ${id} << not found!`,
+    );
+  }
+
+  /**
+   *
    */
   async save(id: string, input: SectionInput): Promise<string> {
     try {
       await this.manager.update(SectionEntity, {id}, {
-        id:  WrongDataException.assert(input.id, 'Section id expected'),
+        id: WrongDataException.assert(input.id, 'Section id expected'),
         block: await this.checkBlock(input.block),
         sort: input.sort,
         parent: input.parent ? await this.checkParent(input.parent) : null,
@@ -83,10 +80,11 @@ export class SectionUpdateOperation {
     }
 
     const beforeItem = await this.checkSection(input.id);
-    const [stringList, pointList] = filterProperties(input.property);
+
     await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
     await new ImageUpdateOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);
 
+    const [stringList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;

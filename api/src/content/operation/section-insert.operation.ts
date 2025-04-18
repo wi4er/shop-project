@@ -12,6 +12,8 @@ import { Section4pointEntity } from '../model/section4point.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { ImageInsertOperation } from '../../common/operation/image-insert.operation';
 import { Section2imageEntity } from '../model/section2image.entity';
+import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
+import { Section2permissionEntity } from '../model/section2permission.entity';
 
 export class SectionInsertOperation {
 
@@ -25,35 +27,30 @@ export class SectionInsertOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkBlock(id: number): Promise<BlockEntity> {
-    const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
-
     return WrongDataException.assert(
-      await blockRepo.findOne({where: {id}}),
-      `Block with id ${id} not found!`,
+      await this.manager
+        .getRepository<BlockEntity>(BlockEntity)
+        .findOne({where: {id}}),
+      `Block with id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkSection(id: string): Promise<SectionEntity> {
-    const sectionRepo = this.manager.getRepository<SectionEntity>(SectionEntity);
-
     return WrongDataException.assert(
-      await sectionRepo.findOne({where: {id}}),
-      `Section with id ${id} not found!`,
+      await this.manager
+        .getRepository<SectionEntity>(SectionEntity)
+        .findOne({where: {id}}),
+      `Section with id >> ${id} << not found!`,
     );
   }
 
   /**
    *
-   * @param input
    */
   async save(input: SectionInput): Promise<string> {
     this.created.id = input.id;
@@ -67,10 +64,11 @@ export class SectionInsertOperation {
       throw new WrongDataException(err.message);
     }
 
-    const [stringList, pointList] = filterProperties(input.property);
-
-    await new ImageInsertOperation(this.manager, Section2imageEntity).save(this.created, input.image);
     await new FlagValueInsertOperation(this.manager, Section2flagEntity).save(this.created, input);
+    await new ImageInsertOperation(this.manager, Section2imageEntity).save(this.created, input.image);
+    await new PermissionValueInsertOperation(this.manager, Section2permissionEntity).save(this.created, input);
+
+    const [stringList, pointList] = filterProperties(input.property);
     await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pointList);
 

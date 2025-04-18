@@ -5,6 +5,15 @@
   flex: 1;
 }
 
+
+.loader {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .select {
   width: 36px;
 }
