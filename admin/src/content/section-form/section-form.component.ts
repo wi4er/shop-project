@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
@@ -8,13 +8,14 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Section } from '../../app/model/content/section';
 import { SectionInput } from '../../app/model/content/section.input';
+import { PropertyValueService } from '../../edit/property-value/property-value.service';
 
 @Component({
   selector: 'app-section-form',
   templateUrl: './section-form.component.html',
   styleUrls: ['./section-form.component.css']
 })
-export class SectionFormComponent {
+export class SectionFormComponent implements OnInit {
 
   id: string = '';
   created_at: string = '';
@@ -56,10 +57,14 @@ export class SectionFormComponent {
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
+    private propertyValueService: PropertyValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
@@ -78,12 +83,18 @@ export class SectionFormComponent {
     });
   }
 
+  /**
+   *
+   */
   getPropertyCount() {
     return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
+  /**
+   *
+   */
   initEditValues() {
     for (const col of this.collectionList) {
       this.imageList[col.id] = [];
@@ -105,6 +116,9 @@ export class SectionFormComponent {
     }
   }
 
+  /**
+   *
+   */
   toEdit(item: Section) {
     this.id = item.id;
     this.sort = item.sort;
@@ -121,22 +135,23 @@ export class SectionFormComponent {
       });
     }
 
-    for (const prop of item.property) {
-      this.editProperties[prop.property][prop.lang ?? ''].push({
-        value: prop.string,
-        error: '',
-      });
-    }
+    this.propertyValueService.toEdit(item.property,  this.editProperties);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
     }
   }
 
+  /**
+   *
+   */
   handleChangePermission = (method: string) => (id: number[]) => {
     this.permission[method] = id;
   };
 
+  /**
+   *
+   */
   toInput(): SectionInput {
     const input: SectionInput = {
       id: this.id || undefined,
@@ -163,19 +178,7 @@ export class SectionFormComponent {
       }
     }
 
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) continue;
-
-        for (const value of this.editProperties[prop][lang]) {
-          input.property.push({
-            property: prop,
-            string: value.value,
-            lang: lang || undefined,
-          });
-        }
-      }
-    }
+    input.property = this.propertyValueService.toInput(this.editProperties);
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) input.flag.push(flag);
@@ -184,6 +187,27 @@ export class SectionFormComponent {
     return input;
   }
 
+  /**
+   *
+   */
+  async sendItem(): Promise<string> {
+    if (this.data?.id) {
+      return this.apiService.putData<SectionInput>(
+        ApiEntity.SECTION,
+        this.data.id,
+        this.toInput(),
+      );
+    } else {
+      return this.apiService.postData<SectionInput>(
+        ApiEntity.SECTION,
+        this.toInput(),
+      );
+    }
+  }
+
+  /**
+   *
+   */
   async saveItem(event: Event) {
     event.preventDefault();
 
@@ -203,26 +227,11 @@ export class SectionFormComponent {
       }
     }
 
-    if (this.data?.id) {
-      this.apiService.putData<SectionInput>(
-        ApiEntity.SECTION,
-        this.data.id,
-        this.toInput(),
-      )
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
-    } else {
-      this.apiService.postData<SectionInput>(
-        ApiEntity.SECTION,
-        this.toInput(),
-      )
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
-    }
+    this.sendItem()
+      .then(() => this.dialogRef.close())
+      .catch((err: string) => {
+        this.errorBar.open(err, 'close', {duration: 5000});
+      });
   }
 
 }

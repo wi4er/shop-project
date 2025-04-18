@@ -26,6 +26,8 @@ export class BlockInsertOperation {
    *
    */
   async save(input: BlockInput): Promise<number> {
+    if (input.sort) this.created.sort = input.sort;
+
     try {
       await this.manager.insert(BlockEntity, this.created);
     } catch (err) {

@@ -6,8 +6,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { BlockInput } from '../../app/model/content/block.input';
 import { Block } from '../../app/model/content/block';
-import { PropertyValueService } from '../../app/service/property-value.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PropertyValueService } from '../../edit/property-value/property-value.service';
 
 @Component({
   selector: 'app-block-form',
@@ -20,6 +20,7 @@ export class BlockFormComponent implements OnInit {
 
   created_at: string = '';
   updated_at: string = '';
+  sort: number = 100;
 
   propertyList: Property[] = [];
   langList: Lang[] = [];
@@ -91,11 +92,11 @@ export class BlockFormComponent implements OnInit {
 
   /**
    *
-   * @param item
    */
   toEdit(item: Block) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+    this.sort = item.sort;
 
     this.propertyValueService.toEdit(item.property,  this.editProperties);
 
@@ -115,6 +116,7 @@ export class BlockFormComponent implements OnInit {
   toInput(): BlockInput {
     const input: BlockInput = {
       id: this.data?.id,
+      sort: +this.sort,
       property: [],
       flag: [],
       permission: [],

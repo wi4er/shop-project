@@ -6,6 +6,7 @@ export interface Block {
   id: number;
   created_at: string;
   updated_at: string;
+  sort: number;
 
   flag: string[];
   property: StringPropertyValue[];

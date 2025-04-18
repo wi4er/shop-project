@@ -45,6 +45,7 @@ export class BlockUpdateOperation {
   async save(id: number, input: BlockInput): Promise<number> {
     const beforeItem = await this.checkBlock(id);
 
+    beforeItem.sort = input.sort;
     await beforeItem.save();
 
     await new PermissionValueUpdateOperation(this.manager, Block2permissionEntity).save(beforeItem, input);

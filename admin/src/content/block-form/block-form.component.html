@@ -51,6 +51,18 @@
       </mat-form-field>
     </div>
 
+    <div class="line">
+      <mat-form-field appearance="fill">
+        <mat-label>Sorting</mat-label>
+
+        <input
+          matInput
+          name="sort"
+          [(ngModel)]="sort"
+        />
+      </mat-form-field>
+    </div>
+
     <mat-tab-group dynamicHeight>
       <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
         <app-property-edit

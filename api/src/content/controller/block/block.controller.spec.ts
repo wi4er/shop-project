@@ -66,6 +66,7 @@ describe('BlockController', () => {
         .expect(200);
 
       expect(item.body.id).toBe(1);
+      expect(item.body.sort).toBe(100);
       expect(item.body.created_at).toBeDefined();
       expect(item.body.updated_at).toBeDefined();
       expect(item.body.version).toBe(1);
@@ -255,10 +256,22 @@ describe('BlockController', () => {
       expect(inst.body.id).toBe(1);
     });
 
+    test('Should add with sort', async () => {
+      const inst = await request(app.getHttpServer())
+        .post('/block')
+        .send({sort: 333})
+        .expect(201);
+
+      expect(inst.body.sort).toBe(333);
+    });
+
     test('Should add and read', async () => {
       await request(app.getHttpServer())
         .post('/block')
-        .send({permission: [{method: 'READ'}]})
+        .send({
+          permission: [{method: 'READ'}],
+          sort: 444,
+        })
         .expect(201);
 
       const inst = await request(app.getHttpServer())
@@ -266,6 +279,7 @@ describe('BlockController', () => {
         .expect(200);
 
       expect(inst.body.id).toBe(1);
+      expect(inst.body.sort).toBe(444);
     });
 
     test('Should add with strings', async () => {
@@ -361,15 +375,18 @@ describe('BlockController', () => {
   });
 
   describe('Content block update', () => {
-    test('Should add block', async () => {
+    test('Should update block', async () => {
       const parent = await createBlock();
 
       const inst = await request(app.getHttpServer())
         .put(`/block/${parent.id}`)
-        .send({})
+        .send({
+          sort: 345
+        })
         .expect(200);
 
       expect(inst.body.id).toBe(1);
+      expect(inst.body.sort).toBe(345);
     });
 
     test('Should update permission and read', async () => {

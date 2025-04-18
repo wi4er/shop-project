@@ -31,7 +31,6 @@ import { StorageModule } from '../storage/storage.module';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
 import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { DirectoryModule } from '../directory/directory.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
 

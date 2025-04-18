@@ -8,7 +8,7 @@ import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element.input';
 import { Collection } from '../../app/model/storage/collection';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PropertyValueService } from '../../app/service/property-value.service';
+import { PropertyValueService } from '../../edit/property-value/property-value.service';
 
 @Component({
   selector: 'app-element-form',

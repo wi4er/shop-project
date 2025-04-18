@@ -7,6 +7,8 @@ import { PermissionValueInput } from '../../common/input/permission-value.input'
 export class BlockInput
   implements WithPropertyInput, WithFlagInput, WithPermissionInput {
 
+  sort: number;
+
   property: PropertyValueInput[];
   flag: string[];
   permission: PermissionValueInput[];

@@ -115,6 +115,7 @@ export class BlockListComponent implements OnInit {
     for (const item of data) {
       const line: { [key: string]: string } = {
         id: String(item.id),
+        sort: String(item.sort),
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
@@ -129,7 +130,7 @@ export class BlockListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['id', ...col];
+    this.columns = ['id', 'sort', ...col];
   }
 
   /**

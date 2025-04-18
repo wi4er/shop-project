@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StringPropertyValue } from '../model/string-property-value';
+import { StringPropertyValue } from '../../app/model/string-property-value';
 
 export interface PropertyEdit {
   [property: string]: { [lang: string]: { value: string, error?: string }[] };
