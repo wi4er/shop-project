@@ -11,6 +11,10 @@ import { SectionEntity } from '../model/section.entity';
 import { filterProperties } from '../../common/input/filter-properties';
 import { ImageUpdateOperation } from '../../common/operation/image-update.operation';
 import { Section2imageEntity } from '../model/section2image.entity';
+import { PermissionValueUpdateOperation } from '../../common/operation/permission-value-update.operation';
+import { Section2permissionEntity } from '../model/section2permission.entity';
+import { PointValueUpdateOperation } from '../../common/operation/point-value-update.operation';
+import { Section4pointEntity } from '../model/section4point.entity';
 
 export class SectionUpdateOperation {
 
@@ -46,6 +50,8 @@ export class SectionUpdateOperation {
           image: {image: true},
           string: {property: true},
           flag: {flag: true},
+          point: {point: true},
+          permission: {group: true},
         },
       }),
       `Section id >> ${id} << not found!`,
@@ -83,9 +89,11 @@ export class SectionUpdateOperation {
 
     await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
     await new ImageUpdateOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);
+    await new PermissionValueUpdateOperation(this.manager, Section2permissionEntity).save(beforeItem, input);
 
-    const [stringList] = filterProperties(input.property);
+    const [stringList, pointList] = filterProperties(input.property);
     await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, stringList);
+    await new PointValueUpdateOperation(this.manager, Section4pointEntity).save(beforeItem, pointList);
 
     return beforeItem.id;
   }

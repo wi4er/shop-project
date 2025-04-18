@@ -44,7 +44,7 @@ export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
   async save(beforeItem: T, list: PropertyPointInput[]) {
     const current: { [key: string]: Array<CommonPointEntity<BaseEntity>> } = {};
 
-    for (const item of beforeItem.point) {
+    for (const item of beforeItem.point ?? []) {
       const {id} = item.property;
 
       if (current[id]) current[id].push(item);

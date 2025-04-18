@@ -29,6 +29,7 @@ export class SectionController {
     block: true,
     flag: {flag: true},
     point: {point: {directory: true}, property: true},
+    permission: {group: true},
   };
 
   constructor(
@@ -41,10 +42,16 @@ export class SectionController {
   ) {
   }
 
+  /**
+   *
+   */
   toView(item: SectionEntity) {
     return new SectionRender(item);
   }
 
+  /**
+   *
+   */
   toOrder(sort: SectionOrderInput[]): FindOptionsOrder<SectionEntity> {
     const order = {};
 

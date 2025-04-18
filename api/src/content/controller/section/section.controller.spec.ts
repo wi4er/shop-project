@@ -18,6 +18,7 @@ import { FileEntity } from '../../../storage/model/file.entity';
 import { Section2imageEntity } from '../../model/section2image.entity';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
+import { GroupEntity } from '../../../personal/model/group.entity';
 
 describe('SectionController', () => {
   let source;
@@ -252,11 +253,7 @@ describe('SectionController', () => {
 
   describe('Content section with images', () => {
     test('Should get section with image', async () => {
-      const block = await new BlockEntity().save();
-      const parent = await Object.assign(
-        new SectionEntity(),
-        {id: 'SECTION', block},
-      ).save();
+      const parent = await createSection();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const image = await Object.assign(
         new FileEntity(),
@@ -418,43 +415,78 @@ describe('SectionController', () => {
       });
     });
 
-    describe('Content section addition with', () => {
-      test('Should add with image', async () => {
-        const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-        await Object.assign(
-          new FileEntity(),
-          {
-            collection,
-            original: 'name.txt',
-            mimetype: 'image/jpeg',
-            path: `txt/txt1.txt`,
-          },
-        ).save();
+    describe('Content section addition with permission', () => {
+      test('Should add with permission', async () => {
         await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block: 1}).save();
 
         const inst = await request(app.getHttpServer())
           .post('/section')
-          .send({block: 1, image: [1]})
+          .send({block: 1, permission: [{method: 'READ'}]})
           .expect(201);
 
-        expect(inst.body.image).toHaveLength(1);
-        expect(inst.body.image[0].image).toBe(1);
-        expect(inst.body.image[0].collection).toBe('SHORT');
+        expect(inst.body.permission).toEqual([{method: 'READ'}]);
       });
 
-      test('Shouldn`t add with wrong image', async () => {
+      test('Shouldn`t add with wrong method', async () => {
         await new BlockEntity().save();
-        await Object.assign(new SectionEntity(), {block: 1}).save();
 
         await request(app.getHttpServer())
           .post('/section')
-          .send({block: 1, image: [777]})
+          .send({block: 1, permission: [{method: 'WRONG'}]})
           .expect(400);
+      });
+
+      test('Should add with group permission', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/section')
+          .send({
+            block: 1,
+            permission: [
+              {method: 'READ'},
+              {method: 'READ', group: 'GROUP'},
+            ],
+          })
+          .expect(201);
+
+        expect(inst.body.permission).toContainEqual({method: 'READ', group: 'GROUP'});
+      });
+
+      test('Shouldn`t add with  wrong group', async () => {
+        await new BlockEntity().save();
+        await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
+
+        await request(app.getHttpServer())
+          .post('/section')
+          .send({
+            block: 1,
+            permission: [
+              {method: 'READ'},
+              {method: 'READ', group: 'WRONG'},
+            ],
+          })
+          .expect(400);
+      });
+
+      test('Should add and read with permission', async () => {
+        await new BlockEntity().save();
+
+        await request(app.getHttpServer())
+          .post('/section')
+          .send({id: 'SECTION', block: 1, permission: [{method: 'READ'}]})
+          .expect(201);
+
+        const inst = await request(app.getHttpServer())
+          .get('/section/SECTION')
+          .expect(200);
+
+        expect(inst.body.permission).toEqual([{method: 'READ'}]);
       });
     });
 
-    describe('Content section addition with string property', () => {
+    describe('Content section addition with string', () => {
       test('Should add with strings', async () => {
         await new BlockEntity().save();
         await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
@@ -683,6 +715,56 @@ describe('SectionController', () => {
         await request(app.getHttpServer())
           .put('/section/SECTION')
           .send({block: 999})
+          .expect(400);
+      });
+    });
+
+    describe('Content section update with permission', () => {
+      test('Should update permission', async () => {
+        await createSection();
+
+        const inst = await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1, permission: [{method: 'READ'}]})
+          .expect(200);
+
+        expect(inst.body.permission).toEqual([{method: 'READ'}]);
+      });
+
+      test('Shouldn`t update with wrong method', async () => {
+        await createSection();
+
+        await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1, permission: [{method: 'WRONG'}]})
+          .expect(400);
+      });
+
+      test('Should add group permission', async () => {
+        await createSection();
+        await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({
+            id: 'SECTION',
+            block: 1,
+            permission: [
+              {method: 'ALL'},
+              {method: 'READ', group: 'GROUP'},
+            ]
+          })
+          .expect(200);
+
+        expect(inst.body.permission).toContainEqual({method: 'READ', group: 'GROUP'});
+      });
+
+      test('Shouldn`t update with wrong goup', async () => {
+        await createSection();
+
+        await request(app.getHttpServer())
+          .put('/section/SECTION')
+          .send({id: 'SECTION', block: 1, permission: [{method: 'READ', group: 'WRONG'}]})
           .expect(400);
       });
     });

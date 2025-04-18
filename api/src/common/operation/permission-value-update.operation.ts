@@ -34,7 +34,7 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
   async save(beforeItem: T, input: WithPermissionInput) {
     const current: { [key: string]: Array<PermissionMethod> } = {};
 
-    for (const item of beforeItem.permission) {
+    for (const item of beforeItem.permission ?? []) {
       const {id = ''} = item.group ?? {};
 
       if (current[id]) current[id].push(item.method);

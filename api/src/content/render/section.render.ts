@@ -3,6 +3,7 @@ import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringPropertyRender } from '../../common/render/string-property.render';
 import { PointPropertyRender } from '../../common/render/point-property.render';
 import { ImageRender } from '../../common/render/image.render';
+import { PermissionRender } from '../../common/render/permission.render';
 
 @ApiExtraModels(StringPropertyRender, PointPropertyRender)
 export class SectionRender {
@@ -34,6 +35,10 @@ export class SectionRender {
       })),
     ];
     this.flag = item.flag.map(fl => fl.flag.id);
+    this.permission = item.permission?.map(it => ({
+      method: it.method,
+      group: it.group?.id,
+    }));
   }
 
   @ApiProperty()
@@ -75,6 +80,11 @@ export class SectionRender {
 
   @ApiProperty()
   flag: Array<string>;
+
+  @ApiProperty({
+    type: [PermissionRender],
+  })
+  permission?: Array<PermissionRender>;
 
 }
 
