@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
@@ -11,15 +11,11 @@ import { FormInput } from '../../app/model/form/form.input';
   templateUrl: './form-form.component.html',
   styleUrls: ['./form-form.component.css']
 })
-export class FormFormComponent {
+export class FormFormComponent implements OnInit {
 
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
-
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
@@ -33,18 +29,6 @@ export class FormFormComponent {
   }
 
   ngOnInit(): void {
-    Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, flag, lang]) => {
-      this.propertyList = property;
-      this.flagList = flag;
-      this.langList = lang;
-
-      this.initEditValues();
-    });
-
     if (this.data?.id) {
       this.apiService.fetchItem<Flag>(ApiEntity.FORM, this.data.id)
         .then(res => {
@@ -60,17 +44,6 @@ export class FormFormComponent {
   }
 
   initEditValues() {
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
-
-      for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [{value: ''}];
-      }
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
   }
 
   toEdit(item: Property) {

@@ -12,12 +12,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { GroupPermissionComponent } from './group-permission/group-permission.component';
 import { MatTableModule } from '@angular/material/table';
+import { ImageEditComponent } from './image-edit/image-edit.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     AddButtonComponent,
     FlagEditComponent,
     PropertyEditComponent,
+    ImageEditComponent,
     ItemMenuComponent,
     GroupPermissionComponent,
   ],
@@ -30,11 +34,14 @@ import { MatTableModule } from '@angular/material/table';
     MatCheckboxModule,
     MatMenuModule,
     MatTableModule,
+    MatCardModule,
+    MatDividerModule,
   ],
   exports: [
     AddButtonComponent,
     FlagEditComponent,
     PropertyEditComponent,
+    ImageEditComponent,
     ItemMenuComponent,
     GroupPermissionComponent,
   ],

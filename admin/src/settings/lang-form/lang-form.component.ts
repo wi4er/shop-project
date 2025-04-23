@@ -1,26 +1,22 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
-import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { FlagInput } from '../../app/model/settings/flag.input';
 import { LangInput } from '../../app/model/settings/lang.input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PropertyValueService } from '../../edit/property-value/property-value.service';
 
 @Component({
   selector: 'app-lang-form',
   templateUrl: './lang-form.component.html',
-  styleUrls: ['./lang-form.component.css']
+  styleUrls: ['./lang-form.component.css'],
 })
-export class LangFormComponent {
+export class LangFormComponent implements OnInit {
 
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
-
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
@@ -29,56 +25,53 @@ export class LangFormComponent {
     private dialogRef: MatDialogRef<LangFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private errorBar: MatSnackBar,
+    private propertyValueService: PropertyValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, flag, lang]) => {
-      this.propertyList = property;
-      this.flagList = flag;
-      this.langList = lang;
-
+      this.data?.id ? this.apiService.fetchItem<Lang>(ApiEntity.LANG, this.data.id) : null,
+    ]).then(([item]) => {
       this.initEditValues();
-    });
 
-    if (this.data?.id) {
-      this.apiService.fetchItem<Lang>(ApiEntity.LANG, this.data.id)
-        .then(res => {
-          this.toEdit(res);
-        });
-    }
+      if (item) this.toEdit(item);
+    });
   }
 
+  /**
+   *
+   */
   getPropertyCount() {
     return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
+  /**
+   *
+   */
   initEditValues() {
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
-
-      for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [{value: ''}];
-      }
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
   }
 
+  /**
+   *
+   */
   toEdit(item: Property) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+
+    this.propertyValueService.toEdit(item.property,  this.editProperties);
   }
 
+  /**
+   *
+   */
   toInput(): LangInput {
     const input: LangInput = {
       id: this.id,
@@ -86,13 +79,7 @@ export class LangFormComponent {
       flag: [],
     } as LangInput;
 
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) {
-          continue;
-        }
-      }
-    }
+    input.property = this.propertyValueService.toInput(this.editProperties);
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) {
@@ -103,17 +90,33 @@ export class LangFormComponent {
     return input;
   }
 
-  saveItem() {
+  /**
+   *
+   */
+  sendItem(): Promise<string> {
     if (this.data?.id) {
-
+      return this.apiService.putData<LangInput>(
+        ApiEntity.LANG,
+        this.id,
+        this.toInput(),
+      );
     } else {
-      this.apiService.postData<LangInput>(
+      return this.apiService.postData<LangInput>(
         ApiEntity.LANG,
         this.toInput(),
-      ).then(() => {
-        this.dialogRef.close()
-      });
+      );
     }
+  }
+
+  /**
+   *
+   */
+  saveItem() {
+    this.sendItem()
+      .then(() => this.dialogRef.close())
+      .catch((err: string) => {
+        this.errorBar.open(err, 'close', {duration: 5000});
+      });
   }
 
 }

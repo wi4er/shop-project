@@ -1,7 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
-import { Lang } from '../../app/model/settings/lang';
-import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { BlockInput } from '../../app/model/content/block.input';
@@ -22,10 +19,6 @@ export class BlockFormComponent implements OnInit {
   updated_at: string = '';
   sort: number = 100;
 
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
-
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
   editPermission: { [groupId: string]: { [method: string]: boolean } } = {};
@@ -44,20 +37,14 @@ export class BlockFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
       this.data?.id ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, this.data.id) : null,
-    ]).then(([property, flag, lang, data]) => {
-      this.propertyList = property;
-      this.flagList = flag;
-      this.langList = lang;
+    ]).then(([data]) => {
 
       this.initEditValues();
       if (data) this.toEdit(data);
 
       this.loading = false;
-    })
+    });
   }
 
   /**
@@ -73,21 +60,7 @@ export class BlockFormComponent implements OnInit {
    *
    */
   initEditValues() {
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
 
-      for (const lang of this.langList) {
-        this.editProperties[prop.id] = {};
-
-        this.editProperties[prop.id][lang.id ?? ''] = [{value: ''}];
-      }
-
-      this.editProperties[prop.id][''] = [];
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
   }
 
   /**
@@ -98,14 +71,14 @@ export class BlockFormComponent implements OnInit {
     this.updated_at = item.updated_at;
     this.sort = item.sort;
 
-    this.propertyValueService.toEdit(item.property,  this.editProperties);
+    this.propertyValueService.toEdit(item.property, this.editProperties);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
     }
 
     for (const perm of item.permission) {
-      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {}
+      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {};
       this.editPermission[perm.group ?? ''][perm.method] = true;
     }
   }

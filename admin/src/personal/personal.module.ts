@@ -5,8 +5,8 @@ import { AuthFormComponent } from './auth-form/auth-form.component';
 import { GroupFormComponent } from './group-form/group-form.component';
 import { GroupListComponent } from './group-list/group-list.component';
 import { PermissionListComponent } from './permission-list/permission-list.component';
-import { UserContactFormComponent } from './user-contact-form/user-contact-form.component';
-import { UserContactListComponent } from './user-contact-list/user-contact-list.component';
+import { ContactFormComponent } from './contact-form/contact-form.component';
+import { ContactListComponent } from './contact-list/contact-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -25,10 +25,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { ContactEditComponent } from './contact-edit/contact-edit.component';
-import { UserContactSettingsComponent } from './user-contact-settings/user-contact-settings.component';
+import { ContactSettingsComponent } from './contact-settings/contact-settings.component';
 import { GroupSettingsComponent } from './group-settings/group-settings.component';
 import { MatSelectModule } from '@angular/material/select';
 import { EditModule } from '../edit/edit.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -37,20 +38,20 @@ import { EditModule } from '../edit/edit.module';
     GroupFormComponent,
     GroupListComponent,
     PermissionListComponent,
-    UserContactFormComponent,
-    UserContactListComponent,
+    ContactFormComponent,
+    ContactListComponent,
     UserFormComponent,
     UserListComponent,
     UserSettingsComponent,
     ContactEditComponent,
-    UserContactSettingsComponent,
+    ContactSettingsComponent,
     GroupSettingsComponent,
   ],
   exports: [
     AuthDialogComponent,
     GroupListComponent,
     UserListComponent,
-    UserContactListComponent,
+    ContactListComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +72,7 @@ import { EditModule } from '../edit/edit.module';
     MatTableModule,
     MatToolbarModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class PersonalModule { }

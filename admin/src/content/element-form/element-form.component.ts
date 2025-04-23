@@ -1,7 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
-import { Lang } from '../../app/model/settings/lang';
-import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
@@ -23,11 +20,6 @@ export class ElementFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
   sort: number = 100;
-
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
-  collectionList: Array<Collection> = [];
 
   imageList: {
     [collection: string]: Array<{
@@ -66,18 +58,9 @@ export class ElementFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
       this.apiService.fetchList<Collection>(ApiEntity.COLLECTION),
       this.data?.id ? this.apiService.fetchItem<Element>(ApiEntity.ELEMENT, this.id) : null,
-    ]).then(([property, flag, lang, collection, data]) => {
-      this.propertyList = property;
-      this.flagList = flag;
-      this.langList = lang;
-      this.collectionList = collection;
-
-      this.initEditValues();
+    ]).then(([collection, data]) => {
       if (data) this.toEdit(data);
 
       this.loading = false;
@@ -91,30 +74,6 @@ export class ElementFormComponent implements OnInit {
     return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
-  }
-
-  /**
-   *
-   */
-  initEditValues() {
-    for (const col of this.collectionList) {
-      this.imageList[col.id] = [];
-      this.editImages[col.id] = [];
-    }
-
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
-
-      for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [];
-      }
-
-      this.editProperties[prop.id][''] = [];
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
   }
 
   /**

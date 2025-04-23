@@ -17,9 +17,11 @@ export class FlagValueInsertOperation<T extends BaseEntity> {
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
     const flagRepo = this.trans.getRepository(FlagEntity);
-    const flag = await flagRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(flag, `Flag with id ${id} not found!`);
+    return WrongDataException.assert(
+      await flagRepo.findOne({where: {id}}),
+      `Flag with id >> ${id} << not found!`
+    );
   }
 
   /**

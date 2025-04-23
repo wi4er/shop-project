@@ -45,14 +45,8 @@
     </mat-form-field>
 
     <mat-tab-group dynamicHeight>
-      <mat-tab
-        [label]="'Properties ( ' + getPropertyCount() + ' )'"
-      >
-        <app-property-edit
-          [edit]="editProperties"
-          [list]="propertyList"
-          [lang]="langList"
-        ></app-property-edit>
+      <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
+        <app-property-edit [edit]="editProperties"></app-property-edit>
       </mat-tab>
 
       <mat-tab

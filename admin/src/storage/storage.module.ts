@@ -17,7 +17,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FileListComponent } from './file-list/file-list.component';
 import { FileFormComponent } from './file-form/file-form.component';
-import { ImageEditComponent } from './image-edit/image-edit.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { ArchiveListComponent } from './archive-list/archive-list.component';
@@ -31,7 +30,6 @@ import { FileSettingsComponent } from './file-settings/file-settings.component';
     CollectionFormComponent,
     FileListComponent,
     FileFormComponent,
-    ImageEditComponent,
     ArchiveListComponent,
     CollectionSettingsComponent,
     FileSettingsComponent,
@@ -39,7 +37,6 @@ import { FileSettingsComponent } from './file-settings/file-settings.component';
   exports: [
     CollectionListComponent,
     FileListComponent,
-    ImageEditComponent,
     ArchiveListComponent,
   ],
   imports: [

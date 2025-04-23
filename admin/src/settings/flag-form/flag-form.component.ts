@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FlagInput } from '../../app/model/settings/flag.input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PropertyValueService } from '../../app/service/property-value.service';
+import { PropertyValueService } from '../../edit/property-value/property-value.service';
 
 @Component({
   selector: 'app-flag-form',
@@ -20,10 +20,6 @@ export class FlagFormComponent implements OnInit {
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
-
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
@@ -43,15 +39,8 @@ export class FlagFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
       this.data?.id ? this.apiService.fetchItem<Flag>(ApiEntity.FLAG, this.data.id) : null,
-    ]).then(([property, flag, lang, data]) => {
-      this.propertyList = property;
-      this.flagList = flag;
-      this.langList = lang;
-
+    ]).then(([data]) => {
       this.initEditValues();
       if (data) this.toEdit(data);
 
@@ -72,19 +61,7 @@ export class FlagFormComponent implements OnInit {
    *
    */
   initEditValues() {
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
 
-      for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [{value: ''}];
-      }
-
-      this.editProperties[prop.id][''] = [];
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
   }
 
   /**
@@ -152,3 +129,4 @@ export class FlagFormComponent implements OnInit {
   }
 
 }
+

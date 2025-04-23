@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Contact } from '../../app/model/user/contact';
-import { UserContactFormComponent } from '../user-contact-form/user-contact-form.component';
+import { ContactFormComponent } from '../contact-form/contact-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
-import { UserContactSettingsComponent } from '../user-contact-settings/user-contact-settings.component';
+import { ContactSettingsComponent } from '../contact-settings/contact-settings.component';
 
 @Component({
-  selector: 'app-user-contact-list',
-  templateUrl: './user-contact-list.component.html',
-  styleUrls: ['./user-contact-list.component.css']
+  selector: 'app-contact-list',
+  templateUrl: './contact-list.component.html',
+  styleUrls: ['./contact-list.component.css']
 })
-export class UserContactListComponent implements OnInit {
+export class ContactListComponent implements OnInit {
 
   contactList: { [key: string]: string }[] = [];
   flagList: string[] = [];
@@ -117,7 +117,7 @@ export class UserContactListComponent implements OnInit {
    */
   addItem() {
     this.dialog.open(
-      UserContactFormComponent,
+      ContactFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -130,7 +130,7 @@ export class UserContactListComponent implements OnInit {
    */
   updateItem(id: number) {
     this.dialog.open(
-      UserContactFormComponent,
+      ContactFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -167,7 +167,7 @@ export class UserContactListComponent implements OnInit {
    */
   openSettings() {
     this.dialog.open(
-      UserContactSettingsComponent,
+      ContactSettingsComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',

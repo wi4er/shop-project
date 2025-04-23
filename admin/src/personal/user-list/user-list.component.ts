@@ -32,14 +32,23 @@ export class UserListComponent implements OnInit {
   ) {
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.userList.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -84,8 +93,6 @@ export class UserListComponent implements OnInit {
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: User[]) {
     const col = new Set<string>();

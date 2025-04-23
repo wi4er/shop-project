@@ -9,11 +9,12 @@ import { Group } from '../../app/model/user/group';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Contact } from '../../app/model/user/contact';
 import { ContactInput } from '../../app/model/user/contact.input';
+import { PropertyValueService } from '../../edit/property-value/property-value.service';
 
 @Component({
   selector: 'app-user-group-form',
   templateUrl: './group-form.component.html',
-  styleUrls: ['./group-form.component.css']
+  styleUrls: ['./group-form.component.css'],
 })
 export class GroupFormComponent implements OnInit {
 
@@ -21,10 +22,6 @@ export class GroupFormComponent implements OnInit {
   type: string = '';
   created_at: string = '';
   updated_at: string = '';
-
-  propertyList: Property[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
 
   editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
@@ -34,6 +31,7 @@ export class GroupFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: number } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
+    private propertyValueService: PropertyValueService,
   ) {
     if (data?.id) this.id = String(data.id);
   }
@@ -43,15 +41,8 @@ export class GroupFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
       this.data?.id ? this.apiService.fetchItem<Group>(ApiEntity.GROUP, String(this.data.id)) : null,
-    ]).then(([property, flag, lang, data]) => {
-      this.propertyList = property;
-      this.flagList = flag;
-      this.langList = lang;
-
+    ]).then(([data]) => {
       this.initEditValues();
       if (data) this.toEdit(data);
     });
@@ -70,19 +61,6 @@ export class GroupFormComponent implements OnInit {
    *
    */
   initEditValues() {
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
-
-      for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [];
-      }
-
-      this.editProperties[prop.id][''] = [];
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
   }
 
   /**
@@ -115,19 +93,7 @@ export class GroupFormComponent implements OnInit {
       flag: [],
     } as GroupInput;
 
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) continue;
-
-        for (const value of this.editProperties[prop][lang]) {
-          input.property.push({
-            property: prop,
-            string: value.value,
-            lang: lang || undefined,
-          });
-        }
-      }
-    }
+    input.property = this.propertyValueService.toInput(this.editProperties);
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) {
@@ -141,27 +107,30 @@ export class GroupFormComponent implements OnInit {
   /**
    *
    */
-  saveItem() {
+  sendItem(): Promise<string> {
     if (this.data?.id) {
-      this.apiService.putData<GroupInput>(
+      return this.apiService.putData<GroupInput>(
         ApiEntity.GROUP,
         this.data.id,
         this.toInput(),
-      )
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
+      );
     } else {
-      this.apiService.postData<GroupInput>(
+      return this.apiService.postData<GroupInput>(
         ApiEntity.GROUP,
         this.toInput(),
-      )
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
+      );
     }
+  }
+
+  /**
+   *
+   */
+  saveItem() {
+    this.sendItem()
+      .then(() => this.dialogRef.close())
+      .catch((err: string) => {
+        this.errorBar.open(err, 'close', {duration: 5000});
+      });
   }
 
 }

@@ -9,8 +9,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { Contact } from '../../app/model/user/contact';
-import { UserContactFormComponent } from '../user-contact-form/user-contact-form.component';
-import { UserContactSettingsComponent } from '../user-contact-settings/user-contact-settings.component';
+import { ContactFormComponent } from '../contact-form/contact-form.component';
+import { ContactSettingsComponent } from '../contact-settings/contact-settings.component';
 import { GroupSettingsComponent } from '../group-settings/group-settings.component';
 
 @Component({

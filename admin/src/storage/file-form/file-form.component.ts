@@ -7,7 +7,6 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FileInput } from '../../app/model/storage/file.input';
 import { File as FileEntity } from '../../app/model/storage/file';
 import { HttpClient } from '@angular/common/http';
-import { CollectionInput } from '../../app/model/storage/collection.input';
 
 @Component({
   selector: 'app-file-form',

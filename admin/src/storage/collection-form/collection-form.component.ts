@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
@@ -12,7 +12,7 @@ import { CollectionInput } from '../../app/model/storage/collection.input';
   templateUrl: './collection-form.component.html',
   styleUrls: ['./collection-form.component.css']
 })
-export class CollectionFormComponent {
+export class CollectionFormComponent implements OnInit {
 
   id: string = '';
   created_at: string = '';
