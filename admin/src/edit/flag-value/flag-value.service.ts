@@ -7,7 +7,6 @@ export class FlagValueService {
 
   constructor() { }
 
-
   /**
    *
    */

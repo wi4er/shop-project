@@ -18,6 +18,12 @@
   width: 36px;
 }
 
+
+.flags {
+  display: flex;
+  gap: 4px;
+}
+
 .action {
   width: 48px;
 }
