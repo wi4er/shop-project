@@ -21,4 +21,8 @@
   width: 120px;
 }
 
+.flags {
+  display: flex;
+  gap: 4px;
+}
 
