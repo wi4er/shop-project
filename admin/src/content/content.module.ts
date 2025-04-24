@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, NgForOf, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ElementListComponent } from './element-list/element-list.component';
 import { ElementFormComponent } from './element-form/element-form.component';
 import { SectionListComponent } from './section-list/section-list.component';
@@ -25,11 +25,12 @@ import { MatCardModule } from '@angular/material/card';
 import { StorageModule } from '../storage/storage.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ElementSettingsComponent } from './element-settings/element-settings.component';
-import { MatList, MatListModule } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { BlockSettingsComponent } from './block-settings/block-settings.component';
 import { SectionSettingsComponent } from './section-settings/section-settings.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditModule } from '../edit/edit.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { EditModule } from '../edit/edit.module';
     MatProgressSpinnerModule,
     PersonalModule,
     StorageModule,
+    MatTooltipModule,
   ],
 })
 export class ContentModule { }

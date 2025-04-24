@@ -6,6 +6,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { LangInput } from '../../app/model/settings/lang.input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-lang-form',
@@ -27,6 +28,7 @@ export class LangFormComponent implements OnInit {
     private apiService: ApiService,
     private errorBar: MatSnackBar,
     private propertyValueService: PropertyValueService,
+    private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -38,8 +40,6 @@ export class LangFormComponent implements OnInit {
     Promise.all([
       this.data?.id ? this.apiService.fetchItem<Lang>(ApiEntity.LANG, this.data.id) : null,
     ]).then(([item]) => {
-      this.initEditValues();
-
       if (item) this.toEdit(item);
     });
   }
@@ -56,38 +56,26 @@ export class LangFormComponent implements OnInit {
   /**
    *
    */
-  initEditValues() {
-  }
-
-  /**
-   *
-   */
   toEdit(item: Property) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.propertyValueService.toEdit(item.property,  this.editProperties);
+    this.editProperties = this.propertyValueService.toEdit(item.property);
+
+    for (const flag of item.flag) {
+      this.editFlags[flag] = true;
+    }
   }
 
   /**
    *
    */
   toInput(): LangInput {
-    const input: LangInput = {
+    return {
       id: this.id,
-      property: [],
-      flag: [],
-    } as LangInput;
-
-    input.property = this.propertyValueService.toInput(this.editProperties);
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
-    }
-
-    return input;
+      property: this.propertyValueService.toInput(this.editProperties),
+      flag: this.flagValueService.toInput(this.editFlags),
+    };
   }
 
   /**

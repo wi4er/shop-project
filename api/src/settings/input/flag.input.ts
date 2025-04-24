@@ -5,6 +5,10 @@ import { PropertyValueInput } from '../../common/input/property-value.input';
 export class FlagInput implements WithPropertyInput, WithFlagInput {
 
   id: string;
+  icon: string;
+  iconSvg: string;
+  color: string;
+
   property: PropertyValueInput[];
   flag: string[];
 

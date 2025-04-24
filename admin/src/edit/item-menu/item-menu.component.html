@@ -1,4 +1,3 @@
-
 <button mat-menu-item (click)="onEdit()">
   <mat-icon>edit</mat-icon>
   <span>Edit</span>
@@ -10,11 +9,13 @@
 </button>
 
 <button
-  *ngFor="let flag of flags"
+  *ngFor="let flag of flagList"
   mat-menu-item
-  (click)="onFlag(flag)"
+  (click)="onFlag(flag.id)"
+  [matTooltip]="flag.id"
+  matTooltipPosition="right"
 >
-  <mat-icon *ngIf="active.includes(flag)">check</mat-icon>
-  <mat-icon *ngIf="!active.includes(flag)"></mat-icon>
-  <span> {{flag}} </span>
+  <mat-icon *ngIf="active.includes(flag.id)">check</mat-icon>
+  <mat-icon *ngIf="!active.includes(flag.id)"></mat-icon>
+  <span> {{ getFlagName(flag) }} </span>
 </button>

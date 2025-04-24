@@ -12,6 +12,7 @@ import { Contact } from '../../app/model/user/contact';
 import { ContactFormComponent } from '../contact-form/contact-form.component';
 import { ContactSettingsComponent } from '../contact-settings/contact-settings.component';
 import { GroupSettingsComponent } from '../group-settings/group-settings.component';
+import { Flag } from '../../app/model/settings/flag';
 
 @Component({
   selector: 'app-user-group-list',
@@ -21,7 +22,7 @@ import { GroupSettingsComponent } from '../group-settings/group-settings.compone
 export class GroupListComponent implements OnInit {
 
   contactList: { [key: string]: string }[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
 

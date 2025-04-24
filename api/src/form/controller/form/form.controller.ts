@@ -3,7 +3,6 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { FormEntity } from '../../model/form.entity';
 import { FormInput } from '../../input/form.input';
-import { FlagEntity } from '../../../settings/model/flag.entity';
 import { FormInsertOperation } from '../../operation/form-insert.operation';
 import { FormUpdateOperation } from '../../operation/form-update.operation';
 import { FormDeleteOperation } from '../../operation/form-delete.operation';
@@ -24,7 +23,10 @@ export class FormController {
   ) {
   }
 
-  toView(item: FlagEntity) {
+  /**
+   *
+   */
+  toView(item: FormEntity) {
     return {
       id: item.id,
       created_at: item.created_at,

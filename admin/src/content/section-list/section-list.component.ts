@@ -39,7 +39,7 @@ export class SectionListComponent implements OnChanges {
   activeFlags: { [key: string]: string[] } = {};
 
   propertyList: string[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   imageList: {
     [id: string]: Array<{
       path: string,
@@ -107,7 +107,7 @@ export class SectionListComponent implements OnChanges {
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.refreshData(),
     ]).then(([flagList, propertyList]) => {
-      this.flagList = flagList.map((it: { id: string }) => it.id);
+      this.flagList = flagList;
       this.propertyList = propertyList.map((item: { id: string }) => item.id);
 
       this.loading = false;

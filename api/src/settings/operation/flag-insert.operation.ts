@@ -18,8 +18,14 @@ export class FlagInsertOperation {
     this.created = new FlagEntity();
   }
 
+  /**
+   *
+   */
   async save(input: FlagInput): Promise<string> {
     this.created.id = input.id;
+    this.created.color = input.color;
+    this.created.icon = input.icon;
+    this.created.iconSvg = input.iconSvg;
 
     try {
       await this.manager.insert(FlagEntity, this.created)
@@ -27,7 +33,7 @@ export class FlagInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList] = filterProperties(input.property);
 
     await new StringValueInsertOperation(this.manager, Flag4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, Flag2flagEntity).save(this.created, input);

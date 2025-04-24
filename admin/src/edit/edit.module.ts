@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { ImageEditComponent } from './image-edit/image-edit.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatTableModule,
     MatCardModule,
     MatDividerModule,
+    MatTooltipModule,
   ],
   exports: [
     AddButtonComponent,

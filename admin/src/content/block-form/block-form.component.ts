@@ -5,6 +5,7 @@ import { BlockInput } from '../../app/model/content/block.input';
 import { Block } from '../../app/model/content/block';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-block-form',
@@ -29,6 +30,7 @@ export class BlockFormComponent implements OnInit {
     private apiService: ApiService,
     private errorBar: MatSnackBar,
     private propertyValueService: PropertyValueService,
+    private flagValueService: FlagValueService,
   ) {
   }
 
@@ -71,7 +73,7 @@ export class BlockFormComponent implements OnInit {
     this.updated_at = item.updated_at;
     this.sort = item.sort;
 
-    this.propertyValueService.toEdit(item.property, this.editProperties);
+    this.editProperties = this.propertyValueService.toEdit(item.property);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -90,18 +92,10 @@ export class BlockFormComponent implements OnInit {
     const input: BlockInput = {
       id: this.data?.id,
       sort: +this.sort,
-      property: [],
-      flag: [],
+      property: this.propertyValueService.toInput(this.editProperties),
+      flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as BlockInput;
-
-    input.property = this.propertyValueService.toInput(this.editProperties);
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
-    }
 
     for (const group in this.editPermission) {
       for (const method in this.editPermission[group]) {

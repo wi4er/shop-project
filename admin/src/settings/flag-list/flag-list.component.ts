@@ -3,10 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Flag } from '../../app/model/settings/flag';
-import { Observable } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-flag-list',
@@ -23,23 +23,33 @@ export class FlagListComponent implements OnInit {
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
+    private messageBar: MatSnackBar,
   ) {
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -48,6 +58,9 @@ export class FlagListComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -55,6 +68,9 @@ export class FlagListComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -63,6 +79,9 @@ export class FlagListComponent implements OnInit {
     ];
   }
 
+  /**
+   *
+   */
   async refreshData() {
     return Promise.all([
       this.apiService.fetchList<Flag>(
@@ -76,14 +95,13 @@ export class FlagListComponent implements OnInit {
     ]).then(([data, count]) => {
       this.setData(data);
       this.totalCount = count;
+      this.flagList = data;
       this.selection.clear();
     });
   }
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: Flag[]) {
     const col = new Set<string>();
@@ -110,18 +128,22 @@ export class FlagListComponent implements OnInit {
     this.columns = ['id', 'created_at', 'updated_at', ...col];
   }
 
+  /**
+   *
+   */
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       FlagFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
     const dialog = this.dialog.open(
       FlagFormComponent,
@@ -135,9 +157,29 @@ export class FlagListComponent implements OnInit {
     dialog.afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
+    const list: Array<string> = [...this.activeFlags[id]];
+
+    const index = this.activeFlags[id].indexOf(flag);
+    if (~index) {
+      list.splice(index, 1);
+    } else {
+      list.push(flag);
+    }
+
+    this.apiService.patchData(ApiEntity.FLAG, id, {flag: list})
+      .then(() => {
+        this.messageBar.open(`Changing flag ${flag} for ${id}`, 'close', {duration: 3000});
+        return this.refreshData();
+      });
   }
 
+  /**
+   *
+   */
   async deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -145,6 +187,9 @@ export class FlagListComponent implements OnInit {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.FLAG, [id])
       .then(() => this.refreshData());

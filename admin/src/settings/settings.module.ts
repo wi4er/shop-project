@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditModule } from '../edit/edit.module';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { EditModule } from '../edit/edit.module';
     MatTableModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
   ],
   exports: [
   ],

@@ -7,6 +7,7 @@ import { User } from '../../app/model/user/user';
 import { Group } from '../../app/model/user/group';
 import { Contact } from '../../app/model/user/contact';
 import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-user-form',
@@ -35,6 +36,7 @@ export class UserFormComponent implements OnInit {
     private apiService: ApiService,
     private errorBar: MatSnackBar,
     private propertyValueService: PropertyValueService,
+    private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -51,7 +53,6 @@ export class UserFormComponent implements OnInit {
       this.groupList = group;
       this.contactList = contact;
 
-      this.initEditValues();
       if (data) this.toEdit(data);
 
       this.loading = false;
@@ -70,19 +71,13 @@ export class UserFormComponent implements OnInit {
   /**
    *
    */
-  initEditValues() {
-  }
-
-  /**
-   *
-   */
   toEdit(item: User) {
     this.id = item.id;
     this.login = item.login;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.propertyValueService.toEdit(item.property, this.editProperties);
+    this.editProperties = this.propertyValueService.toEdit(item.property);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -93,22 +88,12 @@ export class UserFormComponent implements OnInit {
    *
    */
   toInput(): UserInput {
-    const input: UserInput = {
+    return {
       id: +this.id,
       login: this.login,
-      property: [],
-      flag: [],
-    } as UserInput;
-
-    input.property = this.propertyValueService.toInput(this.editProperties);
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
-    }
-
-    return input;
+      property: this.propertyValueService.toInput(this.editProperties),
+      flag: this.flagValueService.toInput(this.editFlags),
+    };
   }
 
   /**

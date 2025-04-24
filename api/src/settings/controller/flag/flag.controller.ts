@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { FlagEntity } from '../../model/flag.entity';
@@ -7,6 +7,7 @@ import { FlagInsertOperation } from '../../operation/flag-insert.operation';
 import { FlagUpdateOperation } from '../../operation/flag-update.operation';
 import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { FlagPatchOperation } from '../../operation/flag-patch.operation';
 
 @Controller('flag')
 export class FlagController {
@@ -30,6 +31,9 @@ export class FlagController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
+      color: item.color,
+      icon: item.icon,
+      iconSvg: item.iconSvg,
       property: [
         ...item.string.map(str => ({
           string: str.string,
@@ -61,44 +65,69 @@ export class FlagController {
   }
 
   @Get(':id')
-  getItem(
+  async getItem(
     @Param('id')
       id: string,
   ) {
-    return this.flagRepo.findOne({
-      where: {id},
-      relations: this.relations,
-    }).then(item => this.toView(NoDataException.assert(item, `Flag with id ${id} not found`)));
+    return this.toView(
+      NoDataException.assert(
+        await this.flagRepo.findOne({
+          where: {id},
+          relations: this.relations,
+        }),
+        `Flag with id >> ${id} << not found`,
+      ),
+    );
   }
 
   @Post()
-  addItem(
+  async addItem(
     @Body()
       input: FlagInput,
   ) {
-    return this.entityManager.transaction(
-      trans => new FlagInsertOperation(trans).save(input)
-        .then(id => trans.getRepository(FlagEntity).findOne({
-          where: {id},
-          relations: this.relations,
-        })),
-    ).then(this.toView);
+    return this.toView(
+      await this.entityManager.transaction(
+        trans => new FlagInsertOperation(trans).save(input)
+          .then(id => trans.getRepository(FlagEntity).findOne({
+            where: {id},
+            relations: this.relations,
+          })),
+      ),
+    );
   }
 
   @Put(':id')
-  updateItem(
+  async updateItem(
     @Param('id')
       id: string,
     @Body()
       input: FlagInput,
   ) {
-    return this.entityManager.transaction(
+    const item = await this.entityManager.transaction(
       trans => new FlagUpdateOperation(trans).save(id, input)
-        .then(id => trans.getRepository(FlagEntity).findOne({
-          where: {id},
+        .then(updatedId => trans.getRepository(FlagEntity).findOne({
+          where: {id: updatedId},
           relations: this.relations,
-        })),
-    ).then(this.toView);
+        })));
+
+    return this.toView(item);
+  }
+
+  @Patch(':id')
+  async updateFields(
+    @Param('id')
+      id: string,
+    @Body()
+      input: FlagInput,
+  ) {
+    const item = await this.entityManager.transaction(
+      trans => new FlagPatchOperation(trans).save(id, input)
+        .then(updatedId => trans.getRepository(FlagEntity).findOne({
+          where: {id: updatedId},
+          relations: this.relations,
+        })));
+
+    return this.toView(item);
   }
 
   @Delete('/:id')

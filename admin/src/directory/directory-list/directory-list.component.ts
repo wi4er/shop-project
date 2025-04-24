@@ -28,7 +28,7 @@ export class DirectoryListComponent implements OnInit {
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   activeFlags: { [key: string]: string[] } = {};
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   propertyList: string[] = [];
   columns: string[] = [];
 
@@ -86,7 +86,7 @@ export class DirectoryListComponent implements OnInit {
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG)
-        .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
+        .then(list => this.flagList = list),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
     ]).then(() => this.refreshData());

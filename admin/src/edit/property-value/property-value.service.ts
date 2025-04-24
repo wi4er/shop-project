@@ -45,8 +45,13 @@ export class PropertyValueService {
    */
   toEdit(
     list: StringPropertyValue[],
-    edit: PropertyEdit,
   ): PropertyEdit {
+    const edit: {
+      [property: string]: {
+        [lang: string]: { value: string, error?: string }[]
+      }
+    } = {};
+
     for (const prop of list) {
       if (!edit[prop.property]) edit[prop.property] = {};
       if (!edit[prop.property][prop.lang ?? '']) edit[prop.property][prop.lang ?? ''] = [];

@@ -7,16 +7,17 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { ContactSettingsComponent } from '../contact-settings/contact-settings.component';
+import { Flag } from '../../app/model/settings/flag';
 
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
-  styleUrls: ['./contact-list.component.css']
+  styleUrls: ['./contact-list.component.css'],
 })
 export class ContactListComponent implements OnInit {
 
   contactList: { [key: string]: string }[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
 

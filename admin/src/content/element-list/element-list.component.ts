@@ -42,7 +42,7 @@ export class ElementListComponent implements OnChanges {
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   permissionList: { [key: string]: Array<PermissionValue> } = {};
   imageList: {
     [id: string]: Array<{
@@ -70,6 +70,7 @@ export class ElementListComponent implements OnChanges {
       'select',
       'action',
       'publish',
+      'flags',
       'created_at',
       'updated_at',
       ...this.columns,
@@ -108,6 +109,30 @@ export class ElementListComponent implements OnChanges {
   /**
    *
    */
+  getFlagsIcon(id: string) {
+    const list = this.activeFlags[id];
+    const icons: Array<{
+      icon: string | null,
+      title: string,
+      color: string | null,
+    }> = [];
+
+    for (const flag of this.flagList) {
+      if (list.includes(flag.id) && flag.icon) {
+        icons.push({
+          icon: flag.icon,
+          title: flag.id,
+          color: flag.color,
+        });
+      }
+    }
+
+    return icons;
+  }
+
+  /**
+   *
+   */
   ngOnChanges() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
@@ -115,7 +140,7 @@ export class ElementListComponent implements OnChanges {
       this.blockId ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, String(this.blockId)) : null,
       this.refreshData(),
     ]).then(([flagList, propertyList, blockItem]) => {
-      this.flagList = flagList.map((it: { id: string }) => it.id);
+      this.flagList = flagList;
       this.propertyList = propertyList.map((item: { id: string }) => item.id);
       this.blockName = blockItem?.property.find(item => item.property === 'NAME')?.string;
 

@@ -20,7 +20,7 @@
     *ngIf="data?.id"
     mat-dialog-title
   >
-    Update flag #{{data?.id}}
+    Update flag #{{ data?.id }}
   </h2>
 
   <mat-dialog-content>
@@ -34,7 +34,10 @@
       />
     </mat-form-field>
 
-    <div *ngIf="!!data?.id">
+    <div
+      *ngIf="!!data?.id"
+      class="line"
+    >
       <mat-form-field appearance="fill">
         <mat-label>Created at</mat-label>
 
@@ -59,9 +62,42 @@
     </div>
 
     <mat-tab-group dynamicHeight>
-      <mat-tab
-        [label]="'Properties ( ' + getPropertyCount() + ' )'"
-      >
+      <mat-tab label="Icon">
+        <mat-form-field appearance="fill">
+          <mat-label>Color</mat-label>
+
+          <input
+            matInput
+            name="color"
+            type="color"
+            [(ngModel)]="color"
+          />
+        </mat-form-field>
+
+        <div class="line">
+          <mat-icon
+            *ngIf="icon"
+            [fontIcon]="icon"
+          ></mat-icon>
+
+          <mat-form-field>
+            <mat-label>Icons</mat-label>
+
+            <mat-select [(value)]="icon">
+              <mat-option
+                *ngFor="let item of iconList"
+                [value]="item"
+              >
+                <mat-icon aria-hidden="false" [fontIcon]="item"></mat-icon>
+
+                {{ item }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
         <app-property-edit [edit]="editProperties"></app-property-edit>
       </mat-tab>
 

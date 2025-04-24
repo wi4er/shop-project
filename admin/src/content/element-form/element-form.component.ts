@@ -6,6 +6,7 @@ import { ElementInput } from '../../app/model/content/element.input';
 import { Collection } from '../../app/model/storage/collection';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-element-form',
@@ -49,6 +50,7 @@ export class ElementFormComponent implements OnInit {
     private apiService: ApiService,
     private errorBar: MatSnackBar,
     private propertyValueService: PropertyValueService,
+    private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -95,7 +97,7 @@ export class ElementFormComponent implements OnInit {
       });
     }
 
-    this.propertyValueService.toEdit(item.property,  this.editProperties);
+    this.editProperties = this.propertyValueService.toEdit(item.property);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -116,8 +118,8 @@ export class ElementFormComponent implements OnInit {
       block: this.data?.block ?? 1,
       sort: this.sort,
       image: [],
-      property: [],
-      flag: [],
+      property: this.propertyValueService.toInput(this.editProperties),
+      flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as ElementInput;
 
@@ -131,12 +133,6 @@ export class ElementFormComponent implements OnInit {
       for (const image of this.imageList[col]) {
         input.image.push(image.id);
       }
-    }
-
-    input.property = this.propertyValueService.toInput(this.editProperties);
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) input.flag.push(flag);
     }
 
     for (const group in this.editPermission) {

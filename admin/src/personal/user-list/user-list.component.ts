@@ -7,6 +7,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { UserSettingsComponent } from '../user-settings/user-settings.component';
+import { Flag } from '../../app/model/settings/flag';
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +17,7 @@ import { UserSettingsComponent } from '../user-settings/user-settings.component'
 export class UserListComponent implements OnInit {
 
   userList: { [key: string]: string }[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
 

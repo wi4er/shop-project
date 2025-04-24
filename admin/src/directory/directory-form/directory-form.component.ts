@@ -5,6 +5,7 @@ import { DirectoryInput } from '../../app/model/directory/directory.input';
 import { Directory } from '../../app/model/directory';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-directory-form',
@@ -28,6 +29,7 @@ export class DirectoryFormComponent implements OnInit {
     private apiService: ApiService,
     private errorBar: MatSnackBar,
     private propertyValueService: PropertyValueService,
+    private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -39,7 +41,6 @@ export class DirectoryFormComponent implements OnInit {
     Promise.all([
       this.data?.id ? this.apiService.fetchItem<Directory>(ApiEntity.DIRECTORY, this.data.id) : null,
     ]).then(([data]) => {
-      this.initEditValues();
       if (data) this.toEdit(data);
 
       this.loading = false;
@@ -58,19 +59,12 @@ export class DirectoryFormComponent implements OnInit {
   /**
    *
    */
-  initEditValues() {
-
-  }
-
-  /**
-   *
-   */
   toEdit(item: Directory) {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.propertyValueService.toEdit(item.property,  this.editProperties);
+    this.editProperties = this.propertyValueService.toEdit(item.property);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -81,19 +75,11 @@ export class DirectoryFormComponent implements OnInit {
    *
    */
   toInput(): DirectoryInput {
-    const input = {
+    return {
       id: this.id,
-      property: [],
-      flag: [],
-    } as DirectoryInput;
-
-    input.property = this.propertyValueService.toInput(this.editProperties);
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) input.flag.push(flag);
-    }
-
-    return input;
+      property: this.propertyValueService.toInput(this.editProperties),
+      flag: this.flagValueService.toInput(this.editFlags),
+    };
   }
 
   /**

@@ -28,7 +28,7 @@ export class BlockListComponent implements OnInit {
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   columns: string[] = [];
 
   constructor(
@@ -84,7 +84,7 @@ export class BlockListComponent implements OnInit {
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG)
-        .then(list => this.flagList = list.map((it: { id: string }) => it.id)),
+        .then(list => this.flagList = list),
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
     ]).then(() => this.refreshData());

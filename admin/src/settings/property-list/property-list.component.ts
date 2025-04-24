@@ -6,6 +6,7 @@ import { Property } from '../../app/model/settings/property';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Flag } from '../../app/model/settings/flag';
 
 @Component({
   selector: 'app-property-list',
@@ -22,7 +23,7 @@ export class PropertyListComponent implements OnInit {
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
 
   constructor(
     private dialog: MatDialog,
@@ -31,14 +32,23 @@ export class PropertyListComponent implements OnInit {
   ) {
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   isAllSelected() {
     return this.selection.selected.length === this.list.length;
   }
 
+  /**
+   *
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -47,6 +57,9 @@ export class PropertyListComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   changePage(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -54,6 +67,9 @@ export class PropertyListComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   *
+   */
   getColumns() {
     return [
       'select',
@@ -62,6 +78,9 @@ export class PropertyListComponent implements OnInit {
     ];
   }
 
+  /**
+   *
+   */
   async refreshData() {
     return Promise.all([
       this.apiService.fetchList<Property>(
@@ -81,8 +100,6 @@ export class PropertyListComponent implements OnInit {
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: Property[]) {
     const col = new Set<string>();
@@ -109,34 +126,42 @@ export class PropertyListComponent implements OnInit {
     this.columns = [ 'id', 'created_at', 'updated_at', ...col ];
   }
 
+  /**
+   *
+   */
   addItem() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       PropertyFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       PropertyFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   toggleFlag(id: number, flag: string) {
   }
 
+  /**
+   *
+   */
   async deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
@@ -144,6 +169,9 @@ export class PropertyListComponent implements OnInit {
       .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.PROPERTY, [id])
       .then(() => this.refreshData());

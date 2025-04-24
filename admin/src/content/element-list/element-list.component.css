@@ -23,6 +23,11 @@
   width: 1px;
 }
 
+.flags {
+  display: flex;
+  gap: 4px;
+}
+
 .date {
   width: 120px;
 }

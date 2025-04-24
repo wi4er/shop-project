@@ -2,7 +2,8 @@ import { PropertyValueInput } from '../../common/input/property-value.input';
 import { WithPropertyInput } from '../../common/input/with-property.input';
 import { WithFlagInput } from '../../common/input/with-flag.input';
 
-export class PropertyInput implements WithPropertyInput, WithFlagInput {
+export class PropertyInput
+  implements WithPropertyInput, WithFlagInput {
 
   id: string;
 

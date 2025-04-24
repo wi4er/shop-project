@@ -24,7 +24,7 @@ export class CollectionListComponent implements OnInit {
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
-  flagList: string[] = [];
+  flagList: Array<Flag> = [];
   columns: string[] = [];
   list: { [key: string]: string }[] = [];
 
@@ -83,7 +83,7 @@ export class CollectionListComponent implements OnInit {
       this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
       this.refreshData(),
     ]).then(([flagList, propertyList]) => {
-      this.flagList = flagList.map((it: { id: string }) => it.id);
+      this.flagList = flagList;
       this.propertyList = propertyList.map((item: { id: string }) => item.id);
     });
   }
@@ -139,15 +139,14 @@ export class CollectionListComponent implements OnInit {
    *
    */
   updateItem(id: number) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       CollectionFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
+        data: {id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData())
   }
 
   /**

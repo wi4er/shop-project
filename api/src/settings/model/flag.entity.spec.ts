@@ -25,15 +25,17 @@ describe('Flag entity', () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE', label: 'active'}).save();
 
       const repo = source.getRepository(FlagEntity);
-      const list = await repo.find();
+      const item = await repo.findOne({where: {id: 'ACTIVE'}});
 
-      expect(list).toHaveLength(1);
-      expect(list[0].id).toBe('ACTIVE');
-      expect(list[0].sort).toBe(100);
-      expect(list[0].created_at).toBeDefined();
-      expect(list[0].updated_at).toBeDefined();
-      expect(list[0].deleted_at).toBeNull();
-      expect(list[0].version).toBe(1);
+      expect(item.id).toBe('ACTIVE');
+      expect(item.icon).toBe(null);
+      expect(item.iconSvg).toBe(null);
+      expect(item.color).toBe(null);
+      expect(item.sort).toBe(100);
+      expect(item.created_at).toBeDefined();
+      expect(item.updated_at).toBeDefined();
+      expect(item.deleted_at).toBeNull();
+      expect(item.version).toBe(1);
     });
   });
 });

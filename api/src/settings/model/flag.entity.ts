@@ -41,6 +41,22 @@ export class FlagEntity
   @Column()
   sort: number = 100;
 
+  @Column({
+    nullable: true,
+  })
+  icon: string;
+
+  @Column({
+    nullable: true,
+  })
+  iconSvg: string;
+
+  @Column({
+    nullable: true,
+    length: 9,
+  })
+  color: string;
+
   @OneToMany(
     type => Flag4stringEntity,
     property => property.parent,
