@@ -129,7 +129,7 @@ export class FileFormComponent implements OnInit {
 
   toInput(): FileInput {
     const input: FileInput = {
-      property: [],
+      attribute: [],
       flag: [],
     } as FileInput;
 
@@ -141,7 +141,7 @@ export class FileFormComponent implements OnInit {
 
         for (const value of this.editProperties[prop][lang]) {
           input.property.push({
-            property: prop,
+            attribute: prop,
             string: value.value,
             lang: lang || undefined,
           });

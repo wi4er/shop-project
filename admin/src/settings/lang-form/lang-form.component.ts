@@ -73,7 +73,7 @@ export class LangFormComponent implements OnInit {
   toInput(): LangInput {
     return {
       id: this.id,
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

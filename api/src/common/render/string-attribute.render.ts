@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class StringPropertyRender {
+export class StringAttributeRender {
 
   @ApiProperty()
   string: string;
 
   @ApiProperty()
-  property: string;
+  attribute: string;
 
   @ApiProperty({
     required: false,

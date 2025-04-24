@@ -20,7 +20,7 @@ export class FileController {
 
   relations = {
     collection: true,
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
   };
 
@@ -42,10 +42,10 @@ export class FileController {
       mimetype: item.mimetype,
       path: item.path,
       collection: item.collection.id,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
       ],

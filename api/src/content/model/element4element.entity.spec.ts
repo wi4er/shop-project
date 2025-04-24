@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 import { ElementEntity } from './element.entity';
 import { Element4elementEntity } from './element4element.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 describe('ElementElement entity', () => {
   let source: DataSource;
@@ -24,7 +24,7 @@ describe('ElementElement entity', () => {
         {id: 'PARENT', block},
       ).save();
       const property = await Object.assign(
-        new PropertyEntity(),
+        new AttributeEntity(),
         {id: 'CURRENT'},
       ).save();
       const element = await Object.assign(
@@ -50,7 +50,7 @@ describe('ElementElement entity', () => {
     test('Shouldn`t create without parent', async () => {
       const block = await new BlockEntity().save();
       const property = await Object.assign(
-        new PropertyEntity(),
+        new AttributeEntity(),
         {id: 'CURRENT'},
       ).save();
       const element = await Object.assign(
@@ -66,7 +66,7 @@ describe('ElementElement entity', () => {
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(
         new ElementEntity(),
@@ -92,7 +92,7 @@ describe('ElementElement entity', () => {
         {id: 'NAME', block},
       ).save();
       const property = await Object.assign(
-        new PropertyEntity(),
+        new AttributeEntity(),
         {id: 'CURRENT'},
       ).save();
 

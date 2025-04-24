@@ -1,9 +1,9 @@
-import { PropertyValueInput } from './property-value.input';
+import { AttributeValueInput } from './attribute-value.input';
 
 export class PropertyElementInput
-  implements PropertyValueInput {
+  implements AttributeValueInput {
 
-  property: string;
+  attribute: string;
   element: string;
 
 }

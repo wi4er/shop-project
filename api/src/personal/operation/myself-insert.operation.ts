@@ -2,7 +2,7 @@ import { UserEntity } from '../model/user.entity';
 import { EntityManager } from 'typeorm';
 import { UserInput } from '../input/user.input';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { User4stringEntity } from '../model/user4string.entity';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';

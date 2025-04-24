@@ -47,9 +47,9 @@ import { FormFieldElementEntity } from './form/model/form-field-element.entity';
 import { FormFieldSectionEntity } from './form/model/form-field-section.entity';
 import { FormFieldDirectoryEntity } from './form/model/form-field-directory.entity';
 import { ResultEntity } from './form/model/result.entity';
-import { PropertyEntity } from './settings/model/property.entity';
-import { Property4stringEntity } from './settings/model/property4string.entity';
-import { Property2flagEntity } from './settings/model/property2flag.entity';
+import { AttributeEntity } from './settings/model/attribute.entity';
+import { Attribute4stringEntity } from './settings/model/attribute4string.entity';
+import { Attribute2flagEntity } from './settings/model/attribute2flag.entity';
 import { FlagEntity } from './settings/model/flag.entity';
 import { Flag4stringEntity } from './settings/model/flag4string.entity';
 import { Flag2flagEntity } from './settings/model/flag2flag.entity';
@@ -96,7 +96,7 @@ export function createConnectionOptions(): DataSourceOptions {
       Contact4stringEntity,
       GroupEntity, Group2flagEntity,
       Group4stringEntity,
-      PropertyEntity, Property4stringEntity, Property2flagEntity,
+      AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
       ConfigurationEntity,
       DirectoryEntity, Directory4stringEntity, Directory2flagEntity, Directory4pointEntity,
       PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,

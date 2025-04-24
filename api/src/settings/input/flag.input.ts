@@ -1,15 +1,15 @@
-import { WithPropertyInput } from '../../common/input/with-property.input';
+import { WithAttributeInput } from '../../common/input/with-attribute.input';
 import { WithFlagInput } from '../../common/input/with-flag.input';
-import { PropertyValueInput } from '../../common/input/property-value.input';
+import { AttributeValueInput } from '../../common/input/attribute-value.input';
 
-export class FlagInput implements WithPropertyInput, WithFlagInput {
+export class FlagInput implements WithAttributeInput, WithFlagInput {
 
   id: string;
   icon: string;
   iconSvg: string;
   color: string;
 
-  property: PropertyValueInput[];
+  attribute: AttributeValueInput[];
   flag: string[];
 
 }

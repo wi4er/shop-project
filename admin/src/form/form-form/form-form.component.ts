@@ -54,7 +54,7 @@ export class FormFormComponent implements OnInit {
   toInput(): FormInput {
     const input: FormInput = {
       id: this.id,
-      property: [],
+      attribute: [],
       flag: [],
     } as FormInput;
 

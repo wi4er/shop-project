@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { CollectionInput } from '../input/Collection.input';
@@ -16,28 +16,24 @@ export class CollectionUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
     const colRepo = this.manager.getRepository(CollectionEntity);
 
-    const inst = await colRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, `Collection with id ${id} not found!`);
-
-    return inst;
+    return NoDataException.assert(
+      await colRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `Collection with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param id
-   * @param input
    */
   async save(id: string, input: CollectionInput): Promise<string> {
     const beforeItem = await this.checkCollection(id);
@@ -45,9 +41,10 @@ export class CollectionUpdateOperation {
 
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Collection4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Collection2flagEntity).save(beforeItem, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Collection4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

@@ -1,5 +1,5 @@
 import { BaseEntity } from 'typeorm';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
 export interface CommonStringEntity<P extends BaseEntity> {
@@ -8,7 +8,7 @@ export interface CommonStringEntity<P extends BaseEntity> {
 
   string: string;
   parent: P;
-  property: PropertyEntity;
+  attribute: AttributeEntity;
   lang?: LangEntity;
 
 }

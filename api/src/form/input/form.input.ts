@@ -1,11 +1,11 @@
-import { WithPropertyInput } from '../../common/input/with-property.input';
+import { WithAttributeInput } from '../../common/input/with-attribute.input';
 import { WithFlagInput } from '../../common/input/with-flag.input';
-import { PropertyValueInput } from '../../common/input/property-value.input';
+import { AttributeValueInput } from '../../common/input/attribute-value.input';
 
-export class FormInput implements WithPropertyInput, WithFlagInput {
+export class FormInput implements WithAttributeInput, WithFlagInput {
 
   id: string;
-  property: PropertyValueInput[];
+  attribute: AttributeValueInput[];
   flag: string[];
 
 }

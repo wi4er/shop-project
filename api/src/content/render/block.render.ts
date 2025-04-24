@@ -1,12 +1,12 @@
 import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import { StringPropertyRender } from '../../common/render/string-property.render';
-import { PointPropertyRender } from '../../common/render/point-property.render';
+import { StringAttributeRender } from '../../common/render/string-attribute.render';
+import { PointAttributeRender } from '../../common/render/point-attribute.render';
 import { PermissionRender } from '../../common/render/permission.render';
 import { BlockEntity } from '../model/block.entity';
 
 @ApiExtraModels(
-  StringPropertyRender,
-  PointPropertyRender,
+  StringAttributeRender,
+  PointAttributeRender,
   PermissionRender,
 )
 export class BlockRender {
@@ -17,14 +17,14 @@ export class BlockRender {
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
     this.sort = item.sort;
-    this.property = [
+    this.attribute = [
       ...item.string.map(str => ({
         string: str.string,
-        property: str.property.id,
+        attribute: str.attribute.id,
         lang: str.lang?.id,
       })),
       ...item.point.map(val => ({
-        property: val.property.id,
+        attribute: val.attribute.id,
         point: val.point.id,
         directory: val.point.directory.id,
       })),
@@ -55,12 +55,12 @@ export class BlockRender {
     type: 'array',
     items: {
       oneOf: [
-        {$ref: getSchemaPath(StringPropertyRender)},
-        {$ref: getSchemaPath(PointPropertyRender)},
+        {$ref: getSchemaPath(StringAttributeRender)},
+        {$ref: getSchemaPath(PointAttributeRender)},
       ],
     },
   })
-  property: Array<StringPropertyRender | PointPropertyRender>;
+  attribute: Array<StringAttributeRender | PointAttributeRender>;
 
   @ApiProperty()
   flag: Array<string>;

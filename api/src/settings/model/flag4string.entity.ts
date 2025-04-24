@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { FlagEntity } from './flag.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from './property.entity';
+import { AttributeEntity } from './attribute.entity';
 import { LangEntity } from './lang.entity';
 
 @Entity('settings-flag4string')
@@ -47,14 +47,14 @@ export class Flag4stringEntity
   parent: FlagEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

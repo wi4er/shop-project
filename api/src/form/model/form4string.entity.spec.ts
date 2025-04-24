@@ -3,9 +3,9 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { FormEntity } from './form.entity';
 import { Form4stringEntity } from './form4string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('Form string property entity', () => {
+describe('Form string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -16,13 +16,13 @@ describe('Form string property entity', () => {
   afterAll(() => source.destroy());
 
   describe('Form sting fields', () => {
-    test('Should create property property', async () => {
+    test('Should create attribute attribute', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
 
       const value = new Form4stringEntity();
       value.string = 'VALUE';
-      value.property = property;
+      value.attribute = attribute;
       value.parent = parent;
       const inst = await value.save();
 
@@ -38,34 +38,34 @@ describe('Form string property entity', () => {
       const repo = source.getRepository(Form4stringEntity);
 
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
-      await Object.assign(new Form4stringEntity(), {string: 'VALUE', parent, property}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
+      await Object.assign(new Form4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       const inst = await repo.findOne({
         where: {id: 1},
-        relations: {property: true},
+        relations: {attribute: true},
       });
       expect(inst.id).toBe(1);
       expect(inst.string).toBe('VALUE');
-      expect(inst.property.id).toBe('PROPERTY');
+      expect(inst.attribute.id).toBe('PROPERTY');
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
 
       const value = new Form4stringEntity();
       value.string = 'VALUE';
-      value.property = property;
+      value.attribute = attribute;
       await expect(value.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
 
       const value = new Form4stringEntity();
       value.string = 'VALUE';
       value.parent = parent;
-      await expect(value.save()).rejects.toThrow('propertyId');
+      await expect(value.save()).rejects.toThrow('attributeId');
     });
   });
 
@@ -73,18 +73,18 @@ describe('Form string property entity', () => {
     test('Should add form with string', async () => {
       const repo = source.getRepository(FormEntity);
 
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
-      await Object.assign(new Form4stringEntity(), {string: 'VALUE', property, parent}).save();
+      await Object.assign(new Form4stringEntity(), {string: 'VALUE', attribute, parent}).save();
 
       const item = await repo.findOne({
         where: {id: 'FORM'},
-        relations: {string: {property: true}},
+        relations: {string: {attribute: true}},
       });
 
       expect(item.string).toHaveLength(1);
       expect(item.string[0].string).toBe('VALUE');
-      expect(item.string[0].property.id).toBe('PROPERTY');
+      expect(item.string[0].attribute.id).toBe('PROPERTY');
     });
   });
 });

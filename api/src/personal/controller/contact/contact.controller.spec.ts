@@ -6,7 +6,7 @@ import * as request from 'supertest';
 import { ContactEntity, UserContactType } from '../../model/contact.entity';
 import { Contact4stringEntity } from '../../model/contact4string.entity';
 import { Contact2flagEntity } from '../../model/contact2flag.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
 describe('ContactController', () => {
@@ -111,8 +111,8 @@ describe('ContactController', () => {
         new ContactEntity(),
         {id: 'MAIL', type: UserContactType.EMAIL},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Contact4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Contact4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/contact')
@@ -120,10 +120,10 @@ describe('ContactController', () => {
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('MAIL');
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
   });
 
@@ -198,7 +198,7 @@ describe('ContactController', () => {
     });
 
     test('Should add string to contact', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(
         new ContactEntity(),
         {id: 'MAIL', type: UserContactType.EMAIL},
@@ -209,17 +209,17 @@ describe('ContactController', () => {
         .send({
           id: 'MAIL',
           type: 'PHONE',
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(200);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
-    test('Shouldn`t add with wrong property', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+    test('Shouldn`t add with wrong attribute', async () => {
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(
         new ContactEntity(),
         {id: 'MAIL', type: UserContactType.EMAIL},
@@ -230,7 +230,7 @@ describe('ContactController', () => {
         .send({
           id: 'MAIL',
           type: 'PHONE',
-          property: [{property: 'WRONG', string: 'VALUE'}],
+          attribute: [{attribute: 'WRONG', string: 'VALUE'}],
         })
         .expect(400);
     });
@@ -261,7 +261,7 @@ describe('ContactController', () => {
         {id: 'MAIL', type: UserContactType.EMAIL},
       ).save();
 
-      const inst = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .put('/contact/MAIL')
         .send({
           id: 'MAIL',
@@ -292,7 +292,7 @@ describe('ContactController', () => {
         {id: 'MAIL', type: UserContactType.EMAIL},
       ).save();
 
-      const inst = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete('/contact/WRONG')
         .expect(404);
     });

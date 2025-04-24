@@ -3,11 +3,11 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 import { ElementEntity } from './element.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { SectionEntity } from './section.entity';
 import { Element4sectionEntity } from './element4section.entity';
 
-describe('Element section property entity', () => {
+describe('Element section attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -24,7 +24,7 @@ describe('Element section property entity', () => {
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const section = await Object.assign(new SectionEntity(), {block}).save();
 
       const inst = await Object.assign(new Element4sectionEntity(), {parent, property, section}).save();
@@ -34,7 +34,7 @@ describe('Element section property entity', () => {
 
     test('Shouldn`t create without parent', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const section = await Object.assign(new SectionEntity(), {block}).save();
 
       const inst = Object.assign(new Element4sectionEntity(), {property, section});
@@ -42,7 +42,7 @@ describe('Element section property entity', () => {
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(
         new ElementEntity(),
@@ -61,7 +61,7 @@ describe('Element section property entity', () => {
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = Object.assign(new Element4sectionEntity(), {parent, property});
 

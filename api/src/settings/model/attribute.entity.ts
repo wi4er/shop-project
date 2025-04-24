@@ -8,16 +8,16 @@ import {
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { Property4stringEntity } from './property4string.entity';
-import { Property2flagEntity } from './property2flag.entity';
+import { Attribute4stringEntity } from './attribute4string.entity';
+import { Attribute2flagEntity } from './attribute2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 
-@Entity('settings-property')
+@Entity('settings-attribute')
 @Check('not_empty_id', '"id" > \'\'')
 @Index(['sort'])
-export class PropertyEntity extends BaseEntity
-  implements WithFlagEntity<PropertyEntity>, WithStringEntity<PropertyEntity> {
+export class AttributeEntity extends BaseEntity
+  implements WithFlagEntity<AttributeEntity>, WithStringEntity<AttributeEntity> {
 
   @PrimaryColumn({
     type: 'varchar',
@@ -41,15 +41,15 @@ export class PropertyEntity extends BaseEntity
   sort: number = 100;
 
   @OneToMany(
-    type => Property4stringEntity,
+    type => Attribute4stringEntity,
     property => property.parent,
   )
-  string: Property4stringEntity[];
+  string: Attribute4stringEntity[];
 
   @OneToMany(
-    type => Property2flagEntity,
+    type => Attribute2flagEntity,
     flag => flag.parent,
   )
-  flag: Property2flagEntity[];
+  flag: Attribute2flagEntity[];
 
 }

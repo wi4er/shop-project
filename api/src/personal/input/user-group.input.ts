@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { WithPropertyInput } from '../../common/input/with-property.input';
+import { WithAttributeInput } from '../../common/input/with-attribute.input';
 import { WithFlagInput } from '../../common/input/with-flag.input';
-import { PropertyValueInput } from '../../common/input/property-value.input';
+import { AttributeValueInput } from '../../common/input/attribute-value.input';
 
-export class UserGroupInput implements WithPropertyInput, WithFlagInput {
+export class UserGroupInput implements WithAttributeInput, WithFlagInput {
 
   @ApiProperty()
   id?: string | null;
   parent: string | null;
-  property: PropertyValueInput[];
+  attribute: AttributeValueInput[];
 
   @ApiProperty({ type: [ String ] })
   flag: string[];

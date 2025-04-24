@@ -7,7 +7,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 import { DocumentEntity } from './document.entity';
 
@@ -45,13 +45,13 @@ export class Document4stringEntity
   parent: DocumentEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

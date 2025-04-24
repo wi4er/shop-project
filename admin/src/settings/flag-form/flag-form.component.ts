@@ -89,7 +89,7 @@ export class FlagFormComponent implements OnInit {
       color: this.color,
       icon: this.icon,
       iconSvg: this.iconSvg,
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

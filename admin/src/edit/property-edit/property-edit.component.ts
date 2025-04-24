@@ -4,7 +4,7 @@ import { Lang } from '../../app/model/settings/lang';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 
 @Component({
-  selector: 'app-property-edit',
+  selector: 'app-attribute-edit',
   templateUrl: './property-edit.component.html',
   styleUrls: [ './property-edit.component.css' ],
 })

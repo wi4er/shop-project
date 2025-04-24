@@ -13,7 +13,7 @@ import { NoDataException } from '../../../exception/no-data/no-data.exception';
 export class LangController {
 
   relations = {
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
   };
 
@@ -31,10 +31,10 @@ export class LangController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
       ],

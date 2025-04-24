@@ -4,7 +4,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { DocumentEntity } from '../../model/document.entity';
 import { Document4stringEntity } from '../../model/document4string.entity';
@@ -98,7 +98,7 @@ describe('DocumentController', () => {
   describe('Document with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await new DocumentEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new Document4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
@@ -115,7 +115,7 @@ describe('DocumentController', () => {
 
     test('Should get flag with lang strings', async () => {
       const parent = await new DocumentEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(new Document4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
@@ -156,7 +156,7 @@ describe('DocumentController', () => {
     });
 
     test('Should add with string', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const inst = await request(app.getHttpServer())
         .post('/document')
         .send({
@@ -205,7 +205,7 @@ describe('DocumentController', () => {
     });
 
     test('Should update with string', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await new DocumentEntity().save();
 
       const inst = await request(app.getHttpServer())

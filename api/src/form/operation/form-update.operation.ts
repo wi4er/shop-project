@@ -6,7 +6,7 @@ import { FormEntity } from '../model/form.entity';
 import { Form4stringEntity } from '../model/form4string.entity';
 import { Form2flagEntity } from '../model/form2flag.entity';
 import { FormInput } from '../input/form.input';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 
 export class FormUpdateOperation {
 
@@ -17,28 +17,24 @@ export class FormUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkForm(id: string): Promise<FormEntity> {
     const formRepo = this.manager.getRepository(FormEntity);
 
-    const inst = await formRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, 'Form not found!');
-
-    return inst;
+    return NoDataException.assert(
+      await formRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `Form with id >> ${id} << not found!`,
+    );
   }
 
   /**
    *
-   * @param id
-   * @param input
    */
   async save(id: string, input: FormInput): Promise<string> {
     const beforeItem = await this.checkForm(id);
@@ -46,9 +42,10 @@ export class FormUpdateOperation {
 
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Form4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Form2flagEntity).save(beforeItem, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Form4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

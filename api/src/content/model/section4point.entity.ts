@@ -9,10 +9,10 @@ import {
 import { PointEntity } from '../../directory/model/point.entity';
 import { SectionEntity } from './section.entity';
 import { CommonPointEntity } from '../../common/model/common-point.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-section4point')
-@Index(['point', 'property', 'parent'], {unique: true})
+@Index(['point', 'attribute', 'parent'], {unique: true})
 export class Section4pointEntity
   extends BaseEntity
   implements CommonPointEntity<SectionEntity> {
@@ -54,13 +54,13 @@ export class Section4pointEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

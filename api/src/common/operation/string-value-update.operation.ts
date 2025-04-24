@@ -1,9 +1,9 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { CommonStringEntity } from '../model/common-string.entity';
 import { WithStringEntity } from '../model/with-string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
-import { PropertyStringInput } from '../input/property-string.input';
+import { AttributeStringInput } from '../input/attribute-string.input';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
@@ -17,9 +17,9 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
   /**
    *
    */
-  private async checkProperty(id: string): Promise<PropertyEntity> {
+  private async checkProperty(id: string): Promise<AttributeEntity> {
     return WrongDataException.assert(
-      await this.trans.getRepository(PropertyEntity).findOne({where: {id}}),
+      await this.trans.getRepository(AttributeEntity).findOne({where: {id}}),
       `Property with id >> ${id} << not found!`
     );
   }
@@ -39,23 +39,23 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
   /**
    *
    */
-  async save(beforeItem: T, list: PropertyStringInput[]) {
+  async save(beforeItem: T, list: AttributeStringInput[]) {
     const current: { [key: string]: Array<CommonStringEntity<BaseEntity>> } = {};
 
     for (const item of beforeItem.string) {
-      const {id} = item.property;
+      const {id} = item.attribute;
 
       if (current[id]) current[id].push(item);
       else current[id] = [item];
     }
 
     for (const item of list) {
-      const inst = current[item.property]?.length
-        ? current[item.property].shift()
+      const inst = current[item.attribute]?.length
+        ? current[item.attribute].shift()
         : new this.entity();
 
       inst.parent = beforeItem;
-      inst.property = await this.checkProperty(item.property);
+      inst.attribute = await this.checkProperty(item.attribute);
       inst.string = WrongDataException.assert(item.string, 'Property string value expected');
       inst.lang = await this.checkLang(item.lang);
 

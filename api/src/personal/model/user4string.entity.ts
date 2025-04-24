@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
 @Entity('personal-user4string')
@@ -46,14 +46,14 @@ export class User4stringEntity
   parent: UserEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

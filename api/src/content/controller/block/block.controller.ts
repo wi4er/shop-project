@@ -19,9 +19,9 @@ import { BlockPatchOperation } from '../../operation/block-patch.operation';
 export class BlockController {
 
   relations = {
-    string: {property: true, lang: true},
     flag: {flag: true},
-    point: {point: {directory: true}, property: true},
+    point: {point: {directory: true}, attribute: true},
+    string: {attribute: true, lang: true},
     permission: {group: true},
   };
 

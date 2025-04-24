@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { ElementEntity } from '../model/element.entity';
 import { PropertyElementInput } from '../../common/input/property-element.input';
 import { Element4elementEntity } from '../model/element4element.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class Element4elementInsertOperation {
@@ -29,8 +29,8 @@ export class Element4elementInsertOperation {
    * @param id
    * @private
    */
-  private async checkProperty(id: string): Promise<PropertyEntity> {
-    const propRepo = this.trans.getRepository(PropertyEntity);
+  private async checkProperty(id: string): Promise<AttributeEntity> {
+    const propRepo = this.trans.getRepository(AttributeEntity);
     const inst = await propRepo.findOne({where: {id}});
 
     return WrongDataException.assert(inst, `Property with id ${id} not found!`);
@@ -45,7 +45,7 @@ export class Element4elementInsertOperation {
     for (const item of list ?? []) {
       const inst = new Element4elementEntity();
       inst.parent = created;
-      inst.property = await this.checkProperty(item.property);
+      inst.attribute = await this.checkProperty(item.attribute);
       inst.element = await this.checkElement(item.element);
 
       await this.trans.save(inst);

@@ -4,15 +4,12 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from '../../content/model/block.entity';
 import { Group4stringEntity } from './group4string.entity';
 import { GroupEntity } from './group.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('UserGroup string property entity', () => {
+describe('UserGroup string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -25,34 +22,34 @@ describe('UserGroup string property entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(Object.assign(
         new Group4stringEntity(),
-        {string: 'VALUE', property},
+        {string: 'VALUE', attribute},
       ).save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new GroupEntity(), {block}).save();
 
       await expect(Object.assign(
         new Group4stringEntity(),
         {string: 'VALUE', parent},
-      ).save()).rejects.toThrow('propertyId');
+      ).save()).rejects.toThrow('attributeId');
     });
   });
 
   describe('UserGroup with strings', () => {
     test('Should create element with strings', async () => {
       const repo = source.getRepository(GroupEntity);
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new GroupEntity().save();
 
       await Object.assign(
         new Group4stringEntity(),
-        {string: 'VALUE', parent, property},
+        {string: 'VALUE', parent, attribute},
       ).save();
 
       const inst = await repo.findOne({

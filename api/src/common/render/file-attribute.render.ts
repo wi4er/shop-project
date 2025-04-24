@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SectionPropertyRender {
+export class FileAttributeRender {
 
   @ApiProperty()
-  property: string;
+  attribute: string;
 
   @ApiProperty()
-  section: string;
+  file: number;
 
 }

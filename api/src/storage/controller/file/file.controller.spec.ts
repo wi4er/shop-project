@@ -6,7 +6,7 @@ import * as request from 'supertest';
 import { FileEntity } from '../../model/file.entity';
 import { CollectionEntity } from '../../model/collection.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { File4stringEntity } from '../../model/file4string.entity';
 import { File2flagEntity } from '../../model/file2flag.entity';
@@ -180,18 +180,18 @@ describe('FileController', () => {
         mimetype: 'text',
         path: 'txt/txt.txt',
       }).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new File4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new File4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/file')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
 
     test('Should get file with lang strings', async () => {
@@ -202,17 +202,17 @@ describe('FileController', () => {
         mimetype: 'text',
         path: 'txt/txt.txt',
       }).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new File4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new File4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/file')
         .expect(200);
 
-      expect(res.body[0].property[0].lang).toBe('EN');
-      expect(res.body[0].property[0].string).toBe('VALUE');
-      expect(res.body[0].property[0].property).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBe('EN');
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
     });
   });
 
@@ -330,7 +330,7 @@ describe('FileController', () => {
 
     test('Should add with string', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/file')
@@ -339,15 +339,15 @@ describe('FileController', () => {
           original: 'short.txt',
           mimetype: 'text',
           path: 'txt/txt.txt',
-          property: [
-            {property: 'NAME', string: 'VALUE'},
+          attribute: [
+            {attribute: 'NAME', string: 'VALUE'},
           ],
         })
         .expect(201);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add with flag', async () => {
@@ -395,7 +395,7 @@ describe('FileController', () => {
         mimetype: 'text',
         path: 'txt/txt.txt',
       }).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
         .put('/file/1')
@@ -405,15 +405,15 @@ describe('FileController', () => {
           original: 'short.txt',
           mimetype: 'text',
           path: 'txt/txt.txt',
-          property: [
-            {property: 'NAME', string: 'VALUE'},
+          attribute: [
+            {attribute: 'NAME', string: 'VALUE'},
           ],
         })
         .expect(200);
 
-      expect(res.body.property).toHaveLength(1);
-      expect(res.body.property[0].property).toBe('NAME');
-      expect(res.body.property[0].string).toBe('VALUE');
+      expect(res.body.attribute).toHaveLength(1);
+      expect(res.body.attribute[0].attribute).toBe('NAME');
+      expect(res.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add flag', async () => {

@@ -10,7 +10,7 @@ import {
 import { ElementEntity } from './element.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-element4string')
 export class Element4stringEntity
@@ -47,14 +47,14 @@ export class Element4stringEntity
   parent: ElementEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

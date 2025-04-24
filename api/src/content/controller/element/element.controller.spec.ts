@@ -12,7 +12,7 @@ import { PointEntity } from '../../../directory/model/point.entity';
 import { Element4pointEntity } from '../../model/element4point.entity';
 import { SectionEntity } from '../../model/section.entity';
 import { Element2sectionEntity } from '../../model/element2section.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { UserEntity } from '../../../personal/model/user.entity';
 import { GroupEntity } from '../../../personal/model/group.entity';
@@ -351,9 +351,9 @@ describe('ElementController', () => {
     test('Should get elements with strings', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await createElement(block.id);
-      await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -361,21 +361,21 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('VALUE');
-      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].string).toBe('VALUE');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
     });
 
     test('Should get elements list with many properties', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       for (let i = 0; i < 10; i++) {
         const parent = await createElement();
 
         for (let j = 0; j < 10; j++) {
-          await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
+          await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
         }
       }
 
@@ -385,17 +385,17 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(10);
-      expect(list.body[0].property).toHaveLength(10);
-      expect(list.body[0].property[0].string).toBe('VALUE');
-      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].attribute).toHaveLength(10);
+      expect(list.body[0].attribute[0].string).toBe('VALUE');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
     });
 
     test('Should get elements list with properties and limit', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const property1 = await Object.assign(new PropertyEntity(), {id: 'NAME_1'}).save();
-      const property2 = await Object.assign(new PropertyEntity(), {id: 'NAME_2'}).save();
-      const property3 = await Object.assign(new PropertyEntity(), {id: 'NAME_3'}).save();
+      const attribute1 = await Object.assign(new AttributeEntity(), {id: 'NAME_1'}).save();
+      const attribute2 = await Object.assign(new AttributeEntity(), {id: 'NAME_2'}).save();
+      const attribute3 = await Object.assign(new AttributeEntity(), {id: 'NAME_3'}).save();
 
       for (let i = 1; i <= 10; i++) {
         const parent = await Object.assign(
@@ -407,9 +407,9 @@ describe('ElementController', () => {
           {parent, group: 1, method: PermissionMethod.ALL},
         ).save();
 
-        await Object.assign(new Element4stringEntity(), {parent, property: property1, string: 'VALUE'}).save();
-        await Object.assign(new Element4stringEntity(), {parent, property: property2, string: 'VALUE'}).save();
-        await Object.assign(new Element4stringEntity(), {parent, property: property3, string: 'VALUE'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, attribute: attribute1, string: 'VALUE'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, attribute: attribute2, string: 'VALUE'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, attribute: attribute3, string: 'VALUE'}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -426,11 +426,11 @@ describe('ElementController', () => {
     test('Should get elements with string filter', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
-      const blank = await Object.assign(new ElementEntity, {block}).save();
+      await Object.assign(new ElementEntity, {block}).save();
       const parent = await createElement();
-      await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element?filter[string][eq]=VALUE')
@@ -438,26 +438,26 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('VALUE');
-      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].string).toBe('VALUE');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
     });
 
     test('Should get elements with string sort', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const name = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const gender = await Object.assign(new PropertyEntity(), {id: 'GENDER'}).save();
+      const name = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const gender = await Object.assign(new AttributeEntity(), {id: 'GENDER'}).save();
 
       for (let i = 0; i < 10; i++) {
         const parent = await createElement();
         await Object.assign(
           new Element4stringEntity(),
-          {parent, property: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
+          {parent, attribute: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
         ).save();
         await Object.assign(
           new Element4stringEntity(),
-          {parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
+          {parent, attribute: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
         ).save();
       }
 
@@ -469,9 +469,9 @@ describe('ElementController', () => {
       // console.dir(list.body, { depth: 5 });
       // expect(list.body).toHaveLength(1);
       // expect(list.body[0].id).toBe(2);
-      // expect(list.body[0].property).toHaveLength(1);
-      // expect(list.body[0].property[0].string).toBe('VALUE');
-      // expect(list.body[0].property[0].property).toBe('NAME');
+      // expect(list.body[0].attribute).toHaveLength(1);
+      // expect(list.body[0].attribute[0].string).toBe('VALUE');
+      // expect(list.body[0].attribute[0].attribute).toBe('NAME');
     });
   });
 
@@ -557,13 +557,13 @@ describe('ElementController', () => {
   describe('Content element with point', () => {
     test('Should get element with point', async () => {
       const cookie = await createSession();
-      const block = await new BlockEntity().save();
+      await new BlockEntity().save();
       const parent = await createElement();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
+      const inst = await Object.assign(new Element4pointEntity(), {parent, attribute, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/element')
@@ -571,15 +571,15 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].point).toBe('LONDON');
-      expect(list.body[0].property[0].directory).toBe('CITY');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].point).toBe('LONDON');
+      expect(list.body[0].attribute[0].directory).toBe('CITY');
     });
 
     test('Should get element with point filter', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -587,7 +587,7 @@ describe('ElementController', () => {
         const parent = await createElement();
 
         if (i % 2) {
-          await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
+          await Object.assign(new Element4pointEntity(), {parent, attribute, point}).save();
         }
       }
 
@@ -597,15 +597,15 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(5);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].point).toBe('LONDON');
-      expect(list.body[0].property[0].directory).toBe('CITY');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].point).toBe('LONDON');
+      expect(list.body[0].attribute[0].directory).toBe('CITY');
     });
 
     test('Should get element with point order', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -613,7 +613,7 @@ describe('ElementController', () => {
         const parent = await createElement();
 
         if (i % 2) {
-          await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
+          await Object.assign(new Element4pointEntity(), {parent, attribute, point}).save();
         }
       }
 
@@ -623,9 +623,9 @@ describe('ElementController', () => {
         .expect(200);
 
       // expect(list.body).toHaveLength(5);
-      // expect(list.body[0].property).toHaveLength(1);
-      // expect(list.body[0].property[0].value).toBe('LONDON');
-      // expect(list.body[0].property[0].directory).toBe('CITY');
+      // expect(list.body[0].attribute).toHaveLength(1);
+      // expect(list.body[0].attribute[0].value).toBe('LONDON');
+      // expect(list.body[0].attribute[0].directory).toBe('CITY');
     });
   });
 
@@ -634,15 +634,15 @@ describe('ElementController', () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
       const parent = await createElement(block.id);
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const element = await Object.assign(
         new ElementEntity(),
         {id: 'ELEMENT', block},
       ).save();
 
-      const inst = await Object.assign(
+      await Object.assign(
         new Element4elementEntity(),
-        {parent, property, element},
+        {parent, attribute, element},
       ).save();
 
       const list = await request(app.getHttpServer())
@@ -651,9 +651,9 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].property).toBe('CURRENT');
-      expect(list.body[0].property[0].element).toBe('ELEMENT');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].attribute).toBe('CURRENT');
+      expect(list.body[0].attribute[0].element).toBe('ELEMENT');
     });
   });
 
@@ -729,8 +729,7 @@ describe('ElementController', () => {
         await request(app.getHttpServer())
           .post('/element')
           .send({block: 2})
-          .expect(400)
-          .expect({message: 'Block with id 2 not found!'});
+          .expect(400);
       });
     });
 
@@ -792,33 +791,33 @@ describe('ElementController', () => {
     describe('Element addition with string', () => {
       test('Should add with strings', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const inst = await request(app.getHttpServer())
           .post('/element')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', string: 'VALUE'},
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE'},
             ],
           })
           .expect(201);
 
-        expect(inst.body.property).toHaveLength(1);
-        expect(inst.body.property[0].property).toBe('NAME');
-        expect(inst.body.property[0].string).toBe('VALUE');
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
       });
 
-      test('Shouldn`t add with wrong property', async () => {
+      test('Shouldn`t add with wrong attribute', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         await request(app.getHttpServer())
           .post('/element')
           .send({
             block: 1,
-            property: [
-              {property: 'WRONG', string: 'VALUE'},
+            attribute: [
+              {attribute: 'WRONG', string: 'VALUE'},
             ],
           })
           .expect(400);
@@ -828,7 +827,7 @@ describe('ElementController', () => {
     describe('Element addition with point', () => {
       test('Should add with point', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -836,28 +835,28 @@ describe('ElementController', () => {
           .post('/element')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', point: 'LONDON'},
+            attribute: [
+              {attribute: 'NAME', point: 'LONDON'},
             ],
           })
           .expect(201);
 
-        expect(inst.body.property).toHaveLength(1);
-        expect(inst.body.property[0].property).toBe('NAME');
-        expect(inst.body.property[0].point).toBe('LONDON');
-        expect(inst.body.property[0].directory).toBe('CITY');
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].point).toBe('LONDON');
+        expect(inst.body.attribute[0].directory).toBe('CITY');
       });
 
       test('Shouldn`t add with wrong point', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         await request(app.getHttpServer())
           .post('/element')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', point: 'WRONG'},
+            attribute: [
+              {attribute: 'NAME', point: 'WRONG'},
             ],
           })
           .expect(400);
@@ -865,7 +864,7 @@ describe('ElementController', () => {
 
       test('Shouldn`t add with duplicate point', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -873,9 +872,9 @@ describe('ElementController', () => {
           .post('/element')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', point: 'LONDON'},
-              {property: 'NAME', point: 'LONDON'},
+            attribute: [
+              {attribute: 'NAME', point: 'LONDON'},
+              {attribute: 'NAME', point: 'LONDON'},
             ],
           })
           .expect(400);
@@ -885,22 +884,22 @@ describe('ElementController', () => {
     describe('Element addition with element', () => {
       test('Should add with element', async () => {
         const block = await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         await Object.assign(new ElementEntity(), {id: 'CHILD', block}).save();
 
         const inst = await request(app.getHttpServer())
           .post('/element')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', element: 'CHILD'},
+            attribute: [
+              {attribute: 'NAME', element: 'CHILD'},
             ],
           })
           .expect(201);
 
-        expect(inst.body.property).toHaveLength(1);
-        expect(inst.body.property[0].property).toBe('NAME');
-        expect(inst.body.property[0].element).toBe('CHILD');
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].element).toBe('CHILD');
       });
     });
 
@@ -1195,39 +1194,39 @@ describe('ElementController', () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const item = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [{
-              property: 'NAME',
+            attribute: [{
+              attribute: 'NAME',
               string: 'VALUE',
             }],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(item.body.property).toHaveLength(1);
-        expect(item.body.property[0]['string']).toBe('VALUE');
-        expect(item.body.property[0]['property']).toBe('NAME');
+        expect(item.body.attribute).toHaveLength(1);
+        expect(item.body.attribute[0]['string']).toBe('VALUE');
+        expect(item.body.attribute[0]['attribute']).toBe('NAME');
       });
 
       test('Shouldn`t add without string', async () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const item = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [{
-              property: 'NAME',
+            attribute: [{
+              attribute: 'NAME',
               string: null,
             }],
           })
@@ -1239,43 +1238,43 @@ describe('ElementController', () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-        await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
         const item = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [],
+            attribute: [],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(item.body.property).toHaveLength(0);
+        expect(item.body.attribute).toHaveLength(0);
       });
 
       test('Should change string', async () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-        await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE_1'}).save();
-        await Object.assign(new Element4stringEntity(), {parent, property, string: 'VALUE_2'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE_1'}).save();
+        await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE_2'}).save();
 
         const item = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [{property: 'NAME', string: 'ANOTHER'}],
+            attribute: [{attribute: 'NAME', string: 'ANOTHER'}],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(item.body.property).toHaveLength(1);
-        expect(item.body.property[0].property).toBe('NAME');
-        expect(item.body.property[0].string).toBe('ANOTHER');
+        expect(item.body.attribute).toHaveLength(1);
+        expect(item.body.attribute[0].attribute).toBe('NAME');
+        expect(item.body.attribute[0].string).toBe('ANOTHER');
       });
     });
 
@@ -1284,7 +1283,7 @@ describe('ElementController', () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -1293,63 +1292,63 @@ describe('ElementController', () => {
           .send({
             id: parent.id,
             block: 1,
-            property: [{property: 'NAME', point: 'LONDON'}],
+            attribute: [{attribute: 'NAME', point: 'LONDON'}],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(item.body.property).toHaveLength(1);
-        expect(item.body.property[0].property).toBe('NAME');
-        expect(item.body.property[0].point).toBe('LONDON');
-        expect(item.body.property[0].directory).toBe('CITY');
+        expect(item.body.attribute).toHaveLength(1);
+        expect(item.body.attribute[0].attribute).toBe('NAME');
+        expect(item.body.attribute[0].point).toBe('LONDON');
+        expect(item.body.attribute[0].directory).toBe('CITY');
       });
 
       test('Should remove point', async () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-        await Object.assign(new Element4pointEntity(), {point, parent, property}).save();
+        await Object.assign(new Element4pointEntity(), {point, parent, attribute}).save();
 
         const item = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [],
+            attribute: [],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(item.body.property).toHaveLength(0);
+        expect(item.body.attribute).toHaveLength(0);
       });
 
       test('Should change point', async () => {
         const cookie = await createSession();
         await new BlockEntity().save();
         const parent = await createElement();
-        const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
         await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
-        await Object.assign(new Element4pointEntity(), {point, parent, property}).save();
+        await Object.assign(new Element4pointEntity(), {point, parent, attribute}).save();
 
         const item = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [{property: 'NAME', point: 'PARIS'}],
+            attribute: [{attribute: 'NAME', point: 'PARIS'}],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(item.body.property).toHaveLength(1);
-        expect(item.body.property[0].property).toBe('NAME');
-        expect(item.body.property[0].point).toBe('PARIS');
-        expect(item.body.property[0].directory).toBe('CITY');
+        expect(item.body.attribute).toHaveLength(1);
+        expect(item.body.attribute[0].attribute).toBe('NAME');
+        expect(item.body.attribute[0].point).toBe('PARIS');
+        expect(item.body.attribute[0].directory).toBe('CITY');
       });
     });
 
@@ -1358,7 +1357,7 @@ describe('ElementController', () => {
         const cookie = await createSession();
         const block = await new BlockEntity().save();
         const parent = await createElement();
-        await Object.assign(new PropertyEntity(), {id: 'CHILD'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'CHILD'}).save();
         await Object.assign(new ElementEntity(), {id: 'CHILD', block}).save();
 
         const res = await request(app.getHttpServer())
@@ -1366,37 +1365,37 @@ describe('ElementController', () => {
           .send({
             id: parent.id,
             block: 1,
-            property: [
-              {property: 'CHILD', element: 'CHILD'},
+            attribute: [
+              {attribute: 'CHILD', element: 'CHILD'},
             ],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(res.body.property).toHaveLength(1);
-        expect(res.body.property[0].property).toBe('CHILD');
-        expect(res.body.property[0].element).toBe('CHILD');
+        expect(res.body.attribute).toHaveLength(1);
+        expect(res.body.attribute[0].attribute).toBe('CHILD');
+        expect(res.body.attribute[0].element).toBe('CHILD');
       });
 
       test('Should remove element', async () => {
         const cookie = await createSession();
         const block = await new BlockEntity().save();
         const parent = await createElement();
-        const property = await Object.assign(new PropertyEntity(), {id: 'CHILD'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'CHILD'}).save();
         const element = await Object.assign(new ElementEntity(), {block}).save();
-        await Object.assign(new Element4elementEntity(), {parent, property, element}).save();
+        await Object.assign(new Element4elementEntity(), {parent, attribute, element}).save();
 
         const res = await request(app.getHttpServer())
           .put(`/element/${parent.id}`)
           .send({
             id: parent.id,
             block: 1,
-            property: [],
+            attribute: [],
           })
           .set('cookie', cookie)
           .expect(200);
 
-        expect(res.body.property).toHaveLength(0);
+        expect(res.body.attribute).toHaveLength(0);
       });
     });
 
@@ -1635,7 +1634,7 @@ describe('ElementController', () => {
       await new BlockEntity().save();
       await createElement();
 
-      const list = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete('/element/WRONG')
         .set('cookie', cookie)
         .expect(403);

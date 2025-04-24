@@ -4,11 +4,11 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { CollectionEntity } from '../../storage/model/collection.entity';
 import { FileEntity } from '../../storage/model/file.entity';
 import { BlockEntity } from './block.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { Section4fileEntity } from './section4file.entity';
 import { SectionEntity } from './section.entity';
 
-describe('Section file property entity', () => {
+describe('Section file attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -36,7 +36,7 @@ describe('Section file property entity', () => {
       ).save();
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
 
@@ -48,7 +48,7 @@ describe('Section file property entity', () => {
     test('Shouldn`t create without file', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
         Object.assign(new Section4fileEntity(), {parent, property}).save(),
@@ -66,14 +66,14 @@ describe('Section file property entity', () => {
           path: `txt/txt1.txt`,
         },
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
         Object.assign(new Section4fileEntity(), {file, property}).save(),
       ).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
@@ -101,7 +101,7 @@ describe('Section file property entity', () => {
         new SectionEntity(),
         {id: 'SECTION', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const file = await Object.assign(
         new FileEntity(),
@@ -131,7 +131,7 @@ describe('Section file property entity', () => {
         new SectionEntity(),
         {id: 'SECTION', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {

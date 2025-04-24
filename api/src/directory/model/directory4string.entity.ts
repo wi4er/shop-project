@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { DirectoryEntity } from './directory.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
 @Entity('directory4string')
@@ -40,24 +40,27 @@ export class Directory4stringEntity
     directory => directory.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: DirectoryEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: true,
     },
   )

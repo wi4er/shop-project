@@ -25,10 +25,10 @@ export class ElementPatchOperation {
         where: {id},
         relations: {
           image: {image: true},
-          string: {property: true},
+          string: {attribute: true},
           flag: {flag: true},
-          point: {point: true, property: true},
-          element: {element: true, property: true},
+          point: {point: true, attribute: true},
+          element: {element: true, attribute: true},
           permission: {group: true},
         },
       }),

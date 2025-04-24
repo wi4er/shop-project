@@ -6,7 +6,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Property } from '../../app/model/settings/property';
 
 @Component({
-  selector: 'app-dashboard-property',
+  selector: 'app-dashboard-attribute',
   templateUrl: './dashboard-property.component.html',
   styleUrls: ['./dashboard-property.component.css'],
 })

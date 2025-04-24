@@ -7,7 +7,7 @@ import { FlagValueInsertOperation } from "../../common/operation/flag-value-inse
 import { User2userContactInsertOperation } from "./user2user-contact-insert.operation";
 import { User2userGroupInsertOperation } from "./user2user-group-insert.operation";
 import { UserInput } from "../input/user.input";
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class UserInsertOperation {
@@ -25,12 +25,12 @@ export class UserInsertOperation {
 
     await this.manager.save(this.created);
 
-    const [stringList, pointList] = filterProperties(input.property);
-
-    await new StringValueInsertOperation(this.manager, User4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, User2flagEntity).save(this.created, input);
     await new User2userContactInsertOperation(this.manager).save(this.created, input);
     await new User2userGroupInsertOperation(this.manager).save(this.created, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.manager, User4stringEntity).save(this.created, stringList);
 
     return this.created.id;
   }

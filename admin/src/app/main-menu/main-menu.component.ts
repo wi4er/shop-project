@@ -85,7 +85,7 @@ export class MainMenuComponent implements OnInit {
       title: 'Settings',
       child: [{
         title: 'Properties',
-        link: '/property',
+        link: '/attribute',
         icon: 'display_settings',
       }, {
         title: 'Flags',

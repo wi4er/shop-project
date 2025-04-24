@@ -6,7 +6,7 @@ import { DocumentEntity } from '../model/document.entity';
 import { DocumentInput } from '../input/document.input';
 import { Document4stringEntity } from '../model/document4string.entity';
 import { Document2flagEntity } from '../model/document2flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 
 export class DocumentUpdateOperation {
 
@@ -17,37 +17,34 @@ export class DocumentUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkBlock(id: number): Promise<DocumentEntity> {
     const docRepo = this.manager.getRepository(DocumentEntity);
 
-    const inst = await docRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, 'Document not found!');
-
-    return inst;
+    return NoDataException.assert(
+      await docRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `Document with id >>${id}<< not found!`
+    );
   }
 
   /**
    *
-   * @param id
-   * @param input
    */
   async save(id: number, input: DocumentInput): Promise<number> {
     const beforeItem = await this.checkBlock(id);
 
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Document4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Document2flagEntity).save(beforeItem, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Document4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn
 } from "typeorm";
 import { ElementEntity } from "./element.entity";
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-element4element')
 export class Element4elementEntity extends BaseEntity {
@@ -49,13 +49,13 @@ export class Element4elementEntity extends BaseEntity {
   parent: ElementEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

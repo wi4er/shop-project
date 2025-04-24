@@ -24,11 +24,11 @@ export class SectionController {
 
   relations = {
     parent: true,
-    image: {image: {collection: true}},
-    string: {property: true, lang: true},
     block: true,
     flag: {flag: true},
-    point: {point: {directory: true}, property: true},
+    image: {image: {collection: true}},
+    point: {point: {directory: true}, attribute: true},
+    string: {attribute: true, lang: true},
     permission: {group: true},
   };
 

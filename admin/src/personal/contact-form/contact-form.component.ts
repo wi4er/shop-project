@@ -80,7 +80,7 @@ export class ContactFormComponent implements OnInit {
     return {
       id: this.id,
       type: this.typeSelect.value ?? 'EMAIL',
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

@@ -1,11 +1,11 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { CollectionEntity } from './collection.entity';
 import { Collection4stringEntity } from './collection4string.entity';
 
-describe('Collection string property entity', () => {
+describe('Collection string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -24,7 +24,7 @@ describe('Collection string property entity', () => {
     });
 
     test('Should create instance', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 
       const inst = await Object.assign(
@@ -39,14 +39,14 @@ describe('Collection string property entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
         Object.assign(new Collection4stringEntity(), {string: 'VALUE', property}).save(),
       ).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 
       await expect(
@@ -59,7 +59,7 @@ describe('Collection string property entity', () => {
     test('Should create collection with string', async () => {
       const repo = source.getRepository(CollectionEntity);
 
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       await Object.assign(new Collection4stringEntity(), {string: 'VALUE', parent, property}).save();
 
@@ -70,7 +70,7 @@ describe('Collection string property entity', () => {
 
       expect(inst.string).toHaveLength(1);
       expect(inst.string[0].string).toBe('VALUE');
-      expect(inst.string[0].property.id).toBe('NAME');
+      expect(inst.string[0].attribute.id).toBe('NAME');
     });
   });
 });

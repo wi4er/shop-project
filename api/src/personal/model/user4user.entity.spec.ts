@@ -3,9 +3,9 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { UserEntity } from './user.entity';
 import { User4userEntity } from './user4user.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('User user property entity', () => {
+describe('User user attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,11 +14,11 @@ describe('User user property entity', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe('User property fields', () => {
+  describe('User attribute fields', () => {
     test('Should create user with user', async () => {
       const repo = source.getRepository(UserEntity);
 
-      await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const child = await Object.assign(new UserEntity(), {login: 'child'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
 
@@ -38,7 +38,7 @@ describe('User user property entity', () => {
     });
 
     test('Shouldn`t create user without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const user = await Object.assign(new UserEntity(), {login: 'child'}).save();
 
       const inst = Object.assign(
@@ -49,7 +49,7 @@ describe('User user property entity', () => {
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create user without property', async () => {
+    test('Shouldn`t create user without attribute', async () => {
       const user = await Object.assign(new UserEntity(), {login: 'child'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
 
@@ -62,7 +62,7 @@ describe('User user property entity', () => {
     });
 
     test('Shouldn`t create user without user', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
 
       const inst = Object.assign(
@@ -74,7 +74,7 @@ describe('User user property entity', () => {
     });
 
     test('Shouldn`t create user duplicate user', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'PARENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const user = await Object.assign(new UserEntity(), {login: 'child'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
 

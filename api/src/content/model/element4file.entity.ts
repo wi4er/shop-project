@@ -8,10 +8,10 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { FileEntity } from '../../storage/model/file.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-element4file')
-@Index(['file', 'parent', 'property'], {unique: true})
+@Index(['file', 'parent', 'attribute'], {unique: true})
 export class Element4fileEntity
   extends BaseEntity {
 
@@ -51,13 +51,13 @@ export class Element4fileEntity
   parent: ElementEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

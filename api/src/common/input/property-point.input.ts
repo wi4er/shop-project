@@ -1,8 +1,8 @@
-import { PropertyValueInput } from './property-value.input';
+import { AttributeValueInput } from './attribute-value.input';
 
-export class PropertyPointInput implements PropertyValueInput {
+export class PropertyPointInput implements AttributeValueInput {
 
-  property: string;
+  attribute: string;
   point: string;
 
 }

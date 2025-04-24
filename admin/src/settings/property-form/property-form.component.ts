@@ -8,7 +8,7 @@ import { PropertyValueService } from '../../edit/property-value/property-value.s
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-property-form',
+  selector: 'app-attribute-form',
   templateUrl: './property-form.component.html',
   styleUrls: ['./property-form.component.css'],
 })
@@ -73,7 +73,7 @@ export class PropertyFormComponent implements OnInit {
   toInput(): PropertyInput {
     return {
       id: this.id,
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

@@ -98,7 +98,7 @@ export class CollectionFormComponent implements OnInit {
   toInput(): CollectionInput {
     const input: CollectionInput = {
       id: this.id,
-      property: [],
+      attribute: [],
       flag: [],
     } as CollectionInput;
 
@@ -110,7 +110,7 @@ export class CollectionFormComponent implements OnInit {
 
         for (const value of this.editProperties[prop][lang]) {
           input.property.push({
-            property: prop,
+            attribute: prop,
             string: value.value,
             lang: lang || undefined,
           });

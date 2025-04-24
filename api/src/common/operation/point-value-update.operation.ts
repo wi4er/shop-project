@@ -1,6 +1,6 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { WithPointEntity } from '../model/with-point.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { PointEntity } from '../../directory/model/point.entity';
 import { PropertyPointInput } from '../input/property-point.input';
@@ -17,8 +17,8 @@ export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
   /**
    *
    */
-  private async checkProperty(id: string): Promise<PropertyEntity> {
-    const propRepo = this.trans.getRepository(PropertyEntity);
+  private async checkProperty(id: string): Promise<AttributeEntity> {
+    const propRepo = this.trans.getRepository(AttributeEntity);
 
     return WrongDataException.assert(
       await propRepo.findOne({where: {id}}),
@@ -45,19 +45,19 @@ export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
     const current: { [key: string]: Array<CommonPointEntity<BaseEntity>> } = {};
 
     for (const item of beforeItem.point ?? []) {
-      const {id} = item.property;
+      const {id} = item.attribute;
 
       if (current[id]) current[id].push(item);
       else current[id] = [item];
     }
 
     for (const item of list) {
-      const inst = current[item.property]?.length
-        ? current[item.property].shift()
+      const inst = current[item.attribute]?.length
+        ? current[item.attribute].shift()
         : new this.entity();
 
       inst.parent = beforeItem;
-      inst.property = await this.checkProperty(item.property);
+      inst.attribute = await this.checkProperty(item.attribute);
       inst.point = await this.checkPoint(item.point)
 
       await this.trans.save(inst);

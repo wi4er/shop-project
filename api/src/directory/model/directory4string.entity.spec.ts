@@ -3,10 +3,10 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
 import { Directory4stringEntity } from './directory4string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
-describe('Directory string property entity', () => {
+describe('Directory string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -25,41 +25,41 @@ describe('Directory string property entity', () => {
     });
 
     test('Should create item', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const parent = await Object.assign(new DirectoryEntity(), {id: 'LIST'}).save();
 
       await Object.assign(new Directory4stringEntity(), {
-        string: 'VALUE', property, parent, lang,
+        string: 'VALUE', attribute, parent, lang,
       }).save();
     });
 
     test('Should create without lang', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new DirectoryEntity(), {id: 'LIST'}).save();
 
       const inst = await Object.assign(new Directory4stringEntity(), {
-        string: 'VALUE', property, parent,
+        string: 'VALUE', attribute, parent,
       }).save();
 
       expect(inst.lang).toBeUndefined();
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const parent = await Object.assign(new DirectoryEntity(), {id: 'LIST'}).save();
 
       await expect(Object.assign(new Directory4stringEntity(), {
         string: 'VALUE', parent, lang,
-      }).save()).rejects.toThrow('propertyId');
+      }).save()).rejects.toThrow('attributeId');
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
       await expect(Object.assign(new Directory4stringEntity(), {
-        string: 'VALUE', property, lang,
+        string: 'VALUE', attribute, lang,
       }).save()).rejects.toThrow('parentId');
     });
   });
@@ -67,12 +67,12 @@ describe('Directory string property entity', () => {
   describe('Directory with string', () => {
     test('Should create directory with string', async () => {
       const repo = source.getRepository(DirectoryEntity);
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const parent = await Object.assign(new DirectoryEntity(), {id: 'ENUM'}).save();
 
       await Object.assign(new Directory4stringEntity(), {
-        string: 'VALUE', property, parent, lang,
+        string: 'VALUE', attribute, parent, lang,
       }).save();
 
       const inst = await repo.findOne({
@@ -85,13 +85,13 @@ describe('Directory string property entity', () => {
 
     test('Should create directory with string list', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'LIST'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
       for (let i = 0; i < 10; i++) {
         await Object.assign(new Directory4stringEntity(), {
           string: 'VALUE',
-          property: 'NAME',
+          attribute: 'NAME',
           parent: 'LIST',
           lang: 'EN',
         }).save();
@@ -108,10 +108,10 @@ describe('Directory string property entity', () => {
       const stingRepo = source.getRepository(Directory4stringEntity);
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new DirectoryEntity(), {id: 'ENUM'}).save();
 
-      await Object.assign(new Directory4stringEntity(), {string: 'VALUE', property, parent, lang}).save();
+      await Object.assign(new Directory4stringEntity(), {string: 'VALUE', attribute, parent, lang}).save();
       await repo.delete({id: 'ENUM'});
 
       expect(await stingRepo.find()).toEqual([]);

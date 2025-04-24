@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { LangEntity } from './lang.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from './property.entity';
+import { AttributeEntity } from './attribute.entity';
 
 @Entity('settings-lang4string')
 export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<LangEntity> {
@@ -54,13 +54,13 @@ export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<
   parent: LangEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

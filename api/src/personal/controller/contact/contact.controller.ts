@@ -11,7 +11,7 @@ import { UserContactDeleteOperation } from '../../operation/user-contact-delete.
 export class ContactController {
 
   relations = {
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
   };
 
@@ -30,10 +30,10 @@ export class ContactController {
       updated_at: item.updated_at,
       version: item.version,
       type: item.type,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
 

@@ -8,7 +8,7 @@ import { Element2flagEntity } from '../model/element2flag.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { BlockEntity } from '../model/block.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { PointValueUpdateOperation } from '../../common/operation/point-value-update.operation';
 import { Element4pointEntity } from '../model/element4point.entity';
 import { Element4elementUpdateOperation } from './element4element-update.operation';
@@ -49,10 +49,10 @@ export class ElementUpdateOperation {
         where: {id},
         relations: {
           image: {image: true},
-          string: {property: true},
+          string: {attribute: true},
           flag: {flag: true},
-          point: {point: true, property: true},
-          element: {element: true, property: true},
+          point: {point: true, attribute: true},
+          element: {element: true, attribute: true},
           permission: {group: true},
         },
       }),
@@ -80,7 +80,7 @@ export class ElementUpdateOperation {
     await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
     await new PermissionValueUpdateOperation(this.manager, Element2permissionEntity).save(beforeItem, input);
 
-    const [stringList, pointList, elemList] = filterProperties(input.property);
+    const [stringList, pointList, elemList] = filterAttributes(input.attribute);
     await new StringValueUpdateOperation(this.manager, Element4stringEntity).save(beforeItem, stringList);
     await new PointValueUpdateOperation(this.manager, Element4pointEntity).save(beforeItem, pointList);
     await new Element4elementUpdateOperation(this.manager).save(beforeItem, elemList);

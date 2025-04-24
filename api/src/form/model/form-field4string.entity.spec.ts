@@ -4,27 +4,24 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { FormEntity } from './form.entity';
 import { FormFieldEntity } from './form-field.entity';
 import { FormField4stringEntity } from './form-field4string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('Form field string property entity', () => {
+describe('Form field string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
   describe('Form field sting fields', () => {
-    test('Should create field property', async () => {
+    test('Should create field attribute', async () => {
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const parent = await Object.assign(new FormFieldEntity(), {id: 'FIELD', form}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
 
       const value = new FormField4stringEntity();
       value.string = 'VALUE';
-      value.property = property;
+      value.attribute = attribute;
       value.parent = parent;
       const inst = await value.save();
 
@@ -41,37 +38,37 @@ describe('Form field string property entity', () => {
 
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const parent = await Object.assign(new FormFieldEntity(), {id: 'FIELD', form}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
-      await Object.assign(new FormField4stringEntity(), {string: 'VALUE', parent, property}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
+      await Object.assign(new FormField4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       const inst = await repo.findOne({
         where: {id: 1},
-        relations: {property: true, parent: true},
+        relations: {attribute: true, parent: true},
       });
 
       expect(inst.id).toBe(1);
       expect(inst.string).toBe('VALUE');
-      expect(inst.property.id).toBe('PROPERTY');
+      expect(inst.attribute.id).toBe('PROPERTY');
       expect(inst.parent.id).toBe('FIELD');
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
 
       const value = new FormField4stringEntity();
       value.string = 'VALUE';
-      value.property = property;
+      value.attribute = attribute;
       await expect(value.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const parent = await Object.assign(new FormFieldEntity(), {id: 'FIELD', form}).save();
 
       const value = new FormField4stringEntity();
       value.string = 'VALUE';
       value.parent = parent;
-      await expect(value.save()).rejects.toThrow('propertyId');
+      await expect(value.save()).rejects.toThrow('attributeId');
     });
   });
 
@@ -79,19 +76,19 @@ describe('Form field string property entity', () => {
     test('Should add field with string', async () => {
       const repo = source.getRepository(FormFieldEntity);
 
-      const property = await Object.assign(new PropertyEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const parent = await Object.assign(new FormFieldEntity(), {id: 'FIELD', form}).save();
-      await Object.assign(new FormField4stringEntity(), {string: 'VALUE', property, parent}).save();
+      await Object.assign(new FormField4stringEntity(), {string: 'VALUE', attribute, parent}).save();
 
       const item = await repo.findOne({
         where: {id: 'FIELD'},
-        relations: {string: {property: true}},
+        relations: {string: {attribute: true}},
       });
 
       expect(item.string).toHaveLength(1);
       expect(item.string[0].string).toBe('VALUE');
-      expect(item.string[0].property.id).toBe('PROPERTY');
+      expect(item.string[0].attribute.id).toBe('PROPERTY');
     });
   });
 });

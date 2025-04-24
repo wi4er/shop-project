@@ -118,7 +118,7 @@ export class ElementFormComponent implements OnInit {
       block: this.data?.block ?? 1,
       sort: this.sort,
       image: [],
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as ElementInput;

@@ -32,7 +32,7 @@ export class DocumentController {
       property: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          property: str.attribute.id,
           lang: str.lang?.id,
         })),
       ],

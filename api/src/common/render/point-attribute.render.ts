@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PointPropertyRender {
+export class PointAttributeRender {
 
   @ApiProperty()
-  property: string;
+  attribute: string;
 
   @ApiProperty()
   point: string;

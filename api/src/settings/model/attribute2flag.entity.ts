@@ -6,15 +6,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from './property.entity';
+import { AttributeEntity } from './attribute.entity';
 import { CommonFlagEntity } from '../../common/model/common-flag.entity';
 import { FlagEntity } from './flag.entity';
 
-@Entity('settings-property2flag')
+@Entity('settings-attribute2flag')
 @Index(['parent', 'flag'], {unique: true})
-export class Property2flagEntity
+export class Attribute2flagEntity
   extends BaseEntity
-  implements CommonFlagEntity<PropertyEntity> {
+  implements CommonFlagEntity<AttributeEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -32,7 +32,7 @@ export class Property2flagEntity
   version: number;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     property => property.flag,
     {
       onDelete: 'CASCADE',
@@ -40,7 +40,7 @@ export class Property2flagEntity
       nullable: false,
     },
   )
-  parent: PropertyEntity;
+  parent: AttributeEntity;
 
   @ManyToOne(
     () => FlagEntity,

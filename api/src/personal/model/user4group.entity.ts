@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { GroupEntity } from './group.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('personal-user4group')
 export class User4groupEntity extends BaseEntity {
@@ -42,19 +42,21 @@ export class User4groupEntity extends BaseEntity {
     type => UserEntity,
     user => user.group,
     {
-      nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      nullable: false,
     },
   )
   parent: UserEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

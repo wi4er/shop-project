@@ -24,7 +24,7 @@ export class SectionPatchOperation {
         where: {id},
         relations: {
           image: {image: true},
-          string: {property: true},
+          string: {attribute: true},
           flag: {flag: true},
         },
       }),

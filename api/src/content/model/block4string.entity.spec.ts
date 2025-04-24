@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { Block4stringEntity } from './block4string.entity';
 import { BlockEntity } from './block.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
 describe('BlockString entity', () => {
@@ -26,12 +26,12 @@ describe('BlockString entity', () => {
 
     test('Should create block string', async () => {
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = new Block4stringEntity();
       inst.string = 'VALUE';
       inst.parent = parent;
-      inst.property = property;
+      inst.attribute = property;
       const saved = await inst.save();
 
       expect(saved.id).toBe(1);
@@ -40,27 +40,27 @@ describe('BlockString entity', () => {
 
     test('Should create block string with lang', async () => {
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
       const inst = new Block4stringEntity();
       inst.string = 'VALUE';
       inst.parent = parent;
-      inst.property = property;
+      inst.attribute = property;
       inst.lang = lang;
       await inst.save();
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = new Block4stringEntity();
       inst.string = 'VALUE';
-      inst.property = property;
+      inst.attribute = property;
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const parent = await new BlockEntity().save();
 
       const inst = new Block4stringEntity();
@@ -71,7 +71,7 @@ describe('BlockString entity', () => {
 
     test('Shouldn`t create with wrong lang', async () => {
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = Object.assign(
         new Block4stringEntity(),

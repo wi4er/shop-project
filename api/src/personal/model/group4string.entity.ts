@@ -9,7 +9,7 @@ import {
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { GroupEntity } from './group.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('personal-group4string')
 export class Group4stringEntity
@@ -39,20 +39,21 @@ export class Group4stringEntity
     group => group.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: GroupEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

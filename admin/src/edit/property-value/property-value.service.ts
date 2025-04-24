@@ -29,7 +29,7 @@ export class PropertyValueService {
           if (!value.value) continue;
 
           property.push({
-            property: prop,
+            attribute: prop,
             string: value.value,
             lang: lang || undefined,
           });

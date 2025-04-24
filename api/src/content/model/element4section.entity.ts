@@ -9,10 +9,10 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { SectionEntity } from './section.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-element4section')
-@Index(['parent', 'section', 'property'], {unique: true})
+@Index(['parent', 'section', 'attribute'], {unique: true})
 export class Element4sectionEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -53,13 +53,13 @@ export class Element4sectionEntity extends BaseEntity {
   section: SectionEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

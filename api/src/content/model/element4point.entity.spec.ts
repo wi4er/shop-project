@@ -6,7 +6,7 @@ import { Element4pointEntity } from './element4point.entity';
 import { ElementEntity } from './element.entity';
 import { DirectoryEntity } from '../../directory/model/directory.entity';
 import { PointEntity } from '../../directory/model/point.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 describe('ElementPoint entity', () => {
   let source: DataSource;
@@ -32,7 +32,7 @@ describe('ElementPoint entity', () => {
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -45,7 +45,7 @@ describe('ElementPoint entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -57,7 +57,7 @@ describe('ElementPoint entity', () => {
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(
         new ElementEntity(),
@@ -80,7 +80,7 @@ describe('ElementPoint entity', () => {
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = Object.assign(
         new Element4pointEntity(),
@@ -99,7 +99,7 @@ describe('ElementPoint entity', () => {
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -117,7 +117,7 @@ describe('ElementPoint entity', () => {
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 

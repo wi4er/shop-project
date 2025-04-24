@@ -1,10 +1,10 @@
 import { EntityManager } from 'typeorm';
 import { CommonStringEntity } from '../model/common-string.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { WithStringEntity } from '../model/with-string.entity';
-import { PropertyStringInput } from '../input/property-string.input';
+import { AttributeStringInput } from '../input/attribute-string.input';
 
 export class StringValueInsertOperation<T extends WithStringEntity<T>> {
 
@@ -17,8 +17,8 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
   /**
    *
    */
-  private async checkProperty(id: string): Promise<PropertyEntity> {
-    const propRepo = this.trans.getRepository(PropertyEntity);
+  private async checkProperty(id: string): Promise<AttributeEntity> {
+    const propRepo = this.trans.getRepository(AttributeEntity);
 
     return WrongDataException.assert(
       await propRepo.findOne({where: {id}}),
@@ -43,11 +43,11 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
   /**
    *
    */
-  async save(created: T, list: PropertyStringInput[]): Promise<undefined> {
+  async save(created: T, list: AttributeStringInput[]): Promise<undefined> {
     for (const item of list ?? []) {
       const inst = new this.entity();
       inst.parent = created;
-      inst.property = await this.checkProperty(item.property);
+      inst.attribute = await this.checkProperty(item.attribute);
       inst.string = item.string;
       inst.lang = await this.checkLang(item.lang);
 

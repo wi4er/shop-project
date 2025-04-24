@@ -13,7 +13,7 @@ import { FlagPatchOperation } from '../../operation/flag-patch.operation';
 export class FlagController {
 
   relations = {
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
   };
 
@@ -34,10 +34,10 @@ export class FlagController {
       color: item.color,
       icon: item.icon,
       iconSvg: item.iconSvg,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
       ],

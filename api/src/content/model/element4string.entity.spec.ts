@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { ElementEntity } from './element.entity';
 import { Element4stringEntity } from './element4string.entity';
 import { BlockEntity } from './block.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 describe('ElementString entity', () => {
   let source: DataSource;
@@ -25,14 +25,14 @@ describe('ElementString entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
         Object.assign(new Element4stringEntity(), {string: 'VALUE', property}).save(),
       ).rejects.toThrow();
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
 
@@ -47,7 +47,7 @@ describe('ElementString entity', () => {
       const repo = source.getRepository(ElementEntity);
 
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(
         new ElementEntity(),
         {id: 'NAME', block},
@@ -66,8 +66,8 @@ describe('ElementString entity', () => {
 
     test('Should find with string sort', async () => {
       const block = await new BlockEntity().save();
-      const name = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      const gender = await Object.assign(new PropertyEntity(), {id: 'GENDER'}).save();
+      const name = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const gender = await Object.assign(new AttributeEntity(), {id: 'GENDER'}).save();
 
       for (let i = 0; i < 10; i++) {
         const parent = await Object.assign(

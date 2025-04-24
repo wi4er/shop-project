@@ -6,7 +6,7 @@ import { FlagValueUpdateOperation } from '../../common/operation/flag-value-upda
 import { BlockInput } from '../input/block.input';
 import { Block4stringEntity } from '../model/block4string.entity';
 import { Block2flagEntity } from '../model/block2flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { PermissionValueUpdateOperation } from '../../common/operation/permission-value-update.operation';
 import { PointValueUpdateOperation } from '../../common/operation/point-value-update.operation';
 import { Block2permissionEntity } from '../model/block2permission.entity';
@@ -29,8 +29,8 @@ export class BlockUpdateOperation {
       await blockRepo.findOne({
         where: {id},
         relations: {
-          string: {property: true},
-          point: {property: true, point: true},
+          string: {attribute: true},
+          point: {attribute: true, point: true},
           flag: {flag: true},
           permission: {group: true},
         },
@@ -51,7 +51,7 @@ export class BlockUpdateOperation {
     await new PermissionValueUpdateOperation(this.manager, Block2permissionEntity).save(beforeItem, input);
     await new FlagValueUpdateOperation(this.manager, Block2flagEntity).save(beforeItem, input);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
     await new StringValueUpdateOperation(this.manager, Block4stringEntity).save(beforeItem, stringList);
     await new PointValueUpdateOperation(this.manager, Block4pointEntity).save(beforeItem, pointList);
 

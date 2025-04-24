@@ -10,7 +10,7 @@ import { DirectoryController } from './controller/directory/directory.controller
 import { PointController } from './controller/point/point.controller';
 import { Directory4pointEntity } from './model/directory4point.entity';
 import { Point4pointEntity } from './model/point4point.entity';
-import { PropertyEntity } from '../settings/model/property.entity';
+import { AttributeEntity } from '../settings/model/attribute.entity';
 import { LangEntity } from '../settings/model/lang.entity';
 import { FlagEntity } from '../settings/model/flag.entity';
 
@@ -19,7 +19,7 @@ import { FlagEntity } from '../settings/model/flag.entity';
     TypeOrmModule.forFeature([
       DirectoryEntity, Directory4stringEntity, Directory2flagEntity, Directory4pointEntity,
       PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,
-      PropertyEntity,
+      AttributeEntity,
       LangEntity,
       FlagEntity,
     ]),

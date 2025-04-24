@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { Flag4stringEntity } from '../model/flag4string.entity';
 import { Flag2flagEntity } from '../model/flag2flag.entity';
 import { FlagEntity } from '../model/flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { FlagInput } from '../input/flag.input';
@@ -33,7 +33,7 @@ export class FlagInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const [stringList] = filterProperties(input.property);
+    const [stringList] = filterAttributes(input.attribute);
 
     await new StringValueInsertOperation(this.manager, Flag4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, Flag2flagEntity).save(this.created, input);

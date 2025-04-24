@@ -7,7 +7,7 @@ import { FlagValueInsertOperation } from '../../common/operation/flag-value-inse
 import { PointInput } from '../input/point.input';
 import { Point4stringEntity } from '../model/point4string.entity';
 import { Point2flagEntity } from '../model/point2flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
 import { Point4pointEntity } from '../model/point4point.entity';
 
@@ -23,21 +23,18 @@ export class PointInsertOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
     const dirRepo = this.manager.getRepository<DirectoryEntity>(DirectoryEntity);
 
-    const inst = await dirRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, 'Wrong directory id!')
-
-    return inst;
+    return WrongDataException.assert(
+      await dirRepo.findOne({where: {id}}),
+      `Directory with id >>${id}<< not found! `,
+    );
   }
 
   /**
    *
-   * @param input
    */
   async save(input: PointInput): Promise<string> {
     this.created.directory = await this.checkDirectory(input.directory);
@@ -45,11 +42,11 @@ export class PointInsertOperation {
 
     await this.manager.save(this.created);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    await new FlagValueInsertOperation(this.manager, Point2flagEntity).save(this.created, input);
 
+    const [stringList, pointList] = filterAttributes(input.attribute);
     await new StringValueInsertOperation(this.manager, Point4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Point4pointEntity).save(this.created, pointList);
-    await new FlagValueInsertOperation(this.manager, Point2flagEntity).save(this.created, input);
 
     return this.created.id;
   }

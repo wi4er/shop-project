@@ -5,7 +5,7 @@ import { Contact2flagEntity } from "../model/contact2flag.entity";
 import { StringValueUpdateOperation } from "../../common/operation/string-value-update.operation";
 import { FlagValueUpdateOperation } from "../../common/operation/flag-value-update.operation";
 import { UserContactInput } from "../input/user-contact.input";
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class UserContactUpdateOperation {
@@ -17,22 +17,25 @@ export class UserContactUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkContact(id: string) {
     const contactRepo = this.trans.getRepository(ContactEntity);
-    const inst = await contactRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
 
-    return WrongDataException.assert(inst, `Contact with id ${id} not found!`);
+    return WrongDataException.assert(
+      await contactRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `Contact with id ${id} not found!`
+    );
   }
 
+  /**
+   *
+   */
   async save(id: string, input: UserContactInput): Promise<string> {
     const beforeItem = await this.checkContact(input.id);
 
@@ -41,7 +44,7 @@ export class UserContactUpdateOperation {
 
     await this.trans.save(beforeItem);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
     await new StringValueUpdateOperation(this.trans, Contact4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.trans, Contact2flagEntity).save(beforeItem, input);
 

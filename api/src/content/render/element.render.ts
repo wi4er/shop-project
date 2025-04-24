@@ -1,18 +1,18 @@
 import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import { StringPropertyRender } from '../../common/render/string-property.render';
-import { PointPropertyRender } from '../../common/render/point-property.render';
+import { StringAttributeRender } from '../../common/render/string-attribute.render';
+import { PointAttributeRender } from '../../common/render/point-attribute.render';
 import { ElementEntity } from '../model/element.entity';
-import { ElementPropertyRender } from '../../common/render/element-property.render';
-import { SectionPropertyRender } from '../../common/render/section-property.render';
+import { ElementAttributeRender } from '../../common/render/element-attribute.render';
+import { SectionAttributeRender } from '../../common/render/section-attribute.render';
 import { PermissionRender } from '../../common/render/permission.render';
-import { FilePropertyRender } from '../../common/render/file-property.render';
+import { FileAttributeRender } from '../../common/render/file-attribute.render';
 import { ImageRender } from '../../common/render/image.render';
 
 @ApiExtraModels(
-  StringPropertyRender,
-  PointPropertyRender,
-  ElementPropertyRender,
-  SectionPropertyRender,
+  StringAttributeRender,
+  PointAttributeRender,
+  ElementAttributeRender,
+  SectionAttributeRender,
   PermissionRender,
 )
 export class ElementRender {
@@ -31,27 +31,27 @@ export class ElementRender {
       path: it.image.path,
       collection: it.image.collection.id,
     }));
-    this.property = [
+    this.attribute = [
       ...item.string.map(str => ({
         string: str.string,
-        property: str.property.id,
+        attribute: str.attribute.id,
         lang: str.lang?.id,
       })),
       ...item.point.map(val => ({
-        property: val.property.id,
+        attribute: val.attribute.id,
         point: val.point.id,
         directory: val.point.directory.id,
       })),
       ...item.element.map(val => ({
-        property: val.property.id,
+        attribute: val.attribute.id,
         element: val.element.id,
       })),
       ...item.section.map(val => ({
-        property: val.property.id,
+        attribute: val.attribute.id,
         section: val.section.id,
       })),
       ...item.file.map(val => ({
-        property: val.property.id,
+        attribute: val.attribute.id,
         file: val.file.id,
       })),
     ];
@@ -92,19 +92,19 @@ export class ElementRender {
     type: 'array',
     items: {
       oneOf: [
-        {$ref: getSchemaPath(StringPropertyRender)},
-        {$ref: getSchemaPath(PointPropertyRender)},
-        {$ref: getSchemaPath(ElementPropertyRender)},
-        {$ref: getSchemaPath(SectionPropertyRender)},
+        {$ref: getSchemaPath(StringAttributeRender)},
+        {$ref: getSchemaPath(PointAttributeRender)},
+        {$ref: getSchemaPath(ElementAttributeRender)},
+        {$ref: getSchemaPath(SectionAttributeRender)},
       ],
     },
   })
-  property: Array<
-    StringPropertyRender
-    | PointPropertyRender
-    | ElementPropertyRender
-    | SectionPropertyRender
-    | FilePropertyRender
+  attribute: Array<
+    StringAttributeRender
+    | PointAttributeRender
+    | ElementAttributeRender
+    | SectionAttributeRender
+    | FileAttributeRender
   >;
 
   @ApiProperty()

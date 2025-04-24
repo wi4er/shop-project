@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { FileEntity } from '../../storage/model/file.entity';
 import { ElementEntity } from './element.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { BlockEntity } from './block.entity';
 
 @Entity('content-block4file')
@@ -51,12 +51,12 @@ export class Block4fileEntity
   parent: BlockEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  property: AttributeEntity;
 
 }

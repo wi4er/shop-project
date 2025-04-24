@@ -8,7 +8,7 @@ import { PointEntity } from '../../model/point.entity';
 import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { Point4pointEntity } from '../../model/point4point.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
@@ -110,8 +110,8 @@ describe('PointController', () => {
     test('Should get with strings', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Point4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Point4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/point')
@@ -119,26 +119,26 @@ describe('PointController', () => {
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('LONDON');
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
 
     test('Should get point with lang strings', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Point4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Point4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/point')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].property[0].lang).toBe('EN');
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute[0].lang).toBe('EN');
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
   });
 
@@ -164,9 +164,9 @@ describe('PointController', () => {
 
       const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
       const point = await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'RULES'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'RULES'}).save();
 
-      await Object.assign(new Point4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Point4pointEntity(), {parent, attribute, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/point')
@@ -174,9 +174,9 @@ describe('PointController', () => {
 
       expect(list.body).toHaveLength(2);
       expect(list.body[0].id).toBe('LONDON');
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].point).toBe('PARIS');
-      expect(list.body[0].property[0].directory).toBe('CITY');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].point).toBe('PARIS');
+      expect(list.body[0].attribute[0].directory).toBe('CITY');
     });
   });
 
@@ -199,9 +199,7 @@ describe('PointController', () => {
     test('Shouldn`t add without directory', async () => {
       await request(app.getHttpServer())
         .post('/point')
-        .send({
-          id: 'London',
-        })
+        .send({id: 'London'})
         .expect(400);
     });
 

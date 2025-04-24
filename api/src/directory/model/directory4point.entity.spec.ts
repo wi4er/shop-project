@@ -4,15 +4,12 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
 import { PointEntity } from './point.entity';
 import { Directory4pointEntity } from './directory4point.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('Directory point property entity', () => {
+describe('Directory point attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -26,43 +23,43 @@ describe('Directory point property entity', () => {
 
     test('Should create directory point', async () => {
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'COUNTRY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'ENGLAND', directory}).save();
 
       const inst = await Object.assign(
         new Directory4pointEntity(),
-        {parent, property, point},
+        {parent, attribute, point},
       ).save();
 
       expect(inst.id).toBe(1);
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = Object.assign(new Directory4pointEntity(), {property, point});
+      const inst = Object.assign(new Directory4pointEntity(), {attribute, point});
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       const inst = Object.assign(new Directory4pointEntity(), {parent, point});
 
-      await expect(inst.save()).rejects.toThrow('propertyId');
+      await expect(inst.save()).rejects.toThrow('attributeId');
     });
 
     test('Shouldn`t create without point', async () => {
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
-      const inst = Object.assign(new Directory4pointEntity(), {parent, property});
+      const inst = Object.assign(new Directory4pointEntity(), {parent, attribute});
 
       await expect(inst.save()).rejects.toThrow('pointId');
     });
@@ -72,11 +69,11 @@ describe('Directory point property entity', () => {
     test('Should create block with points', async () => {
       const repo = source.getRepository(DirectoryEntity);
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'COUNTRY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'FRANCE', directory}).save();
 
-      await Object.assign(new Directory4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Directory4pointEntity(), {parent, attribute, point}).save();
 
       const inst = await repo.findOne({where: {id: 'CITY'}, relations: {point: {point: true}}});
 
@@ -86,13 +83,13 @@ describe('Directory point property entity', () => {
 
     test('Shouldn`t create with duplicate points', async () => {
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'COUNTRY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'FRANCE', directory}).save();
 
-      await Object.assign(new Directory4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Directory4pointEntity(), {parent, attribute, point}).save();
       await expect(
-        Object.assign(new Directory4pointEntity(), {parent, property, point}).save(),
+        Object.assign(new Directory4pointEntity(), {parent, attribute, point}).save(),
       ).rejects.toThrow('duplicate');
     });
   });

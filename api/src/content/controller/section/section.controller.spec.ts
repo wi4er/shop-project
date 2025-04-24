@@ -10,7 +10,7 @@ import { Section2flagEntity } from '../../model/section2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { Section4pointEntity } from '../../model/section4point.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
@@ -218,36 +218,36 @@ describe('SectionController', () => {
   describe('Content section with strings', () => {
     test('Should get section with strings', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
-      await Object.assign(new Section4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      await Object.assign(new Section4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('VALUE');
-      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].string).toBe('VALUE');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
     });
 
     test('Should get section with lang', async () => {
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Section4stringEntity(), {parent, property, lang, string: 'WITH_LANG'}).save();
+      await Object.assign(new Section4stringEntity(), {parent, attribute, lang, string: 'WITH_LANG'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('WITH_LANG');
-      expect(list.body[0].property[0].property).toBe('NAME');
-      expect(list.body[0].property[0].lang).toBe('EN');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].string).toBe('WITH_LANG');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
+      expect(list.body[0].attribute[0].lang).toBe('EN');
     });
   });
 
@@ -314,20 +314,20 @@ describe('SectionController', () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Section4pointEntity(), {point, parent, property}).save();
+      await Object.assign(new Section4pointEntity(), {point, parent, attribute}).save();
 
       const list = await request(app.getHttpServer())
         .get('/section')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].property).toBe('CURRENT');
-      expect(list.body[0].property[0].point).toBe('LONDON');
-      expect(list.body[0].property[0].directory).toBe('CITY');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].attribute).toBe('CURRENT');
+      expect(list.body[0].attribute[0].point).toBe('LONDON');
+      expect(list.body[0].attribute[0].directory).toBe('CITY');
     });
   });
 
@@ -489,54 +489,54 @@ describe('SectionController', () => {
     describe('Content section addition with string', () => {
       test('Should add with strings', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const inst = await request(app.getHttpServer())
           .post('/section')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', string: 'VALUE'},
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE'},
             ],
           })
           .expect(201);
 
-        expect(inst.body.property).toHaveLength(1);
-        expect(inst.body.property[0].property).toBe('NAME');
-        expect(inst.body.property[0].string).toBe('VALUE');
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
       });
 
       test('Should add with lang', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
         const inst = await request(app.getHttpServer())
           .post('/section')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', string: 'VALUE', lang: 'EN'},
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE', lang: 'EN'},
             ],
           })
           .expect(201);
 
-        expect(inst.body.property).toHaveLength(1);
-        expect(inst.body.property[0].property).toBe('NAME');
-        expect(inst.body.property[0].string).toBe('VALUE');
-        expect(inst.body.property[0].lang).toBe('EN');
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
+        expect(inst.body.attribute[0].lang).toBe('EN');
       });
 
-      test('Shouldn`t add with wrong property', async () => {
+      test('Shouldn`t add with wrong attribute', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         await request(app.getHttpServer())
           .post('/section')
           .send({
             block: 1,
-            property: [
-              {property: 'WRONG', string: 'VALUE'},
+            attribute: [
+              {attribute: 'WRONG', string: 'VALUE'},
             ],
           })
           .expect(400);
@@ -544,15 +544,15 @@ describe('SectionController', () => {
 
       test('Shouldn`t add with wrong lang', async () => {
         await new BlockEntity().save();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
         await Object.assign(new LangEntity(), {id: 'EN'}).save();
 
         await request(app.getHttpServer())
           .post('/section')
           .send({
             block: 1,
-            property: [
-              {property: 'NAME', string: 'VALUE', lang: 'WRONG'},
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE', lang: 'WRONG'},
             ],
           })
           .expect(400);
@@ -638,7 +638,7 @@ describe('SectionController', () => {
 
     describe('Content section addition with block', () => {
       test('Shouldn`t add section without block', async () => {
-        const inst = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .post('/section')
           .send({})
           .expect(400);
@@ -847,39 +847,39 @@ describe('SectionController', () => {
     describe('Content section with strings', () => {
       test('Should add strings', async () => {
         await createSection();
-        await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const inst = await request(app.getHttpServer())
           .put('/section/SECTION')
           .send({
             id: 'SECTION',
             block: 1,
-            property: [
-              {property: 'NAME', string: 'VALUE'},
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE'},
             ],
           })
           .expect(200);
 
-        expect(inst.body.property).toHaveLength(1);
-        expect(inst.body.property[0].property).toBe('NAME');
-        expect(inst.body.property[0].string).toBe('VALUE');
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
       });
 
       test('Should remove strings', async () => {
         const parent = await createSection();
-        const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-        await Object.assign(new Section4stringEntity(), {parent, property, string: 'VALUE'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new Section4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
         const inst = await request(app.getHttpServer())
           .put('/section/SECTION')
           .send({
             id: 'SECTION',
             block: 1,
-            property: [],
+            attribute: [],
           })
           .expect(200);
 
-        expect(inst.body.property).toHaveLength(0);
+        expect(inst.body.attribute).toHaveLength(0);
       });
     });
 

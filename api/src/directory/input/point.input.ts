@@ -1,14 +1,14 @@
-import { PropertyValueInput } from '../../common/input/property-value.input';
-import { WithPropertyInput } from '../../common/input/with-property.input';
+import { AttributeValueInput } from '../../common/input/attribute-value.input';
+import { WithAttributeInput } from '../../common/input/with-attribute.input';
 import { WithFlagInput } from '../../common/input/with-flag.input';
 
-export class PointInput implements WithPropertyInput, WithFlagInput {
+export class PointInput implements WithAttributeInput, WithFlagInput {
 
   id: string;
 
   directory: string;
 
-  property: PropertyValueInput[];
+  attribute: AttributeValueInput[];
 
   flag: string[];
 

@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { FileEntity } from '../model/file.entity';
@@ -21,20 +21,19 @@ export class FileInsertOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
     WrongDataException.assert(id, `Collection id expected`);
     const colRepo = this.manager.getRepository(CollectionEntity);
-    const collection = await colRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(collection, `Collection with id ${id} not found!`);
+    return WrongDataException.assert(
+      await colRepo.findOne({where: {id}}),
+      `Collection with id ${id} not found!`
+    );
   }
 
   /**
    *
-   * @param input
    */
   async save(input: FileInput): Promise<number> {
     this.created.collection = await this.checkCollection(input.collection);
@@ -48,10 +47,10 @@ export class FileInsertOperation {
       throw new WrongDataException(err);
     }
 
-    const [stringList, pointList] = filterProperties(input.property);
-
-    await new StringValueInsertOperation(this.manager, File4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, File2flagEntity).save(this.created, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.manager, File4stringEntity).save(this.created, stringList);
 
     return this.created.id;
   }

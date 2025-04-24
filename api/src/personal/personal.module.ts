@@ -23,8 +23,8 @@ import { User4descriptionEntity } from './model/user4description.entity';
 import { MyselfController } from './controller/myself/myself.controller';
 import { GroupController } from './controller/group/group.controller';
 import { ContactController } from './controller/contact/contact.controller';
-import { PropertyEntity } from '../settings/model/property.entity';
-import { Property4stringEntity } from '../settings/model/property4string.entity';
+import { AttributeEntity } from '../settings/model/attribute.entity';
+import { Attribute4stringEntity } from '../settings/model/attribute4string.entity';
 import { LangEntity } from '../settings/model/lang.entity';
 import { FlagEntity } from '../settings/model/flag.entity';
 import { User2imageEntity } from './model/user2image.entity';
@@ -36,7 +36,7 @@ import { User2imageEntity } from './model/user2image.entity';
       User4stringEntity, User4userEntity, User4pointEntity, User4descriptionEntity,
       GroupEntity, Group4stringEntity, Group2flagEntity,
       ContactEntity, Contact2flagEntity, Contact4stringEntity,
-      PropertyEntity, Property4stringEntity,
+      AttributeEntity, Attribute4stringEntity,
       LangEntity, FlagEntity,
       PointEntity,
     ]),

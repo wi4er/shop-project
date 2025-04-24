@@ -9,7 +9,7 @@ import { User2flagEntity } from '../../model/user2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { User4pointEntity } from '../../model/user4point.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { ContactEntity, UserContactType } from '../../model/contact.entity';
 
@@ -118,9 +118,9 @@ describe('UserController', () => {
 
   describe('User with strings', () => {
     test('Should get user with strings', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
-      await Object.assign(new User4stringEntity(), {parent, property, string: 'John'}).save();
+      await Object.assign(new User4stringEntity(), {parent, attribute, string: 'John'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/user')
@@ -128,7 +128,7 @@ describe('UserController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].id).toHaveLength(36);
-      expect(list.body[0].property).toEqual([{property: 'NAME', string: 'John'}]);
+      expect(list.body[0].attribute).toEqual([{attribute: 'NAME', string: 'John'}]);
     });
   });
 
@@ -151,20 +151,20 @@ describe('UserController', () => {
     test('Should get section with point', async () => {
       const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'GENDER'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'SEX'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'SEX'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'MAIL', directory}).save();
 
-      await Object.assign(new User4pointEntity(), {point, parent, property}).save();
+      await Object.assign(new User4pointEntity(), {point, parent, attribute}).save();
 
       const list = await request(app.getHttpServer())
         .get('/user')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].property).toBe('SEX');
-      expect(list.body[0].property[0].point).toBe('MAIL');
-      expect(list.body[0].property[0].directory).toBe('GENDER');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].attribute).toBe('SEX');
+      expect(list.body[0].attribute[0].point).toBe('MAIL');
+      expect(list.body[0].attribute[0].directory).toBe('GENDER');
     });
   });
 
@@ -187,19 +187,19 @@ describe('UserController', () => {
     });
 
     test('Should add user with strings', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/user')
         .send({
           login: 'user',
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(201);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add user with flag', async () => {
@@ -269,37 +269,37 @@ describe('UserController', () => {
 
     test('Should add strings', async () => {
       await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
         .put('/user/111')
         .send({
           login: 'user',
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(200);
 
-      expect(res.body.property[0].property).toBe('NAME');
-      expect(res.body.property[0].string).toBe('VALUE');
+      expect(res.body.attribute[0].attribute).toBe('NAME');
+      expect(res.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should update strings', async () => {
       const parent = await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'OLD'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NEW'}).save();
-      await Object.assign(new User4stringEntity(), {parent, property, string: 'OLD'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'OLD'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NEW'}).save();
+      await Object.assign(new User4stringEntity(), {parent, attribute, string: 'OLD'}).save();
 
       const res = await request(app.getHttpServer())
         .put('/user/111')
         .send({
           login: 'user',
-          property: [{property: 'NEW', string: 'NEW'}],
+          attribute: [{attribute: 'NEW', string: 'NEW'}],
         })
         .expect(200);
 
-      expect(res.body.property).toHaveLength(1);
-      expect(res.body.property[0].property).toBe('NEW');
-      expect(res.body.property[0].string).toBe('NEW');
+      expect(res.body.attribute).toHaveLength(1);
+      expect(res.body.attribute[0].attribute).toBe('NEW');
+      expect(res.body.attribute[0].string).toBe('NEW');
     });
 
     test('Should add flag', async () => {
@@ -337,7 +337,7 @@ describe('UserController', () => {
 
   describe('User deletion', () => {
     test('Should delete', async () => {
-      await Object.assign(new UserEntity(), {login: 'USER'}).save();
+      await Object.assign(new UserEntity(), {id: '1', login: 'USER'}).save();
 
       const drop = await request(app.getHttpServer())
         .delete('/user/1');

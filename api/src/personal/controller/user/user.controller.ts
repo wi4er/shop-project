@@ -13,12 +13,12 @@ import { UserDeleteOperation } from '../../operation/user-delete.operation';
 export class UserController {
 
   relations = {
-    string: {property: true, lang: true},
     group: true,
     child: true,
     contact: {contact: true},
     flag: {flag: true},
-    point: {point: {directory: true}, property: true},
+    point: {point: {directory: true}, attribute: true},
+    string: {attribute: true, lang: true},
   };
 
   constructor(
@@ -41,14 +41,14 @@ export class UserController {
         value: cn.value,
       })),
       group: item.group.map(gr => gr.id),
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
         ...item.point.map(val => ({
-          property: val.property.id,
+          attribute: val.attribute.id,
           point: val.point.id,
           directory: val.point.directory.id,
         })),

@@ -9,7 +9,7 @@ import {
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { FormEntity } from './form.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('form-form4string')
 export class Form4stringEntity
@@ -45,13 +45,13 @@ export class Form4stringEntity
   parent: FormEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       cascade: true,
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

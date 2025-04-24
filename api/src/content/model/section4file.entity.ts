@@ -7,11 +7,11 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { FileEntity } from '../../storage/model/file.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { SectionEntity } from './section.entity';
 
 @Entity('content-section4file')
-@Index(['file', 'parent', 'property'], {unique: true})
+@Index(['file', 'parent', 'attribute'], {unique: true})
 export class Section4fileEntity
   extends BaseEntity {
 
@@ -51,13 +51,13 @@ export class Section4fileEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

@@ -6,7 +6,7 @@ import * as request from 'supertest';
 import { FormEntity } from '../../model/form.entity';
 import { Form4stringEntity } from '../../model/form4string.entity';
 import { Form2flagEntity } from '../../model/form2flag.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
@@ -98,7 +98,7 @@ describe('FormController', () => {
   describe('Form with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new Form4stringEntity(), {parent, property, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
@@ -115,7 +115,7 @@ describe('FormController', () => {
 
     test('Should get flag with lang strings', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(new Form4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
 
@@ -157,7 +157,7 @@ describe('FormController', () => {
     });
 
     test('Should add with strings', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/form')
@@ -216,7 +216,7 @@ describe('FormController', () => {
 
     test('Should add strings', async () => {
       await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .put('/form/ORDER')
@@ -235,7 +235,7 @@ describe('FormController', () => {
 
     test('Should update strings', async () => {
       const parent = await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new Form4stringEntity(), {property, parent, string: 'OLD'}).save();
 
       const inst = await request(app.getHttpServer())

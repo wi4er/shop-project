@@ -13,8 +13,8 @@ export class GroupController {
 
   relations = {
     parent: true,
-    string: {property: true, lang: true},
     flag: {flag: true},
+    string: {attribute: true, lang: true},
   };
 
   constructor(

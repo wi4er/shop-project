@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { File4stringEntity } from './file4string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { CollectionEntity } from './collection.entity';
 import { FileEntity } from './file.entity';
 
-describe('File string property entity', () => {
+describe('File string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -25,7 +25,7 @@ describe('File string property entity', () => {
     });
 
     test('Should create instance', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(
         new FileEntity(),
@@ -46,14 +46,14 @@ describe('File string property entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
         Object.assign(new File4stringEntity(), {string: 'VALUE', property}).save(),
       ).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(
         new FileEntity(),
@@ -74,7 +74,7 @@ describe('File string property entity', () => {
   describe('File with strings', () => {
     test('Should create file with string', async () => {
       const repo = source.getRepository(FileEntity);
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(
         new FileEntity(),
@@ -95,7 +95,7 @@ describe('File string property entity', () => {
 
       expect(inst.string).toHaveLength(1);
       expect(inst.string[0].string).toBe('VALUE');
-      expect(inst.string[0].property.id).toBe('NAME');
+      expect(inst.string[0].attribute.id).toBe('NAME');
     });
   });
 });

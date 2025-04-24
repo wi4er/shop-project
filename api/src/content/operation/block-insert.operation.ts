@@ -7,7 +7,7 @@ import { Block2flagEntity } from '../model/block2flag.entity';
 import { BlockInput } from '../input/block.input';
 import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
 import { Block4pointEntity } from '../model/block4point.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { Block2permissionEntity } from '../model/block2permission.entity';
@@ -37,7 +37,7 @@ export class BlockInsertOperation {
     await new PermissionValueInsertOperation(this.manager, Block2permissionEntity).save(this.created, input);
     await new FlagValueInsertOperation(this.manager, Block2flagEntity).save(this.created, input);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
     await new StringValueInsertOperation(this.manager, Block4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Block4pointEntity).save(this.created, pointList);
 

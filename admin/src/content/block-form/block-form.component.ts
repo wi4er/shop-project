@@ -92,7 +92,7 @@ export class BlockFormComponent implements OnInit {
     const input: BlockInput = {
       id: this.data?.id,
       sort: +this.sort,
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as BlockInput;

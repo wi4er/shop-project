@@ -91,7 +91,7 @@ export class UserFormComponent implements OnInit {
     return {
       id: +this.id,
       login: this.login,
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

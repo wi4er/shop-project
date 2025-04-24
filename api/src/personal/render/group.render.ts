@@ -1,8 +1,8 @@
 import { GroupEntity } from '../model/group.entity';
 
-class GroupPropertyRender {
+class GroupAttributeRender {
 
-  property: string;
+  attribute: string;
   string: string;
   lang: string;
 
@@ -16,10 +16,10 @@ export class GroupRender {
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
     this.parent = item.parent?.id;
-    this.property = [
+    this.attribute = [
       ...item.string.map(str => ({
         string: str.string,
-        property: str.property.id,
+        attribute: str.attribute.id,
         lang: str.lang?.id,
       })),
     ];
@@ -31,7 +31,7 @@ export class GroupRender {
   updated_at: string;
   version: number;
   parent?: string;
-  property: GroupPropertyRender[];
+  attribute: GroupAttributeRender[];
   flag: string[];
 
 }

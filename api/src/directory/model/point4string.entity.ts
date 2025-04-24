@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { PointEntity } from './point.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 
 @Entity('directory-point4string')
@@ -27,7 +27,7 @@ export class Point4stringEntity
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date;
+  deleted_at: Date | null
 
   @VersionColumn()
   version: number;
@@ -46,13 +46,13 @@ export class Point4stringEntity
   parent: PointEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

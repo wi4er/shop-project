@@ -9,7 +9,7 @@ import { Section4stringEntity } from '../model/section4string.entity';
 import { Section2flagEntity } from '../model/section2flag.entity';
 import { PointValueInsertOperation } from '../../common/operation/point-value-insert.operation';
 import { Section4pointEntity } from '../model/section4point.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { ImageInsertOperation } from '../../common/operation/image-insert.operation';
 import { Section2imageEntity } from '../model/section2image.entity';
 import { PermissionValueInsertOperation } from '../../common/operation/permission-value-insert.operation';
@@ -68,7 +68,7 @@ export class SectionInsertOperation {
     await new ImageInsertOperation(this.manager, Section2imageEntity).save(this.created, input.image);
     await new PermissionValueInsertOperation(this.manager, Section2permissionEntity).save(this.created, input);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
     await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, stringList);
     await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pointList);
 

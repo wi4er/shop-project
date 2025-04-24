@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueInsertOperation } from '../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { LangEntity } from '../model/lang.entity';
@@ -27,7 +27,7 @@ export class LangInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
 
     await new StringValueInsertOperation(this.manager, Lang4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, Lang2flagEntity).save(this.created, input);

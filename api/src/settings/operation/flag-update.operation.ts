@@ -3,7 +3,7 @@ import { EntityManager } from 'typeorm';
 import { Flag4stringEntity } from '../model/flag4string.entity';
 import { Flag2flagEntity } from '../model/flag2flag.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { FlagInput } from '../input/flag.input';
@@ -26,7 +26,7 @@ export class FlagUpdateOperation {
       await flagRepo.findOne({
         where: {id},
         relations: {
-          string: {property: true, lang: true},
+          string: {attribute: true, lang: true},
           flag: {flag: true},
         },
       }),
@@ -53,7 +53,7 @@ export class FlagUpdateOperation {
 
     await new FlagValueUpdateOperation(this.manager, Flag2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterProperties(input.property);
+    const [stringList] = filterAttributes(input.attribute);
     await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;

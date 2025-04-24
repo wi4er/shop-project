@@ -7,10 +7,10 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('personal-user4user')
-@Index(['user', 'parent', 'property'], {unique: true})
+@Index(['user', 'parent', 'attribute'], {unique: true})
 export class User4userEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -42,18 +42,20 @@ export class User4userEntity extends BaseEntity {
     () => UserEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   user: UserEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

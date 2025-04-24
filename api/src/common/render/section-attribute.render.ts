@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ElementPropertyRender {
+export class SectionAttributeRender {
 
   @ApiProperty()
-  property: string
+  attribute: string;
 
   @ApiProperty()
-  element: string;
+  section: string;
 
 }

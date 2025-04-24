@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 import { CollectionEntity } from '../../storage/model/collection.entity';
 import { FileEntity } from '../../storage/model/file.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { Section2imageEntity } from './section2image.entity';
 import { SectionEntity } from './section.entity';
 
@@ -79,7 +79,7 @@ describe('Section image entity', () => {
         new SectionEntity(),
         {id: 'SECTION', block},
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const image = await Object.assign(
         new FileEntity(),
@@ -109,7 +109,7 @@ describe('Section image entity', () => {
         new SectionEntity(),
         {id: 'SECTION',block}
       ).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {

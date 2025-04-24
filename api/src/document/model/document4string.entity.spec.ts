@@ -1,12 +1,12 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 import { DocumentEntity } from './document.entity';
 import { Document4stringEntity } from './document4string.entity';
 
-describe('Document string property entity', () => {
+describe('Document string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -17,12 +17,12 @@ describe('Document string property entity', () => {
 
   describe('DocumentString fields', () => {
     test('Should create item', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const parent = await new DocumentEntity().save();
 
       const inst = new Document4stringEntity();
-      inst.property = property;
+      inst.attribute = property;
       inst.parent = parent;
       inst.string = 'VALUE';
       inst.lang = lang;
@@ -36,10 +36,10 @@ describe('Document string property entity', () => {
 
     test('Should create without lang', async () => {
       const parent = await new DocumentEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = new Document4stringEntity();
-      inst.property = property;
+      inst.attribute = property;
       inst.string = 'VALUE';
       inst.parent = parent;
       await inst.save();
@@ -48,16 +48,16 @@ describe('Document string property entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = new Document4stringEntity();
-      inst.property = property;
+      inst.attribute = property;
       inst.string = 'VALUE';
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const parent = await new DocumentEntity().save();
 
       const inst = new Document4stringEntity();
@@ -70,12 +70,12 @@ describe('Document string property entity', () => {
 
   describe('Document with strings', () => {
     test('Should create lang with strings', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const inst = new Document4stringEntity();
-        inst.property = property;
+        inst.attribute = property;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
 
@@ -92,12 +92,12 @@ describe('Document string property entity', () => {
     });
 
     test('Should delete string with lang', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const inst = new Document4stringEntity();
-        inst.property = property;
+        inst.attribute = property;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
 
@@ -112,13 +112,13 @@ describe('Document string property entity', () => {
       expect(list).toHaveLength(0);
     });
 
-    test('Should delete string with property', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+    test('Should delete string with attribute', async () => {
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const inst = new Document4stringEntity();
-        inst.property = property;
+        inst.attribute = property;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
 

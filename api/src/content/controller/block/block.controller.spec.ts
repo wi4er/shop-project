@@ -9,7 +9,7 @@ import { Block2flagEntity } from '../../model/block2flag.entity';
 import { DirectoryEntity } from '../../../directory/model/directory.entity';
 import { PointEntity } from '../../../directory/model/point.entity';
 import { Block4pointEntity } from '../../model/block4point.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
@@ -70,7 +70,7 @@ describe('BlockController', () => {
       expect(item.body.created_at).toBeDefined();
       expect(item.body.updated_at).toBeDefined();
       expect(item.body.version).toBe(1);
-      expect(item.body.property).toEqual([]);
+      expect(item.body.attribute).toEqual([]);
       expect(item.body.flag).toEqual([]);
       expect(item.body.permission).toEqual([{method: 'ALL'}]);
     });
@@ -180,8 +180,8 @@ describe('BlockController', () => {
   describe('Content element with strings', () => {
     test('Should get block with string', async () => {
       const parent = await createBlock();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Block4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Block4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/block')
@@ -189,16 +189,16 @@ describe('BlockController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].id).toBe(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('VALUE');
-      expect(list.body[0].property[0].property).toBe('NAME');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].string).toBe('VALUE');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
     });
 
     test('Should get block with lang', async () => {
       const parent = await createBlock();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Block4stringEntity(), {parent, property, lang, string: 'WITH_LANG'}).save();
+      await Object.assign(new Block4stringEntity(), {parent, attribute, lang, string: 'WITH_LANG'}).save();
 
       const list = await request(app.getHttpServer())
         .get('/block')
@@ -206,10 +206,10 @@ describe('BlockController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].id).toBe(1);
-      expect(list.body[0].property).toHaveLength(1);
-      expect(list.body[0].property[0].string).toBe('WITH_LANG');
-      expect(list.body[0].property[0].property).toBe('NAME');
-      expect(list.body[0].property[0].lang).toBe('EN');
+      expect(list.body[0].attribute).toHaveLength(1);
+      expect(list.body[0].attribute[0].string).toBe('WITH_LANG');
+      expect(list.body[0].attribute[0].attribute).toBe('NAME');
+      expect(list.body[0].attribute[0].lang).toBe('EN');
     });
   });
 
@@ -230,19 +230,19 @@ describe('BlockController', () => {
   describe('Content element with point', () => {
     test('Should get element with point', async () => {
       const parent = await createBlock();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Block4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Block4pointEntity(), {parent, attribute, point}).save();
 
       const item = await request(app.getHttpServer())
         .get('/block/1')
         .expect(200);
 
-      expect(item.body.property).toHaveLength(1);
-      expect(item.body.property[0].point).toBe('LONDON');
-      expect(item.body.property[0].directory).toBe('CITY');
+      expect(item.body.attribute).toHaveLength(1);
+      expect(item.body.attribute[0].point).toBe('LONDON');
+      expect(item.body.attribute[0].directory).toBe('CITY');
     });
   });
 
@@ -283,20 +283,20 @@ describe('BlockController', () => {
     });
 
     test('Should add with strings', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/block')
         .send({
-          property: [
-            {property: 'NAME', string: 'VALUE'},
+          attribute: [
+            {attribute: 'NAME', string: 'VALUE'},
           ],
         })
         .expect(201);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
   });
 
@@ -304,44 +304,44 @@ describe('BlockController', () => {
     test('Should add with point', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'London', directory}).save();
-      await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/block')
         .send({
-          property: [
-            {property: 'CURRENT', point: 'London'},
+          attribute: [
+            {attribute: 'CURRENT', point: 'London'},
           ],
         })
         .expect(201);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('CURRENT');
-      expect(inst.body.property[0].point).toBe('London');
-      expect(inst.body.property[0].directory).toBe('CITY');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('CURRENT');
+      expect(inst.body.attribute[0].point).toBe('London');
+      expect(inst.body.attribute[0].directory).toBe('CITY');
     });
 
     test('Shouldn`t add with wrong point', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       await request(app.getHttpServer())
         .post('/block')
         .send({
-          property: [
-            {property: 'CURRENT', point: 'WRONG'},
+          attribute: [
+            {attribute: 'CURRENT', point: 'WRONG'},
           ],
         })
         .expect(400);
     });
 
     test('Shouldn`t add with blank point', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'CURRENT'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/block')
         .send({
-          property: [
-            {property: 'CURRENT'},
+          attribute: [
+            {attribute: 'CURRENT'},
           ],
         })
         .expect(400);
@@ -410,35 +410,35 @@ describe('BlockController', () => {
   describe('Content block update with strings', () => {
     test('Should add strings', async () => {
       const parent = await createBlock();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .put(`/block/${parent.id}`)
         .send({
-          property: [
-            {property: 'NAME', string: 'John'},
+          attribute: [
+            {attribute: 'NAME', string: 'John'},
           ],
         })
         .expect(200);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('John');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('John');
     });
 
     test('Should remove strings', async () => {
       const parent = await createBlock();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Block4stringEntity(), {property, parent, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Block4stringEntity(), {attribute, parent, string: 'VALUE'}).save();
 
       const inst = await request(app.getHttpServer())
         .put('/block/1')
         .send({
-          property: [],
+          attribute: [],
         })
         .expect(200);
 
-      expect(inst.body.property).toHaveLength(0);
+      expect(inst.body.attribute).toHaveLength(0);
     });
   });
 

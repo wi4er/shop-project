@@ -5,7 +5,7 @@ import { Contact2flagEntity } from "../model/contact2flag.entity";
 import { StringValueInsertOperation } from "../../common/operation/string-value-insert.operation";
 import { FlagValueInsertOperation } from "../../common/operation/flag-value-insert.operation";
 import { UserContactInput } from "../input/user-contact.input";
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
 export class UserContactInsertOperation {
@@ -26,7 +26,7 @@ export class UserContactInsertOperation {
 
     await this.trans.save(this.created);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
 
     await new StringValueInsertOperation(this.trans, Contact4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.trans, Contact2flagEntity).save(this.created, input);

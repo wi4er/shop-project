@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { FileEntity } from '../model/file.entity';
@@ -19,36 +19,36 @@ export class FileUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkFile(id: number): Promise<FileEntity> {
     const flagRepo = this.manager.getRepository(FileEntity);
 
-    const inst = await flagRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, `File with id ${id} not found!`);
-
-    return inst;
-  }
-
-  private async checkCollection(id: string): Promise<CollectionEntity> {
-    const colRepo = this.manager.getRepository(CollectionEntity);
-
-    const inst = await colRepo.findOne({where: {id}});
-
-    return WrongDataException.assert(inst, `Collection with id ${id} not found!`);
+    return NoDataException.assert(
+      await flagRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `File with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param id
-   * @param input
+   */
+  private async checkCollection(id: string): Promise<CollectionEntity> {
+    const colRepo = this.manager.getRepository(CollectionEntity);
+
+    return WrongDataException.assert(
+      await colRepo.findOne({where: {id}}),
+      `Collection with id >> ${id} << not found!`
+    );
+  }
+
+  /**
+   *
    */
   async save(id: number, input: FileInput): Promise<number> {
     const beforeItem = await this.checkFile(id);
@@ -56,9 +56,10 @@ export class FileUpdateOperation {
 
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, File4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, File2flagEntity).save(beforeItem, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, File4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

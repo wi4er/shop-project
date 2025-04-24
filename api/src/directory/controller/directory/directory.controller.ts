@@ -11,9 +11,9 @@ import { DirectoryDeleteOperation } from '../../operation/directory-delete.opera
 export class DirectoryController {
 
   relations = {
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
-    point: {point: {directory: true}, property: true},
+    point: {point: {directory: true}, attribute: true},
   };
 
   constructor(
@@ -30,14 +30,14 @@ export class DirectoryController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
         ...item.point.map(val => ({
-          property: val.property.id,
+          attribute: val.attribute.id,
           point: val.point.id,
           directory: val.point.directory.id,
         })),

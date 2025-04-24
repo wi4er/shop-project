@@ -8,7 +8,7 @@ import { DirectoryEntity } from '../model/directory.entity';
 import { PointEntity } from '../model/point.entity';
 import { Point4stringEntity } from '../model/point4string.entity';
 import { Point2flagEntity } from '../model/point2flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 
 export class PointUpdateOperation {
 
@@ -19,42 +19,36 @@ export class PointUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
     const dirRepo = this.manager.getRepository<DirectoryEntity>(DirectoryEntity);
 
-    const inst = await dirRepo.findOne({where: {id}});
-    WrongDataException.assert(inst, 'Wrong directory id!');
-
-    return inst;
+    return WrongDataException.assert(
+      await dirRepo.findOne({where: {id}}),
+      `Directory with id >> ${id} << not found!`,
+    );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkPoint(id: string): Promise<PointEntity> {
     const pointRepo = this.manager.getRepository(PointEntity);
 
-    const inst = await pointRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, 'Point not found!');
-
-    return inst;
+    return NoDataException.assert(
+      await pointRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `Point with id >> ${id} << not found!`,
+    );
   }
 
   /**
    *
-   * @param id
-   * @param input
    */
   async save(id: string, input: PointInput): Promise<string> {
     const beforeItem = await this.checkPoint(id);
@@ -63,9 +57,10 @@ export class PointUpdateOperation {
 
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Point4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Point2flagEntity).save(beforeItem, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Point4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

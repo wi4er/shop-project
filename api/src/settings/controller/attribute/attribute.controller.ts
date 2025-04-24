@@ -1,39 +1,39 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { PropertyEntity } from '../../model/property.entity';
-import { PropertyInput } from '../../input/property.input';
-import { PropertyInsertOperation } from '../../operation/property-insert.operation';
-import { PropertyUpdateOperation } from '../../operation/property-update.operation';
-import { PropertyDeleteOperation } from '../../operation/property-delete.operation';
+import { AttributeEntity } from '../../model/attribute.entity';
+import { AttributeInput } from '../../input/attribute.input';
+import { AttributeInsertOperation } from '../../operation/attribute-insert.operation';
+import { AttributeUpdateOperation } from '../../operation/attribute-update.operation';
+import { AttributeDeleteOperation } from '../../operation/attribute-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
-@Controller('property')
-export class PropertyController {
+@Controller('attribute')
+export class AttributeController {
 
   relations = {
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
   };
 
   constructor(
     @InjectEntityManager()
     private entityManager: EntityManager,
-    @InjectRepository(PropertyEntity)
-    private propertyRepo: Repository<PropertyEntity>,
+    @InjectRepository(AttributeEntity)
+    private propertyRepo: Repository<AttributeEntity>,
   ) {
   }
 
-  toView(item: PropertyEntity) {
+  toView(item: AttributeEntity) {
     return {
       id: item.id,
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.property.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
       ],
@@ -76,11 +76,11 @@ export class PropertyController {
   @Post()
   async addItem(
     @Body()
-      input: PropertyInput,
+      input: AttributeInput,
   ) {
     return this.entityManager.transaction(
-      trans => new PropertyInsertOperation(trans).save(input)
-        .then(id => trans.getRepository(PropertyEntity).findOne({
+      trans => new AttributeInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(AttributeEntity).findOne({
           where: {id},
           relations: this.relations,
         })),
@@ -92,11 +92,11 @@ export class PropertyController {
     @Param('id')
       id: string,
     @Body()
-      input: PropertyInput,
+      input: AttributeInput,
   ) {
     return this.entityManager.transaction(
-      trans => new PropertyUpdateOperation(trans).save(id, input)
-        .then(id => trans.getRepository(PropertyEntity).findOne({
+      trans => new AttributeUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(AttributeEntity).findOne({
           where: {id},
           relations: this.relations,
         })),
@@ -109,7 +109,7 @@ export class PropertyController {
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      trans => new PropertyDeleteOperation(trans).save([id]),
+      trans => new AttributeDeleteOperation(trans).save([id]),
     );
   }
 

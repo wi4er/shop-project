@@ -3,14 +3,12 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { Contact4stringEntity } from './contact4string.entity';
 import { ContactEntity, UserContactType } from './contact.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('Contact string property entity', () => {
+describe('Contact string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
 
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
@@ -24,13 +22,13 @@ describe('Contact string property entity', () => {
     });
 
     test('Should create instance', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(
         new ContactEntity(),
         {id: 'mail', type: UserContactType.EMAIL},
       ).save();
 
-      const inst = await Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent, property}).save();
+      const inst = await Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       expect(inst.version).toBe(1);
       expect(inst.created_at).toBeDefined();
@@ -39,14 +37,14 @@ describe('Contact string property entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
         Object.assign(new Contact4stringEntity(), {string: 'VALUE', property}).save(),
       ).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const parent = await Object.assign(
         new ContactEntity(),
         {id: 'mail', type: UserContactType.EMAIL},
@@ -54,29 +52,29 @@ describe('Contact string property entity', () => {
 
       await expect(
         Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent}).save(),
-      ).rejects.toThrow('propertyId');
+      ).rejects.toThrow('attributeId');
     });
   });
 
   describe('Contact with strings', () => {
     test('Should create contact with string', async () => {
       const repo = source.getRepository(ContactEntity);
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(
         new ContactEntity(),
         {id: 'NAME', type: UserContactType.EMAIL},
       ).save();
 
-      await Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent, property}).save();
+      await Object.assign(new Contact4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       const inst = await repo.findOne({
         where: {id: 'NAME'},
-        relations: {string: {property: true}},
+        relations: {string: {attribute: true}},
       });
 
       expect(inst.string).toHaveLength(1);
       expect(inst.string[0].string).toBe('VALUE');
-      expect(inst.string[0].property.id).toBe('NAME');
+      expect(inst.string[0].attribute.id).toBe('NAME');
     });
   });
 });

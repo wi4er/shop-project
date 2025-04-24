@@ -5,7 +5,7 @@ import { DocumentEntity } from '../model/document.entity';
 import { DocumentInput } from '../input/document.input';
 import { Document4stringEntity } from '../model/document4string.entity';
 import { Document2flagEntity } from '../model/document2flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 
 export class DocumentInsertOperation {
 
@@ -24,7 +24,7 @@ export class DocumentInsertOperation {
   async save(input: DocumentInput): Promise<number> {
     await this.manager.save(this.created);
 
-    const [stringList, pointList] = filterProperties(input.property);
+    const [stringList, pointList] = filterAttributes(input.attribute);
 
     await new StringValueInsertOperation(this.manager, Document4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.manager, Document2flagEntity).save(this.created, input);

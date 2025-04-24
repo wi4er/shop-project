@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { CommonPointEntity } from '../model/common-point.entity';
 import { PropertyPointInput } from '../input/property-point.input';
@@ -17,8 +17,8 @@ export class PointValueInsertOperation<T extends WithPointEntity<T>> {
   /**
    *
    */
-  private async checkProperty(id?: string): Promise<PropertyEntity> {
-    const propRepo = this.trans.getRepository(PropertyEntity);
+  private async checkProperty(id?: string): Promise<AttributeEntity> {
+    const propRepo = this.trans.getRepository(AttributeEntity);
 
     return WrongDataException.assert(
       await propRepo.findOne({where: {id}}),
@@ -45,7 +45,7 @@ export class PointValueInsertOperation<T extends WithPointEntity<T>> {
     for (const item of list) {
       const inst = new this.entity();
       inst.parent = created;
-      inst.property = await this.checkProperty(item.property);
+      inst.attribute = await this.checkProperty(item.attribute);
       inst.point = await this.checkPoint(item.point);
 
       await this.trans.save(inst)

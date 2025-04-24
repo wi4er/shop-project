@@ -6,7 +6,7 @@ import * as request from 'supertest';
 import { GroupEntity } from '../../model/group.entity';
 import { Group4stringEntity } from '../../model/group4string.entity';
 import { Group2flagEntity } from '../../model/group2flag.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
@@ -128,33 +128,33 @@ describe('GroupController', () => {
   describe('Group with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await new GroupEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Group4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Group4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/group')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
 
     test('Should get flag with lang strings', async () => {
       const parent = await new GroupEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Group4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Group4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/group')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].property[0].lang).toBe('EN');
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute[0].lang).toBe('EN');
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
   });
 
@@ -204,27 +204,27 @@ describe('GroupController', () => {
     });
 
     test('Should add with strings', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .post('/group')
         .send({
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(201);
 
-      expect(inst.body.property).toHaveLength(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute).toHaveLength(1);
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
-    test('Shouldn`t with wrong property', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+    test('Shouldn`t with wrong attribute', async () => {
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
-      const inst = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/group')
         .send({
-          property: [{property: 'WRONG', string: 'VALUE'}],
+          attribute: [{attribute: 'WRONG', string: 'VALUE'}],
         })
         .expect(400);
     });
@@ -245,7 +245,7 @@ describe('GroupController', () => {
     test('Should n`t add with flag', async () => {
       await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
 
-      const inst = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/group')
         .send({flag: ['WRONG']})
         .expect(400);
@@ -286,28 +286,28 @@ describe('GroupController', () => {
     });
 
     test('Should add strings', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const inst = await request(app.getHttpServer())
         .put('/group/111')
         .send({
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(200);
 
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
-    test('Shouldn`t update wrong property', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+    test('Shouldn`t update wrong attribute', async () => {
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       await request(app.getHttpServer())
         .put('/group/111')
         .send({
-          property: [{property: 'WRONG', string: 'VALUE'}],
+          attribute: [{attribute: 'WRONG', string: 'VALUE'}],
         })
         .expect(400);
     });

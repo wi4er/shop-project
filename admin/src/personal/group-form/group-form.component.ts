@@ -89,7 +89,7 @@ export class GroupFormComponent implements OnInit {
   toInput(): GroupInput {
     const input: GroupInput = {
       id: +this.id,
-      property: [],
+      attribute: [],
       flag: [],
     } as GroupInput;
 

@@ -2,10 +2,9 @@ import { EntityManager } from 'typeorm';
 import { FlagEntity } from '../model/flag.entity';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
 import { FlagInput } from '../input/flag.input';
-import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
 import { Flag2flagEntity } from '../model/flag2flag.entity';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
 import { Flag4stringEntity } from '../model/flag4string.entity';
 
@@ -26,7 +25,7 @@ export class FlagPatchOperation {
       await flagRepo.findOne({
         where: {id},
         relations: {
-          string: {property: true, lang: true},
+          string: {attribute: true, lang: true},
           flag: {flag: true},
         },
       }),
@@ -42,8 +41,8 @@ export class FlagPatchOperation {
 
     if (input.flag) await new FlagValueUpdateOperation(this.manager, Flag2flagEntity).save(beforeItem, input);
 
-    if (input.property) {
-      const [stringList] = filterProperties(input.property);
+    if (input.attribute) {
+      const [stringList] = filterAttributes(input.attribute);
       await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, stringList);
     }
 

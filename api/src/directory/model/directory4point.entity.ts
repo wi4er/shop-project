@@ -10,10 +10,10 @@ import {
 import { CommonPointEntity } from '../../common/model/common-point.entity';
 import { PointEntity } from './point.entity';
 import { DirectoryEntity } from './directory.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('directory4point')
-@Index(['point', 'property', 'parent'], {unique: true})
+@Index(['point', 'attribute', 'parent'], {unique: true})
 export class Directory4pointEntity
   extends BaseEntity
   implements CommonPointEntity<DirectoryEntity> {
@@ -37,6 +37,7 @@ export class Directory4pointEntity
     () => PointEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -47,18 +48,20 @@ export class Directory4pointEntity
     directory => directory.point,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: DirectoryEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

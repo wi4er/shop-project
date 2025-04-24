@@ -7,14 +7,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PropertyEntity } from './property.entity';
+import { AttributeEntity } from './attribute.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { LangEntity } from './lang.entity';
 
-@Entity('settings-property4string')
-export class Property4stringEntity
+@Entity('settings-attribute4string')
+export class Attribute4stringEntity
   extends BaseEntity
-  implements CommonStringEntity<PropertyEntity> {
+  implements CommonStringEntity<AttributeEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,7 +35,7 @@ export class Property4stringEntity
   string: string;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     property => property.string,
     {
       onDelete: 'CASCADE',
@@ -43,17 +43,17 @@ export class Property4stringEntity
       nullable: false,
     },
   )
-  parent: PropertyEntity;
+  parent: AttributeEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

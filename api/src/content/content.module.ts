@@ -20,7 +20,7 @@ import { Block2permissionEntity } from './model/block2permission.entity';
 import { UserEntity } from '../personal/model/user.entity';
 import { GroupEntity } from '../personal/model/group.entity';
 import { Block4pointEntity } from './model/block4point.entity';
-import { PropertyEntity } from '../settings/model/property.entity';
+import { AttributeEntity } from '../settings/model/attribute.entity';
 import { LangEntity } from '../settings/model/lang.entity';
 import { Element2permissionEntity } from './model/element2permission.entity';
 import { Section2permissionEntity } from './model/section2permission.entity';
@@ -43,7 +43,7 @@ import { Block4fileEntity } from './model/block4file.entity';
       Block4stringEntity, Block2flagEntity, Block4pointEntity, Block2permissionEntity, Block4fileEntity,
       Block2permissionEntity,
       UserEntity, GroupEntity,
-      PropertyEntity,
+      AttributeEntity,
       LangEntity,
     ]),
   ],

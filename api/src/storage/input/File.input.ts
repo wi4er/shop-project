@@ -1,16 +1,16 @@
-import { WithPropertyInput } from '../../common/input/with-property.input';
+import { WithAttributeInput } from '../../common/input/with-attribute.input';
 import { WithFlagInput } from '../../common/input/with-flag.input';
-import { PropertyValueInput } from '../../common/input/property-value.input';
+import { AttributeValueInput } from '../../common/input/attribute-value.input';
 
 export class FileInput
-  implements WithPropertyInput, WithFlagInput {
+  implements WithAttributeInput, WithFlagInput {
 
   original: string;
   encoding?: string;
   mimetype: string;
   collection: string;
   path: string;
-  property: PropertyValueInput[];
+  attribute: AttributeValueInput[];
   flag: string[];
 
 }

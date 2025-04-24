@@ -9,7 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Flag } from '../../app/model/settings/flag';
 
 @Component({
-  selector: 'app-property-list',
+  selector: 'app-attribute-list',
   templateUrl: './property-list.component.html',
   styleUrls: ['./property-list.component.css']
 })

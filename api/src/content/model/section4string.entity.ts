@@ -9,7 +9,7 @@ import {
 import { SectionEntity } from './section.entity';
 import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-section4string')
 export class Section4stringEntity
@@ -46,14 +46,14 @@ export class Section4stringEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
   @ManyToOne(
     () => LangEntity,

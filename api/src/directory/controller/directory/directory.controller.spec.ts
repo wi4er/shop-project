@@ -8,7 +8,7 @@ import { Directory4stringEntity } from '../../model/directory4string.entity';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
 import { PointEntity } from '../../model/point.entity';
 import { Directory4pointEntity } from '../../model/directory4point.entity';
-import { PropertyEntity } from '../../../settings/model/property.entity';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
@@ -114,10 +114,10 @@ describe('DirectoryController', () => {
   describe('Directory with strings', () => {
     test('Should get with strings', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(
         new Directory4stringEntity(),
-        {parent: 'CITY', property: 'NAME', string: 'VALUE'},
+        {parent: 'CITY', attribute: 'NAME', string: 'VALUE'},
       ).save();
 
       const res = await request(app.getHttpServer())
@@ -126,19 +126,19 @@ describe('DirectoryController', () => {
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('CITY');
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
 
     test('Should get directory with lang strings', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(
         new Directory4stringEntity(),
-        {parent: 'CITY', property: 'NAME', lang: 'EN', string: 'VALUE'},
+        {parent: 'CITY', attribute: 'NAME', lang: 'EN', string: 'VALUE'},
       ).save();
 
       const res = await request(app.getHttpServer())
@@ -146,8 +146,8 @@ describe('DirectoryController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].property[0].lang).toBe('EN');
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute[0].lang).toBe('EN');
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
   });
 
@@ -171,19 +171,19 @@ describe('DirectoryController', () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
       const parent = await Object.assign(new DirectoryEntity(), {id: 'STATE'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'CAPITAL'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CAPITAL'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Directory4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Directory4pointEntity(), {parent, attribute, point}).save();
 
       const list = await request(app.getHttpServer())
         .get('/directory')
         .expect(200);
 
       expect(list.body).toHaveLength(2);
-      expect(list.body[1].property).toHaveLength(1);
-      expect(list.body[1].property[0].point).toBe('LONDON');
-      expect(list.body[1].property[0].directory).toBe('CITY');
+      expect(list.body[1].attribute).toHaveLength(1);
+      expect(list.body[1].attribute[0].point).toBe('LONDON');
+      expect(list.body[1].attribute[0].directory).toBe('CITY');
     });
   });
 
@@ -198,20 +198,20 @@ describe('DirectoryController', () => {
     });
 
     test('Should add with string', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const res = await request(app.getHttpServer())
         .post('/directory')
         .send({
           id: 'LIST',
-          property: [
-            {property: 'NAME', string: 'VALUE'},
+          attribute: [
+            {attribute: 'NAME', string: 'VALUE'},
           ],
         })
         .expect(201);
 
-      expect(res.body.property).toHaveLength(1);
-      expect(res.body.property[0].property).toBe('NAME');
-      expect(res.body.property[0].string).toBe('VALUE');
+      expect(res.body.attribute).toHaveLength(1);
+      expect(res.body.attribute[0].attribute).toBe('NAME');
+      expect(res.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add with flag', async () => {
@@ -253,21 +253,21 @@ describe('DirectoryController', () => {
 
     test('Should add strings', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
         .put('/directory/CITY')
         .send({
           id: 'CITY',
-          property: [
-            {property: 'NAME', string: 'VALUE'},
+          attribute: [
+            {attribute: 'NAME', string: 'VALUE'},
           ],
         })
         .expect(200);
 
       expect(res.body.id).toBe('CITY');
-      expect(res.body.property[0].property).toBe('NAME');
-      expect(res.body.property[0].string).toBe('VALUE');
+      expect(res.body.attribute[0].attribute).toBe('NAME');
+      expect(res.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add flags', async () => {

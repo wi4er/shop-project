@@ -6,7 +6,7 @@ import * as request from 'supertest';
 import { LangEntity } from '../../model/lang.entity';
 import { Lang4stringEntity } from '../../model/lang4string.entity';
 import { Lang2flagEntity } from '../../model/lang2flag.entity';
-import { PropertyEntity } from '../../model/property.entity';
+import { AttributeEntity } from '../../model/attribute.entity';
 import { FlagEntity } from '../../model/flag.entity';
 
 describe('LangController', () => {
@@ -106,8 +106,8 @@ describe('LangController', () => {
   describe('Lang with strings', () => {
     test('Should get lang with strings', async () => {
       const parent = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Lang4stringEntity(), {parent, property, string: 'English'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Lang4stringEntity(), {parent, attribute, string: 'English'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/lang')
@@ -115,23 +115,23 @@ describe('LangController', () => {
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('EN');
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('English');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('English');
     });
 
     test('Should get lang with lang strings', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang1 = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const lang2 = await Object.assign(new LangEntity(), {id: 'GR'}).save();
       await Object.assign(
         new Lang4stringEntity(),
-        {parent: lang1, property, lang: lang1, string: 'English'},
+        {parent: lang1, attribute, lang: lang1, string: 'English'},
       ).save();
       await Object.assign(
         new Lang4stringEntity(),
-        {parent: lang1, property, lang: lang2, string: 'Englisch'},
+        {parent: lang1, attribute, lang: lang2, string: 'English'},
       ).save();
 
       const res = await request(app.getHttpServer())
@@ -139,10 +139,10 @@ describe('LangController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(2);
-      expect(res.body[0].property[0].lang).toBe('EN');
-      expect(res.body[0].property[0].string).toBe('English');
-      expect(res.body[0].property[1].lang).toBe('GR');
-      expect(res.body[0].property[1].string).toBe('Englisch');
+      expect(res.body[0].attribute[0].lang).toBe('EN');
+      expect(res.body[0].attribute[0].string).toBe('English');
+      expect(res.body[0].attribute[1].lang).toBe('GR');
+      expect(res.body[0].attribute[1].string).toBe('English');
     });
   });
 
@@ -184,19 +184,19 @@ describe('LangController', () => {
     });
 
     test('Should add with strings', async () => {
-      await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
         .post('/lang')
         .send({
           id: 'EN',
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(201);
 
       expect(res.body.id).toBe('EN');
-      expect(res.body.property[0].property).toBe('NAME');
-      expect(res.body.property[0].string).toBe('VALUE');
+      expect(res.body.attribute[0].attribute).toBe('NAME');
+      expect(res.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add with flag', async () => {
@@ -239,16 +239,16 @@ describe('LangController', () => {
 
     test('Should update id with string', async () => {
       const parent = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Lang4stringEntity(), {parent, property, string: 'English'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Lang4stringEntity(), {parent, attribute, string: 'English'}).save();
 
       const res = await request(app.getHttpServer())
         .put('/lang/EN')
-        .send({id: 'GR', property: [{property: 'NAME', string: 'English'}]})
+        .send({id: 'GR', attribute: [{attribute: 'NAME', string: 'English'}]})
         .expect(200);
 
       expect(res.body.id).toBe('GR');
-      expect(res.body.property).toEqual([{property: 'NAME', string: 'English'}]);
+      expect(res.body.attribute).toEqual([{attribute: 'NAME', string: 'English'}]);
     });
 
     test('Should update id with flag', async () => {

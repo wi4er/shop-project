@@ -6,7 +6,7 @@ import { FlagValueUpdateOperation } from '../../common/operation/flag-value-upda
 import { Directory4stringEntity } from '../model/directory4string.entity';
 import { Directory2flagEntity } from '../model/directory2flag.entity';
 import { DirectoryInput } from '../input/directory.input';
-import { filterProperties } from '../../common/input/filter-properties';
+import { filterAttributes } from '../../common/input/filter-attributes';
 
 export class DirectoryUpdateOperation {
 
@@ -17,28 +17,24 @@ export class DirectoryUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
     const dirRepo = this.manager.getRepository(DirectoryEntity);
 
-    const inst = await dirRepo.findOne({
-      where: {id},
-      relations: {
-        string: {property: true},
-        flag: {flag: true},
-      },
-    });
-    NoDataException.assert(inst, 'Directory not found!');
-
-    return inst;
+    return NoDataException.assert(
+      await dirRepo.findOne({
+        where: {id},
+        relations: {
+          string: {attribute: true},
+          flag: {flag: true},
+        },
+      }),
+      `Directory with id >> ${id} << not found!`,
+    );
   }
 
   /**
    *
-   * @param id
-   * @param input
    */
   async save(id: string, input: DirectoryInput): Promise<string> {
     const beforeItem = await this.checkDirectory(id);
@@ -46,9 +42,10 @@ export class DirectoryUpdateOperation {
 
     await beforeItem.save();
 
-    const [stringList, pointList] = filterProperties(input.property);
-    await new StringValueUpdateOperation(this.manager, Directory4stringEntity).save(beforeItem, stringList);
     await new FlagValueUpdateOperation(this.manager, Directory2flagEntity).save(beforeItem, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Directory4stringEntity).save(beforeItem, stringList);
 
     return beforeItem.id;
   }

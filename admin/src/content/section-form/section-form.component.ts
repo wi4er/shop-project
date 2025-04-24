@@ -116,7 +116,7 @@ export class SectionFormComponent implements OnInit {
       sort: this.sort,
       block: this.data?.block ?? 1,
       image: [],
-      property: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.propertyValueService.toInput(this.editProperties),
       flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as SectionInput;

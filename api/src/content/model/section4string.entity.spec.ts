@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 import { Section4stringEntity } from './section4string.entity';
 import { SectionEntity } from './section.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 describe('SectionString entity', () => {
   let source: DataSource;
@@ -25,7 +25,7 @@ describe('SectionString entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(Object.assign(
         new Section4stringEntity(),
@@ -33,7 +33,7 @@ describe('SectionString entity', () => {
       ).save()).rejects.toThrow();
     });
 
-    test('Shouldn`t create without property', async () => {
+    test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
 
@@ -49,7 +49,7 @@ describe('SectionString entity', () => {
       const repo = source.getRepository(SectionEntity);
 
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new PropertyEntity(), {id: 'NAME'}).save();
+      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
 
       await Object.assign(

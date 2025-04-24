@@ -10,10 +10,10 @@ import {
 import { UserEntity } from './user.entity';
 import { PointEntity } from '../../directory/model/point.entity';
 import { CommonPointEntity } from '../../common/model/common-point.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('personal-user4point')
-@Index(['point', 'property', 'parent'], {unique: true})
+@Index(['point', 'attribute', 'parent'], {unique: true})
 export class User4pointEntity
   extends BaseEntity
   implements CommonPointEntity<UserEntity> {
@@ -28,7 +28,7 @@ export class User4pointEntity
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at: Date;
+  deleted_at: Date | null;
 
   @VersionColumn()
   version: number;
@@ -47,18 +47,20 @@ export class User4pointEntity
     user => user.point,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: UserEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }

@@ -81,7 +81,7 @@ export class DocumentFormComponent {
   toInput(): DocumentInput {
     const input: DocumentInput = {
       id: +this.id,
-      property: [],
+      attribute: [],
       flag: [],
     } as DocumentInput;
 

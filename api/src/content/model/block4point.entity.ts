@@ -9,10 +9,10 @@ import {
 import { PointEntity } from '../../directory/model/point.entity';
 import { CommonPointEntity } from '../../common/model/common-point.entity';
 import { BlockEntity } from './block.entity';
-import { PropertyEntity } from '../../settings/model/property.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 @Entity('content-block4point')
-@Index(['point', 'property', 'parent'], {unique: true})
+@Index(['point', 'attribute', 'parent'], {unique: true})
 export class Block4pointEntity
   extends BaseEntity
   implements CommonPointEntity<BlockEntity> {
@@ -53,13 +53,13 @@ export class Block4pointEntity
   parent: BlockEntity;
 
   @ManyToOne(
-    () => PropertyEntity,
+    () => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  property: PropertyEntity;
+  attribute: AttributeEntity;
 
 }
