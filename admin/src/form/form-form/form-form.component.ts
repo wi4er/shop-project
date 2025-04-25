@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ export class FormFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -37,16 +37,17 @@ export class FormFormComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   getPropertyCount() {
-    return Object.values(this.editProperties)
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
-  initEditValues() {
-  }
 
-  toEdit(item: Property) {
+  toEdit(item: Attribute) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
   }
@@ -58,9 +59,9 @@ export class FormFormComponent implements OnInit {
       flag: [],
     } as FormInput;
 
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) {
+    for (const prop in this.editAttributes) {
+      for (const lang in this.editAttributes[prop]) {
+        if (!this.editAttributes[prop][lang]) {
           continue;
         }
       }

@@ -1,10 +1,7 @@
 import { StringAttributeValue } from '../string-attribute-value';
 
-export interface CollectionInput {
+export interface WithAttributeInput {
 
-  id?: string;
-
-  flag: string[];
   attribute: StringAttributeValue[];
 
 }

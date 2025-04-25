@@ -1,15 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Property } from '../../app/model/settings/property';
-import { Lang } from '../../app/model/settings/lang';
-import { Flag } from '../../app/model/settings/flag';
 import { GroupInput } from '../../app/model/user/group.input';
 import { Group } from '../../app/model/user/group';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Contact } from '../../app/model/user/contact';
-import { ContactInput } from '../../app/model/user/contact.input';
-import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 
 @Component({
   selector: 'app-user-group-form',
@@ -23,7 +18,7 @@ export class GroupFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -31,7 +26,7 @@ export class GroupFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: number } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
-    private propertyValueService: PropertyValueService,
+    private attributeValueService: AttributeValueService,
   ) {
     if (data?.id) this.id = String(data.id);
   }
@@ -51,8 +46,8 @@ export class GroupFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editProperties)
+  getAttributeCount() {
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
@@ -71,8 +66,8 @@ export class GroupFormComponent implements OnInit {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    for (const prop of item.property) {
-      this.editProperties[prop.property][prop.lang ?? ''].push({
+    for (const prop of item.attribute) {
+      this.editAttributes[prop.attribute][prop.lang ?? ''].push({
         value: prop.string,
         error: '',
       });
@@ -88,12 +83,12 @@ export class GroupFormComponent implements OnInit {
    */
   toInput(): GroupInput {
     const input: GroupInput = {
-      id: +this.id,
+      id: this.id,
       attribute: [],
       flag: [],
     } as GroupInput;
 
-    input.property = this.propertyValueService.toInput(this.editProperties);
+    input.attribute = this.attributeValueService.toInput(this.editAttributes);
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) {

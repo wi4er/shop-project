@@ -7,7 +7,7 @@ export enum ApiEntity {
   ELEMENT = 'element',
   SECTION = 'section',
   FLAG = 'flag',
-  PROPERTY = 'property',
+  ATTRIBUTE = 'attribute',
   DIRECTORY = 'directory',
   FORM = 'form',
   RESULT = 'result',

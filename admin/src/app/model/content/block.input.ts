@@ -1,11 +1,12 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionInput } from '../permission/permission-input';
 
 export interface BlockInput {
 
   id?: number;
+
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
   permission: PermissionInput[];
 
 }

@@ -37,8 +37,6 @@ export class LangListComponent implements OnInit {
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: Lang[]) {
     const col = new Set<string>();
@@ -52,9 +50,9 @@ export class LangListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('attribute_' + it.attribute);
+        line['attribute_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

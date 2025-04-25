@@ -7,7 +7,7 @@ import { BlockFormComponent } from '../block-form/block-form.component';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Flag } from '../../app/model/settings/flag';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BlockSettingsComponent } from '../block-settings/block-settings.component';
 
@@ -113,7 +113,7 @@ export class BlockListComponent implements OnInit {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG)
         .then(list => this.flagList = list),
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
     ]).then(() => this.refreshData());
   }
@@ -148,9 +148,9 @@ export class BlockListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('property_' + it.attribute);
+        line['property_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

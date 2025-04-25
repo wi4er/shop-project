@@ -3,7 +3,7 @@ import { ApiEntity, ApiService } from '../service/api.service';
 import { Block } from '../model/content/block';
 import { Form } from '../model/form/form';
 import { Collection } from '../model/storage/collection';
-import { StringPropertyValue } from '../model/string-property-value';
+import { StringAttributeValue } from '../model/string-attribute-value';
 
 interface MenuItem {
   title: string;
@@ -84,7 +84,7 @@ export class MainMenuComponent implements OnInit {
     {
       title: 'Settings',
       child: [{
-        title: 'Properties',
+        title: 'Attributes',
         link: '/attribute',
         icon: 'display_settings',
       }, {
@@ -123,8 +123,8 @@ export class MainMenuComponent implements OnInit {
     },
   ];
 
-  findName(list: Array<StringPropertyValue>): string | undefined {
-    return list.find(item => item.property === 'NAME')?.string;
+  findName(list: Array<StringAttributeValue>): string | undefined {
+    return list.find(item => item.attribute === 'NAME')?.string;
   }
 
   ngOnInit() {
@@ -135,7 +135,7 @@ export class MainMenuComponent implements OnInit {
         }
 
         for (const item of list) {
-          const name = this.findName(item.property) ?? 'Block ' + String(item.id);
+          const name = this.findName(item.attribute) ?? 'Block ' + String(item.id);
 
           this.content.child.push({
             title: name,

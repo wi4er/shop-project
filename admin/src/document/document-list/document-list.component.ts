@@ -54,9 +54,9 @@ export class DocumentListComponent {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('property_' + it.attribute);
+        line['property_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

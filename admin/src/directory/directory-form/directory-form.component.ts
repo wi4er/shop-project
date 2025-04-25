@@ -4,7 +4,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DirectoryInput } from '../../app/model/directory/directory.input';
 import { Directory } from '../../app/model/directory';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class DirectoryFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -28,7 +28,7 @@ export class DirectoryFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
-    private propertyValueService: PropertyValueService,
+    private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
@@ -50,8 +50,8 @@ export class DirectoryFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editProperties)
+  getAttributeCount() {
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
@@ -64,7 +64,7 @@ export class DirectoryFormComponent implements OnInit {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.editProperties = this.propertyValueService.toEdit(item.property);
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -77,7 +77,7 @@ export class DirectoryFormComponent implements OnInit {
   toInput(): DirectoryInput {
     return {
       id: this.id,
-      attribute: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

@@ -1,7 +1,10 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface GroupInput {
-  id?: number;
+
+  id?: string;
+
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
+
 }

@@ -1,16 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Observable } from 'rxjs';
 import { Group } from '../../app/model/user/group';
 import { GroupFormComponent } from '../group-form/group-form.component';
-import { StringifiableRecord } from 'query-string/base';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
-import { Contact } from '../../app/model/user/contact';
-import { ContactFormComponent } from '../contact-form/contact-form.component';
-import { ContactSettingsComponent } from '../contact-settings/contact-settings.component';
 import { GroupSettingsComponent } from '../group-settings/group-settings.component';
 import { Flag } from '../../app/model/settings/flag';
 
@@ -90,8 +85,6 @@ export class GroupListComponent implements OnInit {
 
   /**
    *
-   * @param data
-   * @private
    */
   private setData(data: Group[]) {
     const col = new Set<string>();
@@ -105,9 +98,9 @@ export class GroupListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('attribute_' + it.attribute);
+        line['attribute_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

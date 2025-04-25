@@ -1,7 +1,10 @@
-import { StringPropertyValue } from './string-property-value';
+import { StringAttributeValue } from './string-attribute-value';
 
 export interface DocumentInput {
+
   id?: number;
+
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
+
 }

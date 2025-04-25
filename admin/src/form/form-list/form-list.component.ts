@@ -55,8 +55,8 @@ export class FormListComponent {
       };
 
       for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+        col.add('property_' + it.attribute);
+        line['property_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

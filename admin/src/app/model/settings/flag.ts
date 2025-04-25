@@ -1,4 +1,4 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface Flag {
 
@@ -10,6 +10,6 @@ export interface Flag {
   iconSvg: string | null;
 
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
 
 }

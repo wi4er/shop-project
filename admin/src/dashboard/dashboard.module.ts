@@ -4,7 +4,7 @@ import { DashboardTileComponent } from './dashboard-tile/dashboard-tile.componen
 import { DashboardContentComponent } from './dashboard-content/dashboard-content.component';
 import { DashboardCollectionComponent } from './dashboard-collection/dashboard-collection.component';
 import { DashboardDirectoryComponent } from './dashboard-directory/dashboard-directory.component';
-import { DashboardPropertyComponent } from './dashboard-property/dashboard-property.component';
+import { DashboardAttributeComponent } from './dashboard-attribute/dashboard-attribute.component';
 import { DashboardFlagComponent } from './dashboard-flag/dashboard-flag.component';
 import { DashboardLangComponent } from './dashboard-lang/dashboard-lang.component';
 import { DashboardConfigComponent } from './dashboard-config/dashboard-config.component';
@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     DashboardContentComponent,
     DashboardCollectionComponent,
     DashboardDirectoryComponent,
-    DashboardPropertyComponent,
+    DashboardAttributeComponent,
     DashboardFlagComponent,
     DashboardLangComponent,
     DashboardConfigComponent,

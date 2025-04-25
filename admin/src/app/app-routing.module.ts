@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DirectoryListComponent } from '../directory/directory-list/directory-list.component';
 import { FlagListComponent } from '../settings/flag-list/flag-list.component';
 import { LangListComponent } from '../settings/lang-list/lang-list.component';
-import { PropertyListComponent } from '../settings/property-list/property-list.component';
+import { AttributeListComponent } from '../settings/attribute-list/attribute-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ContentPageComponent } from './content-page/content-page.component';
 import { FormListComponent } from '../form/form-list/form-list.component';
@@ -42,8 +42,8 @@ const routes: Routes = [{
   path: 'lang',
   component: LangListComponent,
 }, {
-  path: 'property',
-  component: PropertyListComponent,
+  path: 'attribute',
+  component: AttributeListComponent,
 }, {
   path: 'form',
   component: FormListComponent,

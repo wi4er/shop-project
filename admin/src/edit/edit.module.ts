@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlagEditComponent } from './flag-edit/flag-edit.component';
-import { PropertyEditComponent } from './property-edit/property-edit.component';
+import { AttributeEditComponent } from './attribute-edit/attribute-edit.component';
 import { AddButtonComponent } from './add-button/add-button.component';
 import { ItemMenuComponent } from './item-menu/item-menu.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [
     AddButtonComponent,
     FlagEditComponent,
-    PropertyEditComponent,
+    AttributeEditComponent,
     ImageEditComponent,
     ItemMenuComponent,
     GroupPermissionComponent,
@@ -42,7 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   exports: [
     AddButtonComponent,
     FlagEditComponent,
-    PropertyEditComponent,
+    AttributeEditComponent,
     ImageEditComponent,
     ItemMenuComponent,
     GroupPermissionComponent,

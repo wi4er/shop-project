@@ -4,7 +4,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Section } from '../../app/model/content/section';
 import { SectionInput } from '../../app/model/content/section.input';
-import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
@@ -29,7 +29,7 @@ export class SectionFormComponent implements OnInit {
     }>
   } = {};
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
   editImages: {
     [collection: string]: Array<{
@@ -48,7 +48,7 @@ export class SectionFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
-    private propertyValueService: PropertyValueService,
+    private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
@@ -70,8 +70,8 @@ export class SectionFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editProperties)
+  getAttributeCount() {
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
@@ -95,7 +95,7 @@ export class SectionFormComponent implements OnInit {
       });
     }
 
-    this.editProperties = this.propertyValueService.toEdit(item.property);
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -116,7 +116,7 @@ export class SectionFormComponent implements OnInit {
       sort: this.sort,
       block: this.data?.block ?? 1,
       image: [],
-      attribute: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as SectionInput;

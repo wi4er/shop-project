@@ -1,4 +1,4 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface Collection {
 
@@ -7,6 +7,6 @@ export interface Collection {
   updated_at: string;
   version: number;
   flag: string[];
-  property: StringPropertyValue[];
+  property: StringAttributeValue[];
 
 }

@@ -1,9 +1,9 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface DirectoryInput {
 
   id?: string;
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
 
 }

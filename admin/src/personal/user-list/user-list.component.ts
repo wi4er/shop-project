@@ -108,9 +108,9 @@ export class UserListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('attribute_' + it.attribute);
+        line['attribute_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;
@@ -174,15 +174,13 @@ export class UserListComponent implements OnInit {
    *
    */
   openSettings() {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       UserSettingsComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

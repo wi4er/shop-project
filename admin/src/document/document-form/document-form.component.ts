@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ export class DocumentFormComponent {
   created_at: string = '';
   updated_at: string = '';
 
-  propertyList: Property[] = [];
+  propertyList: Attribute[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
 
@@ -34,7 +34,7 @@ export class DocumentFormComponent {
 
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
     ]).then(([property, flag, lang]) => {
@@ -73,7 +73,7 @@ export class DocumentFormComponent {
     }
   }
 
-  toEdit(item: Property) {
+  toEdit(item: Attribute) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
   }

@@ -5,7 +5,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { Flag } from '../../app/model/settings/flag';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { FileFormComponent } from '../file-form/file-form.component';
 import { File } from '../../app/model/storage/file';
 import { FileSettingsComponent } from '../file-settings/file-settings.component';
@@ -84,7 +84,7 @@ export class FileListComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.refreshData(),
     ]).then(([flagList, propertyList]) => {
       this.flagList = flagList;
@@ -111,9 +111,9 @@ export class FileListComponent implements OnChanges {
         original: item.original,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('property_' + it.attribute);
+        line['property_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

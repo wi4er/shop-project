@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -21,7 +21,7 @@ export class FileFormComponent implements OnInit {
   updated_at: string = '';
   file?: File;
 
-  propertyList: Property[] = [];
+  attributeList: Attribute[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
 
@@ -29,7 +29,7 @@ export class FileFormComponent implements OnInit {
     name: string,
     hash: string,
   };
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -41,15 +41,12 @@ export class FileFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    console.log(this.data?.id);
-
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, flag, lang]) => {
-      this.propertyList = property;
+    ]).then(([attribute, flag, lang]) => {
+      this.attributeList = attribute;
       this.flagList = flag;
       this.langList = lang;
 
@@ -62,12 +59,18 @@ export class FileFormComponent implements OnInit {
     });
   }
 
-  getPropertyCount() {
-    return Object.values(this.editProperties)
+  /**
+   *
+   */
+  getAttributeCount() {
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
+  /**
+   *
+   */
   onFileLoad(event: Event) {
     const target = event.target as HTMLInputElement;
     this.file = target?.files?.[0];
@@ -89,12 +92,15 @@ export class FileFormComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   initEditValues() {
-    for (const prop of this.propertyList) {
-      this.editProperties[prop.id] = {};
+    for (const prop of this.attributeList) {
+      this.editAttributes[prop.id] = {};
 
       for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = [{value: ''}];
+        this.editAttributes[prop.id][lang.id] = [{value: ''}];
       }
     }
 
@@ -103,20 +109,23 @@ export class FileFormComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   */
   toEdit(item: FileEntity) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    for (const prop of item.property) {
-      if (!this.editProperties[prop.property]) {
-        this.editProperties[prop.property] = {};
+    for (const prop of item.attribute) {
+      if (!this.editAttributes[prop.attribute]) {
+        this.editAttributes[prop.attribute] = {};
       }
 
-      if (!this.editProperties[prop.property][prop.lang ?? '']) {
-        this.editProperties[prop.property][prop.lang ?? ''] = [];
+      if (!this.editAttributes[prop.attribute][prop.lang ?? '']) {
+        this.editAttributes[prop.attribute][prop.lang ?? ''] = [];
       }
 
-      this.editProperties[prop.property][prop.lang ?? ''].push({
+      this.editAttributes[prop.attribute][prop.lang ?? ''].push({
         value: prop.string,
         error: '',
       });
@@ -133,14 +142,14 @@ export class FileFormComponent implements OnInit {
       flag: [],
     } as FileInput;
 
-    for (const prop in this.editProperties) {
-      for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) {
+    for (const prop in this.editAttributes) {
+      for (const lang in this.editAttributes[prop]) {
+        if (!this.editAttributes[prop][lang]) {
           continue;
         }
 
-        for (const value of this.editProperties[prop][lang]) {
-          input.property.push({
+        for (const value of this.editAttributes[prop][lang]) {
+          input.attribute.push({
             attribute: prop,
             string: value.value,
             lang: lang || undefined,

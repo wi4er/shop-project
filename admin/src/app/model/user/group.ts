@@ -1,4 +1,4 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface Group {
 
@@ -6,7 +6,8 @@ export interface Group {
   created_at: string;
   updated_at: string;
   parent: number;
+
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
 
 }

@@ -36,7 +36,7 @@ export class ItemMenuComponent implements OnInit {
   }
 
   getFlagName(flag: Flag): string {
-    const name = flag.property.find(it => it.property === 'NAME');
+    const name = flag.attribute.find(it => it.attribute === 'NAME');
 
     if (name) {
       return name.string;

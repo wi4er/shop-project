@@ -1,8 +1,11 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface UserInput {
+
   id?: number;
   login: string;
+
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
+
 }

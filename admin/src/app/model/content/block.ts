@@ -1,4 +1,4 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionValue } from '../permission/permission-value';
 
 export interface Block {
@@ -9,7 +9,7 @@ export interface Block {
   sort: number;
 
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
   permission: PermissionValue[];
 
 }

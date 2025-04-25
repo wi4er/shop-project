@@ -4,7 +4,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Flag } from '../../app/model/settings/flag';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { Element } from '../../app/model/content/element';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
@@ -41,7 +41,7 @@ export class ElementListComponent implements OnChanges {
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   activeFlags: { [key: string]: string[] } = {};
-  propertyList: string[] = [];
+  attributeList: string[] = [];
   flagList: Array<Flag> = [];
   permissionList: { [key: string]: Array<PermissionValue> } = {};
   imageList: {
@@ -51,6 +51,7 @@ export class ElementListComponent implements OnChanges {
     }> | null
   } = {};
   columns: string[] = [];
+
   list: { [key: string]: string }[] = [];
   expandedElement: Element | null = null;
 
@@ -136,13 +137,13 @@ export class ElementListComponent implements OnChanges {
   ngOnChanges() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.blockId ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, String(this.blockId)) : null,
       this.refreshData(),
-    ]).then(([flagList, propertyList, blockItem]) => {
+    ]).then(([flagList, attributeList, blockItem]) => {
       this.flagList = flagList;
-      this.propertyList = propertyList.map((item: { id: string }) => item.id);
-      this.blockName = blockItem?.property.find(item => item.property === 'NAME')?.string;
+      this.attributeList = attributeList.map((item: { id: string }) => item.id);
+      this.blockName = blockItem?.attribute.find(item => item.attribute === 'NAME')?.string;
 
       this.loading = false;
     });
@@ -171,9 +172,9 @@ export class ElementListComponent implements OnChanges {
         this.imageList[item.id]?.push(image);
       }
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('attribute_' + it.attribute);
+        line['attribute_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

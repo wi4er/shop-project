@@ -6,7 +6,7 @@ import { PermissionMethod } from '../../app/model/permission/permission-method';
 @Component({
   selector: 'app-group-permission',
   templateUrl: './group-permission.component.html',
-  styleUrls: ['./group-permission.component.css']
+  styleUrls: ['./group-permission.component.css'],
 })
 export class GroupPermissionComponent implements OnInit {
 
@@ -17,7 +17,7 @@ export class GroupPermissionComponent implements OnInit {
 
   @Input()
   permission: {
-    [groupId: string]: { [method: string]: boolean }
+    [groupId: string]: { [method: string]: boolean | null},
   } = {};
 
   constructor(
@@ -39,7 +39,7 @@ export class GroupPermissionComponent implements OnInit {
   getList() {
     const list = [];
 
-    list.push({id: ''})
+    list.push({id: ''});
     list.push(...this.groupList);
 
     return list;

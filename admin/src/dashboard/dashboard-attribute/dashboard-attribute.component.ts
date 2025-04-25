@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { PropertyFormComponent } from '../../settings/property-form/property-form.component';
+import { AttributeFormComponent } from '../../settings/attribute-form/attribute-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 
 @Component({
   selector: 'app-dashboard-attribute',
-  templateUrl: './dashboard-property.component.html',
-  styleUrls: ['./dashboard-property.component.css'],
+  templateUrl: './dashboard-attribute.component.html',
+  styleUrls: ['./dashboard-attribute.component.css'],
 })
-export class DashboardPropertyComponent implements OnInit {
+export class DashboardAttributeComponent implements OnInit {
 
   list: {
     [id: string]: {
@@ -38,7 +38,7 @@ export class DashboardPropertyComponent implements OnInit {
 
   handleMove(id: string) {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      AttributeFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -56,7 +56,7 @@ export class DashboardPropertyComponent implements OnInit {
   refreshData() {
     this.list = {};
 
-    this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
+    this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
           id: it.id,

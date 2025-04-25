@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
 import { Lang } from '../../app/model/settings/lang';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { LangInput } from '../../app/model/settings/lang.input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
@@ -19,7 +18,7 @@ export class LangFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -27,7 +26,7 @@ export class LangFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
-    private propertyValueService: PropertyValueService,
+    private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
@@ -47,8 +46,8 @@ export class LangFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editProperties)
+  getAttributeCount() {
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
@@ -56,11 +55,11 @@ export class LangFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Property) {
+  toEdit(item: Lang) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.editProperties = this.propertyValueService.toEdit(item.property);
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -73,7 +72,7 @@ export class LangFormComponent implements OnInit {
   toInput(): LangInput {
     return {
       id: this.id,
-      attribute: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

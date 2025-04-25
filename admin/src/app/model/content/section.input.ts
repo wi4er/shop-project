@@ -1,4 +1,4 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionInput } from '../permission/permission-input';
 
 export interface SectionInput {
@@ -8,6 +8,7 @@ export interface SectionInput {
 
   image: Array<number>;
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
   permission: PermissionInput[];
+
 }

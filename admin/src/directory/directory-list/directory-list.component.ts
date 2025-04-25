@@ -9,7 +9,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { Flag } from '../../app/model/settings/flag';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { BlockSettingsComponent } from '../../content/block-settings/block-settings.component';
 import { DirectorySettingsComponent } from '../directory-settings/directory-settings.component';
 
@@ -29,7 +29,7 @@ export class DirectoryListComponent implements OnInit {
 
   activeFlags: { [key: string]: string[] } = {};
   flagList: Array<Flag> = [];
-  propertyList: string[] = [];
+  attributeList: string[] = [];
   columns: string[] = [];
 
   constructor(
@@ -87,8 +87,8 @@ export class DirectoryListComponent implements OnInit {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG)
         .then(list => this.flagList = list),
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY)
-        .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE)
+        .then(list => this.attributeList = list.map((item: { id: string }) => item.id)),
     ]).then(() => this.refreshData());
   }
 
@@ -138,9 +138,9 @@ export class DirectoryListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('attribute_' + it.attribute);
+        line['attribute_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

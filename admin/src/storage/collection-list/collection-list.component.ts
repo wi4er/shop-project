@@ -5,7 +5,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { Flag } from '../../app/model/settings/flag';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { CollectionFormComponent } from '../collection-form/collection-form.component';
 import { Collection } from '../../app/model/storage/collection';
 import { CollectionSettingsComponent } from '../collection-settings/collection-settings.component';
@@ -80,7 +80,7 @@ export class CollectionListComponent implements OnInit {
   ngOnInit() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.refreshData(),
     ]).then(([flagList, propertyList]) => {
       this.flagList = flagList;
@@ -104,8 +104,8 @@ export class CollectionListComponent implements OnInit {
       };
 
       for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+        col.add('property_' + it.attribute);
+        line['property_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

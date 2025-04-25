@@ -15,7 +15,7 @@
     <th mat-header-cell *matHeaderCellDef> {{ method }}</th>
     <td mat-cell *matCellDef="let element">
       <mat-checkbox
-        [checked]="permission[element.id]?.[method] ?? false"
+        [checked]="permission[element.id][method] ?? false"
         (change)="handleChange(element.id, method)"
       >
       </mat-checkbox>

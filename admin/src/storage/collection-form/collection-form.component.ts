@@ -1,16 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { Lang } from '../../app/model/settings/lang';
 import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Collection } from '../../app/model/storage/collection';
 import { CollectionInput } from '../../app/model/storage/collection.input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-collection-form',
   templateUrl: './collection-form.component.html',
-  styleUrls: ['./collection-form.component.css']
+  styleUrls: ['./collection-form.component.css'],
 })
 export class CollectionFormComponent implements OnInit {
 
@@ -18,7 +19,7 @@ export class CollectionFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  propertyList: Property[] = [];
+  propertyList: Attribute[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
 
@@ -29,12 +30,13 @@ export class CollectionFormComponent implements OnInit {
     private dialogRef: MatDialogRef<CollectionFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private errorBar: MatSnackBar,
   ) {
   }
 
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
     ]).then(([property, flag, lang]) => {
@@ -76,15 +78,15 @@ export class CollectionFormComponent implements OnInit {
     this.updated_at = item.updated_at;
 
     for (const prop of item.property) {
-      if (!this.editProperties[prop.property]) {
-        this.editProperties[prop.property] = {};
+      if (!this.editProperties[prop.attribute]) {
+        this.editProperties[prop.attribute] = {};
       }
 
-      if (!this.editProperties[prop.property][prop.lang ?? '']) {
-        this.editProperties[prop.property][prop.lang ?? ''] = [];
+      if (!this.editProperties[prop.attribute][prop.lang ?? '']) {
+        this.editProperties[prop.attribute][prop.lang ?? ''] = [];
       }
 
-      this.editProperties[prop.property][prop.lang ?? ''].push({
+      this.editProperties[prop.attribute][prop.lang ?? ''].push({
         value: prop.string,
         error: '',
       });
@@ -109,7 +111,7 @@ export class CollectionFormComponent implements OnInit {
         }
 
         for (const value of this.editProperties[prop][lang]) {
-          input.property.push({
+          input.attribute.push({
             attribute: prop,
             string: value.value,
             lang: lang || undefined,
@@ -127,23 +129,33 @@ export class CollectionFormComponent implements OnInit {
     return input;
   }
 
-  saveItem() {
+  /**
+   *
+   */
+  sendItem(): Promise<string> {
     if (this.data?.id) {
-      this.apiService.putData<CollectionInput>(
+      return this.apiService.putData<CollectionInput>(
         ApiEntity.COLLECTION,
         this.data.id,
         this.toInput(),
-      ).then(() => {
-        this.dialogRef.close();
-      });
+      );
     } else {
-      this.apiService.postData<CollectionInput>(
+      return this.apiService.postData<CollectionInput>(
         ApiEntity.COLLECTION,
         this.toInput(),
-      ).then(() => {
-        this.dialogRef.close();
-      });
+      );
     }
+  }
+
+  /**
+   *
+   */
+  saveItem() {
+    this.sendItem()
+      .then(() => this.dialogRef.close())
+      .catch((err: string) => {
+        this.errorBar.open(err, 'close', {duration: 5000});
+      });
   }
 
 }

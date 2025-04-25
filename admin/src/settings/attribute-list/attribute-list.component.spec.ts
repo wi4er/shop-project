@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PropertyListComponent } from './property-list.component';
+import { AttributeListComponent } from './attribute-list.component';
 
 describe('PropertyListComponent', () => {
-  let component: PropertyListComponent;
-  let fixture: ComponentFixture<PropertyListComponent>;
+  let component: AttributeListComponent;
+  let fixture: ComponentFixture<AttributeListComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PropertyListComponent]
+      declarations: [AttributeListComponent]
     });
-    fixture = TestBed.createComponent(PropertyListComponent);
+    fixture = TestBed.createComponent(AttributeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

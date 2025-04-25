@@ -1,4 +1,4 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionValue } from '../permission/permission-value';
 
 export interface Section {
@@ -7,6 +7,7 @@ export interface Section {
   created_at: string;
   updated_at: string;
   sort: number;
+
   image: Array<{
     original: string;
     image: number;
@@ -14,7 +15,7 @@ export interface Section {
     collection: string;
   }>
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
   permission: PermissionValue[];
 
 }

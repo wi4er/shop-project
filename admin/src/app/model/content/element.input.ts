@@ -1,15 +1,16 @@
-import { StringPropertyValue } from '../string-property-value';
-import { WithPropertyInput } from '../settings/with-property.input';
+import { StringAttributeValue } from '../string-attribute-value';
+import { WithAttributeInput } from '../settings/with-attribute.input';
 import { PermissionInput } from '../permission/permission-input';
 
-export interface ElementInput extends WithPropertyInput {
+export interface ElementInput
+  extends WithAttributeInput {
 
   id: string;
   block: number;
 
   image: Array<number>;
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
   permission: PermissionInput[];
 
 }

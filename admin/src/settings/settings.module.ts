@@ -6,8 +6,8 @@ import { FlagFormComponent } from './flag-form/flag-form.component';
 import { FlagListComponent } from './flag-list/flag-list.component';
 import { LangFormComponent } from './lang-form/lang-form.component';
 import { LangListComponent } from './lang-list/lang-list.component';
-import { PropertyFormComponent } from './property-form/property-form.component';
-import { PropertyListComponent } from './property-list/property-list.component';
+import { AttributeFormComponent } from './attribute-form/attribute-form.component';
+import { AttributeListComponent } from './attribute-list/attribute-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -28,8 +28,8 @@ import { MatSelectModule } from '@angular/material/select';
     FlagListComponent,
     LangFormComponent,
     LangListComponent,
-    PropertyFormComponent,
-    PropertyListComponent,
+    AttributeFormComponent,
+    AttributeListComponent,
   ],
   imports: [
     CommonModule,

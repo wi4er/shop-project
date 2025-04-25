@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PropertyFormComponent } from '../property-form/property-form.component';
+import { AttributeFormComponent } from '../attribute-form/attribute-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -10,10 +10,10 @@ import { Flag } from '../../app/model/settings/flag';
 
 @Component({
   selector: 'app-attribute-list',
-  templateUrl: './property-list.component.html',
-  styleUrls: ['./property-list.component.css']
+  templateUrl: './attribute-list.component.html',
+  styleUrls: ['./attribute-list.component.css']
 })
-export class PropertyListComponent implements OnInit {
+export class AttributeListComponent implements OnInit {
 
   totalCount: number = 0;
   pageSize: number = 10;
@@ -83,14 +83,14 @@ export class PropertyListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Property>(
-        ApiEntity.PROPERTY,
+      this.apiService.fetchList<Attribute>(
+        ApiEntity.ATTRIBUTE,
         {
           limit: this.pageSize,
           offset: this.currentPage * this.pageSize,
         },
       ),
-      this.apiService.countData(ApiEntity.PROPERTY),
+      this.apiService.countData(ApiEntity.ATTRIBUTE),
     ]).then(([data, count]) => {
       this.setData(data);
       this.totalCount = count;
@@ -101,7 +101,7 @@ export class PropertyListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Property[]) {
+  private setData(data: Attribute[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -113,9 +113,9 @@ export class PropertyListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('property_' + it.attribute);
+        line['property_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;
@@ -131,7 +131,7 @@ export class PropertyListComponent implements OnInit {
    */
   addItem() {
     this.dialog.open(
-      PropertyFormComponent,
+      AttributeFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -144,7 +144,7 @@ export class PropertyListComponent implements OnInit {
    */
   updateItem(id: number) {
     this.dialog.open(
-      PropertyFormComponent,
+      AttributeFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
@@ -165,7 +165,7 @@ export class PropertyListComponent implements OnInit {
   async deleteList() {
     const list = this.selection.selected.map(item => item['id']);
 
-    this.apiService.deleteList(ApiEntity.PROPERTY, list)
+    this.apiService.deleteList(ApiEntity.ATTRIBUTE, list)
       .then(() => this.refreshData());
   }
 
@@ -173,7 +173,7 @@ export class PropertyListComponent implements OnInit {
    *
    */
   deleteItem(id: string) {
-    this.apiService.deleteList(ApiEntity.PROPERTY, [id])
+    this.apiService.deleteList(ApiEntity.ATTRIBUTE, [id])
       .then(() => this.refreshData());
   }
 

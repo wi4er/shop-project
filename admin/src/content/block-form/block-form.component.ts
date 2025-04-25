@@ -4,7 +4,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { BlockInput } from '../../app/model/content/block.input';
 import { Block } from '../../app/model/content/block';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class BlockFormComponent implements OnInit {
   updated_at: string = '';
   sort: number = 100;
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
   editPermission: { [groupId: string]: { [method: string]: boolean } } = {};
 
@@ -29,7 +29,7 @@ export class BlockFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
-    private propertyValueService: PropertyValueService,
+    private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
   }
@@ -41,8 +41,6 @@ export class BlockFormComponent implements OnInit {
     Promise.all([
       this.data?.id ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, this.data.id) : null,
     ]).then(([data]) => {
-
-      this.initEditValues();
       if (data) this.toEdit(data);
 
       this.loading = false;
@@ -53,16 +51,9 @@ export class BlockFormComponent implements OnInit {
    *
    */
   getPropertyCount() {
-    return Object.values(this.editProperties)
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
-  }
-
-  /**
-   *
-   */
-  initEditValues() {
-
   }
 
   /**
@@ -73,7 +64,7 @@ export class BlockFormComponent implements OnInit {
     this.updated_at = item.updated_at;
     this.sort = item.sort;
 
-    this.editProperties = this.propertyValueService.toEdit(item.property);
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -92,7 +83,7 @@ export class BlockFormComponent implements OnInit {
     const input: BlockInput = {
       id: this.data?.id,
       sort: +this.sort,
-      attribute: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
       permission: [],
     } as BlockInput;

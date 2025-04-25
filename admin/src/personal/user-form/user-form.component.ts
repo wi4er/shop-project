@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../app/model/user/user';
 import { Group } from '../../app/model/user/group';
 import { Contact } from '../../app/model/user/contact';
-import { PropertyValueService } from '../../edit/property-value/property-value.service';
+import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
@@ -26,8 +26,8 @@ export class UserFormComponent implements OnInit {
   groupList: Array<Group> = [];
   contactList: Array<Contact> = [];
 
-  editProperties: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editContact: { [property: string]: { value: string, error?: string } } = {};
+  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editContact: { [attribute: string]: { value: string, error?: string } } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -35,7 +35,7 @@ export class UserFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
     private errorBar: MatSnackBar,
-    private propertyValueService: PropertyValueService,
+    private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
@@ -62,8 +62,8 @@ export class UserFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editProperties)
+  getAttributeCount() {
+    return Object.values(this.editAttributes)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
@@ -77,7 +77,7 @@ export class UserFormComponent implements OnInit {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.editProperties = this.propertyValueService.toEdit(item.property);
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
 
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
@@ -91,7 +91,7 @@ export class UserFormComponent implements OnInit {
     return {
       id: +this.id,
       login: this.login,
-      attribute: this.propertyValueService.toInput(this.editProperties),
+      attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
     };
   }

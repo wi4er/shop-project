@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Flag } from '../../app/model/settings/flag';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Property } from '../../app/model/settings/property';
+import { Attribute } from '../../app/model/settings/attribute';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
@@ -38,7 +38,7 @@ export class SectionListComponent implements OnChanges {
   currentPage: number = 0;
   activeFlags: { [key: string]: string[] } = {};
 
-  propertyList: string[] = [];
+  attributeList: string[] = [];
   flagList: Array<Flag> = [];
   imageList: {
     [id: string]: Array<{
@@ -129,11 +129,11 @@ export class SectionListComponent implements OnChanges {
   ngOnChanges() {
     Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Property>(ApiEntity.PROPERTY),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.refreshData(),
-    ]).then(([flagList, propertyList]) => {
+    ]).then(([flagList, attributeList]) => {
       this.flagList = flagList;
-      this.propertyList = propertyList.map((item: { id: string }) => item.id);
+      this.attributeList = attributeList.map((item: { id: string }) => item.id);
 
       this.loading = false;
     });
@@ -185,9 +185,9 @@ export class SectionListComponent implements OnChanges {
         this.imageList[item.id]?.push(image);
       }
 
-      for (const it of item.property) {
-        col.add('property_' + it.property);
-        line['property_' + it.property] = it.string;
+      for (const it of item.attribute) {
+        col.add('attribute_' + it.attribute);
+        line['attribute_' + it.attribute] = it.string;
       }
 
       this.activeFlags[item.id] = item.flag;

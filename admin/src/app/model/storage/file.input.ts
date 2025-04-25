@@ -1,8 +1,8 @@
-import { StringPropertyValue } from '../string-property-value';
+import { StringAttributeValue } from '../string-attribute-value';
 
 export interface FileInput {
 
   flag: string[];
-  property: StringPropertyValue[];
+  attribute: StringAttributeValue[];
 
 }
