@@ -236,9 +236,7 @@ export class ElementListComponent implements OnChanges {
     this.dialog.open(
       ElementFormComponent,
       {
-        // width: '1000px',
         panelClass: 'wrapper',
-
         data: {block: this.blockId},
       },
     ).afterClosed().subscribe(() => this.refreshData());

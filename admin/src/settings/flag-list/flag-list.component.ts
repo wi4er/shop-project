@@ -75,8 +75,33 @@ export class FlagListComponent implements OnInit {
     return [
       'select',
       'action',
+      'flags',
       ...this.columns,
     ];
+  }
+
+  /**
+   *
+   */
+  getFlagsIcon(id: string) {
+    const list = this.activeFlags[id];
+    const icons: Array<{
+      icon: string | null,
+      title: string,
+      color: string | null,
+    }> = [];
+
+    for (const flag of this.flagList) {
+      if (list.includes(flag.id) && flag.icon) {
+        icons.push({
+          icon: flag.icon,
+          title: flag.id,
+          color: flag.color,
+        });
+      }
+    }
+
+    return icons;
   }
 
   /**

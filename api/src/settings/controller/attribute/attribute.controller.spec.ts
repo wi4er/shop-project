@@ -270,71 +270,128 @@ describe('AttributeController', () => {
       expect(count.body.count).toBe(1);
     });
 
-    test('Should update id with string', async () => {
-      const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
+    describe('Attribute update with strings', () => {
+      test('Should update id with string', async () => {
+        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
 
-      const item = await request(app.getHttpServer())
-        .put('/attribute/NAME')
-        .send({id: 'UPDATE', attribute: [{string: 'VALUE', attribute: 'UPDATE'}]})
-        .expect(200);
-      const count = await request(app.getHttpServer())
-        .get('/attribute/count')
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'UPDATE', attribute: [{string: 'VALUE', attribute: 'UPDATE'}]})
+          .expect(200);
+        const count = await request(app.getHttpServer())
+          .get('/attribute/count')
+          .expect(200);
 
-      expect(item.body.id).toBe('UPDATE');
-      expect(item.body.attribute).toEqual([{attribute: 'UPDATE', string: 'VALUE'}]);
-      expect(count.body.count).toBe(1);
+        expect(item.body.id).toBe('UPDATE');
+        expect(item.body.attribute).toEqual([{attribute: 'UPDATE', string: 'VALUE'}]);
+        expect(count.body.count).toBe(1);
+      });
+
+      test('Should add strings', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'TARGET'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
+        const item = await request(app.getHttpServer())
+          .put('/attribute/TARGET')
+          .send({
+            id: 'TARGET',
+            attribute: [{attribute: 'NAME', string: 'VALUE'}],
+          })
+          .expect(200);
+
+        expect(item.body.attribute[0].attribute).toBe('NAME');
+        expect(item.body.attribute[0].string).toBe('VALUE');
+      });
     });
 
-    test('Should update id with flag', async () => {
-      const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-      await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
+    describe('Attribute update with flags', () => {
+      test('Should add flag', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
 
-      const item = await request(app.getHttpServer())
-        .put('/attribute/NAME')
-        .send({id: 'UPDATE', flag: ['FLAG']})
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'NAME', flag: ['FLAG']})
+          .expect(200);
 
-      const count = await request(app.getHttpServer())
-        .get('/attribute/count')
-        .expect(200);
+        expect(item.body.flag).toEqual(['FLAG']);
+      });
 
-      expect(item.body.id).toBe('UPDATE');
-      expect(item.body.flag).toEqual(['FLAG']);
-      expect(count.body.count).toBe(1);
-    });
+      test('Should remove flag', async () => {
+        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
 
-    test('Should add strings', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'TARGET'}).save();
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'NAME', flag: []})
+          .expect(200);
 
-      const item = await request(app.getHttpServer())
-        .put('/attribute/TARGET')
-        .send({
-          id: 'TARGET',
-          attribute: [{attribute: 'NAME', string: 'VALUE'}],
-        })
-        .expect(200);
+        expect(item.body.flag).toEqual([]);
+      });
 
-      expect(item.body.attribute[0].attribute).toBe('NAME');
-      expect(item.body.attribute[0].string).toBe('VALUE');
-    });
+      test('Should update flag', async () => {
+        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new FlagEntity(), {id: 'UPDATE'}).save();
+        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
 
-    test('Should add flags', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'TARGET'}).save();
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'NAME', flag: ['UPDATE']})
+          .expect(200);
 
-      const item = await request(app.getHttpServer())
-        .put('/attribute/TARGET')
-        .send({
-          id: 'TARGET',
-          flag: ['ACTIVE'],
-        })
-        .expect(200);
+        expect(item.body.flag).toEqual(['UPDATE']);
+      });
 
-      expect(item.body.flag).toEqual(['ACTIVE']);
+      test('Should update only flag', async () => {
+        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new FlagEntity(), {id: 'UPDATE'}).save();
+        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
+
+        const item = await request(app.getHttpServer())
+          .patch('/attribute/NAME')
+          .send({flag: ['UPDATE']})
+          .expect(200);
+
+        expect(item.body.flag).toEqual(['UPDATE']);
+      });
+
+      test('Should update id with flag', async () => {
+        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
+
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'UPDATE', flag: ['FLAG']})
+          .expect(200);
+
+        const count = await request(app.getHttpServer())
+          .get('/attribute/count')
+          .expect(200);
+
+        expect(item.body.id).toBe('UPDATE');
+        expect(item.body.flag).toEqual(['FLAG']);
+        expect(count.body.count).toBe(1);
+      });
+
+      test('Should add flags', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'TARGET'}).save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const item = await request(app.getHttpServer())
+          .put('/attribute/TARGET')
+          .send({
+            id: 'TARGET',
+            flag: ['ACTIVE'],
+          })
+          .expect(200);
+
+        expect(item.body.flag).toEqual(['ACTIVE']);
+      });
     });
   });
 

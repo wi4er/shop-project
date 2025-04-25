@@ -1,3 +1,10 @@
+:host {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .select {
   width: 36px;
 }
@@ -6,9 +13,8 @@
   width: 48px;
 }
 
-:host {
-  min-height: 100%;
+
+.flags {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  gap: 4px;
 }

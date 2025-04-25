@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { AttributeEntity } from '../../model/attribute.entity';
@@ -7,6 +7,7 @@ import { AttributeInsertOperation } from '../../operation/attribute-insert.opera
 import { AttributeUpdateOperation } from '../../operation/attribute-update.operation';
 import { AttributeDeleteOperation } from '../../operation/attribute-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { AttributePatchOperation } from '../../operation/attribute-patch.operation';
 
 @Controller('attribute')
 export class AttributeController {
@@ -96,6 +97,22 @@ export class AttributeController {
   ) {
     return this.entityManager.transaction(
       trans => new AttributeUpdateOperation(trans).save(id, input)
+        .then(id => trans.getRepository(AttributeEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(this.toView);
+  }
+
+  @Patch(':id')
+  async updateField(
+    @Param('id')
+      id: string,
+    @Body()
+      input: AttributeInput,
+  ) {
+    return this.entityManager.transaction(
+      trans => new AttributePatchOperation(trans).save(id, input)
         .then(id => trans.getRepository(AttributeEntity).findOne({
           where: {id},
           relations: this.relations,

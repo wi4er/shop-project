@@ -7,6 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Flag } from '../../app/model/settings/flag';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-attribute-list',
@@ -29,6 +30,7 @@ export class AttributeListComponent implements OnInit {
     private dialog: MatDialog,
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
+    private messageBar: MatSnackBar,
   ) {
   }
 
@@ -36,7 +38,12 @@ export class AttributeListComponent implements OnInit {
    *
    */
   ngOnInit(): void {
-    this.refreshData();
+    Promise.all([
+      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
+      this.refreshData(),
+    ]).then(([flagList]) => {
+      this.flagList = flagList;
+    });
   }
 
   /**
@@ -74,8 +81,33 @@ export class AttributeListComponent implements OnInit {
     return [
       'select',
       'action',
+      'flags',
       ...this.columns,
     ];
+  }
+
+  /**
+   *
+   */
+  getFlagsIcon(id: string) {
+    const list = this.activeFlags[id];
+    const icons: Array<{
+      icon: string | null,
+      title: string,
+      color: string | null,
+    }> = [];
+
+    for (const flag of this.flagList) {
+      if (list.includes(flag.id) && flag.icon) {
+        icons.push({
+          icon: flag.icon,
+          title: flag.id,
+          color: flag.color,
+        });
+      }
+    }
+
+    return icons;
   }
 
   /**
@@ -156,7 +188,21 @@ export class AttributeListComponent implements OnInit {
   /**
    *
    */
-  toggleFlag(id: number, flag: string) {
+  toggleFlag(id: string, flag: string) {
+    const list: Array<string> = [...this.activeFlags[id]];
+
+    const index = this.activeFlags[id].indexOf(flag);
+    if (~index) {
+      list.splice(index, 1);
+    } else {
+      list.push(flag);
+    }
+
+    this.apiService.patchData(ApiEntity.ATTRIBUTE, id, {flag: list})
+      .then(() => {
+        this.messageBar.open(`Changing flag ${flag} for ${id}`, 'close', {duration: 3000});
+        return this.refreshData();
+      });
   }
 
   /**

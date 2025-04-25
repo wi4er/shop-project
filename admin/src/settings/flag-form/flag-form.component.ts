@@ -51,6 +51,8 @@ export class FlagFormComponent implements OnInit {
         this.toEdit(data);
         this.loading = false;
       });
+    } else {
+      this.loading = false;
     }
   }
 
