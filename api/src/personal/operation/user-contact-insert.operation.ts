@@ -26,10 +26,10 @@ export class UserContactInsertOperation {
 
     await this.trans.save(this.created);
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
-
-    await new StringValueInsertOperation(this.trans, Contact4stringEntity).save(this.created, stringList);
     await new FlagValueInsertOperation(this.trans, Contact2flagEntity).save(this.created, input);
+
+    const [stringList] = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.trans, Contact4stringEntity).save(this.created, stringList);
 
     return this.created.id;
   }

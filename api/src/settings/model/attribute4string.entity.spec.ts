@@ -7,21 +7,18 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 describe('Attribute2string entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
   describe('Attribute2sting fields', () => {
     test('Should create attribute attribute', async () => {
       const parent = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'ATTRIBUTE'}).save();
 
       const value = new Attribute4stringEntity();
       value.string = 'VALUE';
-      value.attribute = property;
+      value.attribute = attribute;
       value.parent = parent;
       const inst = await value.save();
 
@@ -48,7 +45,7 @@ describe('Attribute2string entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'ATTRIBUTE'}).save();
 
       const value = new Attribute4stringEntity();
       value.string = 'VALUE';
@@ -70,7 +67,7 @@ describe('Attribute2string entity', () => {
     test('Should add attribute with string', async () => {
       const repo = source.getRepository(AttributeEntity);
 
-      const attribute = await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'ATTRIBUTE'}).save();
       const parent = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       await Object.assign(new Attribute4stringEntity(), {string: 'VALUE', attribute, parent}).save();
 
@@ -81,17 +78,17 @@ describe('Attribute2string entity', () => {
 
       expect(item.string).toHaveLength(1);
       expect(item.string[0].string).toBe('VALUE');
-      expect(item.string[0].attribute.id).toBe('PROPERTY');
+      expect(item.string[0].attribute.id).toBe('ATTRIBUTE');
     });
 
     test('Should add attribute with attribute id', async () => {
       const repo = source.getRepository(AttributeEntity);
 
       await Object.assign(new AttributeEntity(), {id: 'VALUE'}).save();
-      await Object.assign(new AttributeEntity(), {id: 'PROPERTY'}).save();
-      await Object.assign(new Attribute4stringEntity(), {string: 'VALUE', attribute: 'VALUE', parent: 'PROPERTY'}).save();
+      await Object.assign(new AttributeEntity(), {id: 'ATTRIBUTE'}).save();
+      await Object.assign(new Attribute4stringEntity(), {string: 'VALUE', attribute: 'VALUE', parent: 'ATTRIBUTE'}).save();
 
-      const item = await repo.findOne({where: {id: 'PROPERTY'}, relations: {string: true}});
+      const item = await repo.findOne({where: {id: 'ATTRIBUTE'}, relations: {string: true}});
 
       expect(item.string[0].string).toBe('VALUE');
     });

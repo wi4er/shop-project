@@ -17,6 +17,7 @@ import { PermissionException } from '../../../exception/permission/permission.ex
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { ElementRender } from '../../render/element.render';
 import { ElementPatchOperation } from '../../operation/element-patch.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('Content element')
 @Controller('element')
@@ -33,7 +34,7 @@ export class ElementController {
     element: {element: true, attribute: true},
     section: {section: true, attribute: true},
     file: {file: true, attribute: true},
-  };
+  } as FindOptionsRelations<ElementEntity>;
 
   constructor(
     @InjectEntityManager()
@@ -95,11 +96,11 @@ export class ElementController {
         }
 
         if (key === 'sort') {
-          order['sort'] = item[key]
+          order['sort'] = item[key];
         }
 
         if (key === 'version') {
-          order['version'] = item[key]
+          order['version'] = item[key];
         }
       }
     }

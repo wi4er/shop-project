@@ -26,6 +26,7 @@ describe('AuthController', () => {
   describe('User auth', () => {
     test('Should auth', async () => {
       await Object.assign(new UserEntity(), {
+        id: 'USER',
         login: 'USER',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
@@ -38,17 +39,18 @@ describe('AuthController', () => {
         })
         .expect(201);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('USER');
       expect(res.body.login).toBe('USER');
       expect(res.body.group).toEqual([]);
     });
 
     test('Should auth with group', async () => {
       const parent = await Object.assign(new UserEntity(), {
+        id: 'USER',
         login: 'USER',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
-      const group = await Object.assign(new GroupEntity(), {}).save();
+      const group = await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
       await Object.assign(new User2groupEntity(), {group, parent}).save();
 
       const res = await request(app.getHttpServer())
@@ -59,19 +61,21 @@ describe('AuthController', () => {
         })
         .expect(201);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('USER');
       expect(res.body.login).toBe('USER');
-      expect(res.body.group).toEqual([1]);
+      expect(res.body.group).toEqual(['GROUP']);
     });
 
     test('Should auth with multi users', async () => {
-      const group = await Object.assign(new GroupEntity(), {}).save();
+      const group = await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
       const parent1 = await Object.assign(new UserEntity(), {
+        id: 'USER_1',
         login: 'USER_1',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
       await Object.assign(new User2groupEntity(), {group, parent: parent1}).save();
       const parent2 = await Object.assign(new UserEntity(), {
+        id: 'USER_2',
         login: 'USER_2',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
@@ -85,18 +89,19 @@ describe('AuthController', () => {
         })
         .expect(201);
 
-      expect(res.body.id).toBe(2);
+      expect(res.body.id).toBe('USER_2');
       expect(res.body.login).toBe('USER_2');
-      expect(res.body.group).toEqual([1]);
+      expect(res.body.group).toEqual(['GROUP']);
     });
 
     test('Shouldn`t auth with wrong password', async () => {
       await Object.assign(new UserEntity(), {
+        id: 'USER',
         login: 'USER',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
 
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/auth')
         .send({
           login: 'USER',
@@ -106,13 +111,18 @@ describe('AuthController', () => {
     });
 
     test('Shouldn`t auth without password', async () => {
-      const res = await request(app.getHttpServer())
+      await Object.assign(new UserEntity(), {
+        id: 'USER',
+        login: 'USER',
+        hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
+      }).save();
+
+      await request(app.getHttpServer())
         .post('/auth')
         .send({
           login: 'USER',
-          password: 'qwerty',
         })
-        .expect(403);
+        .expect(400);
     });
 
     test('Shouldn`t auth with wrong content type', async () => {

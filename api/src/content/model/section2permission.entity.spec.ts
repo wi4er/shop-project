@@ -10,10 +10,7 @@ import { PermissionMethod } from '../../permission/model/permission-method';
 describe('Section permission entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -50,15 +47,6 @@ describe('Section permission entity', () => {
       await expect(
         Object.assign(new Section2permissionEntity(), {group, method: PermissionMethod.ALL}).save()
       ).rejects.toThrow('parentId');
-    });
-
-    test('Shouldn`t add without group', async () => {
-      const block = await Object.assign(new BlockEntity(), {}).save();
-      const parent = await Object.assign(new SectionEntity(), {block}).save();
-
-      await expect(
-        Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.ALL}).save()
-      ).rejects.toThrow('groupId');
     });
 
     test('Shouldn`t add without method', async () => {

@@ -9,10 +9,7 @@ import { FileEntity } from './file.entity';
 describe('File string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -25,7 +22,7 @@ describe('File string attribute entity', () => {
     });
 
     test('Should create instance', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(
         new FileEntity(),
@@ -37,7 +34,7 @@ describe('File string attribute entity', () => {
         },
       ).save();
 
-      const inst = await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, property}).save();
+      const inst = await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       expect(inst.version).toBe(1);
       expect(inst.created_at).toBeDefined();
@@ -46,10 +43,10 @@ describe('File string attribute entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new File4stringEntity(), {string: 'VALUE', property}).save(),
+        Object.assign(new File4stringEntity(), {string: 'VALUE', attribute}).save(),
       ).rejects.toThrow('parentId');
     });
 
@@ -67,14 +64,14 @@ describe('File string attribute entity', () => {
 
       await expect(
         Object.assign(new File4stringEntity(), {string: 'VALUE', parent}).save(),
-      ).rejects.toThrow('propertyId');
+      ).rejects.toThrow('attributeId');
     });
   });
 
   describe('File with strings', () => {
     test('Should create file with string', async () => {
       const repo = source.getRepository(FileEntity);
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const parent = await Object.assign(
         new FileEntity(),
@@ -86,11 +83,11 @@ describe('File string attribute entity', () => {
         },
       ).save();
 
-      await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, property}).save();
+      await Object.assign(new File4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       const inst = await repo.findOne({
         where: {id: 1},
-        relations: {string: {property: true}},
+        relations: {string: {attribute: true}},
       });
 
       expect(inst.string).toHaveLength(1);

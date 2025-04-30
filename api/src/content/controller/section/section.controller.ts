@@ -16,6 +16,7 @@ import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
 import { SectionPatchOperation } from '../../operation/section-patch.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
@@ -30,7 +31,7 @@ export class SectionController {
     point: {point: {directory: true}, attribute: true},
     string: {attribute: true, lang: true},
     permission: {group: true},
-  };
+  } as FindOptionsRelations<SectionEntity>;
 
   constructor(
     @InjectEntityManager()

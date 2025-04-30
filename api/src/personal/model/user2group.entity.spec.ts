@@ -8,10 +8,7 @@ import { User2groupEntity } from './user2group.entity';
 describe('User to Group entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -41,17 +38,17 @@ describe('User to Group entity', () => {
     test('Should create user with group', async () => {
       const repo = source.getRepository(UserEntity);
 
-      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
-      const group = await Object.assign(new GroupEntity(), {}).save();
+      const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'user'}).save();
+      const group = await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
       await Object.assign(new User2groupEntity(), {parent, group}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'USER'},
         relations: {group: {group: true}},
       });
 
       expect(inst.group).toHaveLength(1);
-      expect(inst.group[0].group.id).toBe(1);
+      expect(inst.group[0].group.id).toBe('GROUP');
     });
   });
 
@@ -59,17 +56,17 @@ describe('User to Group entity', () => {
     test('Should create user with group', async () => {
       const repo = source.getRepository(UserEntity);
 
-      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
-      const group = await Object.assign(new GroupEntity(), {}).save();
+      const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'user'}).save();
+      const group = await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
       await Object.assign(new User2groupEntity(), {parent, group}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'USER'},
         relations: {group: {group: true}},
       });
 
       expect(inst.group).toHaveLength(1);
-      expect(inst.group[0].group.id).toBe(1);
+      expect(inst.group[0].group.id).toBe('GROUP');
     });
   });
 });

@@ -4,10 +4,11 @@ import { EntityManager, Repository } from 'typeorm';
 import { LangEntity } from '../../model/lang.entity';
 import { FlagInput } from '../../input/flag.input';
 import { LangInput } from '../../input/lang.input';
-import { LangInsertOperation } from '../../operation/lang-insert.operation';
-import { LangUpdateOperation } from '../../operation/lang-update.operation';
-import { LangDeleteOperation } from '../../operation/lang-delete.operation';
+import { LangInsertOperation } from '../../operation/lang/lang-insert.operation';
+import { LangUpdateOperation } from '../../operation/lang/lang-update.operation';
+import { LangDeleteOperation } from '../../operation/lang/lang-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('lang')
 export class LangController {
@@ -15,7 +16,7 @@ export class LangController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<LangEntity>;
 
   constructor(
     @InjectEntityManager()

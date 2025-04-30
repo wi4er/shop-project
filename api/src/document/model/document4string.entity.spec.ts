@@ -9,20 +9,18 @@ import { Document4stringEntity } from './document4string.entity';
 describe('Document string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('DocumentString fields', () => {
     test('Should create item', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       const parent = await new DocumentEntity().save();
 
       const inst = new Document4stringEntity();
-      inst.attribute = property;
+      inst.attribute = attribute;
       inst.parent = parent;
       inst.string = 'VALUE';
       inst.lang = lang;
@@ -36,10 +34,10 @@ describe('Document string attribute entity', () => {
 
     test('Should create without lang', async () => {
       const parent = await new DocumentEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = new Document4stringEntity();
-      inst.attribute = property;
+      inst.attribute = attribute;
       inst.string = 'VALUE';
       inst.parent = parent;
       await inst.save();
@@ -48,10 +46,10 @@ describe('Document string attribute entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = new Document4stringEntity();
-      inst.attribute = property;
+      inst.attribute = attribute;
       inst.string = 'VALUE';
 
       await expect(inst.save()).rejects.toThrow('parentId');
@@ -64,18 +62,18 @@ describe('Document string attribute entity', () => {
       inst.parent = parent;
       inst.string = 'VALUE';
 
-      await expect(inst.save()).rejects.toThrow('propertyId');
+      await expect(inst.save()).rejects.toThrow('attributeId');
     });
   });
 
   describe('Document with strings', () => {
     test('Should create lang with strings', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const inst = new Document4stringEntity();
-        inst.attribute = property;
+        inst.attribute = attribute;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
 
@@ -92,12 +90,12 @@ describe('Document string attribute entity', () => {
     });
 
     test('Should delete string with lang', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const inst = new Document4stringEntity();
-        inst.attribute = property;
+        inst.attribute = attribute;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
 
@@ -113,12 +111,12 @@ describe('Document string attribute entity', () => {
     });
 
     test('Should delete string with attribute', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await new DocumentEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const inst = new Document4stringEntity();
-        inst.attribute = property;
+        inst.attribute = attribute;
         inst.parent = parent;
         inst.string = `VALUE_${i}`;
 

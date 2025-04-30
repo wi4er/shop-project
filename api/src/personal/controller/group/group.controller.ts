@@ -7,6 +7,7 @@ import { UserGroupInsertOperation } from '../../operation/user-group-insert.oper
 import { UserGroupUpdateOperation } from '../../operation/user-group-update.operation';
 import { UserGroupDeleteOperation } from '../../operation/user-group-delete.operation';
 import { GroupRender } from '../../render/group.render';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('group')
 export class GroupController {
@@ -15,7 +16,7 @@ export class GroupController {
     parent: true,
     flag: {flag: true},
     string: {attribute: true, lang: true},
-  };
+  } as FindOptionsRelations<GroupEntity>;
 
   constructor(
     @InjectEntityManager()

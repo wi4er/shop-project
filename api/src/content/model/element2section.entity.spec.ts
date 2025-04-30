@@ -52,7 +52,7 @@ describe('ElementSection entity', () => {
 
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
-      const section = await Object.assign(new SectionEntity(), {block}).save();
+      const section = await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
       await Object.assign(new Element2sectionEntity(), {parent, section}).save();
 
@@ -62,7 +62,7 @@ describe('ElementSection entity', () => {
       });
 
       expect(inst.parent).toHaveLength(1);
-      expect(inst.parent[0].section.id).toBe(1);
+      expect(inst.parent[0].section.id).toBe('SECTION');
     });
   });
 });

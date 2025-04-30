@@ -14,32 +14,30 @@ export class Element4elementInsertOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkElement(id: string): Promise<ElementEntity> {
     const propRepo = this.trans.getRepository(ElementEntity);
-    const inst = await propRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Element with id ${id} not found!`);
+    return WrongDataException.assert(
+      await propRepo.findOne({where: {id}}),
+      `Element with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkProperty(id: string): Promise<AttributeEntity> {
     const propRepo = this.trans.getRepository(AttributeEntity);
-    const inst = await propRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, `Property with id ${id} not found!`);
+    return WrongDataException.assert(
+      await propRepo.findOne({where: {id}}),
+      `Property with id >> ${id} << not found!`
+    );
   }
 
   /**
    *
-   * @param created
-   * @param list
    */
   async save(created: ElementEntity, list: PropertyElementInput[]) {
     for (const item of list ?? []) {
@@ -48,7 +46,10 @@ export class Element4elementInsertOperation {
       inst.attribute = await this.checkProperty(item.attribute);
       inst.element = await this.checkElement(item.element);
 
-      await this.trans.save(inst);
+      await this.trans.save(inst)
+        .catch(err => {
+          throw new WrongDataException(err.message);
+        });
     }
   }
 

@@ -33,7 +33,7 @@ export class Attribute2flagEntity
 
   @ManyToOne(
     () => AttributeEntity,
-    property => property.flag,
+    attribute => attribute.flag,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

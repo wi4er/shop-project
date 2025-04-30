@@ -3,8 +3,8 @@ import {
   Check, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, Index,
-  OneToMany,
+  Entity, Index, JoinColumn,
+  OneToMany, OneToOne,
   PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
@@ -12,6 +12,21 @@ import { Attribute4stringEntity } from './attribute4string.entity';
 import { Attribute2flagEntity } from './attribute2flag.entity';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
+import { AttributeAsPointEntity } from './attribute-as-point.entity';
+import { AttributeAsElementEntity } from './attribute-as-element.entity';
+import { AttributeAsSectionEntity } from './attribute-as-section.entity';
+import { AttributeAsFileEntity } from './attribute-as-file.entity';
+
+export enum AttributeType {
+
+  STRING = 'STRING',
+  DESCRIPTION = 'DESCRIPTION',
+  POINT = 'POINT',
+  ELEMENT = 'ELEMENT',
+  SECTION = 'SECTION',
+  FILE = 'FILE',
+
+}
 
 @Entity('settings-attribute')
 @Check('not_empty_id', '"id" > \'\'')
@@ -40,9 +55,17 @@ export class AttributeEntity extends BaseEntity
   @Column()
   sort: number = 100;
 
+  @Column({
+    type: 'enum',
+    enum: AttributeType,
+    nullable: false,
+    default: AttributeType.STRING,
+  })
+  type: AttributeType;
+
   @OneToMany(
     type => Attribute4stringEntity,
-    property => property.parent,
+    attribute => attribute.parent,
   )
   string: Attribute4stringEntity[];
 
@@ -51,5 +74,29 @@ export class AttributeEntity extends BaseEntity
     flag => flag.parent,
   )
   flag: Attribute2flagEntity[];
+
+  @OneToOne(
+    type => AttributeAsPointEntity,
+    asDir => asDir.parent,
+  )
+  asDirectory: AttributeAsPointEntity;
+
+  @OneToOne(
+    type => AttributeAsElementEntity,
+    asElement => asElement.parent,
+  )
+  asElement: AttributeAsElementEntity;
+
+  @OneToOne(
+    type => AttributeAsSectionEntity,
+    asSection => asSection.parent,
+  )
+  asSection: AttributeAsSectionEntity;
+
+  @OneToOne(
+    type => AttributeAsFileEntity,
+    asFile => asFile.parent,
+  )
+  asFile: AttributeAsFileEntity;
 
 }

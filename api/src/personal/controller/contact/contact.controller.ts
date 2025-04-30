@@ -6,6 +6,7 @@ import { UserContactInput } from '../../input/user-contact.input';
 import { UserContactInsertOperation } from '../../operation/user-contact-insert.operation';
 import { UserContactUpdateOperation } from '../../operation/user-contact-update.operation';
 import { UserContactDeleteOperation } from '../../operation/user-contact-delete.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('contact')
 export class ContactController {
@@ -13,7 +14,7 @@ export class ContactController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<ContactEntity>;
 
   constructor(
     @InjectEntityManager()

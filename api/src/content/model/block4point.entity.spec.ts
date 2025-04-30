@@ -10,10 +10,7 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 describe('Block2point entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -27,27 +24,21 @@ describe('Block2point entity', () => {
 
     test('Should create block point', async () => {
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = await Object.assign(
-        new Block4pointEntity(),
-        {parent, property, point},
-      ).save();
+      const inst = await Object.assign(new Block4pointEntity(), {parent, attribute, point}).save();
 
       expect(inst.id).toBe(1);
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = Object.assign(
-        new Block4pointEntity(),
-        {property, point},
-      )
+      const inst = Object.assign(new Block4pointEntity(), {attribute, point});
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
@@ -57,22 +48,16 @@ describe('Block2point entity', () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = Object.assign(
-        new Block4pointEntity(),
-        {parent, point},
-      )
+      const inst = Object.assign(new Block4pointEntity(), {parent, point});
 
-      await expect(inst.save()).rejects.toThrow('propertyId');
+      await expect(inst.save()).rejects.toThrow('attributeId');
     });
 
     test('Shouldn`t create without point', async () => {
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
-      const inst = Object.assign(
-        new Block4pointEntity(),
-        {parent, property},
-      )
+      const inst = Object.assign(new Block4pointEntity(), {parent, attribute});
 
       await expect(inst.save()).rejects.toThrow('pointId');
     });
@@ -82,11 +67,11 @@ describe('Block2point entity', () => {
     test('Should create block with points', async () => {
       const repo = source.getRepository(BlockEntity);
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
 
-      await Object.assign(new Block4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Block4pointEntity(), {parent, attribute, point}).save();
 
       const inst = await repo.findOne({where: {id: 1}, relations: {point: {point: true}}});
 
@@ -96,13 +81,13 @@ describe('Block2point entity', () => {
 
     test('Shouldn`t create with duplicate points', async () => {
       const parent = await new BlockEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Block4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Block4pointEntity(), {parent, attribute, point}).save();
       await expect(
-        Object.assign(new Block4pointEntity(), {parent, property, point}).save(),
+        Object.assign(new Block4pointEntity(), {parent, attribute, point}).save(),
       ).rejects.toThrow('duplicate');
     });
   });

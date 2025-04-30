@@ -3,11 +3,12 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { FlagEntity } from '../../model/flag.entity';
 import { FlagInput } from '../../input/flag.input';
-import { FlagInsertOperation } from '../../operation/flag-insert.operation';
-import { FlagUpdateOperation } from '../../operation/flag-update.operation';
-import { FlagDeleteOperation } from '../../operation/flag-delete.operation';
+import { FlagInsertOperation } from '../../operation/flag/flag-insert.operation';
+import { FlagUpdateOperation } from '../../operation/flag/flag-update.operation';
+import { FlagDeleteOperation } from '../../operation/flag/flag-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { FlagPatchOperation } from '../../operation/flag-patch.operation';
+import { FlagPatchOperation } from '../../operation/flag/flag-patch.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('flag')
 export class FlagController {
@@ -15,7 +16,7 @@ export class FlagController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<FlagEntity>;
 
   constructor(
     @InjectEntityManager()

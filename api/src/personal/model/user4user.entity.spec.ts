@@ -8,11 +8,9 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 describe('User user attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('User attribute fields', () => {
     test('Should create user with user', async () => {
@@ -24,7 +22,7 @@ describe('User user attribute entity', () => {
 
       await Object.assign(new User4userEntity(), {
         user: child,
-        property: 'PARENT',
+        attribute: 'PARENT',
         parent,
       }).save();
 
@@ -38,12 +36,12 @@ describe('User user attribute entity', () => {
     });
 
     test('Shouldn`t create user without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const user = await Object.assign(new UserEntity(), {login: 'child'}).save();
 
       const inst = Object.assign(
         new User4userEntity(),
-        {user, property},
+        {user, attribute},
       );
 
       await expect(inst.save()).rejects.toThrow('parentId');
@@ -58,30 +56,30 @@ describe('User user attribute entity', () => {
         {user, parent},
       );
 
-      await expect(inst.save()).rejects.toThrow('propertyId');
+      await expect(inst.save()).rejects.toThrow('attributeId');
     });
 
     test('Shouldn`t create user without user', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
 
       const inst = Object.assign(
         new User4userEntity(),
-        {parent, property},
+        {parent, attribute},
       );
 
       await expect(inst.save()).rejects.toThrow('userId');
     });
 
     test('Shouldn`t create user duplicate user', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const user = await Object.assign(new UserEntity(), {login: 'child'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
 
-      await Object.assign(new User4userEntity(), {user, property, parent}).save();
+      await Object.assign(new User4userEntity(), {user, attribute, parent}).save();
 
       await expect(
-        Object.assign(new User4userEntity(), {user, property, parent}).save(),
+        Object.assign(new User4userEntity(), {user, attribute, parent}).save(),
       ).rejects.toThrow('duplicate key value violates unique constraint');
     });
   });

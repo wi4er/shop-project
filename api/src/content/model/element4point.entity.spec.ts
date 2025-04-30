@@ -8,13 +8,10 @@ import { DirectoryEntity } from '../../directory/model/directory.entity';
 import { PointEntity } from '../../directory/model/point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('ElementPoint entity', () => {
+describe('Element for point entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -28,64 +25,43 @@ describe('ElementPoint entity', () => {
 
     test('Should create element point', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(
-        new ElementEntity(),
-        {id: 'NAME', block},
-      ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = await Object.assign(
-        new Element4pointEntity(),
-        {parent, property, point},
-      ).save();
+      const inst = await Object.assign(new Element4pointEntity(), {parent, attribute, point}).save();
 
       expect(inst.id).toBe(1);
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = Object.assign(
-        new Element4pointEntity(),
-        {property, point},
-      );
+      const inst = Object.assign(new Element4pointEntity(), {attribute, point});
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
     test('Shouldn`t create without attribute', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(
-        new ElementEntity(),
-        {id: 'NAME', block},
-      ).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const inst = Object.assign(
-        new Element4pointEntity(),
-        {parent, point},
-      );
+      const inst = Object.assign(new Element4pointEntity(), {parent, point});
 
-      await expect(inst.save()).rejects.toThrow('propertyId');
+      await expect(inst.save()).rejects.toThrow('attributeId');
     });
 
     test('Shouldn`t create without point', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(
-        new ElementEntity(),
-        {id: 'NAME', block},
-      ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
-      const inst = Object.assign(
-        new Element4pointEntity(),
-        {parent, property},
-      );
+      const inst = Object.assign(new Element4pointEntity(), {parent, attribute});
 
       await expect(inst.save()).rejects.toThrow('pointId');
     });
@@ -95,15 +71,12 @@ describe('ElementPoint entity', () => {
     test('Should create element with values', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(
-        new ElementEntity(),
-        {id: 'NAME', block},
-      ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Element4pointEntity(), {parent, attribute, point}).save();
 
       const inst = await repo.findOne({where: {id: 'NAME'}, relations: {point: {point: true}}});
 
@@ -113,17 +86,14 @@ describe('ElementPoint entity', () => {
 
     test('Shouldn`t create with duplicate values', async () => {
       const block = await new BlockEntity().save();
-      const parent = await Object.assign(
-        new ElementEntity(),
-        {id: 'NAME', block},
-      ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      await Object.assign(new Element4pointEntity(), {parent, property, point}).save();
+      await Object.assign(new Element4pointEntity(), {parent, attribute, point}).save();
       await expect(
-        Object.assign(new Element4pointEntity(), {parent, property, point}).save(),
+        Object.assign(new Element4pointEntity(), {parent, attribute, point}).save(),
       ).rejects.toThrow('duplicate');
     });
   });

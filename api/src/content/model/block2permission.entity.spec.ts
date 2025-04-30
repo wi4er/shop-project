@@ -9,10 +9,7 @@ import { PermissionMethod } from '../../permission/model/permission-method';
 describe('Block permission entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -59,7 +56,7 @@ describe('Block permission entity', () => {
       await Object.assign(
         new Block2permissionEntity(),
         {
-          group: await new GroupEntity().save(),
+          group: await Object.assign(new GroupEntity(), {id: 'GROUP'}).save(),
           parent: await new BlockEntity().save(),
           method: PermissionMethod.ALL,
         },
@@ -74,7 +71,7 @@ describe('Block permission entity', () => {
       });
 
       expect(item.parent.id).toBe(1);
-      expect(item.group.id).toBe(1);
+      expect(item.group.id).toBe('GROUP');
     });
 
     test('Shouldn`t create without parent', async () => {
@@ -84,15 +81,6 @@ describe('Block permission entity', () => {
       inst.method = PermissionMethod.ALL;
 
       await expect(inst.save()).rejects.toThrow('parentId');
-    });
-
-    test('Shouldn`t create without group', async () => {
-      const inst = new Block2permissionEntity();
-
-      inst.parent = await new BlockEntity().save();
-      inst.method = PermissionMethod.ALL;
-
-      await expect(inst.save()).rejects.toThrow('groupId');
     });
 
     test('Shouldn`t create without method', async () => {

@@ -9,10 +9,7 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 describe('ElementString entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -47,13 +44,13 @@ describe('ElementString entity', () => {
       const repo = source.getRepository(ElementEntity);
 
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(
         new ElementEntity(),
         {id: 'NAME', block},
       ).save();
 
-      await Object.assign(new Element4stringEntity(), {string: 'VALUE', parent, property}).save();
+      await Object.assign(new Element4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       const inst = await repo.findOne({
         where: {id: parent.id},
@@ -76,11 +73,11 @@ describe('ElementString entity', () => {
         ).save();
         await Object.assign(
           new Element4stringEntity(),
-          {parent, property: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
+          {parent, attribute: name, string: `VALUE_${(Math.random() * 10 >> 0).toString().padStart(2, '0')}`},
         ).save();
         await Object.assign(
           new Element4stringEntity(),
-          {parent, property: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
+          {parent, attribute: gender, string: `GENDER_${i.toString().padStart(2, '0')}`},
         ).save();
       }
 

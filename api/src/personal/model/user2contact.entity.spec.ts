@@ -8,16 +8,14 @@ import { User2contactEntity } from './user2contact.entity';
 describe('User Contact entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('User with contacts', () => {
     test('Should create user with contact', async () => {
       const repo = source.getRepository(UserEntity);
-      const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
+      const parent = await Object.assign(new UserEntity(), {id: 'user', login: 'user'}).save();
       const contact = await Object.assign(
         new ContactEntity(),
         {id: 'mail', type: UserContactType.EMAIL},
@@ -30,12 +28,10 @@ describe('User Contact entity', () => {
         verifyCode: '',
       }).save();
 
-      const res = await repo.findOne(
-        {
-          where: {id: 1},
-          relations: {contact: true},
-        },
-      );
+      const res = await repo.findOne({
+        where: {id: 'user'},
+        relations: {contact: true},
+      });
 
       expect(res.contact).toHaveLength(1);
       expect(res.contact[0].value).toBe('mail@mail.com');

@@ -8,7 +8,7 @@ import { WrongDataException } from '../../exception/wrong-data/wrong-data.except
 export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
 
   constructor(
-    private trans: EntityManager,
+    private transaction: EntityManager,
     private entity: new() => CommonFlagEntity<T>,
   ) {
   }
@@ -17,7 +17,7 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
    *
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
-    const flagRepo = this.trans.getRepository(FlagEntity);
+    const flagRepo = this.transaction.getRepository(FlagEntity);
 
     return WrongDataException.assert(
       await flagRepo.findOne({where: {id}}),
@@ -39,7 +39,7 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
         inst.parent = beforeItem;
         inst.flag = await this.checkFlag(item);
 
-        await this.trans.save(inst)
+        await this.transaction.save(inst)
           .catch(err => {
             throw new WrongDataException(err.detail);
           });
@@ -47,7 +47,7 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
     }
 
     for (const item of current) {
-      await this.trans.delete(this.entity, {
+      await this.transaction.delete(this.entity, {
         parent: beforeItem,
         flag: item,
       });

@@ -7,6 +7,7 @@ import { UserInput } from '../../input/user.input';
 import { UserInsertOperation } from '../../operation/user-insert.operation';
 import { UserUpdateOperation } from '../../operation/user-update.operation';
 import { UserDeleteOperation } from '../../operation/user-delete.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('User object')
 @Controller('user')
@@ -19,7 +20,7 @@ export class UserController {
     flag: {flag: true},
     point: {point: {directory: true}, attribute: true},
     string: {attribute: true, lang: true},
-  };
+  } as FindOptionsRelations<UserEntity>;
 
   constructor(
     @InjectEntityManager()

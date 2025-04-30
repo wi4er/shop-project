@@ -6,6 +6,7 @@ import { DirectoryInput } from '../../input/directory.input';
 import { DirectoryInsertOperation } from '../../operation/directory-insert.operation';
 import { DirectoryUpdateOperation } from '../../operation/directory-update.operation';
 import { DirectoryDeleteOperation } from '../../operation/directory-delete.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('directory')
 export class DirectoryController {
@@ -14,7 +15,7 @@ export class DirectoryController {
     string: {attribute: true, lang: true},
     flag: {flag: true},
     point: {point: {directory: true}, attribute: true},
-  };
+  } as FindOptionsRelations<DirectoryEntity>;
 
   constructor(
     @InjectEntityManager()

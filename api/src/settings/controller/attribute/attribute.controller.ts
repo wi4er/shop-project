@@ -3,43 +3,36 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { AttributeEntity } from '../../model/attribute.entity';
 import { AttributeInput } from '../../input/attribute.input';
-import { AttributeInsertOperation } from '../../operation/attribute-insert.operation';
-import { AttributeUpdateOperation } from '../../operation/attribute-update.operation';
-import { AttributeDeleteOperation } from '../../operation/attribute-delete.operation';
+import { AttributeInsertOperation } from '../../operation/attribute/attribute-insert.operation';
+import { AttributeUpdateOperation } from '../../operation/attribute/attribute-update.operation';
+import { AttributeDeleteOperation } from '../../operation/attribute/attribute-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { AttributePatchOperation } from '../../operation/attribute-patch.operation';
+import { AttributePatchOperation } from '../../operation/attribute/attribute-patch.operation';
+import { AttributeRender } from '../../render/attribute.render';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('attribute')
 export class AttributeController {
 
   relations = {
     string: {attribute: true, lang: true},
+    asDirectory: {directory: true},
+    asSection: {block: true},
+    asElement: {block: true},
+    asFile: {collection: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<AttributeEntity>;
 
   constructor(
     @InjectEntityManager()
     private entityManager: EntityManager,
     @InjectRepository(AttributeEntity)
-    private propertyRepo: Repository<AttributeEntity>,
+    private attributeRepo: Repository<AttributeEntity>,
   ) {
   }
 
   toView(item: AttributeEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new AttributeRender(item)
   }
 
   @Get()
@@ -49,7 +42,7 @@ export class AttributeController {
     @Query('limit')
       limit?: number,
   ) {
-    return this.propertyRepo.find({
+    return this.attributeRepo.find({
       relations: this.relations,
       take: limit,
       skip: offset,
@@ -58,7 +51,7 @@ export class AttributeController {
 
   @Get('count')
   async getCount() {
-    return this.propertyRepo.count().then(count => ({count}));
+    return this.attributeRepo.count().then(count => ({count}));
   }
 
   @Get(':id')
@@ -66,11 +59,11 @@ export class AttributeController {
     @Param('id')
       id: string,
   ) {
-    return this.propertyRepo.findOne({
+    return this.attributeRepo.findOne({
       where: {id},
       relations: this.relations,
     }).then(item => this.toView(
-      NoDataException.assert(item, `Property with id ${id} not found!`)
+      NoDataException.assert(item, `Attribute with id ${id} not found!`)
     ));
   }
 

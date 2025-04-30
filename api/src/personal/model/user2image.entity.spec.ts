@@ -72,7 +72,7 @@ describe('User image entity', () => {
   describe('User with image', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(UserEntity);
-      const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
+      const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'USER'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const image = await Object.assign(
         new FileEntity(),
@@ -87,7 +87,7 @@ describe('User image entity', () => {
       await Object.assign(new User2imageEntity(), {parent, image}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'USER'},
         relations: {image: {image: {collection: true}}},
       });
 
@@ -97,7 +97,7 @@ describe('User image entity', () => {
 
     test('Should create with multi image', async () => {
       const repo = source.getRepository(UserEntity);
-      const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
+      const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'USER'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
@@ -114,7 +114,7 @@ describe('User image entity', () => {
       }
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'USER'},
         relations: {image: {image: {collection: true}}},
       });
 

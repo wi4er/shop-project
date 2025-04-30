@@ -15,11 +15,16 @@ import { FlagController } from './controller/flag/flag.controller';
 import { ConfigurationEntity } from './model/configuration.entity';
 import { ConfigurationController } from './controller/configuration/configuration.controller';
 import { SettingsPermissionEntity } from './model/settings-permission.entity';
+import { AttributeAsPointEntity } from './model/attribute-as-point.entity';
+import { AttributeAsSectionEntity } from './model/attribute-as-section.entity';
+import { AttributeAsElementEntity } from './model/attribute-as-element.entity';
+import { AttributeAsFileEntity } from './model/attribute-as-file.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
+      AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       FlagEntity, Flag2flagEntity, Flag4stringEntity,
       ConfigurationEntity,

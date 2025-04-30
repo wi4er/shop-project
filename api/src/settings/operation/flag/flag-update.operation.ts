@@ -1,13 +1,13 @@
-import { FlagEntity } from '../model/flag.entity';
+import { FlagEntity } from '../../model/flag.entity';
 import { EntityManager } from 'typeorm';
-import { Flag4stringEntity } from '../model/flag4string.entity';
-import { Flag2flagEntity } from '../model/flag2flag.entity';
-import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { filterAttributes } from '../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
-import { FlagInput } from '../input/flag.input';
-import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { Flag4stringEntity } from '../../model/flag4string.entity';
+import { Flag2flagEntity } from '../../model/flag2flag.entity';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { filterAttributes } from '../../../common/input/filter-attributes';
+import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagInput } from '../../input/flag.input';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class FlagUpdateOperation {
 

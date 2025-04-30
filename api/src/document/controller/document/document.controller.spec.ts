@@ -98,8 +98,8 @@ describe('DocumentController', () => {
   describe('Document with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await new DocumentEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Document4stringEntity(), {parent, property, string: 'VALUE'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Document4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/document')
@@ -107,26 +107,26 @@ describe('DocumentController', () => {
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe(1);
-      expect(res.body[0].property).toHaveLength(1);
-      expect(res.body[0].property[0].property).toBe('NAME');
-      expect(res.body[0].property[0].lang).toBeUndefined();
-      expect(res.body[0].property[0].string).toBe('VALUE');
+      expect(res.body[0].attribute).toHaveLength(1);
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBeUndefined();
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
     });
 
     test('Should get flag with lang strings', async () => {
       const parent = await new DocumentEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Document4stringEntity(), {parent, property, lang, string: 'VALUE'}).save();
+      await Object.assign(new Document4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
         .get('/document')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].property[0].lang).toBe('EN');
-      expect(res.body[0].property[0].string).toBe('VALUE');
-      expect(res.body[0].property[0].property).toBe('NAME');
+      expect(res.body[0].attribute[0].lang).toBe('EN');
+      expect(res.body[0].attribute[0].string).toBe('VALUE');
+      expect(res.body[0].attribute[0].attribute).toBe('NAME');
     });
   });
 
@@ -160,13 +160,13 @@ describe('DocumentController', () => {
       const inst = await request(app.getHttpServer())
         .post('/document')
         .send({
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(201);
 
       expect(inst.body.id).toBe(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should add with flag', async () => {
@@ -198,7 +198,7 @@ describe('DocumentController', () => {
     test('Shouldn`t update with wriong id', async () => {
       await new DocumentEntity().save();
 
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .put('/document/99')
         .send({id: 1})
         .expect(404);
@@ -211,13 +211,13 @@ describe('DocumentController', () => {
       const inst = await request(app.getHttpServer())
         .put('/document/1')
         .send({
-          property: [{property: 'NAME', string: 'VALUE'}],
+          attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(200);
 
       expect(inst.body.id).toBe(1);
-      expect(inst.body.property[0].property).toBe('NAME');
-      expect(inst.body.property[0].string).toBe('VALUE');
+      expect(inst.body.attribute[0].attribute).toBe('NAME');
+      expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
     test('Should update with flag', async () => {

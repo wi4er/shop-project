@@ -13,6 +13,7 @@ import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { BlockPatchOperation } from '../../operation/block-patch.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('Content block')
 @Controller('block')
@@ -23,7 +24,7 @@ export class BlockController {
     point: {point: {directory: true}, attribute: true},
     string: {attribute: true, lang: true},
     permission: {group: true},
-  };
+  } as FindOptionsRelations<BlockEntity>;
 
   constructor(
     @InjectEntityManager()

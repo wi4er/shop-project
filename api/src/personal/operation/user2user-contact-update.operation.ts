@@ -6,12 +6,12 @@ import { UserInput } from "../input/user.input";
 
 export class User2userContactUpdateOperation {
   constructor(
-    private trans: EntityManager,
+    private transaction: EntityManager,
   ) {
   }
 
   async save(beforeItem: UserEntity, input: UserInput) {
-    const contactRepo = this.trans.getRepository(ContactEntity);
+    const contactRepo = this.transaction.getRepository(ContactEntity);
     const current: { [key: string]: User2contactEntity } = {};
 
     for (const item of beforeItem.contact) {
@@ -34,11 +34,11 @@ export class User2userContactUpdateOperation {
       inst.contact = await contactRepo.findOne({ where: { id: item.contact } });
       inst.value = item.value;
 
-      await this.trans.save(inst);
+      await this.transaction.save(inst);
     }
 
     for (const contact of Object.values(current)) {
-      await this.trans.delete(User2contactEntity, contact.id);
+      await this.transaction.delete(User2contactEntity, contact.id);
     }
   }
 }

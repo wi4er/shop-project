@@ -4,13 +4,14 @@ import { Repository } from 'typeorm';
 import { ResultEntity } from '../../model/result.entity';
 import { ResultFilterInput } from '../../input/result-filter.input';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('result')
 export class ResultController {
 
   relations = {
     form: true,
-  };
+  } as FindOptionsRelations<ResultEntity>;
 
   constructor(
     @InjectRepository(ResultEntity)

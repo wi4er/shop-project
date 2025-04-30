@@ -19,13 +19,13 @@ describe('MyselfController', () => {
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
   describe('Getting myself', () => {
     test('Should get myself', async () => {
       await Object.assign(new UserEntity(), {
+        id: 'user',
         login: 'user',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
@@ -42,13 +42,14 @@ describe('MyselfController', () => {
         .get(`/myself`)
         .set('cookie', headers['set-cookie']);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('user');
       expect(res.body.login).toBe('user');
     });
 
     test('Should get with group', async () => {
-      const group = await new GroupEntity().save();
+      const group = await Object.assign(new GroupEntity(), {id: 'group'}).save();
       const parent = await Object.assign(new UserEntity(), {
+        id: 'user',
         login: 'user',
         hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
       }).save();
@@ -67,13 +68,13 @@ describe('MyselfController', () => {
         .set('cookie', headers['set-cookie'])
         .expect(200);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toBe('user');
       expect(res.body.login).toBe('user');
-      expect(res.body.group).toEqual([1]);
+      expect(res.body.group).toEqual(['group']);
     });
 
     test('Shouldn`t get without authorization', async () => {
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get(`/myself`)
         .expect(403);
     });
@@ -105,7 +106,7 @@ describe('MyselfController', () => {
         .set('cookie', headers['set-cookie'])
         .expect(200);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toHaveLength(36);
       expect(res.body.login).toBe('admin');
     });
 
@@ -129,13 +130,13 @@ describe('MyselfController', () => {
         })
         .expect(201);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toHaveLength(36);
       expect(res.body.login).toBe('user');
       expect(res.body.group).toEqual([]);
     });
 
     test('Should register with public group', async () => {
-      const group = await Object.assign(new GroupEntity(), {}).save();
+      const group = await Object.assign(new GroupEntity(), {id: 'PUBLIC'}).save();
       process.env.PUBLIC_GROUP = String(group.id);
 
       const res = await request(app.getHttpServer())
@@ -146,9 +147,9 @@ describe('MyselfController', () => {
         })
         .expect(201);
 
-      expect(res.body.id).toBe(1);
+      expect(res.body.id).toHaveLength(36);
       expect(res.body.login).toBe('user');
-      expect(res.body.group).toEqual([1]);
+      expect(res.body.group).toEqual(['PUBLIC']);
     });
 
     test('Shouldn`t create with same login', async () => {

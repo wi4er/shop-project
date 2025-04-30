@@ -8,10 +8,7 @@ import { Collection4stringEntity } from './collection4string.entity';
 describe('Collection string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -24,12 +21,12 @@ describe('Collection string attribute entity', () => {
     });
 
     test('Should create instance', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 
       const inst = await Object.assign(
         new Collection4stringEntity(),
-        {string: 'VALUE', parent, property},
+        {string: 'VALUE', parent, attribute},
       ).save();
 
       expect(inst.version).toBe(1);
@@ -51,7 +48,7 @@ describe('Collection string attribute entity', () => {
 
       await expect(
         Object.assign(new Collection4stringEntity(), {string: 'VALUE', parent}).save(),
-      ).rejects.toThrow('propertyId');
+      ).rejects.toThrow('attributeId');
     });
   });
 
@@ -59,13 +56,13 @@ describe('Collection string attribute entity', () => {
     test('Should create collection with string', async () => {
       const repo = source.getRepository(CollectionEntity);
 
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new Collection4stringEntity(), {string: 'VALUE', parent, property}).save();
+      await Object.assign(new Collection4stringEntity(), {string: 'VALUE', parent, attribute}).save();
 
       const inst = await repo.findOne({
         where: {id: 'SHORT'},
-        relations: {string: {property: true}},
+        relations: {string: {attribute: true}},
       });
 
       expect(inst.string).toHaveLength(1);

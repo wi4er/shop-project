@@ -8,14 +8,14 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { Section4fileEntity } from './section4file.entity';
 import { SectionEntity } from './section.entity';
 
-describe('Section file attribute entity', () => {
+describe('Section for file attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Section file fields', () => {
+  describe('Section for file fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Section4fileEntity);
       const list = await repo.find();
@@ -36,22 +36,22 @@ describe('Section file attribute entity', () => {
       ).save();
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
-      await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
+      await Object.assign(new Section4fileEntity(), {parent, attribute, file}).save();
 
       await expect(
-        Object.assign(new Section4fileEntity(), {parent, property, file}).save(),
+        Object.assign(new Section4fileEntity(), {parent, attribute, file}).save(),
       ).rejects.toThrow('duplicate');
     });
 
     test('Shouldn`t create without file', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new Section4fileEntity(), {parent, property}).save(),
+        Object.assign(new Section4fileEntity(), {parent, attribute}).save(),
       ).rejects.toThrow('fileId');
     });
 
@@ -66,10 +66,10 @@ describe('Section file attribute entity', () => {
           path: `txt/txt1.txt`,
         },
       ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new Section4fileEntity(), {file, property}).save(),
+        Object.assign(new Section4fileEntity(), {file, attribute}).save(),
       ).rejects.toThrow('parentId');
     });
 
@@ -89,7 +89,7 @@ describe('Section file attribute entity', () => {
 
       await expect(
         Object.assign(new Section4fileEntity(), {parent, file}).save(),
-      ).rejects.toThrow('propertyId');
+      ).rejects.toThrow('attributeId');
     });
   });
 
@@ -101,7 +101,7 @@ describe('Section file attribute entity', () => {
         new SectionEntity(),
         {id: 'SECTION', block},
       ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const file = await Object.assign(
         new FileEntity(),
@@ -113,7 +113,7 @@ describe('Section file attribute entity', () => {
         },
       ).save();
 
-      await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
+      await Object.assign(new Section4fileEntity(), {parent, attribute, file}).save();
 
       const inst = await repo.findOne({
         where: {id: 'SECTION'},
@@ -131,7 +131,7 @@ describe('Section file attribute entity', () => {
         new SectionEntity(),
         {id: 'SECTION', block},
       ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
@@ -144,7 +144,7 @@ describe('Section file attribute entity', () => {
             path: `txt/txt${i}.txt`,
           },
         ).save();
-        await Object.assign(new Section4fileEntity(), {parent, property, file}).save();
+        await Object.assign(new Section4fileEntity(), {parent, attribute, file}).save();
       }
 
       const inst = await repo.findOne({

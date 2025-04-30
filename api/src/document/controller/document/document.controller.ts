@@ -11,7 +11,7 @@ import { DocumentDeleteOperation } from '../../operation/document-delete.operati
 export class DocumentController {
 
   relations = {
-    string: {property: true, lang: true},
+    string: {attribute: true, lang: true},
     flag: {flag: true},
   };
 
@@ -29,10 +29,10 @@ export class DocumentController {
       created_at: item.created_at,
       updated_at: item.updated_at,
       version: item.version,
-      property: [
+      attribute: [
         ...item.string.map(str => ({
           string: str.string,
-          property: str.attribute.id,
+          attribute: str.attribute.id,
           lang: str.lang?.id,
         })),
       ],

@@ -14,8 +14,6 @@ export class Element4elementUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkProperty(id: string): Promise<AttributeEntity> {
     const propRepo = this.trans.getRepository(AttributeEntity);
@@ -26,8 +24,6 @@ export class Element4elementUpdateOperation {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkElement(id: string): Promise<ElementEntity> {
     const elemRepo = this.trans.getRepository(ElementEntity);
@@ -38,8 +34,6 @@ export class Element4elementUpdateOperation {
 
   /**
    *
-   * @param beforeItem
-   * @param list
    */
   async save(beforeItem: ElementEntity, list: PropertyElementInput[]) {
     const current: { [key: string]: Element4elementEntity[] } = {};

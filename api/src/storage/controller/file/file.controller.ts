@@ -8,6 +8,7 @@ import { FileUpdateOperation } from '../../operation/file-update.operation';
 import { FileDeleteOperation } from '../../operation/file-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 interface FileFilter {
 
@@ -22,7 +23,7 @@ export class FileController {
     collection: true,
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<FileEntity>;
 
   constructor(
     @InjectEntityManager()

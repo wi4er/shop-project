@@ -50,11 +50,11 @@ describe('Flag string attribute entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = Object.assign(
         new Flag4stringEntity(),
-        {string: 'Flag name', property}
+        {string: 'Flag name', property: attribute}
       );
 
       await expect(inst.save()).rejects.toThrow('parentId')

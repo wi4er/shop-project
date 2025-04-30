@@ -9,7 +9,7 @@ import { WrongDataException } from '../../exception/wrong-data/wrong-data.except
 export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
 
   constructor(
-    private trans: EntityManager,
+    private transaction: EntityManager,
     private entity: new() => CommonStringEntity<T>,
   ) {
   }
@@ -19,7 +19,7 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
    */
   private async checkProperty(id: string): Promise<AttributeEntity> {
     return WrongDataException.assert(
-      await this.trans.getRepository(AttributeEntity).findOne({where: {id}}),
+      await this.transaction.getRepository(AttributeEntity).findOne({where: {id}}),
       `Property with id >> ${id} << not found!`
     );
   }
@@ -31,7 +31,7 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
     if (!id) return null;
 
     return WrongDataException.assert(
-      await this.trans.getRepository(LangEntity).findOne({where: {id}}),
+      await this.transaction.getRepository(LangEntity).findOne({where: {id}}),
       `Language with id >> ${id} << not found!`,
     );
   }
@@ -59,11 +59,11 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
       inst.string = WrongDataException.assert(item.string, 'Property string value expected');
       inst.lang = await this.checkLang(item.lang);
 
-      await this.trans.save(inst);
+      await this.transaction.save(inst);
     }
 
     for (const item of Object.values(current).flat()) {
-      await this.trans.delete(this.entity, item.id);
+      await this.transaction.delete(this.entity, item.id);
     }
   }
 

@@ -49,11 +49,13 @@ services:
     links:
       - postgres
       - cache
+    depends_on:
+      - postgres
     ports:
       - "3030:3000"
     working_dir: /app
-    command: npm run start:dev
-#    command: npm run start
+#    command: npm run start:dev
+    command: npm start
     volumes:
       - "./api:/app"
       - "./data/storage:/storage"

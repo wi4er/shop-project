@@ -9,10 +9,7 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 describe('SectionString entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -25,11 +22,11 @@ describe('SectionString entity', () => {
     });
 
     test('Shouldn`t create without parent', async () => {
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(Object.assign(
         new Section4stringEntity(),
-        {string: 'VALUE', property},
+        {string: 'VALUE', attribute},
       ).save()).rejects.toThrow();
     });
 
@@ -40,7 +37,7 @@ describe('SectionString entity', () => {
       await expect(Object.assign(
         new Section4stringEntity(),
         {string: 'VALUE', parent},
-      ).save()).rejects.toThrow();
+      ).save()).rejects.toThrow('attributeId');
     });
   });
 
@@ -49,21 +46,22 @@ describe('SectionString entity', () => {
       const repo = source.getRepository(SectionEntity);
 
       const block = await new BlockEntity().save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
 
       await Object.assign(
         new Section4stringEntity(),
-        {string: 'VALUE', parent, property},
+        {string: 'VALUE', parent, attribute},
       ).save();
 
       const inst = await repo.findOne({
         where: {id: parent.id},
-        relations: {string: true},
+        relations: {string: {attribute: true}},
       });
 
       expect(inst.string).toHaveLength(1);
       expect(inst.string[0].string).toBe('VALUE');
+      expect(inst.string[0].attribute.id).toBe('NAME');
     });
   });
 });

@@ -1,6 +1,6 @@
-import { EntityManager, In } from 'typeorm';
-import { AttributeEntity } from '../model/attribute.entity';
-import { NoDataException } from '../../exception/no-data/no-data.exception';
+import { EntityManager } from 'typeorm';
+import { AttributeEntity } from '../../model/attribute.entity';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 export class AttributeDeleteOperation {
 
@@ -12,7 +12,7 @@ export class AttributeDeleteOperation {
   /**
    *
    */
-  private async checkProperty(id: string): Promise<AttributeEntity> {
+  private async checkAttribute(id: string): Promise<AttributeEntity> {
     const propRepo = this.manager.getRepository(AttributeEntity);
 
     return NoDataException.assert(
@@ -30,7 +30,7 @@ export class AttributeDeleteOperation {
     const result = [];
 
     for (const id of idList) {
-      const item = await this.checkProperty(id);
+      const item = await this.checkAttribute(id);
       await propRepo.delete(item.id);
 
       result.push(item.id);

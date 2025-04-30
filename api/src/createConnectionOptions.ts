@@ -78,6 +78,10 @@ import { Block4fileEntity } from './content/model/block4file.entity';
 import { User2imageEntity } from './personal/model/user2image.entity';
 import { ConfigurationEntity } from './settings/model/configuration.entity';
 import { SettingsPermissionEntity } from './settings/model/settings-permission.entity';
+import { AttributeAsPointEntity } from './settings/model/attribute-as-point.entity';
+import { AttributeAsSectionEntity } from './settings/model/attribute-as-section.entity';
+import { AttributeAsElementEntity } from './settings/model/attribute-as-element.entity';
+import { AttributeAsFileEntity } from './settings/model/attribute-as-file.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -97,6 +101,7 @@ export function createConnectionOptions(): DataSourceOptions {
       GroupEntity, Group2flagEntity,
       Group4stringEntity,
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
+      AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
       ConfigurationEntity,
       DirectoryEntity, Directory4stringEntity, Directory2flagEntity, Directory4pointEntity,
       PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,

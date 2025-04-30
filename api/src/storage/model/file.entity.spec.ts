@@ -19,6 +19,9 @@ describe('File entity', () => {
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const inst = new FileEntity();
       inst.collection = collection;
+      inst.original = 'name.txt';
+      inst.mimetype = 'img';
+      inst.path = '/abc/';
 
       await inst.save();
 

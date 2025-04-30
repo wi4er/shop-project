@@ -7,6 +7,7 @@ import { CollectionInsertOperation } from '../../operation/collection-insert.ope
 import { CollectionUpdateOperation } from '../../operation/collection-update.operation';
 import { CollectionDeleteOperation } from '../../operation/collection-delete.operation';
 import { CollectionInput } from '../../input/Collection.input';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('collection')
 export class CollectionController {
@@ -14,7 +15,7 @@ export class CollectionController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<CollectionEntity>;
 
   constructor(
     @InjectEntityManager()
@@ -69,7 +70,7 @@ export class CollectionController {
       where: {id},
       relations: this.relations,
     }).then(item => this.toView(
-      NoDataException.assert(item, `Collection with id ${id} not found!`)
+      NoDataException.assert(item, `Collection with id ${id} not found!`),
     ));
   }
 

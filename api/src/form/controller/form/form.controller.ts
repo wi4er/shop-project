@@ -6,6 +6,7 @@ import { FormInput } from '../../input/form.input';
 import { FormInsertOperation } from '../../operation/form-insert.operation';
 import { FormUpdateOperation } from '../../operation/form-update.operation';
 import { FormDeleteOperation } from '../../operation/form-delete.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('form')
 export class FormController {
@@ -13,7 +14,7 @@ export class FormController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+  } as FindOptionsRelations<FormEntity>;
 
   constructor(
     @InjectEntityManager()

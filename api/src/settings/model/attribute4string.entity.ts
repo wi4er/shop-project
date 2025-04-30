@@ -36,7 +36,7 @@ export class Attribute4stringEntity
 
   @ManyToOne(
     () => AttributeEntity,
-    property => property.string,
+    attribute => attribute.string,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

@@ -6,6 +6,11 @@ export class AttributeInput
   implements WithAttributeInput, WithFlagInput {
 
   id: string;
+  type: string;
+
+  directory: string | null;
+  block: number | null;
+  collection: string | null;
 
   attribute: AttributeValueInput[];
   flag: string[];

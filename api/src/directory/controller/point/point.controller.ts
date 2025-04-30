@@ -6,6 +6,7 @@ import { PointInsertOperation } from '../../operation/point-insert.operation';
 import { PointInput } from '../../input/point.input';
 import { PointUpdateOperation } from '../../operation/point-update.operation';
 import { PointDeleteOperation } from '../../operation/point-delete.operation';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('point')
 export class PointController {
@@ -15,7 +16,7 @@ export class PointController {
     string: {attribute: true, lang: true},
     flag: {flag: true},
     point: {point: {directory: true}, attribute: true},
-  };
+  } as FindOptionsRelations<PointEntity>;
 
   constructor(
     @InjectEntityManager()

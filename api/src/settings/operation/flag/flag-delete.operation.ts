@@ -1,7 +1,7 @@
 import { EntityManager, In } from 'typeorm';
-import { LangEntity } from '../model/lang.entity';
+import { FlagEntity } from '../../model/flag.entity';
 
-export class LangDeleteOperation {
+export class FlagDeleteOperation {
 
   constructor(
     private manager: EntityManager,
@@ -9,13 +9,13 @@ export class LangDeleteOperation {
   }
 
   async save(idList: string[]) {
-    const langRepo = this.manager.getRepository(LangEntity);
+    const flagRepo = this.manager.getRepository(FlagEntity);
 
     const result = [];
-    const list = await langRepo.find({where: {id: In(idList)}});
+    const list = await flagRepo.find({where: {id: In(idList)}});
 
     for (const item of list) {
-      await langRepo.delete(item.id);
+      await flagRepo.delete(item.id);
       result.push(item.id);
     }
 

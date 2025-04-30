@@ -59,7 +59,7 @@ export class FlagEntity
 
   @OneToMany(
     type => Flag4stringEntity,
-    property => property.parent,
+    attribute => attribute.parent,
   )
   string: Flag4stringEntity[];
 

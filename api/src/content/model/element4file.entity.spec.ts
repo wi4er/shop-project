@@ -36,22 +36,22 @@ describe('Element file attribute entity', () => {
       ).save();
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
-      await Object.assign(new Element4fileEntity(), {parent, property, file}).save();
+      await Object.assign(new Element4fileEntity(), {parent, attribute, file}).save();
 
       await expect(
-        Object.assign(new Element4fileEntity(), {parent, property, file}).save(),
+        Object.assign(new Element4fileEntity(), {parent, attribute, file}).save(),
       ).rejects.toThrow('duplicate');
     });
 
     test('Shouldn`t create without file', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new Element4fileEntity(), {parent, property}).save(),
+        Object.assign(new Element4fileEntity(), {parent, attribute}).save(),
       ).rejects.toThrow('fileId');
     });
 
@@ -66,10 +66,10 @@ describe('Element file attribute entity', () => {
           path: `txt/txt.txt`,
         },
       ).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await expect(
-        Object.assign(new Element4fileEntity(), {file, property}).save(),
+        Object.assign(new Element4fileEntity(), {file, attribute}).save(),
       ).rejects.toThrow('parentId');
     });
 
@@ -89,7 +89,7 @@ describe('Element file attribute entity', () => {
 
       await expect(
         Object.assign(new Element4fileEntity(), {parent, file}).save(),
-      ).rejects.toThrow('propertyId');
+      ).rejects.toThrow('attributeId');
     });
   });
 
@@ -98,7 +98,7 @@ describe('Element file attribute entity', () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const file = await Object.assign(
         new FileEntity(),
@@ -110,7 +110,7 @@ describe('Element file attribute entity', () => {
         },
       ).save();
 
-      await Object.assign(new Element4fileEntity(), {parent, property, file}).save();
+      await Object.assign(new Element4fileEntity(), {parent, attribute, file}).save();
 
       const inst = await repo.findOne({
         where: {id: 'NAME'},
@@ -125,7 +125,7 @@ describe('Element file attribute entity', () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new ElementEntity(), {id: 'NAME', block}).save();
-      const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+      const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
       for (let i = 0; i < 10; i++) {
@@ -139,7 +139,7 @@ describe('Element file attribute entity', () => {
 
           }
         ).save();
-        await Object.assign(new Element4fileEntity(), {parent, property, file}).save();
+        await Object.assign(new Element4fileEntity(), {parent, attribute, file}).save();
       }
 
       const inst = await repo.findOne({
