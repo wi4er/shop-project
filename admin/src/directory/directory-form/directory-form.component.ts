@@ -6,11 +6,12 @@ import { Directory } from '../../app/model/directory';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-directory-form',
+  selector: 'app-registry-form',
   templateUrl: './directory-form.component.html',
-  styleUrls: ['./directory-form.component.css']
+  styleUrls: ['./directory-form.component.css'],
 })
 export class DirectoryFormComponent implements OnInit {
 
@@ -22,6 +23,7 @@ export class DirectoryFormComponent implements OnInit {
 
   editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
   editFlags: { [field: string]: boolean } = {};
+  editPermission: PermissionEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<DirectoryFormComponent>,
@@ -30,6 +32,7 @@ export class DirectoryFormComponent implements OnInit {
     private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
+    private permissionValueService: PermissionValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -69,6 +72,10 @@ export class DirectoryFormComponent implements OnInit {
     for (const flag of item.flag) {
       this.editFlags[flag] = true;
     }
+
+    this.editPermission = this.permissionValueService.toEdit(item.permission);
+
+    console.log(this.editPermission);
   }
 
   /**
@@ -79,6 +86,7 @@ export class DirectoryFormComponent implements OnInit {
       id: this.id,
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
+      permission: this.permissionValueService.toInput(this.editPermission),
     };
   }
 
@@ -96,19 +104,19 @@ export class DirectoryFormComponent implements OnInit {
       return this.apiService.postData<DirectoryInput>(
         ApiEntity.DIRECTORY,
         this.toInput(),
-      )
+      );
     }
   }
 
-    /**
+  /**
    *
    */
   saveItem() {
-      this.sendItem()
-        .then(() => this.dialogRef.close())
-        .catch((err: string) => {
-          this.errorBar.open(err, 'close', {duration: 5000});
-        });
+    this.sendItem()
+      .then(() => this.dialogRef.close())
+      .catch((err: string) => {
+        this.errorBar.open(err, 'close', {duration: 5000});
+      });
   }
 
 }

@@ -3,7 +3,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user.entity';
 import { EntityManager, Repository } from 'typeorm';
 import { ApiCreatedResponse, ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { UserUpdateOperation } from '../../operation/user-update.operation';
+import { UserUpdateOperation } from '../../operation/user/user-update.operation';
 import { UserSchema } from '../../schema/user.schema';
 import { UserInput } from '../../input/user.input';
 import { CurrentUser } from '../../decorator/current-user/current-user.decorator';

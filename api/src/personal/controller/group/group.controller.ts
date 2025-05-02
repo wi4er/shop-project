@@ -3,9 +3,9 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { GroupEntity } from '../../model/group.entity';
 import { UserGroupInput } from '../../input/user-group.input';
-import { UserGroupInsertOperation } from '../../operation/user-group-insert.operation';
-import { UserGroupUpdateOperation } from '../../operation/user-group-update.operation';
-import { UserGroupDeleteOperation } from '../../operation/user-group-delete.operation';
+import { UserGroupInsertOperation } from '../../operation/group/user-group-insert.operation';
+import { UserGroupUpdateOperation } from '../../operation/group/user-group-update.operation';
+import { UserGroupDeleteOperation } from '../../operation/group/user-group-delete.operation';
 import { GroupRender } from '../../render/group.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 

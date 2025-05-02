@@ -4,9 +4,9 @@ import { UserEntity } from '../../model/user.entity';
 import { EntityManager, Repository } from 'typeorm';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { UserInput } from '../../input/user.input';
-import { UserInsertOperation } from '../../operation/user-insert.operation';
-import { UserUpdateOperation } from '../../operation/user-update.operation';
-import { UserDeleteOperation } from '../../operation/user-delete.operation';
+import { UserInsertOperation } from '../../operation/user/user-insert.operation';
+import { UserUpdateOperation } from '../../operation/user/user-update.operation';
+import { UserDeleteOperation } from '../../operation/user/user-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('User object')

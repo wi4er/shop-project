@@ -16,7 +16,7 @@ describe('Directory field entity', () => {
   afterAll(() => source.destroy());
 
   describe('Directory field', () => {
-    test('Should create directory field', async () => {
+    test('Should create registry field', async () => {
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const field = await Object.assign(new FormFieldEntity(), {id: 'DIRECTORY', form}).save();
       const inst = await Object.assign(new FormFieldDirectoryEntity(), {field}).save();
@@ -26,8 +26,8 @@ describe('Directory field entity', () => {
     });
   });
 
-  describe('Field with directory', () => {
-    test('Should create directory field', async () => {
+  describe('Field with registry', () => {
+    test('Should create registry field', async () => {
       const fieldRepo = source.getRepository(FormFieldEntity);
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const field = await Object.assign(new FormFieldEntity(), {id: 'DIRECTORY', form}).save();

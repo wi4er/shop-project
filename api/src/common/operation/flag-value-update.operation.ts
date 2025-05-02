@@ -21,7 +21,7 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
 
     return WrongDataException.assert(
       await flagRepo.findOne({where: {id}}),
-      `Flag with if >> ${id} << not found!`
+      `Flag with id >> ${id} << not found!`,
     );
   }
 
@@ -47,10 +47,14 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
     }
 
     for (const item of current) {
-      await this.transaction.delete(this.entity, {
-        parent: beforeItem,
-        flag: item,
-      });
+      await this.transaction
+        .delete(this.entity, {
+          parent: beforeItem,
+          flag: item,
+        })
+        .catch(err => {
+          throw new WrongDataException(err.detail);
+        });
     }
   }
 

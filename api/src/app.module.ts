@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { PersonalModule } from './personal/personal.module';
 import { ContentModule } from './content/content.module';
 import { StorageModule } from './storage/storage.module';
-import { DirectoryModule } from './directory/directory.module';
+import { RegistryModule } from './registry/registry.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { createConnectionOptions } from './createConnectionOptions';
@@ -27,7 +27,7 @@ import * as process from 'process';
     PersonalModule,
     ContentModule,
     StorageModule,
-    DirectoryModule,
+    RegistryModule,
     CommonModule,
     FormModule,
     ExceptionModule,

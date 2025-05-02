@@ -65,7 +65,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'input',
       }, {
         title: 'Directories',
-        link: '/directory',
+        link: '/registry',
         icon: 'folder',
       }, {
         title: 'Documents',

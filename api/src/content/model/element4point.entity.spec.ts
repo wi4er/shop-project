@@ -4,8 +4,8 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 import { Element4pointEntity } from './element4point.entity';
 import { ElementEntity } from './element.entity';
-import { DirectoryEntity } from '../../directory/model/directory.entity';
-import { PointEntity } from '../../directory/model/point.entity';
+import { DirectoryEntity } from '../../registry/model/directory.entity';
+import { PointEntity } from '../../registry/model/point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 
 describe('Element for point entity', () => {

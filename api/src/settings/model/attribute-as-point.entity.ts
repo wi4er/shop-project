@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { DirectoryEntity } from '../../directory/model/directory.entity';
+import { DirectoryEntity } from '../../registry/model/directory.entity';
 import { AttributeEntity } from './attribute.entity';
 
 @Entity('settings-attribute-as-point')

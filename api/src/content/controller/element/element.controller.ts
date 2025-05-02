@@ -116,7 +116,7 @@ export class ElementController {
   @Get()
   async getList(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Query('filter')
       filter?: ElementFilterInput,
     @Query('sort')
@@ -144,7 +144,7 @@ export class ElementController {
   @Get('count')
   async getCount(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Query('filter')
       filter?: ElementFilterInput,
   ): Promise<{ count: number }> {
@@ -196,7 +196,7 @@ export class ElementController {
   })
   async addItem(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
@@ -217,7 +217,7 @@ export class ElementController {
   })
   async updateItem(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Param('id')
       id: string,
     @Body()
@@ -251,7 +251,7 @@ export class ElementController {
   })
   async updateField(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Param('id')
       id: string,
     @Body()
@@ -280,7 +280,7 @@ export class ElementController {
   @Delete('/:id')
   async deleteItem(
     @CurrentGroups()
-      group: number[],
+      group: string[],
     @Param('id')
       id: string,
   ): Promise<string[]> {

@@ -1,7 +1,7 @@
 import { AttributeEntity } from '../../model/attribute.entity';
 import { EntityManager } from 'typeorm';
 import { AttributeAsPointEntity } from '../../model/attribute-as-point.entity';
-import { DirectoryEntity } from '../../../directory/model/directory.entity';
+import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class AttributeAsPointInsertOperation {

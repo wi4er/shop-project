@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
 import { AttributeInput } from '../../input/attribute.input';
-import { DirectoryEntity } from '../../../directory/model/directory.entity';
+import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeAsPointEntity } from '../../model/attribute-as-point.entity';
 

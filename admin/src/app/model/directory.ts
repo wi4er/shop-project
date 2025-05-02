@@ -1,4 +1,5 @@
 import { StringAttributeValue } from './string-attribute-value';
+import { PermissionValue } from './permission/permission-value';
 
 export interface Directory {
 
@@ -8,5 +9,6 @@ export interface Directory {
 
   flag: string[];
   attribute: StringAttributeValue[];
+  permission: PermissionValue[];
 
 }

@@ -3,9 +3,9 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { ContactEntity } from '../../model/contact.entity';
 import { UserContactInput } from '../../input/user-contact.input';
-import { UserContactInsertOperation } from '../../operation/user-contact-insert.operation';
-import { UserContactUpdateOperation } from '../../operation/user-contact-update.operation';
-import { UserContactDeleteOperation } from '../../operation/user-contact-delete.operation';
+import { UserContactInsertOperation } from '../../operation/contact/user-contact-insert.operation';
+import { UserContactUpdateOperation } from '../../operation/contact/user-contact-update.operation';
+import { UserContactDeleteOperation } from '../../operation/contact/user-contact-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('contact')

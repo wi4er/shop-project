@@ -33,7 +33,7 @@ const routes: Routes = [{
   path: 'content',
   component: BlockListComponent,
 }, {
-  path: 'directory',
+  path: 'registry',
   component: DirectoryListComponent,
 }, {
   path: 'flag',

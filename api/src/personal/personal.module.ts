@@ -18,7 +18,7 @@ import { User2groupEntity } from './model/user2group.entity';
 import { GroupEntity } from './model/group.entity';
 import { Group4stringEntity } from './model/group4string.entity';
 import { Group2flagEntity } from './model/group2flag.entity';
-import { PointEntity } from '../directory/model/point.entity';
+import { PointEntity } from '../registry/model/point.entity';
 import { User4descriptionEntity } from './model/user4description.entity';
 import { MyselfController } from './controller/myself/myself.controller';
 import { GroupController } from './controller/group/group.controller';

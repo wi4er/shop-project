@@ -8,7 +8,7 @@ import { Attribute4stringEntity } from '../../model/attribute4string.entity';
 import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
 import { FlagEntity } from '../../model/flag.entity';
 import { LangEntity } from '../../model/lang.entity';
-import { DirectoryEntity } from '../../../directory/model/directory.entity';
+import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { AttributeAsPointEntity } from '../../model/attribute-as-point.entity';
 import { BlockEntity } from '../../../content/model/block.entity';
 import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
@@ -87,7 +87,7 @@ describe('AttributeController', () => {
     });
 
     describe('Attribute fields with type', () => {
-      test('Should get with directory type', async () => {
+      test('Should get with registry type', async () => {
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const parent = await Object.assign(
           new AttributeEntity(),
@@ -301,7 +301,7 @@ describe('AttributeController', () => {
     });
 
     describe('Attribute addition with type', () => {
-      test('Should add with directory type', async () => {
+      test('Should add with registry type', async () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         const item = await request(app.getHttpServer())
@@ -317,7 +317,7 @@ describe('AttributeController', () => {
         expect(item.body.type).toBe('POINT');
       });
 
-      test('Shouldn`t add with wrong directory', async () => {
+      test('Shouldn`t add with wrong registry', async () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         await request(app.getHttpServer())

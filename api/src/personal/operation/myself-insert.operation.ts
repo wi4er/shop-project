@@ -7,8 +7,8 @@ import { StringValueInsertOperation } from '../../common/operation/string-value-
 import { User4stringEntity } from '../model/user4string.entity';
 import { FlagValueInsertOperation } from '../../common/operation/flag-value-insert.operation';
 import { User2flagEntity } from '../model/user2flag.entity';
-import { User2userContactInsertOperation } from './user2user-contact-insert.operation';
-import { User2userGroupInsertOperation } from './user2user-group-insert.operation';
+import { User2userContactInsertOperation } from './user/user2user-contact-insert.operation';
+import { User2userGroupInsertOperation } from './user/user2user-group-insert.operation';
 import { ContactEntity } from '../model/contact.entity';
 import { AuthInput } from '../input/auth.input';
 import { EncodeService } from '../service/encode/encode.service';

@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { FormFieldEntity } from './form-field.entity';
 
-@Entity('form-field-directory')
+@Entity('form-field-registry')
 export class FormFieldDirectoryEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()

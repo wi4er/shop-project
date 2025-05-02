@@ -7,8 +7,8 @@ import { BlockEntity } from '../../model/block.entity';
 import { ElementEntity } from '../../model/element.entity';
 import { Element4stringEntity } from '../../model/element4string.entity';
 import { Element2flagEntity } from '../../model/element2flag.entity';
-import { DirectoryEntity } from '../../../directory/model/directory.entity';
-import { PointEntity } from '../../../directory/model/point.entity';
+import { DirectoryEntity } from '../../../registry/model/directory.entity';
+import { PointEntity } from '../../../registry/model/point.entity';
 import { Element4pointEntity } from '../../model/element4point.entity';
 import { SectionEntity } from '../../model/section.entity';
 import { Element2sectionEntity } from '../../model/element2section.entity';
@@ -625,7 +625,7 @@ describe('ElementController', () => {
       // expect(list.body).toHaveLength(5);
       // expect(list.body[0].attribute).toHaveLength(1);
       // expect(list.body[0].attribute[0].value).toBe('LONDON');
-      // expect(list.body[0].attribute[0].directory).toBe('CITY');
+      // expect(list.body[0].attribute[0].registry).toBe('CITY');
     });
   });
 

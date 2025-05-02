@@ -7,6 +7,7 @@ import { Collection } from '../../app/model/storage/collection';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
   selector: 'app-element-form',
@@ -40,9 +41,7 @@ export class ElementFormComponent implements OnInit {
       hash: string,
     }>
   } = {};
-  editPermission: {
-    [groupId: string]: { [method: string]: boolean }
-  } = {};
+  editPermission: PermissionEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<ElementFormComponent>,
@@ -51,6 +50,7 @@ export class ElementFormComponent implements OnInit {
     private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
+    private permissionValueService: PermissionValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -103,10 +103,7 @@ export class ElementFormComponent implements OnInit {
       this.editFlags[flag] = true;
     }
 
-    for (const perm of item.permission) {
-      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {}
-      this.editPermission[perm.group ?? ''][perm.method] = true;
-    }
+    this.editPermission = this.permissionValueService.toEdit(item.permission);
   }
 
   /**
@@ -135,11 +132,7 @@ export class ElementFormComponent implements OnInit {
       }
     }
 
-    for (const group in this.editPermission) {
-      for (const method in this.editPermission[group]) {
-        if (this.editPermission[group][method]) input.permission.push({method, group: group ? group : undefined});
-      }
-    }
+    input.permission = this.permissionValueService.toInput(this.editPermission);
 
     return input;
   }
@@ -153,12 +146,12 @@ export class ElementFormComponent implements OnInit {
         ApiEntity.ELEMENT,
         this.data.id,
         this.toInput(),
-      )
+      );
     } else {
       return this.apiService.postData<ElementInput>(
         ApiEntity.ELEMENT,
         this.toInput(),
-      )
+      );
     }
   }
 

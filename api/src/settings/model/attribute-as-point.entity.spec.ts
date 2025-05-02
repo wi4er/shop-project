@@ -2,10 +2,10 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { AttributeEntity, AttributeType } from './attribute.entity';
-import { DirectoryEntity } from '../../directory/model/directory.entity';
+import { DirectoryEntity } from '../../registry/model/directory.entity';
 import { AttributeAsPointEntity } from './attribute-as-point.entity';
 
-describe('Attribute as directory entity', () => {
+describe('Attribute as registry entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));

@@ -2,8 +2,8 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
-import { DirectoryEntity } from '../../directory/model/directory.entity';
-import { PointEntity } from '../../directory/model/point.entity';
+import { DirectoryEntity } from '../../registry/model/directory.entity';
+import { PointEntity } from '../../registry/model/point.entity';
 import { Block4pointEntity } from './block4point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 

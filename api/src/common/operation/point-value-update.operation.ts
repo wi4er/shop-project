@@ -2,7 +2,7 @@ import { BaseEntity, EntityManager } from 'typeorm';
 import { WithPointEntity } from '../model/with-point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { PointEntity } from '../../directory/model/point.entity';
+import { PointEntity } from '../../registry/model/point.entity';
 import { PropertyPointInput } from '../input/property-point.input';
 import { CommonPointEntity } from '../model/common-point.entity';
 

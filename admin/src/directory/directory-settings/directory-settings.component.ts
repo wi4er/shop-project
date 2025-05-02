@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-directory-settings',
+  selector: 'app-registry-settings',
   templateUrl: './directory-settings.component.html',
   styleUrls: ['./directory-settings.component.css']
 })

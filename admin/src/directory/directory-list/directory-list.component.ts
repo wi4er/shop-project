@@ -14,7 +14,7 @@ import { BlockSettingsComponent } from '../../content/block-settings/block-setti
 import { DirectorySettingsComponent } from '../directory-settings/directory-settings.component';
 
 @Component({
-  selector: 'app-directory-list',
+  selector: 'app-registry-list',
   templateUrl: './directory-list.component.html',
   styleUrls: ['./directory-list.component.css'],
 })

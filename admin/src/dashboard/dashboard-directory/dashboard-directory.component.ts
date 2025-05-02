@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Collection } from '../../app/model/storage/collection';
 import { Directory } from '../../app/model/directory';
 
 @Component({
-  selector: 'app-dashboard-directory',
+  selector: 'app-dashboard-registry',
   templateUrl: './dashboard-directory.component.html',
   styleUrls: ['./dashboard-directory.component.css']
 })

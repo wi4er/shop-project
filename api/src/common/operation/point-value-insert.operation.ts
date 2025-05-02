@@ -4,7 +4,7 @@ import { WrongDataException } from '../../exception/wrong-data/wrong-data.except
 import { CommonPointEntity } from '../model/common-point.entity';
 import { PropertyPointInput } from '../input/property-point.input';
 import { WithPointEntity } from '../model/with-point.entity';
-import { PointEntity } from '../../directory/model/point.entity';
+import { PointEntity } from '../../registry/model/point.entity';
 
 export class PointValueInsertOperation<T extends WithPointEntity<T>> {
 

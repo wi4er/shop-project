@@ -3,8 +3,8 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { SectionEntity } from './section.entity';
 import { BlockEntity } from './block.entity';
-import { DirectoryEntity } from '../../directory/model/directory.entity';
-import { PointEntity } from '../../directory/model/point.entity';
+import { DirectoryEntity } from '../../registry/model/directory.entity';
+import { PointEntity } from '../../registry/model/point.entity';
 import { Section4pointEntity } from './section4point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 

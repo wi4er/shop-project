@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Group } from '../../app/model/user/group';
 import { PermissionMethod } from '../../app/model/permission/permission-method';
+import { PermissionEdit } from '../permission-value/permission-value.service';
 
 @Component({
   selector: 'app-group-permission',
@@ -16,9 +17,7 @@ export class GroupPermissionComponent implements OnInit {
   displayedColumns = ['groupId', ...this.methodList];
 
   @Input()
-  permission: {
-    [groupId: string]: { [method: string]: boolean | null},
-  } = {};
+  permission: PermissionEdit = {};
 
   constructor(
     private apiService: ApiService,
@@ -33,6 +32,10 @@ export class GroupPermissionComponent implements OnInit {
     this.permission[group][method] = !this.permission[group][method];
   }
 
+  getChecked(group: string, method: string) {
+    return this.permission[group]?.[method] ?? false
+  }
+
   /**
    *
    */
@@ -44,7 +47,6 @@ export class GroupPermissionComponent implements OnInit {
 
     return list;
   }
-
 
   /**
    *
