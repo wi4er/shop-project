@@ -8,15 +8,15 @@ import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { ElementInput } from '../../input/element.input';
 import { ElementFilterInput } from '../../input/element-filter.input';
 import { ElementOrder } from '../../input/element.order';
-import { ElementInsertOperation } from '../../operation/element-insert.operation';
-import { ElementUpdateOperation } from '../../operation/element-update.operation';
-import { ElementDeleteOperation } from '../../operation/element-delete.operation';
+import { ElementInsertOperation } from '../../operation/element/element-insert.operation';
+import { ElementUpdateOperation } from '../../operation/element/element-update.operation';
+import { ElementDeleteOperation } from '../../operation/element/element-delete.operation';
 import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { ElementRender } from '../../render/element.render';
-import { ElementPatchOperation } from '../../operation/element-patch.operation';
+import { ElementPatchOperation } from '../../operation/element/element-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('Content element')

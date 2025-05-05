@@ -2,12 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { UserInput } from '../../app/model/user/user.input';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../app/model/user/user';
 import { Group } from '../../app/model/user/group';
 import { Contact } from '../../app/model/user/contact';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
-import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-user-form',
@@ -26,15 +25,14 @@ export class UserFormComponent implements OnInit {
   groupList: Array<Group> = [];
   contactList: Array<Contact> = [];
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: AttributeEdit = {};
   editContact: { [attribute: string]: { value: string, error?: string } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editFlags: FlagEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
-    private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
@@ -62,15 +60,6 @@ export class UserFormComponent implements OnInit {
   /**
    *
    */
-  getAttributeCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
-  }
-
-  /**
-   *
-   */
   toEdit(item: User) {
     this.id = item.id;
     this.login = item.login;
@@ -78,10 +67,7 @@ export class UserFormComponent implements OnInit {
     this.updated_at = item.updated_at;
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
+    this.editFlags = this.flagValueService.toEdit(item.flag);
   }
 
   /**
@@ -118,11 +104,7 @@ export class UserFormComponent implements OnInit {
    *
    */
   saveItem() {
-    this.sendItem()
-      .then(() => this.dialogRef.close())
-      .catch((err: string) => {
-        this.errorBar.open(err, 'close', {duration: 5000});
-      });
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

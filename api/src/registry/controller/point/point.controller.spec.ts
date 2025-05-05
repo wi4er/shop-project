@@ -242,38 +242,78 @@ describe('PointController', () => {
   });
 
   describe('Point addition', () => {
-    test('Should add point', async () => {
-      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+    describe('Point addition with fields', () => {
+      test('Should add point', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
-      const res = await request(app.getHttpServer())
-        .post('/point')
-        .send({
-          id: 'London',
-          directory: 'CITY',
-        })
-        .expect(201);
+        const res = await request(app.getHttpServer())
+          .post('/point')
+          .send({
+            id: 'London',
+            directory: 'CITY',
+          })
+          .expect(201);
 
-      expect(res.body.id).toBe('London');
-      expect(res.body.directory).toBe('CITY');
-    });
+        expect(res.body.id).toBe('London');
+        expect(res.body.directory).toBe('CITY');
+      });
 
-    test('Shouldn`t add without registry', async () => {
-      await request(app.getHttpServer())
-        .post('/point')
-        .send({id: 'London'})
-        .expect(400);
-    });
+      test('Shouldn`t add with duplicate id', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
-    test('Shouldn`t add with wrong registry', async () => {
-      await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await request(app.getHttpServer())
+          .post('/point')
+          .send({
+            id: 'London',
+            directory: 'CITY',
+          })
+          .expect(201);
 
-      await request(app.getHttpServer())
-        .post('/point')
-        .send({
-          id: 'London',
-          directory: 'WRONG',
-        })
-        .expect(400);
+        await request(app.getHttpServer())
+          .post('/point')
+          .send({
+            id: 'London',
+            directory: 'CITY',
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add with blank id', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
+        await request(app.getHttpServer())
+          .post('/point')
+          .send({id: '', directory: 'CITY'})
+          .expect(400);
+      });
+
+      test('Shouldn`t add without id', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
+        await request(app.getHttpServer())
+          .post('/point')
+          .send({directory: 'CITY'})
+          .expect(400);
+      });
+
+      test('Shouldn`t add without registry', async () => {
+        await request(app.getHttpServer())
+          .post('/point')
+          .send({id: 'London'})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with wrong registry', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
+        await request(app.getHttpServer())
+          .post('/point')
+          .send({
+            id: 'London',
+            directory: 'WRONG',
+          })
+          .expect(400);
+      });
     });
   });
 
@@ -311,7 +351,7 @@ describe('PointController', () => {
         expect(res.body.directory).toBe('CITY');
       });
 
-      test('Should update directory', async () => {
+      test('Should update registry', async () => {
         const directory = await createDirectory('CITY');
         await createDirectory('LOCATION');
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
@@ -328,7 +368,7 @@ describe('PointController', () => {
         expect(res.body.directory).toBe('LOCATION');
       });
 
-      test('Shouldn`t update with wrong directory', async () => {
+      test('Shouldn`t update with wrong registry', async () => {
         const directory = await createDirectory('CITY');
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -369,7 +409,7 @@ describe('PointController', () => {
     });
 
     describe('Point patch update', () => {
-      test('Should update directory only', async () => {
+      test('Should update registry only', async () => {
         const directory = await createDirectory('CITY');
         await createDirectory('LOCATION');
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();

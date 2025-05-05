@@ -3,9 +3,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { BlockInput } from '../../app/model/content/block.input';
 import { Block } from '../../app/model/content/block';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
   selector: 'app-block-form',
@@ -28,9 +28,9 @@ export class BlockFormComponent implements OnInit {
     private dialogRef: MatDialogRef<BlockFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
-    private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
+    private permissionValueService: PermissionValueService,
   ) {
   }
 
@@ -50,53 +50,27 @@ export class BlockFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
-  }
-
-  /**
-   *
-   */
   toEdit(item: Block) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
     this.sort = item.sort;
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
-
-    for (const perm of item.permission) {
-      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {};
-      this.editPermission[perm.group ?? ''][perm.method] = true;
-    }
+    this.editFlags = this.flagValueService.toEdit(item.flag);
+    this.editPermission = this.permissionValueService.toEdit(item.permission);
   }
 
   /**
    *
    */
   toInput(): BlockInput {
-    const input: BlockInput = {
-      id: this.data?.id,
+    return {
+      id: +(this.data?.id ?? 0),
       sort: +this.sort,
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
-      permission: [],
-    } as BlockInput;
-
-    for (const group in this.editPermission) {
-      for (const method in this.editPermission[group]) {
-        if (this.editPermission[group][method]) {
-          input.permission.push({method, group: group ? group : undefined});
-        }
-      }
-    }
-
-    return input;
+      permission: this.permissionValueService.toInput(this.editPermission),
+    };
   }
 
   /**
@@ -121,11 +95,7 @@ export class BlockFormComponent implements OnInit {
    *
    */
   saveItem() {
-    this.sendItem()
-      .then(() => this.dialogRef.close())
-      .catch((err: string) => {
-        this.errorBar.open(err, 'close', {duration: 5000});
-      });
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

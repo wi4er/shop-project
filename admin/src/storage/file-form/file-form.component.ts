@@ -1,12 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Attribute } from '../../app/model/settings/attribute';
-import { Lang } from '../../app/model/settings/lang';
-import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FileInput } from '../../app/model/storage/file.input';
 import { File as FileEntity } from '../../app/model/storage/file';
 import { HttpClient } from '@angular/common/http';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-file-form',
@@ -21,42 +20,28 @@ export class FileFormComponent implements OnInit {
   updated_at: string = '';
   file?: File;
 
-  attributeList: Attribute[] = [];
-  langList: Lang[] = [];
-  flagList: Flag[] = [];
-
   editFile?: {
     name: string,
     hash: string,
   };
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<FileFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
     private http: HttpClient,
+    private attributeValueService: AttributeValueService,
+    private flagValueService: FlagValueService,
   ) {
   }
 
   ngOnInit(): void {
-    Promise.all([
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([attribute, flag, lang]) => {
-      this.attributeList = attribute;
-      this.flagList = flag;
-      this.langList = lang;
-
-      this.initEditValues();
-    }).then(() => {
-      if (this.data?.id) {
-        this.apiService.fetchItem<FileEntity>(ApiEntity.FILE, this.data.id)
-          .then(res => this.toEdit(res));
-      }
-    });
+    if (this.data?.id) {
+      this.apiService.fetchItem<FileEntity>(ApiEntity.FILE, this.data.id)
+        .then(res => this.toEdit(res));
+    }
   }
 
   /**
@@ -95,78 +80,27 @@ export class FileFormComponent implements OnInit {
   /**
    *
    */
-  initEditValues() {
-    for (const prop of this.attributeList) {
-      this.editAttributes[prop.id] = {};
+  toEdit(item: FileEntity) {
+    this.created_at = item.created_at;
+    this.updated_at = item.updated_at;
 
-      for (const lang of this.langList) {
-        this.editAttributes[prop.id][lang.id] = [{value: ''}];
-      }
-    }
-
-    for (const flag of this.flagList) {
-      this.editFlags[flag.id] = false;
-    }
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
+    this.editFlags = this.flagValueService.toEdit(item.flag);
   }
 
   /**
    *
    */
-  toEdit(item: FileEntity) {
-    this.created_at = item.created_at;
-    this.updated_at = item.updated_at;
-
-    for (const prop of item.attribute) {
-      if (!this.editAttributes[prop.attribute]) {
-        this.editAttributes[prop.attribute] = {};
-      }
-
-      if (!this.editAttributes[prop.attribute][prop.lang ?? '']) {
-        this.editAttributes[prop.attribute][prop.lang ?? ''] = [];
-      }
-
-      this.editAttributes[prop.attribute][prop.lang ?? ''].push({
-        value: prop.string,
-        error: '',
-      });
-    }
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
-  }
-
   toInput(): FileInput {
-    const input: FileInput = {
-      attribute: [],
-      flag: [],
-    } as FileInput;
-
-    for (const prop in this.editAttributes) {
-      for (const lang in this.editAttributes[prop]) {
-        if (!this.editAttributes[prop][lang]) {
-          continue;
-        }
-
-        for (const value of this.editAttributes[prop][lang]) {
-          input.attribute.push({
-            attribute: prop,
-            string: value.value,
-            lang: lang || undefined,
-          });
-        }
-      }
-    }
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
-    }
-
-    return input;
+    return {
+      attribute: this.attributeValueService.toInput(this.editAttributes),
+      flag: this.flagValueService.toInput(this.editFlags),
+    };
   }
 
+  /**
+   *
+   */
   saveItem() {
     const data = new FormData();
 

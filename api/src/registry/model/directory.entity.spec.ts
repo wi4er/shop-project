@@ -25,6 +25,13 @@ describe('Directory entity', () => {
       expect(inst.version).toBe(1);
     });
 
+    test('Shouldn`t create without id', async () => {
+      const inst = new DirectoryEntity();
+      inst.id = '';
+
+      await expect(inst.save()).rejects.toThrow('id');
+    });
+
     test('Shouldn`t create with blank id', async () => {
       const inst = new DirectoryEntity();
       inst.id = '';

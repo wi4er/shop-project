@@ -10,6 +10,7 @@ import { PointValueInsertOperation } from '../../../common/operation/point-value
 import { Directory4pointEntity } from '../../model/directory4point.entity';
 import { PermissionValueInsertOperation } from '../../../common/operation/permission-value-insert.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class DirectoryInsertOperation {
 
@@ -25,7 +26,13 @@ export class DirectoryInsertOperation {
    *
    */
   async save(input: DirectoryInput): Promise<string> {
-    this.created.id = input.id;
+    this.created.id = WrongDataException.assert(input.id, 'Directory id expected');
+
+    try {
+      await this.transaction.insert(DirectoryEntity, this.created);
+    } catch (err) {
+      throw new WrongDataException(err.detail);
+    }
 
     await this.transaction.save(this.created);
 

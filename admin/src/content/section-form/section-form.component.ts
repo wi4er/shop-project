@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Section } from '../../app/model/content/section';
 import { SectionInput } from '../../app/model/content/section.input';
 import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
   selector: 'app-section-form',
@@ -47,9 +47,9 @@ export class SectionFormComponent implements OnInit {
     private dialogRef: MatDialogRef<SectionFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
-    private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
+    private permissionValueService: PermissionValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
@@ -65,15 +65,6 @@ export class SectionFormComponent implements OnInit {
 
       this.loading = false;
     });
-  }
-
-  /**
-   *
-   */
-  getAttributeCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
   }
 
   /**
@@ -96,15 +87,8 @@ export class SectionFormComponent implements OnInit {
     }
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
-
-    for (const perm of item.permission) {
-      if (!this.editPermission[perm.group ?? '']) this.editPermission[perm.group ?? ''] = {}
-      this.editPermission[perm.group ?? ''][perm.method] = true;
-    }
+    this.editFlags = this.flagValueService.toEdit(item.flag);
+    this.editPermission = this.permissionValueService.toEdit(item.permission);
   }
 
   /**
@@ -118,7 +102,7 @@ export class SectionFormComponent implements OnInit {
       image: [],
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
-      permission: [],
+      permission: this.permissionValueService.toInput(this.editPermission),
     } as SectionInput;
 
     for (const collection in this.editImages) {
@@ -130,16 +114,6 @@ export class SectionFormComponent implements OnInit {
     for (const col in this.imageList) {
       for (const image of this.imageList[col]) {
         input.image.push(image.id);
-      }
-    }
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) input.flag.push(flag);
-    }
-
-    for (const group in this.editPermission) {
-      for (const method in this.editPermission[group]) {
-        if (this.editPermission[group][method]) input.permission.push({method, group: group ? group : undefined});
       }
     }
 
@@ -186,11 +160,7 @@ export class SectionFormComponent implements OnInit {
       }
     }
 
-    this.sendItem()
-      .then(() => this.dialogRef.close())
-      .catch((err: string) => {
-        this.errorBar.open(err, 'close', {duration: 5000});
-      });
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

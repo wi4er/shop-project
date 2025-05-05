@@ -4,9 +4,8 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element.input';
 import { Collection } from '../../app/model/storage/collection';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
-import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
@@ -31,8 +30,8 @@ export class ElementFormComponent implements OnInit {
     }>
   } = {};
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
   editImages: {
     [collection: string]: Array<{
       id?: number,
@@ -47,7 +46,6 @@ export class ElementFormComponent implements OnInit {
     private dialogRef: MatDialogRef<ElementFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
-    private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
     private permissionValueService: PermissionValueService,
@@ -72,15 +70,6 @@ export class ElementFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
-  }
-
-  /**
-   *
-   */
   toEdit(item: Element) {
     this.id = item.id;
     this.created_at = item.created_at;
@@ -98,11 +87,7 @@ export class ElementFormComponent implements OnInit {
     }
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
-
+    this.editFlags = this.flagValueService.toEdit(item.flag);
     this.editPermission = this.permissionValueService.toEdit(item.permission);
   }
 
@@ -117,7 +102,7 @@ export class ElementFormComponent implements OnInit {
       image: [],
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
-      permission: [],
+      permission: this.permissionValueService.toInput(this.editPermission),
     } as ElementInput;
 
     for (const collection in this.editImages) {
@@ -131,8 +116,6 @@ export class ElementFormComponent implements OnInit {
         input.image.push(image.id);
       }
     }
-
-    input.permission = this.permissionValueService.toInput(this.editPermission);
 
     return input;
   }
@@ -177,11 +160,7 @@ export class ElementFormComponent implements OnInit {
       }
     }
 
-    this.sendItem()
-      .then(() => this.dialogRef.close())
-      .catch((err: string) => {
-        this.errorBar.open(err, 'close', {duration: 5000});
-      });
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

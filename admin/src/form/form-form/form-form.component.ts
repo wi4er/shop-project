@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Attribute } from '../../app/model/settings/attribute';
-import { Lang } from '../../app/model/settings/lang';
-import { Flag } from '../../app/model/settings/flag';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FormInput } from '../../app/model/form/form.input';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { Form } from '../../app/model/form/form';
 
 @Component({
   selector: 'app-form-form',
@@ -17,20 +17,25 @@ export class FormFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<FormFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
+    private attributeValueService: AttributeValueService,
+    private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = data.id;
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     if (this.data?.id) {
-      this.apiService.fetchItem<Flag>(ApiEntity.FORM, this.data.id)
+      this.apiService.fetchItem<Form>(ApiEntity.FORM, this.data.id)
         .then(res => {
           this.toEdit(res);
         });
@@ -40,42 +45,28 @@ export class FormFormComponent implements OnInit {
   /**
    *
    */
-  getPropertyCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
-  }
-
-
-  toEdit(item: Attribute) {
+  toEdit(item: Form) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
+    this.editFlags = this.flagValueService.toEdit(item.flag);
   }
 
+  /**
+   *
+   */
   toInput(): FormInput {
-    const input: FormInput = {
+    return  {
       id: this.id,
-      attribute: [],
-      flag: [],
-    } as FormInput;
-
-    for (const prop in this.editAttributes) {
-      for (const lang in this.editAttributes[prop]) {
-        if (!this.editAttributes[prop][lang]) {
-          continue;
-        }
-      }
-    }
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
-    }
-
-    return input;
+      attribute: this.attributeValueService.toInput(this.editAttributes),
+      flag: this.flagValueService.toInput(this.editFlags),
+    };
   }
 
+  /**
+   *
+   */
   saveItem() {
     if (this.data?.id) {
 

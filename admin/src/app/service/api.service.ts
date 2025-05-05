@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import qs from 'query-string';
 import { StringifiableRecord } from 'query-string/base';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export enum ApiEntity {
   BLOCK = 'block',
@@ -9,6 +10,7 @@ export enum ApiEntity {
   FLAG = 'flag',
   ATTRIBUTE = 'attribute',
   DIRECTORY = 'directory',
+  POINT = 'point',
   FORM = 'form',
   RESULT = 'result',
   LANG = 'lang',
@@ -28,7 +30,9 @@ export class ApiService {
 
   apiUrl = 'http://localhost:3030';
 
-  constructor() {
+  constructor(
+    private errorBar: MatSnackBar,
+  ) {
   }
 
   /**
@@ -124,7 +128,12 @@ export class ApiService {
       credentials: 'include',
       body: JSON.stringify(item),
     }).then(res => res.json().then(reason => {
-      return res.ok ? reason : Promise.reject(reason.message);
+      if (res.ok) {
+        return reason;
+      } else {
+        this.errorBar.open(reason.message, 'close', {duration: 5000});
+        return Promise.reject(reason.message);
+      }
     }));
   }
 
@@ -148,7 +157,12 @@ export class ApiService {
       credentials: 'include',
       body: JSON.stringify(item),
     }).then(res => res.json().then(reason => {
-      return res.ok ? reason : Promise.reject(reason.message);
+      if (res.ok) {
+        return reason;
+      } else {
+        this.errorBar.open(reason.message, 'close', {duration: 5000});
+        return Promise.reject(reason.message);
+      }
     }));
 
     return req;
@@ -174,7 +188,12 @@ export class ApiService {
       credentials: 'include',
       body: JSON.stringify(item),
     }).then(res => res.json().then(reason => {
-      return res.ok ? reason : Promise.reject(reason.message);
+      if (res.ok) {
+        return reason;
+      } else {
+        this.errorBar.open(reason.message, 'close', {duration: 5000});
+        return Promise.reject(reason.message);
+      }
     }));
 
     return req;
@@ -185,7 +204,7 @@ export class ApiService {
    */
   deleteList(
     entity: ApiEntity,
-    idList: string[] | number[]
+    idList: string[] | number[],
   ) {
     const reqList = [];
 
@@ -202,10 +221,14 @@ export class ApiService {
           'content-type': 'application/json',
         },
         credentials: 'include',
-      }).then(res => {
-        if (!res.ok) console.error(res);
-        return res.json();
-      }));
+      }).then(res => res.json().then(reason => {
+        if (res.ok) {
+          return reason;
+        } else {
+          this.errorBar.open(reason.message, 'close', {duration: 5000});
+          return Promise.reject(reason.message);
+        }
+      })));
     }
 
     return Promise.all(reqList);

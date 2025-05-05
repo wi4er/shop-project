@@ -4,15 +4,15 @@ import { BlockEntity } from '../../model/block.entity';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlockInput } from '../../input/block.input';
-import { BlockInsertOperation } from '../../operation/block-insert.operation';
-import { BlockUpdateOperation } from '../../operation/block-update.operation';
-import { BlockDeleteOperation } from '../../operation/block-delete.operation';
+import { BlockInsertOperation } from '../../operation/block/block-insert.operation';
+import { BlockUpdateOperation } from '../../operation/block/block-update.operation';
+import { BlockDeleteOperation } from '../../operation/block/block-delete.operation';
 import { BlockRender } from '../../render/block.render';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { BlockPatchOperation } from '../../operation/block-patch.operation';
+import { BlockPatchOperation } from '../../operation/block/block-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('Content block')

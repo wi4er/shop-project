@@ -6,7 +6,8 @@ export interface Collection {
   created_at: string;
   updated_at: string;
   version: number;
+
   flag: string[];
-  property: StringAttributeValue[];
+  attribute: StringAttributeValue[];
 
 }

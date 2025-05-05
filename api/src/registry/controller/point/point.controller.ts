@@ -56,6 +56,8 @@ export class PointController {
   async getList(
     @CurrentGroups()
       group: string[],
+    @Query('directory')
+      directory: string,
     @Query('offset')
       offset?: number,
     @Query('limit')
@@ -65,6 +67,7 @@ export class PointController {
       where: {
         ...this.toWhere(),
         directory: {
+          id: directory,
           permission: {
             group: Or(In(group), IsNull()),
             method: In([PermissionMethod.READ, PermissionMethod.ALL]),

@@ -16,7 +16,7 @@ export class PointInsertOperation {
   created: PointEntity;
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
     this.created = new PointEntity();
   }
@@ -25,10 +25,10 @@ export class PointInsertOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    const dirRepo = this.manager.getRepository<DirectoryEntity>(DirectoryEntity);
-
     return WrongDataException.assert(
-      await dirRepo.findOne({where: {id}}),
+      await this.transaction
+        .getRepository<DirectoryEntity>(DirectoryEntity)
+        .findOne({where: {id}}),
       `Directory with id >>${id}<< not found! `,
     );
   }
@@ -37,16 +37,23 @@ export class PointInsertOperation {
    *
    */
   async save(input: PointInput): Promise<string> {
-    this.created.directory = await this.checkDirectory(input.directory);
-    this.created.id = input.id;
+    this.created.id = WrongDataException.assert(input.id, 'Point id expected');
+    this.created.directory = await this.checkDirectory(
+      WrongDataException.assert(input.directory, 'Directory id expected!'),
+    );
 
-    await this.manager.save(this.created);
+    try {
+      await this.transaction.insert(PointEntity, this.created);
+    } catch (err) {
+      throw new WrongDataException(err.detail);
+    }
+    await this.transaction.save(this.created);
 
-    await new FlagValueInsertOperation(this.manager, Point2flagEntity).save(this.created, input);
+    await new FlagValueInsertOperation(this.transaction, Point2flagEntity).save(this.created, input);
 
     const [stringList, pointList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, Point4stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.manager, Point4pointEntity).save(this.created, pointList);
+    await new StringValueInsertOperation(this.transaction, Point4stringEntity).save(this.created, stringList);
+    await new PointValueInsertOperation(this.transaction, Point4pointEntity).save(this.created, pointList);
 
     return this.created.id;
   }

@@ -135,18 +135,7 @@ export class ElementListComponent implements OnChanges {
    *
    */
   ngOnChanges() {
-    Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.blockId ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, String(this.blockId)) : null,
-      this.refreshData(),
-    ]).then(([flagList, attributeList, blockItem]) => {
-      this.flagList = flagList;
-      this.attributeList = attributeList.map((item: { id: string }) => item.id);
-      this.blockName = blockItem?.attribute.find(item => item.attribute === 'NAME')?.string;
-
-      this.loading = false;
-    });
+    this.refreshData();
   }
 
   /**
@@ -190,6 +179,9 @@ export class ElementListComponent implements OnChanges {
    */
   async refreshData() {
     return Promise.all([
+      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
+      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.blockId ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, String(this.blockId)) : null,
       this.apiService.fetchList<Element>(
         ApiEntity.ELEMENT,
         {
@@ -204,10 +196,15 @@ export class ElementListComponent implements OnChanges {
         ApiEntity.ELEMENT,
         {['filter[block]']: this.blockId},
       ),
-    ]).then(([data, count]) => {
+    ]).then(([flagList, attributeList, blockItem, data, count]) => {
+      this.flagList = flagList;
+      this.attributeList = attributeList.map((item: { id: string }) => item.id);
+      this.blockName = blockItem?.attribute.find(item => item.attribute === 'NAME')?.string;
       this.setData(data);
       this.totalCount = count;
+
       this.selection.clear();
+      this.loading = false;
     });
   }
 

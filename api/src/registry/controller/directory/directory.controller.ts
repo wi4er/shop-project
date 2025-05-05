@@ -32,7 +32,6 @@ export class DirectoryController {
     private directoryRepo: Repository<DirectoryEntity>,
     @InjectRepository(Directory2permissionEntity)
     private permRepo: Repository<Directory2permissionEntity>,
-
   ) {
   }
 
@@ -45,6 +44,7 @@ export class DirectoryController {
    */
   toWhere(): FindOptionsWhere<DirectoryEntity> {
     const where = {};
+
 
     return where;
   }

@@ -31,8 +31,9 @@ import { StorageModule } from '../storage/storage.module';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
 import { PersonalPopupComponent } from './personal-popup/personal-popup.component';
-import { DirectoryModule } from '../directory/directory.module';
+import { DirectoryModule } from '../registry/directory.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import { PointPageComponent } from './point-page/point-page.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { DashboardModule } from '../dashboard/dashboard.module';
     StoragePageComponent,
     CollectionPageComponent,
     PersonalPopupComponent,
+    PointPageComponent,
   ],
   imports: [
     BrowserModule,

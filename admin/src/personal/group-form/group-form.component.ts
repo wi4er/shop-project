@@ -3,8 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { GroupInput } from '../../app/model/user/group.input';
 import { Group } from '../../app/model/user/group';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-user-group-form',
@@ -18,15 +18,15 @@ export class GroupFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<GroupFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: number } | null,
     private apiService: ApiService,
-    private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
+    private flagValueService: FlagValueService,
   ) {
     if (data?.id) this.id = String(data.id);
   }
@@ -38,24 +38,8 @@ export class GroupFormComponent implements OnInit {
     Promise.all([
       this.data?.id ? this.apiService.fetchItem<Group>(ApiEntity.GROUP, String(this.data.id)) : null,
     ]).then(([data]) => {
-      this.initEditValues();
       if (data) this.toEdit(data);
     });
-  }
-
-  /**
-   *
-   */
-  getAttributeCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
-  }
-
-  /**
-   *
-   */
-  initEditValues() {
   }
 
   /**
@@ -66,37 +50,19 @@ export class GroupFormComponent implements OnInit {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    for (const prop of item.attribute) {
-      this.editAttributes[prop.attribute][prop.lang ?? ''].push({
-        value: prop.string,
-        error: '',
-      });
-    }
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
+    this.editAttributes = this.attributeValueService.toEdit(item.attribute);
+    this.editFlags = this.flagValueService.toEdit(item.flag);
   }
 
   /**
    *
    */
   toInput(): GroupInput {
-    const input: GroupInput = {
+    return {
       id: this.id,
-      attribute: [],
-      flag: [],
-    } as GroupInput;
-
-    input.attribute = this.attributeValueService.toInput(this.editAttributes);
-
-    for (const flag in this.editFlags) {
-      if (this.editFlags[flag]) {
-        input.flag.push(flag);
-      }
-    }
-
-    return input;
+      attribute: this.attributeValueService.toInput(this.editAttributes),
+      flag: this.flagValueService.toInput(this.editFlags),
+    };
   }
 
   /**
@@ -121,11 +87,7 @@ export class GroupFormComponent implements OnInit {
    *
    */
   saveItem() {
-    this.sendItem()
-      .then(() => this.dialogRef.close())
-      .catch((err: string) => {
-        this.errorBar.open(err, 'close', {duration: 5000});
-      });
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

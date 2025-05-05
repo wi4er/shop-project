@@ -252,13 +252,42 @@ describe('DirectoryController', () => {
   });
 
   describe('Directory addition', () => {
-    test('Should add item', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/directory')
-        .send({id: 'LIST'})
-        .expect(201);
 
-      expect(res.body.id).toBe('LIST');
+    describe('Directory addition with fields', () => {
+      test('Should add item', async () => {
+        const res = await request(app.getHttpServer())
+          .post('/directory')
+          .send({id: 'LIST'})
+          .expect(201);
+
+        expect(res.body.id).toBe('LIST');
+      });
+
+      test('Shouldn`t add with blank id', async () => {
+        await request(app.getHttpServer())
+          .post('/directory')
+          .send({id: ''})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with blank id', async () => {
+        await request(app.getHttpServer())
+          .post('/directory')
+          .send({id: null})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with duplicate id', async () => {
+        await request(app.getHttpServer())
+          .post('/directory')
+          .send({id: 'LIST'})
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .post('/directory')
+          .send({id: 'LIST'})
+          .expect(400);
+      });
     });
 
     describe('Directory addition with permission', () => {

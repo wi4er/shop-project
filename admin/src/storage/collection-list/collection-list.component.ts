@@ -103,7 +103,7 @@ export class CollectionListComponent implements OnInit {
         updated_at: item.updated_at,
       };
 
-      for (const it of item.property) {
+      for (const it of item.attribute) {
         col.add('property_' + it.attribute);
         line['property_' + it.attribute] = it.string;
       }

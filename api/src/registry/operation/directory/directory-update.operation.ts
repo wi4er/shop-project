@@ -43,7 +43,7 @@ export class DirectoryUpdateOperation {
   async save(id: string, input: DirectoryInput): Promise<string> {
     try {
       await this.transaction.update(DirectoryEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'Directory expected!'),
+        id: WrongDataException.assert(input.id, 'Directory id expected!'),
       });
     } catch (err) {
       throw new WrongDataException(err.message);

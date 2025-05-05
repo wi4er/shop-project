@@ -3,9 +3,8 @@ import { Lang } from '../../app/model/settings/lang';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { LangInput } from '../../app/model/settings/lang.input';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
-import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
   selector: 'app-lang-form',
@@ -18,14 +17,13 @@ export class LangFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<LangFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
     private apiService: ApiService,
-    private errorBar: MatSnackBar,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
   ) {
@@ -46,24 +44,12 @@ export class LangFormComponent implements OnInit {
   /**
    *
    */
-  getAttributeCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
-  }
-
-  /**
-   *
-   */
   toEdit(item: Lang) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
-
-    for (const flag of item.flag) {
-      this.editFlags[flag] = true;
-    }
+    this.editFlags = this.flagValueService.toEdit(item.flag);
   }
 
   /**
@@ -99,11 +85,7 @@ export class LangFormComponent implements OnInit {
    *
    */
   saveItem() {
-    this.sendItem()
-      .then(() => this.dialogRef.close())
-      .catch((err: string) => {
-        this.errorBar.open(err, 'close', {duration: 5000});
-      });
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

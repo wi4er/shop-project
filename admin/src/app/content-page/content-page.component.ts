@@ -9,13 +9,6 @@ import { FormControl } from '@angular/forms';
 })
 export class ContentPageComponent implements OnInit {
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {
-    this.blockId = +this.route.snapshot.paramMap.get('id')!;
-  }
-
   pages: { [key: number]: string } = {
     0: 'element',
     1: 'section',
@@ -24,6 +17,13 @@ export class ContentPageComponent implements OnInit {
   selected = new FormControl(0);
 
   blockId: number;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
+    this.blockId = +this.route.snapshot.paramMap.get('id')!;
+  }
 
   ngOnInit(): void {
     this.route.paramMap

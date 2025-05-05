@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DirectoryListComponent } from '../directory/directory-list/directory-list.component';
+import { DirectoryListComponent } from '../registry/directory-list/directory-list.component';
 import { FlagListComponent } from '../settings/flag-list/flag-list.component';
 import { LangListComponent } from '../settings/lang-list/lang-list.component';
 import { AttributeListComponent } from '../settings/attribute-list/attribute-list.component';
@@ -16,6 +16,8 @@ import { BlockListComponent } from '../content/block-list/block-list.component';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
 import { DashboardTileComponent } from '../dashboard/dashboard-tile/dashboard-tile.component';
+import { PointListComponent } from '../registry/point-list/point-list.component';
+import { PointPageComponent } from './point-page/point-page.component';
 
 const routes: Routes = [{
   path: '',
@@ -35,6 +37,9 @@ const routes: Routes = [{
 }, {
   path: 'registry',
   component: DirectoryListComponent,
+}, {
+  path: 'directory/:id',
+  component: PointPageComponent,
 }, {
   path: 'flag',
   component: FlagListComponent,

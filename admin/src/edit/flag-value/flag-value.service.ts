@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
 
+
+export interface FlagEdit {
+  [field: string]: boolean,
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FlagValueService {
 
-  constructor() { }
+  constructor() {
+  }
 
   /**
    *
@@ -20,6 +26,19 @@ export class FlagValueService {
     }
 
     return input;
+  }
+
+  /**
+   *
+   */
+  toEdit(flagList: Array<string>): FlagEdit {
+    const edit: FlagEdit = {};
+
+    for (const flag of flagList) {
+      edit[flag] = true;
+    }
+
+    return edit;
   }
 
 }

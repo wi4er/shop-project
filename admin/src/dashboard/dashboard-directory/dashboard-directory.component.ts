@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Directory } from '../../app/model/directory';
+import { Directory } from '../../app/model/registry/directory';
 
 @Component({
   selector: 'app-dashboard-registry',

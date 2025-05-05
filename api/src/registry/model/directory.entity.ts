@@ -75,3 +75,4 @@ export class DirectoryEntity
   permission: Directory2permissionEntity[];
 
 }
+

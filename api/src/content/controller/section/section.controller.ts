@@ -4,9 +4,9 @@ import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
 import { SectionFilterInput } from '../../input/section-filter.input';
 import { SectionInput } from '../../input/section.input';
-import { SectionInsertOperation } from '../../operation/section-insert.operation';
-import { SectionUpdateOperation } from '../../operation/section-update.operation';
-import { SectionDeleteOperation } from '../../operation/section-delete.operation';
+import { SectionInsertOperation } from '../../operation/section/section-insert.operation';
+import { SectionUpdateOperation } from '../../operation/section/section-update.operation';
+import { SectionDeleteOperation } from '../../operation/section/section-delete.operation';
 import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SectionRender } from '../../render/section.render';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
@@ -15,7 +15,7 @@ import { PermissionException } from '../../../exception/permission/permission.ex
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
-import { SectionPatchOperation } from '../../operation/section-patch.operation';
+import { SectionPatchOperation } from '../../operation/section/section-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @ApiTags('Content section')
