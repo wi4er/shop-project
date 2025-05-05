@@ -82,7 +82,7 @@ describe('FlagController', () => {
     test('Shouldn`t get with wrong id', async () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get('/flag/WRONG')
         .expect(404);
     });
@@ -421,6 +421,14 @@ describe('FlagController', () => {
         .expect(200);
 
       expect(inst.body).toEqual(['ACTIVE']);
+    });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      await request(app.getHttpServer())
+        .delete('/flag/WRONG')
+        .expect(404);
     });
   });
 });

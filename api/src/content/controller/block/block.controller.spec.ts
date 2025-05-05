@@ -525,6 +525,14 @@ describe('BlockController', () => {
       expect(inst.body).toEqual([1]);
     });
 
+    test('Shouldn`t delete with wrong id', async () => {
+      await new BlockEntity().save();
+
+      await request(app.getHttpServer())
+        .delete(`/block/777`)
+        .expect(404);
+    });
+
     test('Shouldn`t delete without permission', async () => {
       const parent = await new BlockEntity().save();
 

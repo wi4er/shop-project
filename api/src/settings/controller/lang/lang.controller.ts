@@ -9,6 +9,8 @@ import { LangUpdateOperation } from '../../operation/lang/lang-update.operation'
 import { LangDeleteOperation } from '../../operation/lang/lang-delete.operation';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { LangRender } from '../../render/lang.render';
+import { ElementEntity } from '../../../content/model/element.entity';
 
 @Controller('lang')
 export class LangController {
@@ -27,20 +29,7 @@ export class LangController {
   }
 
   toView(item: LangEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new LangRender(item);
   }
 
   @Get()
@@ -110,7 +99,14 @@ export class LangController {
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      trans => new LangDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(LangEntity).findOne({where: {id}}),
+          `Language with id >> ${id} << not found!`,
+        );
+
+        return new LangDeleteOperation(trans).save([id]);
+      },
     );
   }
 

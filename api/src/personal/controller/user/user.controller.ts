@@ -8,6 +8,9 @@ import { UserInsertOperation } from '../../operation/user/user-insert.operation'
 import { UserUpdateOperation } from '../../operation/user/user-update.operation';
 import { UserDeleteOperation } from '../../operation/user/user-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { UserRender } from '../../render/user.render';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { ElementEntity } from '../../../content/model/element.entity';
 
 @ApiTags('User object')
 @Controller('user')
@@ -31,31 +34,7 @@ export class UserController {
   }
 
   toView(item: UserEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      login: item.login,
-      contact: item.contact.map(cn => ({
-        contact: cn.contact.id,
-        value: cn.value,
-      })),
-      group: item.group.map(gr => gr.id),
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-        ...item.point.map(val => ({
-          attribute: val.attribute.id,
-          point: val.point.id,
-          directory: val.point.directory.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new UserRender(item);
   }
 
   @Get()
@@ -126,7 +105,14 @@ export class UserController {
       id: string,
   ) {
     return this.entityManager.transaction(
-      trans => new UserDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(UserEntity).findOne({where: {id}}),
+          `User with id >> ${id} << not found!`,
+        );
+
+        return new UserDeleteOperation(trans).save([id]);
+      },
     );
   }
 

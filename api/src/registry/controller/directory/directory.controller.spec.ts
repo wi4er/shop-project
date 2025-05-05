@@ -590,7 +590,7 @@ describe('DirectoryController', () => {
 
       await request(app.getHttpServer())
         .delete('/directory/WRONG')
-        .expect(403);
+        .expect(404);
     });
 
     test('Shouldn`t delete without permission', async () => {

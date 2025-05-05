@@ -18,6 +18,8 @@ import { CurrentGroups } from '../../../personal/decorator/current-groups/curren
 import { ElementRender } from '../../render/element.render';
 import { ElementPatchOperation } from '../../operation/element/element-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { BlockEntity } from '../../model/block.entity';
 
 @ApiTags('Content element')
 @Controller('element')
@@ -277,26 +279,33 @@ export class ElementController {
     ).then(this.toView);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   async deleteItem(
     @CurrentGroups()
       group: string[],
     @Param('id')
       id: string,
   ): Promise<string[]> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.entityManager.transaction(
-      trans => new ElementDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(ElementEntity).findOne({where: {id}}),
+          `Element with id >> ${id} << not found!`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Element2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id},
+              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied!`,
+        );
+
+        return new ElementDeleteOperation(trans).save([id]);
+      },
     );
   }
 

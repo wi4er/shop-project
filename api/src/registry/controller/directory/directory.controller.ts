@@ -14,6 +14,8 @@ import { PermissionMethod } from '../../../permission/model/permission-method';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { ElementEntity } from '../../../content/model/element.entity';
 
 @Controller('directory')
 export class DirectoryController {
@@ -193,19 +195,26 @@ export class DirectoryController {
     @Param('id')
       id: string,
   ): Promise<string[]> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied for element ${id}`,
-    );
-
     return this.entityManager.transaction(
-      trans => new DirectoryDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(DirectoryEntity).findOne({where: {id}}),
+          `Directory with id >> ${id} << not found!`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Directory2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id},
+              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied for directory ${id}`,
+        );
+
+        return new DirectoryDeleteOperation(trans).save([id]);
+      },
     );
   }
 

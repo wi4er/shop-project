@@ -9,6 +9,8 @@ import { FlagDeleteOperation } from '../../operation/flag/flag-delete.operation'
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FlagPatchOperation } from '../../operation/flag/flag-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { FlagRender } from '../../render/flag.render';
+import { ElementEntity } from '../../../content/model/element.entity';
 
 @Controller('flag')
 export class FlagController {
@@ -27,23 +29,7 @@ export class FlagController {
   }
 
   toView(item: FlagEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      color: item.color,
-      icon: item.icon,
-      iconSvg: item.iconSvg,
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new FlagRender(item);
   }
 
   @Get()
@@ -137,7 +123,14 @@ export class FlagController {
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      trans => new FlagDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(FlagEntity).findOne({where: {id}}),
+          `Flag with id >> ${id} << not found!`,
+        );
+
+        return new FlagDeleteOperation(trans).save([id]);
+      },
     );
   }
 

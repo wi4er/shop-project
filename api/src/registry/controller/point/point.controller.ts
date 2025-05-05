@@ -150,31 +150,33 @@ export class PointController {
     @Body()
       input: PointInput,
   ) {
-    const point = NoDataException.assert(
-      await this.pointRepo.findOne({
-        where: {id: pointId},
-        relations: {directory: true},
-      }),
-      `Point with id >> ${pointId} << not foundQ`,
-    );
-
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id: point.directory.id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied for directory ${pointId}`,
-    );
-
     const item = await this.entityManager.transaction(
-      trans => new PointUpdateOperation(trans).save(pointId, input)
-        .then(id => trans.getRepository(PointEntity).findOne({
-          where: {id},
-          relations: this.relations,
-        })));
+      async trans => {
+        const point = NoDataException.assert(
+          await trans.getRepository(PointEntity).findOne({
+            where: {id: pointId},
+            relations: {directory: true},
+          }),
+          `Point with id >> ${pointId} << not foundQ`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Directory2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id: point.directory.id},
+              method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied for directory ${point.directory.id}`,
+        );
+
+        return new PointUpdateOperation(trans).save(pointId, input)
+          .then(id => trans.getRepository(PointEntity).findOne({
+            where: {id},
+            relations: this.relations,
+          }));
+      });
 
     return this.toView(item);
   }
@@ -188,31 +190,33 @@ export class PointController {
     @Body()
       input: PointInput,
   ) {
-    const point = NoDataException.assert(
-      await this.pointRepo.findOne({
-        where: {id: pointId},
-        relations: {directory: true},
-      }),
-      `Point with id >> ${pointId} << not foundQ`,
-    );
-
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id: point.directory.id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied for directory ${pointId}`,
-    );
-
     const item = await this.entityManager.transaction(
-      trans => new PointPatchOperation(trans).save(pointId, input)
-        .then(id => trans.getRepository(PointEntity).findOne({
-          where: {id},
-          relations: this.relations,
-        })));
+      async trans => {
+        const point = NoDataException.assert(
+          await trans.getRepository(PointEntity).findOne({
+            where: {id: pointId},
+            relations: {directory: true},
+          }),
+          `Point with id >> ${pointId} << not foundQ`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Directory2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id: point.directory.id},
+              method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied for directory ${point.directory.id}`,
+        );
+
+        return new PointPatchOperation(trans).save(pointId, input)
+          .then(id => trans.getRepository(PointEntity).findOne({
+            where: {id},
+            relations: this.relations,
+          }));
+      });
 
     return this.toView(item);
   }
@@ -224,27 +228,29 @@ export class PointController {
     @Param('id')
       pointId: string,
   ): Promise<string[]> {
-    const point = NoDataException.assert(
-      await this.pointRepo.findOne({
-        where: {id: pointId},
-        relations: {directory: true},
-      }),
-      `Point with id >> ${pointId} << not foundQ`,
-    );
-
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id: point.directory.id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied for directory ${pointId}`,
-    );
-
     return this.entityManager.transaction(
-      trans => new PointDeleteOperation(trans).save([pointId]),
+      async trans => {
+        const point = NoDataException.assert(
+          await trans.getRepository(PointEntity).findOne({
+            where: {id: pointId},
+            relations: {directory: true},
+          }),
+          `Point with id >> ${pointId} << not foundQ`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Directory2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id: point.directory.id},
+              method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied for directory ${point.directory.id}`,
+        );
+
+        return new PointDeleteOperation(trans).save([pointId]);
+      },
     );
   }
 

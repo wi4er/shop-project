@@ -7,6 +7,8 @@ import { UserContactInsertOperation } from '../../operation/contact/user-contact
 import { UserContactUpdateOperation } from '../../operation/contact/user-contact-update.operation';
 import { UserContactDeleteOperation } from '../../operation/contact/user-contact-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { ContactRender } from '../../render/contact.render';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @Controller('contact')
 export class ContactController {
@@ -24,23 +26,11 @@ export class ContactController {
   ) {
   }
 
+  /**
+   *
+   */
   toView(item: ContactEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      type: item.type,
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new ContactRender(item);
   }
 
   @Get()
@@ -109,7 +99,14 @@ export class ContactController {
       id: string,
   ) {
     return this.entityManager.transaction(
-      trans => new UserContactDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(ContactEntity).findOne({where: {id}}),
+          `Contact with id >> ${id} << not found!`,
+        );
+
+        return new UserContactDeleteOperation(trans).save([id]);
+      },
     );
   }
 

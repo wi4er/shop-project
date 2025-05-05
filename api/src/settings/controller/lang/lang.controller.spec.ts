@@ -265,4 +265,24 @@ describe('LangController', () => {
       expect(res.body.flag).toEqual(['FLAG']);
     });
   });
+
+  describe('Lang delete', () => {
+    test('Should delete lang', async () => {
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      const res = await request(app.getHttpServer())
+        .delete('/lang/EN')
+        .expect(200);
+
+      expect(res.body).toEqual(['EN']);
+    });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+
+      await request(app.getHttpServer())
+        .delete('/lang/WRONG')
+        .expect(404);
+    });
+  });
 });

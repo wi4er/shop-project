@@ -14,6 +14,7 @@ import { CurrentGroups } from '../../../personal/decorator/current-groups/curren
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { BlockPatchOperation } from '../../operation/block/block-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @ApiTags('Content block')
 @Controller('block')
@@ -202,19 +203,26 @@ export class BlockController {
     @Param('id')
       id: number,
   ): Promise<number[]> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied for element ${id}`,
-    );
-
     return this.entityManager.transaction(
-      trans => new BlockDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(BlockEntity).findOne({where: {id: Number(id)}}),
+          `Block with id >> ${id} << not found!`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Block2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id},
+              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied for element ${id}`,
+        );
+
+        return new BlockDeleteOperation(trans).save([id]);
+      },
     );
   }
 

@@ -349,5 +349,13 @@ describe('UserController', () => {
 
       expect(rest.body).toEqual([]);
     });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      await Object.assign(new UserEntity(), {id: '1', login: 'USER'}).save();
+
+      await request(app.getHttpServer())
+        .delete('/user/WRONG')
+        .expect(404);
+    });
   });
 });

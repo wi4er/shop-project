@@ -17,6 +17,8 @@ import { CurrentGroups } from '../../../personal/decorator/current-groups/curren
 import { Section2permissionEntity } from '../../model/section2permission.entity';
 import { SectionPatchOperation } from '../../operation/section/section-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { BlockEntity } from '../../model/block.entity';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
@@ -262,19 +264,26 @@ export class SectionController {
     @Param('id')
       id: string,
   ): Promise<number[]> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.entityManager.transaction(
-      trans => new SectionDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(SectionEntity).findOne({where: {id}}),
+          `Section with id >> ${id} << not found!`,
+        );
+
+        PermissionException.assert(
+          await trans.getRepository(Section2permissionEntity).findOne({
+            where: {
+              group: Or(In(group), IsNull()),
+              parent: {id},
+              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+            },
+          }),
+          `Permission denied!`,
+        );
+
+        return new SectionDeleteOperation(trans).save([id]);
+      },
     );
   }
 

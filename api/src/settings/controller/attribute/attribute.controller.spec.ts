@@ -757,7 +757,7 @@ describe('AttributeController', () => {
     test('Shouldn`t delete with wrong id', async () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
-      const item = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete('/attribute/WRONG')
         .expect(404);
     });

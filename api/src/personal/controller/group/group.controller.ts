@@ -8,6 +8,8 @@ import { UserGroupUpdateOperation } from '../../operation/group/user-group-updat
 import { UserGroupDeleteOperation } from '../../operation/group/user-group-delete.operation';
 import { GroupRender } from '../../render/group.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
+import { ElementEntity } from '../../../content/model/element.entity';
 
 @Controller('group')
 export class GroupController {
@@ -92,7 +94,14 @@ export class GroupController {
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      trans => new UserGroupDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(GroupEntity).findOne({where: {id}}),
+          `Group with id >> ${id} << not found!`,
+        );
+
+        return new UserGroupDeleteOperation(trans).save([id])
+      },
     );
   }
 

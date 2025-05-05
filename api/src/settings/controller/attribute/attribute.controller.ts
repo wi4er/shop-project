@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { AttributeEntity } from '../../model/attribute.entity';
 import { AttributeInput } from '../../input/attribute.input';
 import { AttributeInsertOperation } from '../../operation/attribute/attribute-insert.operation';
@@ -10,6 +10,9 @@ import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { AttributePatchOperation } from '../../operation/attribute/attribute-patch.operation';
 import { AttributeRender } from '../../render/attribute.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { PermissionException } from '../../../exception/permission/permission.exception';
+import { Element2permissionEntity } from '../../../content/model/element2permission.entity';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 
 @Controller('attribute')
 export class AttributeController {
@@ -119,7 +122,14 @@ export class AttributeController {
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      trans => new AttributeDeleteOperation(trans).save([id]),
+      async trans => {
+        NoDataException.assert(
+          await trans.getRepository(AttributeEntity).findOne({where: {id}}),
+          `Attribute with id >> ${id} << not found!`,
+        );
+
+        return new AttributeDeleteOperation(trans).save([id]);
+      },
     );
   }
 

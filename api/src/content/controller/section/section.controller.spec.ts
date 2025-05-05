@@ -947,4 +947,44 @@ describe('SectionController', () => {
       });
     });
   });
+
+  describe('Content section deletion', () => {
+    test('Should delete section', async () => {
+      await createSection();
+
+      const inst = await request(app.getHttpServer())
+        .delete('/section/SECTION')
+        .expect(200);
+
+      expect(inst.body).toEqual(['SECTION']);
+    });
+
+    test('Shouldn`t delete with wrong ID', async () => {
+      await createSection();
+
+      await request(app.getHttpServer())
+        .delete('/section/WRONG')
+        .expect(404);
+    });
+
+    test('Shouldn`t delete without permission', async () => {
+      const block = await Object.assign(new BlockEntity(), {}).save();
+      await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
+
+      await request(app.getHttpServer())
+        .delete('/section/SECTION')
+        .expect(403);
+    });
+
+    test('Shouldn`t delete without DELETE permission', async () => {
+      const block = await Object.assign(new BlockEntity(), {}).save();
+      const parent = await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
+      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.WRITE}).save();
+
+      await request(app.getHttpServer())
+        .delete('/section/SECTION')
+        .expect(403);
+    });
+  });
 });

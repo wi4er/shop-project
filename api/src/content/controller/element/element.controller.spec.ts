@@ -1637,6 +1637,15 @@ describe('ElementController', () => {
       await request(app.getHttpServer())
         .delete('/element/WRONG')
         .set('cookie', cookie)
+        .expect(404);
+    });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      const block = await new BlockEntity().save();
+      await Object.assign(new ElementEntity(), {id: 'ELEMENT', block}).save();
+
+      await request(app.getHttpServer())
+        .delete('/element/ELEMENT')
         .expect(403);
     });
   });
