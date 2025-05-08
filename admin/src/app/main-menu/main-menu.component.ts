@@ -105,7 +105,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'person',
       }, {
         title: 'Permission',
-        link: '/permission',
+        link: '/registry-permission',
         icon: 'lock',
       }],
     },
@@ -117,7 +117,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'assessment',
       }, {
         title: 'Logs',
-        link: '/log',
+        link: '/registry-log',
         icon: 'list',
       }],
     },

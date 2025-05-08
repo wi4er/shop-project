@@ -11,6 +11,7 @@ import { Flag } from '../../app/model/settings/flag';
 import { Attribute } from '../../app/model/settings/attribute';
 import { DirectorySettingsComponent } from '../directory-settings/directory-settings.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DirectoryHistoryComponent } from '../directory-history/directory-history.component';
 
 @Component({
   selector: 'app-registry-list',
@@ -247,6 +248,20 @@ export class DirectoryListComponent implements OnInit {
       {
         width: '1000px',
         panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      DirectoryHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
       },
     ).afterClosed().subscribe(() => this.refreshData());
   }

@@ -14,6 +14,7 @@ import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Point4pointEntity } from './point4point.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
+import { Point2logEntity } from './point2log.entity';
 
 @Entity('registry-point')
 @Check('not_empty_id', '"id" > \'\'')
@@ -72,5 +73,11 @@ export class PointEntity
     point => point.parent,
   )
   point: Point4pointEntity[];
+
+  @OneToMany(
+    type => Point2logEntity,
+    log => log.parent,
+  )
+  log: Point2logEntity
 
 }

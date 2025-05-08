@@ -12,7 +12,7 @@ import { ElementInsertOperation } from '../../operation/element/element-insert.o
 import { ElementUpdateOperation } from '../../operation/element/element-update.operation';
 import { ElementDeleteOperation } from '../../operation/element/element-delete.operation';
 import { Element2permissionEntity } from '../../model/element2permission.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { ElementRender } from '../../render/element.render';
@@ -133,7 +133,7 @@ export class ElementController {
         ...(filter ? this.toWhere(filter) : {}),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       },
       order: sort ? this.toOrder(sort) : null,
@@ -155,7 +155,7 @@ export class ElementController {
         ...(filter ? this.toWhere(filter) : {}),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       },
     }).then(count => ({count}));
@@ -178,7 +178,7 @@ export class ElementController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -230,7 +230,7 @@ export class ElementController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied!`,
@@ -264,7 +264,7 @@ export class ElementController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied!`,
@@ -298,7 +298,7 @@ export class ElementController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id},
-              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
             },
           }),
           `Permission denied!`,

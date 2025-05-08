@@ -14,13 +14,18 @@ import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Directory4pointEntity } from './directory4point.entity';
 import { WithPointEntity } from '../../common/model/with-point.entity';
 import { Directory2permissionEntity } from './directory2permission.entity';
+import { WithLogEntity } from '../../common/model/with-log.entity';
+import { Directory2logEntity } from './directory2log.entity';
 
 @Entity('registry-registry')
 @Check('not_empty_id', '"id" > \'\'')
 @Index(['sort'])
 export class DirectoryEntity
   extends BaseEntity
-  implements WithFlagEntity<DirectoryEntity>, WithStringEntity<DirectoryEntity>, WithPointEntity<DirectoryEntity> {
+  implements WithFlagEntity<DirectoryEntity>,
+    WithStringEntity<DirectoryEntity>,
+    WithPointEntity<DirectoryEntity>,
+    WithLogEntity<DirectoryEntity> {
 
   @PrimaryColumn({
     type: 'varchar',
@@ -73,6 +78,12 @@ export class DirectoryEntity
     permission => permission.parent,
   )
   permission: Directory2permissionEntity[];
+
+  @OneToMany(
+    type => Directory2logEntity,
+    log => log.parent,
+  )
+  log: Directory2logEntity;
 
 }
 

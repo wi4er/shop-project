@@ -1,5 +1,5 @@
 export default async (message, Bot) => {
-    // console.log(message)
+    // console.registry-log(message)
 
     const res = await Bot.api("sendMessage", {
         chat_id: message.chat.id,

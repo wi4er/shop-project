@@ -11,17 +11,19 @@ import { Point4pointEntity } from '../../model/point4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('PointController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -29,7 +31,7 @@ describe('PointController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  async function createDirectory(id: string, method: PermissionMethod = PermissionMethod.ALL) {
+  async function createDirectory(id: string, method: PermissionOperation = PermissionOperation.ALL) {
     const parent = await Object.assign(new DirectoryEntity(), {id}).save();
     await Object.assign(new Directory2permissionEntity(), {parent, method}).save();
 
@@ -39,7 +41,7 @@ describe('PointController', () => {
   describe('Point fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
@@ -50,19 +52,19 @@ describe('PointController', () => {
       await Object.assign(new PointEntity(), {id: 'NAME', directory}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe('NAME');
     });
 
-    test('Should get list without permission', async () => {
+    test('Should get list without registry-permission', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'London', directory}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
@@ -76,7 +78,7 @@ describe('PointController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/point?limit=3')
+        .get('/registry/point?limit=3')
         .expect(200);
 
       expect(res.body).toHaveLength(3);
@@ -93,7 +95,7 @@ describe('PointController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/point?offset=3')
+        .get('/registry/point?offset=3')
         .expect(200);
 
       expect(res.body).toHaveLength(7);
@@ -108,7 +110,7 @@ describe('PointController', () => {
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       const item = await request(app.getHttpServer())
-        .get('/point/LONDON')
+        .get('/registry/point/LONDON')
         .expect(200);
 
       expect(item.body.id).toBe('LONDON');
@@ -118,17 +120,17 @@ describe('PointController', () => {
       const directory = await createDirectory('CITY');
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-      const item = await request(app.getHttpServer())
-        .get('/point/WRONG')
+      await request(app.getHttpServer())
+        .get('/registry/point/WRONG')
         .expect(404);
     });
 
-    test('Shouldn`t get point without permission item', async () => {
+    test('Shouldn`t get point without registry-permission item', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       await request(app.getHttpServer())
-        .get('/point/LONDON')
+        .get('/registry/point/LONDON')
         .expect(403);
     });
   });
@@ -136,7 +138,7 @@ describe('PointController', () => {
   describe('Point count', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
-        .get('/point/count')
+        .get('/registry/point/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
@@ -150,18 +152,18 @@ describe('PointController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/point/count')
+        .get('/registry/point/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 10});
     });
 
-    test('Should get empty list without permission', async () => {
+    test('Should get empty list without registry-permission', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'London', directory}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/point/count')
+        .get('/registry/point/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
@@ -176,7 +178,7 @@ describe('PointController', () => {
       await Object.assign(new Point4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -195,7 +197,7 @@ describe('PointController', () => {
       await Object.assign(new Point4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -212,7 +214,7 @@ describe('PointController', () => {
       await Object.assign(new Point2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -230,7 +232,7 @@ describe('PointController', () => {
       await Object.assign(new Point4pointEntity(), {parent, attribute, point}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/point')
+        .get('/registry/point')
         .expect(200);
 
       expect(list.body).toHaveLength(2);
@@ -247,7 +249,7 @@ describe('PointController', () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         const res = await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({
             id: 'London',
             directory: 'CITY',
@@ -262,7 +264,7 @@ describe('PointController', () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({
             id: 'London',
             directory: 'CITY',
@@ -270,7 +272,7 @@ describe('PointController', () => {
           .expect(201);
 
         await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({
             id: 'London',
             directory: 'CITY',
@@ -282,7 +284,7 @@ describe('PointController', () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({id: '', directory: 'CITY'})
           .expect(400);
       });
@@ -291,14 +293,14 @@ describe('PointController', () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({directory: 'CITY'})
           .expect(400);
       });
 
       test('Shouldn`t add without registry', async () => {
         await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({id: 'London'})
           .expect(400);
       });
@@ -307,7 +309,7 @@ describe('PointController', () => {
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         await request(app.getHttpServer())
-          .post('/point')
+          .post('/registry/point')
           .send({
             id: 'London',
             directory: 'WRONG',
@@ -324,7 +326,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         const res = await request(app.getHttpServer())
-          .put('/point/LONDON')
+          .put('/registry/point/LONDON')
           .send({
             id: 'LONDON',
             directory: 'CITY',
@@ -340,7 +342,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         const res = await request(app.getHttpServer())
-          .put('/point/LONDON')
+          .put('/registry/point/LONDON')
           .send({
             id: 'UPDATED',
             directory: 'CITY',
@@ -357,7 +359,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         const res = await request(app.getHttpServer())
-          .put('/point/LONDON')
+          .put('/registry/point/LONDON')
           .send({
             id: 'LONDON',
             directory: 'LOCATION',
@@ -372,8 +374,8 @@ describe('PointController', () => {
         const directory = await createDirectory('CITY');
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
-        const res = await request(app.getHttpServer())
-          .put('/point/LONDON')
+        await request(app.getHttpServer())
+          .put('/registry/point/LONDON')
           .send({
             id: 'LONDON',
             directory: 'WRONG',
@@ -386,7 +388,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         await request(app.getHttpServer())
-          .put('/point/WRONG')
+          .put('/registry/point/WRONG')
           .send({
             id: 'London',
             directory: 'CITY',
@@ -394,12 +396,12 @@ describe('PointController', () => {
           .expect(404);
       });
 
-      test('Shouldn`t update without permission', async () => {
+      test('Shouldn`t update without registry-permission', async () => {
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         await request(app.getHttpServer())
-          .put('/point/LONDON')
+          .put('/registry/point/LONDON')
           .send({
             id: 'LONDON',
             directory: 'CITY',
@@ -415,7 +417,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         const res = await request(app.getHttpServer())
-          .patch('/point/LONDON')
+          .patch('/registry/point/LONDON')
           .send({
             directory: 'LOCATION',
           })
@@ -430,7 +432,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         const res = await request(app.getHttpServer())
-          .patch('/point/LONDON')
+          .patch('/registry/point/LONDON')
           .send({
             flag: ['ACTIVE'],
           })
@@ -445,7 +447,7 @@ describe('PointController', () => {
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
         const res = await request(app.getHttpServer())
-          .patch('/point/LONDON')
+          .patch('/registry/point/LONDON')
           .send({
             attribute: [{attribute: 'NAME', string: 'VALUE'}],
           })
@@ -464,7 +466,7 @@ describe('PointController', () => {
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       const list = await request(app.getHttpServer())
-        .delete('/point/LONDON')
+        .delete('/registry/point/LONDON')
         .expect(200);
 
       expect(list.body).toEqual(['LONDON']);
@@ -475,16 +477,16 @@ describe('PointController', () => {
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       await request(app.getHttpServer())
-        .delete('/point/WRONG')
+        .delete('/registry/point/WRONG')
         .expect(404);
     });
 
-    test('Shouldn`t delete without permission', async () => {
+    test('Shouldn`t delete without registry-permission', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
       await request(app.getHttpServer())
-        .delete('/point/LONDON')
+        .delete('/registry/point/LONDON')
         .expect(403);
     });
   });

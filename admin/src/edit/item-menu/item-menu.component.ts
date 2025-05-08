@@ -15,14 +15,16 @@ export class ItemMenuComponent implements OnInit {
   }
 
   @Input()
-  onDelete() {
-    console.log('DELETE EXPECTED');
-  }
+  onDelete?: () => void;
 
   @Input()
-  onEdit() {
-    console.log('DELETE EXPECTED');
-  }
+  onEdit?: () => void;
+
+  @Input()
+  onHistory?: () => void;
+
+  @Input()
+  onFlag?: (id: string) => void;
 
   @Input()
   flagList: Array<Flag> = [];
@@ -30,11 +32,9 @@ export class ItemMenuComponent implements OnInit {
   @Input()
   active: string[] = [];
 
-  @Input()
-  onFlag(id: string) {
-    console.log(id);
-  }
-
+  /**
+   *
+   */
   getFlagName(flag: Flag): string {
     const name = flag.attribute.find(it => it.attribute === 'NAME');
 

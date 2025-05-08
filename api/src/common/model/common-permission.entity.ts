@@ -1,11 +1,13 @@
 import { BaseEntity } from 'typeorm';
 import { GroupEntity } from '../../personal/model/group.entity';
-import { PermissionMethod } from '../../permission/model/permission-method';
+import { PermissionOperation } from '../../permission/model/permission-operation';
 
-export interface CommonPermissionEntity<T> {
+export interface CommonPermissionEntity<T extends BaseEntity>
+  extends BaseEntity{
 
   parent: T;
+
   group: GroupEntity;
-  method: PermissionMethod;
+  method: PermissionOperation;
 
 }

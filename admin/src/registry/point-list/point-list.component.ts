@@ -11,6 +11,8 @@ import { Directory } from '../../app/model/registry/directory';
 import { PointSettingsComponent } from '../point-settings/point-settings.component';
 import { PointFormComponent } from '../point-form/point-form.component';
 import { Point } from '../../app/model/registry/point';
+import { PointHistoryComponent } from '../point-history/point-history.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-point-list',
@@ -38,6 +40,7 @@ export class PointListComponent implements OnChanges {
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
+    private router: Router,
     public sanitizer: DomSanitizer,
     private messageBar: MatSnackBar,
   ) {
@@ -85,6 +88,13 @@ export class PointListComponent implements OnChanges {
     this.pageSize = event.pageSize;
 
     this.refreshData();
+  }
+
+  /**
+   *
+   */
+  handleBefore() {
+    this.router.navigate(['/registry']);
   }
 
   /**
@@ -248,5 +258,20 @@ export class PointListComponent implements OnChanges {
       },
     ).afterClosed().subscribe(() => this.refreshData());
   }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      PointHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
 
 }

@@ -25,7 +25,7 @@ export class AuthFormComponent {
     this.userService.authUser(this.login, this.password)
       .then(res => {
         // this.dialogRef.close();
-        // console.log(res);
+        // console.registry-log(res);
       });12
   }
 

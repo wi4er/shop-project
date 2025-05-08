@@ -83,6 +83,10 @@ import { AttributeAsSectionEntity } from './settings/model/attribute-as-section.
 import { AttributeAsElementEntity } from './settings/model/attribute-as-element.entity';
 import { AttributeAsFileEntity } from './settings/model/attribute-as-file.entity';
 import { Directory2permissionEntity } from './registry/model/directory2permission.entity';
+import { RegistryPermissionEntity } from './registry/model/registry-permission.entity';
+import { Point2logEntity } from './registry/model/point2log.entity';
+import { Directory2logEntity } from './registry/model/directory2log.entity';
+import { RegistryPermission2permissionEntity } from './registry/model/registry-permission2permission.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -104,10 +108,13 @@ export function createConnectionOptions(): DataSourceOptions {
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
       AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
       ConfigurationEntity,
+      RegistryPermissionEntity, RegistryPermission2permissionEntity,
       DirectoryEntity,
       Directory4stringEntity, Directory4pointEntity,
-      Directory2flagEntity, Directory2permissionEntity,
-      PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,
+      Directory2flagEntity, Directory2permissionEntity, Directory2logEntity,
+      PointEntity,
+      Point2flagEntity, Point2logEntity,
+      Point4stringEntity, Point4pointEntity,
       FlagEntity, Flag4stringEntity, Flag2flagEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       SettingsPermissionEntity,

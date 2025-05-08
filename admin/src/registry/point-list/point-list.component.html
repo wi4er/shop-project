@@ -1,4 +1,12 @@
 <mat-toolbar *ngIf="list.length">
+  <button
+    mat-icon-button
+    (click)="handleBefore()"
+    title="to directories"
+  >
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+
   <span> Points </span>
 
   <span class="spacer"></span>
@@ -89,6 +97,7 @@
           [active]="activeFlags[element.id] || []"
           [onDelete]="deleteItem.bind(this, element.id)"
           [onEdit]="updateItem.bind(this, element.id)"
+          [onHistory]="openHistory.bind(this, element.id)"
           [onFlag]="toggleFlag.bind(this, element.id)"
         ></app-item-menu>
       </mat-menu>

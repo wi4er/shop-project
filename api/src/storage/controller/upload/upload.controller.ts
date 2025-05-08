@@ -61,10 +61,10 @@ export class UploadController {
   //     id: number,
   // ) {
   //
-  //   console.log(id);
+  //   console.registry-log(id);
   //
   //   fs.writeFile(process.env.STORAGE_PATH + '/file.jpg', file.buffer)
-  //     .then(res => console.log('WRITE'));
+  //     .then(res => console.registry-log('WRITE'));
   //
   //
   //   return '123';

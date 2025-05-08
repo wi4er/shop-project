@@ -9,7 +9,7 @@ import { BlockUpdateOperation } from '../../operation/block/block-update.operati
 import { BlockDeleteOperation } from '../../operation/block/block-delete.operation';
 import { BlockRender } from '../../render/block.render';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { BlockPatchOperation } from '../../operation/block/block-patch.operation';
@@ -59,7 +59,7 @@ export class BlockController {
       where: {
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       },
       relations: this.relations,
@@ -77,7 +77,7 @@ export class BlockController {
       where: {
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       },
     }).then(count => ({count}));
@@ -100,7 +100,7 @@ export class BlockController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -152,7 +152,7 @@ export class BlockController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -181,7 +181,7 @@ export class BlockController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -215,7 +215,7 @@ export class BlockController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id},
-              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
             },
           }),
           `Permission denied for element ${id}`,

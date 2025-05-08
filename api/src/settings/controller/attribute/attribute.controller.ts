@@ -12,7 +12,7 @@ import { AttributeRender } from '../../render/attribute.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { Element2permissionEntity } from '../../../content/model/element2permission.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 
 @Controller('attribute')
 export class AttributeController {

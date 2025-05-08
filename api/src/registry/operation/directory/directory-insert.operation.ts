@@ -26,7 +26,7 @@ export class DirectoryInsertOperation {
    *
    */
   async save(input: DirectoryInput): Promise<string> {
-    this.created.id = WrongDataException.assert(input.id, 'Directory id expected');
+    this.created.id =  WrongDataException.assert(input.id, 'Directory id expected');
 
     try {
       await this.transaction.insert(DirectoryEntity, this.created);

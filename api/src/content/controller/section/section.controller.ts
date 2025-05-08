@@ -12,7 +12,7 @@ import { SectionRender } from '../../render/section.render';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { SectionOrderInput } from '../../input/section-order.input';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
 import { SectionPatchOperation } from '../../operation/section/section-patch.operation';
@@ -158,7 +158,7 @@ export class SectionController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       }),
       `Permission denied!`,
@@ -208,7 +208,7 @@ export class SectionController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied!`,
@@ -242,7 +242,7 @@ export class SectionController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied!`,
@@ -276,7 +276,7 @@ export class SectionController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id},
-              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
             },
           }),
           `Permission denied!`,

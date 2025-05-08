@@ -14,14 +14,23 @@ import { AttributeEntity } from '../settings/model/attribute.entity';
 import { LangEntity } from '../settings/model/lang.entity';
 import { FlagEntity } from '../settings/model/flag.entity';
 import { Directory2permissionEntity } from './model/directory2permission.entity';
+import { RegistryPermissionEntity } from './model/registry-permission.entity';
+import { RegistryPermissionController } from './controller/registry-permission/registry-permission.controller';
+import { RegistryLogController } from './controller/registry-log/registry-log.controller';
+import { Directory2logEntity } from './model/directory2log.entity';
+import { Point2logEntity } from './model/point2log.entity';
+import { RegistryPermission2permissionEntity } from './model/registry-permission2permission.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      RegistryPermissionEntity, RegistryPermission2permissionEntity,
       DirectoryEntity,
       Directory4stringEntity, Directory4pointEntity,
-      Directory2flagEntity, Directory2permissionEntity,
-      PointEntity, Point4stringEntity, Point2flagEntity, Point4pointEntity,
+      Directory2flagEntity, Directory2permissionEntity, Directory2logEntity,
+      PointEntity,
+      Point2flagEntity, Point2logEntity,
+      Point4stringEntity, Point4pointEntity,
       AttributeEntity,
       LangEntity,
       FlagEntity,
@@ -29,7 +38,7 @@ import { Directory2permissionEntity } from './model/directory2permission.entity'
   ],
   providers: [
   ],
-  controllers: [DirectoryController, PointController],
+  controllers: [DirectoryController, PointController, RegistryPermissionController, RegistryLogController],
 })
 export class RegistryModule {
 }

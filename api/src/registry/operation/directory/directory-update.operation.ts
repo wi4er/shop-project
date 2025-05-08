@@ -10,6 +10,7 @@ import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { DirectoryLogInsertOperation } from '../log/directory-log.insert.operation';
 
 export class DirectoryUpdateOperation {
 
@@ -40,10 +41,13 @@ export class DirectoryUpdateOperation {
   /**
    *
    */
-  async save(id: string, input: DirectoryInput): Promise<string> {
+  async save(
+    id: string,
+    input: DirectoryInput,
+  ): Promise<string> {
     try {
       await this.transaction.update(DirectoryEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'Directory id expected!'),
+        id: input.id,
       });
     } catch (err) {
       throw new WrongDataException(err.message);
@@ -51,6 +55,12 @@ export class DirectoryUpdateOperation {
 
     const beforeItem = await this.checkDirectory(input.id);
 
+    if (id !== WrongDataException.assert(input.id, 'Directory id expected')) {
+      await new DirectoryLogInsertOperation(this.transaction).save(beforeItem, {
+        from: id,
+        to: input.id,
+      });
+    }
     await new FlagValueUpdateOperation(this.transaction, Directory2flagEntity).save(beforeItem, input);
     await new PermissionValueUpdateOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
 

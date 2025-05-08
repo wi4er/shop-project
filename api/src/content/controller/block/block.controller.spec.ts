@@ -13,7 +13,7 @@ import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { GroupEntity } from '../../../personal/model/group.entity';
 
 describe('BlockController', () => {
@@ -22,7 +22,7 @@ describe('BlockController', () => {
 
   async function createBlock(): Promise<BlockEntity> {
     const parent = await new BlockEntity().save();
-    await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
+    await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
 
     return parent;
   }
@@ -75,7 +75,7 @@ describe('BlockController', () => {
       expect(item.body.permission).toEqual([{method: 'ALL'}]);
     });
 
-    test('Shouldn`t get item without permission', async () => {
+    test('Shouldn`t get item without registry-permission', async () => {
       await new BlockEntity().save();
 
       await request(app.getHttpServer())
@@ -83,11 +83,11 @@ describe('BlockController', () => {
         .expect(403);
     });
 
-    test('Should get block list with permission', async () => {
+    test('Should get block list with registry-permission', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
         if (i % 2) {
-          await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+          await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
         }
       }
 
@@ -106,7 +106,7 @@ describe('BlockController', () => {
     test('Should get block with limit', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
-        await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+        await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -123,7 +123,7 @@ describe('BlockController', () => {
     test('Should get block with offset', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
-        await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+        await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
       }
 
       const list = await request(app.getHttpServer())
@@ -151,7 +151,7 @@ describe('BlockController', () => {
     test('Should get block count', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
-        await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+        await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
       }
 
       const item = await request(app.getHttpServer())
@@ -161,11 +161,11 @@ describe('BlockController', () => {
       expect(item.body).toEqual({count: 10});
     });
 
-    test('Should get count with permission', async () => {
+    test('Should get count with registry-permission', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
         if (i % 2) {
-          await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+          await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
         }
       }
 
@@ -389,7 +389,7 @@ describe('BlockController', () => {
       expect(inst.body.sort).toBe(345);
     });
 
-    test('Should update permission and read', async () => {
+    test('Should update registry-permission and read', async () => {
       const parent = await createBlock();
 
       await request(app.getHttpServer())
@@ -490,13 +490,13 @@ describe('BlockController', () => {
     });
   });
 
-  describe('Content block update with permission', () => {
+  describe('Content block update with registry-permission', () => {
     test('Should update permissions', async () => {
       await Object.assign(new GroupEntity(), {id: '222'}).save();
 
       const parent = await new BlockEntity().save();
-      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
-      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
+      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
+      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
 
       const inst = await request(app.getHttpServer())
         .put(`/block/${parent.id}`)
@@ -533,7 +533,7 @@ describe('BlockController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t delete without permission', async () => {
+    test('Shouldn`t delete without registry-permission', async () => {
       const parent = await new BlockEntity().save();
 
       await request(app.getHttpServer())
@@ -541,10 +541,10 @@ describe('BlockController', () => {
         .expect(403);
     });
 
-    test('Shouldn`t delete without DELETE permission', async () => {
+    test('Shouldn`t delete without DELETE registry-permission', async () => {
       const parent = await new BlockEntity().save();
-      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
-      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionMethod.WRITE}).save();
+      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
+      await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.WRITE}).save();
 
       await request(app.getHttpServer())
         .delete(`/block/${parent.id}`)

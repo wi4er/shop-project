@@ -18,7 +18,7 @@ import { UserEntity } from '../../../personal/model/user.entity';
 import { GroupEntity } from '../../../personal/model/group.entity';
 import { User2groupEntity } from '../../../personal/model/user2group.entity';
 import { Element2permissionEntity } from '../../model/element2permission.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { Element4elementEntity } from '../../model/element4element.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
 import { Element2imageEntity } from '../../model/element2image.entity';
@@ -63,7 +63,7 @@ describe('ElementController', () => {
     const parent = await Object.assign(new ElementEntity, {block}).save();
     await Object.assign(
       new Element2permissionEntity(),
-      {parent, group: '1', method: PermissionMethod.ALL},
+      {parent, group: '1', method: PermissionOperation.ALL},
     ).save();
 
     return parent;
@@ -94,7 +94,7 @@ describe('ElementController', () => {
       expect(list.body).toHaveLength(10);
     });
 
-    test('Should get element with group permission', async () => {
+    test('Should get element with group registry-permission', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -102,7 +102,7 @@ describe('ElementController', () => {
         const parent = await Object.assign(new ElementEntity, {block: 1}).save();
         if (i % 2) await Object.assign(
           new Element2permissionEntity(),
-          {parent, group: 1, method: PermissionMethod.READ},
+          {parent, group: 1, method: PermissionOperation.READ},
         ).save();
       }
 
@@ -114,14 +114,14 @@ describe('ElementController', () => {
       expect(list.body).toHaveLength(5);
     });
 
-    test('Should get element with public permission', async () => {
+    test('Should get element with public registry-permission', async () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
         const parent = await Object.assign(new ElementEntity, {block: 1}).save();
         if (i % 2) await Object.assign(
           new Element2permissionEntity(),
-          {parent, group: null, method: PermissionMethod.READ},
+          {parent, group: null, method: PermissionOperation.READ},
         ).save();
       }
 
@@ -194,7 +194,7 @@ describe('ElementController', () => {
         ).save();
         await Object.assign(
           new Element2permissionEntity(),
-          {parent, method: PermissionMethod.ALL},
+          {parent, method: PermissionOperation.ALL},
         ).save();
       }
 
@@ -242,7 +242,7 @@ describe('ElementController', () => {
         .expect(403);
     });
 
-    test('Shouldn`t get element without permission', async () => {
+    test('Shouldn`t get element without registry-permission', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
       await Object.assign(new ElementEntity, {id: 'NAME', block: 1}).save();
@@ -277,7 +277,7 @@ describe('ElementController', () => {
       expect(list.body).toEqual({count: 10});
     });
 
-    test('Should get element count with group permission ', async () => {
+    test('Should get element count with group registry-permission ', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -285,7 +285,7 @@ describe('ElementController', () => {
         const parent = await Object.assign(new ElementEntity, {block: 1}).save();
         if (i % 2) await Object.assign(
           new Element2permissionEntity(),
-          {parent, group: 1, method: PermissionMethod.READ},
+          {parent, group: 1, method: PermissionOperation.READ},
         ).save();
       }
 
@@ -297,7 +297,7 @@ describe('ElementController', () => {
       expect(list.body).toEqual({count: 5});
     });
 
-    test('Should get element with permission count', async () => {
+    test('Should get element with registry-permission count', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -305,7 +305,7 @@ describe('ElementController', () => {
         const parent = await Object.assign(new ElementEntity, {block: 1}).save();
         if (i % 2) await Object.assign(
           new Element2permissionEntity(),
-          {parent, method: PermissionMethod.READ},
+          {parent, method: PermissionOperation.READ},
         ).save();
       }
 
@@ -404,7 +404,7 @@ describe('ElementController', () => {
         ).save();
         await Object.assign(
           new Element2permissionEntity(),
-          {parent, group: 1, method: PermissionMethod.ALL},
+          {parent, group: 1, method: PermissionOperation.ALL},
         ).save();
 
         await Object.assign(new Element4stringEntity(), {parent, attribute: attribute1, string: 'VALUE'}).save();
@@ -733,8 +733,8 @@ describe('ElementController', () => {
       });
     });
 
-    describe('Element addition with permission', () => {
-      test('Should add with permission', async () => {
+    describe('Element addition with registry-permission', () => {
+      test('Should add with registry-permission', async () => {
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
 
         await new BlockEntity().save();
@@ -1084,8 +1084,8 @@ describe('ElementController', () => {
       });
     });
 
-    describe('Content element permission update', () => {
-      test('Should add permission', async () => {
+    describe('Content element registry-permission update', () => {
+      test('Should add registry-permission', async () => {
         const cookie = await createSession();
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
         await new BlockEntity().save();
@@ -1164,7 +1164,7 @@ describe('ElementController', () => {
           .expect(400);
       });
 
-      test('Should remove permission', async () => {
+      test('Should remove registry-permission', async () => {
         const cookie = await createSession();
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
         await new BlockEntity().save();

@@ -21,6 +21,9 @@ import { DirectorySettingsComponent } from './directory-settings/directory-setti
 import { PointListComponent } from './point-list/point-list.component';
 import { PointFormComponent } from './point-form/point-form.component';
 import { PointSettingsComponent } from './point-settings/point-settings.component';
+import { DirectoryHistoryComponent } from './directory-history/directory-history.component';
+import { PointHistoryComponent } from './point-history/point-history.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,9 @@ import { PointSettingsComponent } from './point-settings/point-settings.componen
     DirectorySettingsComponent,
     PointListComponent,
     PointFormComponent,
-    PointSettingsComponent
+    PointSettingsComponent,
+    DirectoryHistoryComponent,
+    PointHistoryComponent
   ],
   imports: [
     EditModule,
@@ -50,6 +55,7 @@ import { PointSettingsComponent } from './point-settings/point-settings.componen
     MatInputModule,
     MatTabsModule,
     MatProgressSpinnerModule,
+    MatListModule,
   ],
   exports: [
     DirectoryListComponent,

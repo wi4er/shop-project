@@ -5,7 +5,7 @@ import { ContentPermissionEntity } from './content-permission.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
 import { BlockEntity } from './block.entity';
 
-describe('Content permission entity', () => {
+describe('Content registry-permission entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe('Content permission entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Content permission fields', () => {
+  describe('Content registry-permission fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(ContentPermissionEntity);
       const list = await repo.find();

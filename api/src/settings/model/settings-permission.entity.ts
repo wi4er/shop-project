@@ -28,7 +28,7 @@ export enum SettingsMethod {
 
 }
 
-@Entity('settings-permission')
+@Entity('settings-registry-permission')
 export class SettingsPermissionEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()

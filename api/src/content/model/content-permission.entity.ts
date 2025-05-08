@@ -9,9 +9,9 @@ import {
 } from 'typeorm';
 import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
-import { PermissionMethod } from '../../permission/model/permission-method';
+import { PermissionOperation } from '../../permission/model/permission-operation';
 
-@Entity('content-permission')
+@Entity('content-registry-permission')
 export class ContentPermissionEntity
   extends BaseEntity {
 
@@ -51,9 +51,9 @@ export class ContentPermissionEntity
 
   @Column({
     type: 'enum',
-    enum: PermissionMethod,
+    enum: PermissionOperation,
     nullable: false,
   })
-  method: PermissionMethod;
+  method: PermissionOperation;
 
 }

@@ -10,14 +10,14 @@ import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations'
 import { DirectoryRender } from '../../render/directory.render';
 import { DirectoryPatchOperation } from '../../operation/directory/directory-patch.operation';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { ElementEntity } from '../../../content/model/element.entity';
 
-@Controller('directory')
+@Controller('registry/directory')
 export class DirectoryController {
 
   relations = {
@@ -65,7 +65,7 @@ export class DirectoryController {
         ...this.toWhere(),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       },
       relations: this.relations,
@@ -84,7 +84,7 @@ export class DirectoryController {
         ...this.toWhere(),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       },
     }).then(count => ({count}));
@@ -102,7 +102,7 @@ export class DirectoryController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
+          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -142,7 +142,7 @@ export class DirectoryController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -172,7 +172,7 @@ export class DirectoryController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
+          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
         },
       }),
       `Permission denied for directory ${id}`,
@@ -207,7 +207,7 @@ export class DirectoryController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id},
-              method: In([PermissionMethod.DELETE, PermissionMethod.ALL]),
+              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
             },
           }),
           `Permission denied for directory ${id}`,

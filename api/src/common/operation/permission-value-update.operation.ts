@@ -4,7 +4,7 @@ import { GroupEntity } from '../../personal/model/group.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { WithPermissionInput } from '../input/with-permission.input';
 import { WithPermissionEntity } from '../model/with-permission.entity';
-import { PermissionMethod } from '../../permission/model/permission-method';
+import { PermissionOperation } from '../../permission/model/permission-operation';
 
 export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseEntity>> {
 
@@ -32,7 +32,7 @@ export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseE
    *
    */
   async save(beforeItem: T, input: WithPermissionInput) {
-    const current: { [key: string]: Array<PermissionMethod> } = {};
+    const current: { [key: string]: Array<PermissionOperation> } = {};
 
     for (const item of beforeItem.permission ?? []) {
       const {id = ''} = item.group ?? {};

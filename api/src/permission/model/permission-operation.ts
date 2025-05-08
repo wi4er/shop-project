@@ -1,4 +1,4 @@
-export enum PermissionMethod {
+export enum PermissionOperation {
 
   READ = 'READ',
   WRITE = 'WRITE',

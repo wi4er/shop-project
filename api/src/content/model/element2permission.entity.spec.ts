@@ -5,16 +5,16 @@ import { Element2permissionEntity } from './element2permission.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
 import { BlockEntity } from './block.entity';
 import { ElementEntity } from './element.entity';
-import { PermissionMethod } from '../../permission/model/permission-method';
+import { PermissionOperation } from '../../permission/model/permission-operation';
 
-describe('Element permission entity', () => {
+describe('Element registry-permission entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element permission fields', () => {
+  describe('Element registry-permission fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Element2permissionEntity);
       const list = await repo.find();
@@ -29,7 +29,7 @@ describe('Element permission entity', () => {
 
       await Object.assign(
         new Element2permissionEntity(),
-        {parent, group, method: PermissionMethod.ALL},
+        {parent, group, method: PermissionOperation.ALL},
       ).save();
     });
 
@@ -40,12 +40,12 @@ describe('Element permission entity', () => {
 
       await Object.assign(
         new Element2permissionEntity(),
-        {parent, group, method: PermissionMethod.ALL},
+        {parent, group, method: PermissionOperation.ALL},
       ).save();
 
       await expect(Object.assign(
         new Element2permissionEntity(),
-        {parent, group, method: PermissionMethod.ALL},
+        {parent, group, method: PermissionOperation.ALL},
       ).save()).rejects.toThrow('duplicate');
     });
 
@@ -55,7 +55,7 @@ describe('Element permission entity', () => {
 
       await Object.assign(
         new Element2permissionEntity(),
-        {parent, method: PermissionMethod.ALL},
+        {parent, method: PermissionOperation.ALL},
       ).save();
     });
 
@@ -64,7 +64,7 @@ describe('Element permission entity', () => {
 
       await expect(Object.assign(
         new Element2permissionEntity(),
-        {group, method: PermissionMethod.ALL},
+        {group, method: PermissionOperation.ALL},
       ).save()).rejects.toThrow('parentId');
     });
 

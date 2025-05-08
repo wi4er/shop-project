@@ -4,16 +4,16 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { Block2permissionEntity } from './block2permission.entity';
 import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
-import { PermissionMethod } from '../../permission/model/permission-method';
+import { PermissionOperation } from '../../permission/model/permission-operation';
 
-describe('Block permission entity', () => {
+describe('Block registry-permission entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Block permission fields', () => {
+  describe('Block registry-permission fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Block2permissionEntity);
       const list = await repo.find();
@@ -26,7 +26,7 @@ describe('Block permission entity', () => {
 
       inst.group = await new GroupEntity().save();
       inst.parent = await new BlockEntity().save();
-      inst.method = PermissionMethod.ALL;
+      inst.method = PermissionOperation.ALL;
 
       await inst.save();
 
@@ -42,12 +42,12 @@ describe('Block permission entity', () => {
 
       await Object.assign(
         new Block2permissionEntity(),
-        {group, parent, method: PermissionMethod.ALL},
+        {group, parent, method: PermissionOperation.ALL},
       ).save();
 
       await expect(Object.assign(
         new Block2permissionEntity(),
-        {group, parent, method: PermissionMethod.ALL},
+        {group, parent, method: PermissionOperation.ALL},
       ).save()).rejects.toThrow('duplicate');
     });
 
@@ -58,7 +58,7 @@ describe('Block permission entity', () => {
         {
           group: await Object.assign(new GroupEntity(), {id: 'GROUP'}).save(),
           parent: await new BlockEntity().save(),
-          method: PermissionMethod.ALL,
+          method: PermissionOperation.ALL,
         },
       ).save();
 
@@ -78,7 +78,7 @@ describe('Block permission entity', () => {
       const inst = new Block2permissionEntity();
 
       inst.group = await new GroupEntity().save();
-      inst.method = PermissionMethod.ALL;
+      inst.method = PermissionOperation.ALL;
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });

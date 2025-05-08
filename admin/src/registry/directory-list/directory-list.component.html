@@ -89,6 +89,7 @@
           [active]="activeFlags[element.id] || []"
           [onDelete]="deleteItem.bind(this, element.id)"
           [onEdit]="updateItem.bind(this, element.id)"
+          [onHistory]="openHistory.bind(this, element.id)"
           [onFlag]="toggleFlag.bind(this, element.id)"
         ></app-item-menu>
       </mat-menu>

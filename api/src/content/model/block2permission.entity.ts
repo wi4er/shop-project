@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../personal/model/group.entity';
-import { PermissionMethod } from '../../permission/model/permission-method';
+import { PermissionOperation } from '../../permission/model/permission-operation';
 import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
 
 @Entity('content-block2permission')
@@ -56,9 +56,9 @@ export class Block2permissionEntity
 
   @Column({
     type: 'enum',
-    enum: PermissionMethod,
+    enum: PermissionOperation,
     nullable: false,
   })
-  method: PermissionMethod;
+  method: PermissionOperation;
 
 }

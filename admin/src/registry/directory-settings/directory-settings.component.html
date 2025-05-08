@@ -1,1 +1,30 @@
-<p>directory-settings works!</p>
+<h2 mat-dialog-title>Directory settings</h2>
+
+<mat-dialog-content class="mat-typography">
+  <mat-tab-group
+    animationDuration="450ms"
+    [selectedIndex]="selected.value"
+  >
+    <mat-tab label="Permissions">
+      <app-permission-edit></app-permission-edit>
+    </mat-tab>
+
+    <mat-tab label="Properties">
+
+    </mat-tab>
+
+    <mat-tab label="Flags">
+      <mat-selection-list >
+
+      </mat-selection-list>
+    </mat-tab>
+
+    <mat-tab label="Sorts">
+      ORDERS HERE
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

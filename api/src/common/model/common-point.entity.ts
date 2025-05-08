@@ -2,11 +2,13 @@ import { BaseEntity } from 'typeorm';
 import { PointEntity } from '../../registry/model/point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-export class CommonPointEntity<T extends BaseEntity> {
+export interface CommonPointEntity<T extends BaseEntity>
+  extends BaseEntity{
 
-  id: any;
-  point: PointEntity;
+  id: number;
   parent: T;
+
+  point: PointEntity;
   attribute: AttributeEntity;
 
 }

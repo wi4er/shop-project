@@ -1,21 +1,40 @@
-<button mat-menu-item (click)="onEdit()">
+<button
+  *ngIf="onEdit"
+  mat-menu-item
+  (click)="onEdit()"
+>
   <mat-icon>edit</mat-icon>
   <span>Edit</span>
 </button>
 
-<button mat-menu-item (click)="onDelete()">
+<button
+  *ngIf="onDelete"
+  mat-menu-item
+  (click)="onDelete()"
+>
   <mat-icon>delete</mat-icon>
   <span>Delete</span>
 </button>
 
 <button
-  *ngFor="let flag of flagList"
+  *ngIf="onHistory"
   mat-menu-item
-  (click)="onFlag(flag.id)"
-  [matTooltip]="flag.id"
-  matTooltipPosition="right"
+  (click)="onHistory()"
 >
-  <mat-icon *ngIf="active.includes(flag.id)">check</mat-icon>
-  <mat-icon *ngIf="!active.includes(flag.id)"></mat-icon>
-  <span> {{ getFlagName(flag) }} </span>
+  <mat-icon>timeline</mat-icon>
+  <span>History</span>
 </button>
+
+<ng-container *ngIf="onFlag">
+  <button
+    *ngFor="let flag of flagList"
+    mat-menu-item
+    (click)="onFlag(flag.id)"
+    [matTooltip]="flag.id"
+    matTooltipPosition="right"
+  >
+    <mat-icon *ngIf="active.includes(flag.id)">check</mat-icon>
+    <mat-icon *ngIf="!active.includes(flag.id)"></mat-icon>
+    <span> {{ getFlagName(flag) }} </span>
+  </button>
+</ng-container>
