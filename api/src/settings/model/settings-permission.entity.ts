@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 
 export enum SettingsEntity {
 
@@ -28,7 +28,7 @@ export enum SettingsMethod {
 
 }
 
-@Entity('settings-registry-permission')
+@Entity('settings-access')
 export class SettingsPermissionEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn()

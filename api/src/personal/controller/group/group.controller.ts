@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { GroupEntity } from '../../model/group.entity';
-import { UserGroupInput } from '../../input/user-group.input';
+import { GroupEntity } from '../../model/group/group.entity';
+import { GroupInput } from '../../input/group.input';
 import { UserGroupInsertOperation } from '../../operation/group/user-group-insert.operation';
 import { UserGroupUpdateOperation } from '../../operation/group/user-group-update.operation';
 import { UserGroupDeleteOperation } from '../../operation/group/user-group-delete.operation';
@@ -61,7 +61,7 @@ export class GroupController {
   @Post()
   async addItem(
     @Body()
-      input: UserGroupInput,
+      input: GroupInput,
   ) {
     return this.entityManager.transaction(
       trans => new UserGroupInsertOperation(this.entityManager).save(input)
@@ -77,7 +77,7 @@ export class GroupController {
     @Param('id')
       id: string,
     @Body()
-      input: UserGroupInput,
+      input: GroupInput,
   ) {
     return this.entityManager.transaction(
       trans => new UserGroupUpdateOperation(trans).save(id, input)

@@ -1,9 +1,9 @@
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import { EntityManager } from 'typeorm';
-import { User4stringEntity } from '../../model/user4string.entity';
+import { User4stringEntity } from '../../model/user/user4string.entity';
 import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
-import { User2flagEntity } from '../../model/user2flag.entity';
+import { User2flagEntity } from '../../model/user/user2flag.entity';
 import { User2userContactUpdateOperation } from './user2user-contact-update.operation';
 import { UserInput } from '../../input/user.input';
 import { filterAttributes } from '../../../common/input/filter-attributes';

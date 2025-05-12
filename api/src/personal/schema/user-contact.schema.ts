@@ -1,5 +1,5 @@
 import { UserPropertySchema } from "./user-property.schema";
-import { UserContactType } from "../model/contact.entity";
+import { UserContactType } from "../model/contact/contact.entity";
 
 export class UserContactSchema {
 

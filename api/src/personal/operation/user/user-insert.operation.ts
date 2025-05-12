@@ -1,7 +1,7 @@
 import { EntityManager } from "typeorm";
-import { UserEntity } from "../../model/user.entity";
-import { User4stringEntity } from "../../model/user4string.entity";
-import { User2flagEntity } from "../../model/user2flag.entity";
+import { UserEntity } from "../../model/user/user.entity";
+import { User4stringEntity } from "../../model/user/user4string.entity";
+import { User2flagEntity } from "../../model/user/user2flag.entity";
 import { StringValueInsertOperation } from "../../../common/operation/string-value-insert.operation";
 import { FlagValueInsertOperation } from "../../../common/operation/flag-value-insert.operation";
 import { User2userContactInsertOperation } from "./user2user-contact-insert.operation";

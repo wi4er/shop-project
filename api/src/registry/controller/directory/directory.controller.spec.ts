@@ -13,9 +13,12 @@ import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
-import { GroupEntity } from '../../../personal/model/group.entity';
+import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
+import { AccessEntity } from '../../../personal/model/access/access.entity';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { AccessTarget } from '../../../personal/model/access/access-target';
 
 describe('DirectoryController', () => {
   let source: DataSource;
@@ -32,20 +35,33 @@ describe('DirectoryController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  async function createDirectory(id: string, method: PermissionOperation = PermissionOperation.ALL) {
+  async function createDirectory(
+    id: string,
+    method: PermissionOperation = PermissionOperation.ALL,
+    permission: boolean = true,
+  ) {
     const parent = await Object.assign(new DirectoryEntity(), {id}).save();
-    await Object.assign(new Directory2permissionEntity(), {parent, method}).save();
+    if (permission) await Object.assign(new Directory2permissionEntity(), {parent, method}).save();
+    await Object.assign(new AccessEntity(), {method: AccessMethod.ALL, target: AccessTarget.DIRECTORY}).save();
 
     return parent;
   }
 
-  describe('Directory fields', () => {
+  describe('Directory list', () => {
     test('Should get empty list', async () => {
+      await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
+
       const res = await request(app.getHttpServer())
         .get('/registry/directory')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
+    });
+
+    test('Shouldn`t get without access', async () => {
+      await request(app.getHttpServer())
+        .get('/registry/directory')
+        .expect(403);
     });
 
     test('Should get list', async () => {
@@ -60,16 +76,6 @@ describe('DirectoryController', () => {
       expect(res.body).toHaveLength(10);
       expect(res.body[0].id).toBe('NAME_0');
       expect(res.body[9].id).toBe('NAME_9');
-    });
-
-    test('Should get single instance', async () => {
-      await createDirectory('NAME');
-
-      const res = await request(app.getHttpServer())
-        .get('/registry/directory/NAME')
-        .expect(200);
-
-      expect(res.body.id).toBe('NAME');
     });
 
     test('Should get with limit', async () => {
@@ -101,13 +107,48 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('Directory with registry-permission', () => {
-    test('Should get with registry-permission', async () => {
+  describe('Directory item', () => {
+    test('Should get single instance', async () => {
+      await createDirectory('NAME');
+
+      const res = await request(app.getHttpServer())
+        .get('/registry/directory/NAME')
+        .expect(200);
+
+      expect(res.body.id).toBe('NAME');
+    });
+
+    test('Shouldn`t get with wrong id', async () => {
+      await createDirectory('NAME');
+
+      await request(app.getHttpServer())
+        .get('/registry/directory/WRONG')
+        .expect(404);
+    });
+
+    test('Shouldn`t get without access', async () => {
+      const parent = await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+
+      await request(app.getHttpServer())
+        .get('/registry/directory/NAME')
+        .expect(403);
+    });
+
+    test('Shouldn`t get without item permission', async () => {
+      await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
+
+      await request(app.getHttpServer())
+        .get('/registry/directory/NAME')
+        .expect(403);
+    });
+  });
+
+  describe('Directory with permission', () => {
+    test('Should get with item permission', async () => {
       for (let i = 0; i <= 9; i++) {
-        const parent = await Object.assign(new DirectoryEntity(), {id: `NAME_${i}`}).save();
-        if (i % 2) {
-          await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
-        }
+        await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
       }
 
       const res = await request(app.getHttpServer())
@@ -118,9 +159,21 @@ describe('DirectoryController', () => {
       expect(res.body[0].id).toBe('NAME_1');
     });
 
-    test('Should get instance with READ registry-permission', async () => {
-      const parent = await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
+    test('Should get with item permission', async () => {
+      for (let i = 0; i <= 9; i++) {
+        await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/registry/directory')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+      expect(res.body[0].id).toBe('NAME_1');
+    });
+
+    test('Should get instance with READ permission', async () => {
+      await createDirectory('NAME', PermissionOperation.READ);
 
       const res = await request(app.getHttpServer())
         .get('/registry/directory/NAME')
@@ -129,7 +182,8 @@ describe('DirectoryController', () => {
       expect(res.body.id).toBe('NAME');
     });
 
-    test('Shouldn`t get instance without registry-permission', async () => {
+    test('Shouldn`t get instance without item permission', async () => {
+      await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
       await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
 
       await request(app.getHttpServer())
@@ -140,11 +194,19 @@ describe('DirectoryController', () => {
 
   describe('Directory count', () => {
     test('Should get empty count', async () => {
+      await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
+
       const res = await request(app.getHttpServer())
         .get('/registry/directory/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
+    });
+
+    test('Shouldn`t get without access', async () => {
+      await request(app.getHttpServer())
+        .get('/registry/directory/count')
+        .expect(403);
     });
 
     test('Should get count', async () => {
@@ -159,12 +221,9 @@ describe('DirectoryController', () => {
       expect(res.body).toEqual({count: 10});
     });
 
-    test('Should get count with registry-permission', async () => {
+    test('Should get count with access', async () => {
       for (let i = 0; i <= 9; i++) {
-        const parent = await Object.assign(new DirectoryEntity(), {id: `NAME_${i}`}).save();
-        if (i % 2) {
-          await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
-        }
+        await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
       }
 
       const res = await request(app.getHttpServer())
@@ -176,7 +235,7 @@ describe('DirectoryController', () => {
   });
 
   describe('Directory with flags', () => {
-    test('Should get registry with flag', async () => {
+    test('Should get directory with flag', async () => {
       const parent = await createDirectory('CITY');
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       await Object.assign(new Directory2flagEntity(), {parent, flag}).save();
@@ -187,6 +246,23 @@ describe('DirectoryController', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['ACTIVE']);
+    });
+
+    test('Should get directory with multiple flags', async () => {
+      const parent = await createDirectory('CITY');
+      const flag_1 = await Object.assign(new FlagEntity(), {id: 'FLAG_1'}).save();
+      const flag_2 = await Object.assign(new FlagEntity(), {id: 'FLAG_2'}).save();
+      const flag_3 = await Object.assign(new FlagEntity(), {id: 'FLAG_3'}).save();
+      await Object.assign(new Directory2flagEntity(), {parent, flag: flag_1}).save();
+      await Object.assign(new Directory2flagEntity(), {parent, flag: flag_2}).save();
+      await Object.assign(new Directory2flagEntity(), {parent, flag: flag_3}).save();
+
+      const list = await request(app.getHttpServer())
+        .get('/registry/directory')
+        .expect(200);
+
+      expect(list.body).toHaveLength(1);
+      expect(list.body[0].flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
     });
   });
 
@@ -254,9 +330,10 @@ describe('DirectoryController', () => {
   });
 
   describe('Directory addition', () => {
-
     describe('Directory addition with fields', () => {
       test('Should add item', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+
         const res = await request(app.getHttpServer())
           .post('/registry/directory')
           .send({id: 'LIST'})
@@ -265,7 +342,16 @@ describe('DirectoryController', () => {
         expect(res.body.id).toBe('LIST');
       });
 
+      test('Shouldn`t add without access', async () => {
+        await request(app.getHttpServer())
+          .post('/registry/directory')
+          .send({id: 'LIST'})
+          .expect(403);
+      });
+
       test('Shouldn`t add with blank id', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({id: ''})
@@ -273,6 +359,8 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t add with blank id', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({id: null})
@@ -280,6 +368,8 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t add with duplicate id', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({id: 'LIST'})
@@ -292,8 +382,10 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('Directory addition with registry-permission', () => {
-      test('Should add item with registry-permission', async () => {
+    describe('Directory addition with permission', () => {
+      test('Should add item with permission', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+
         const item = await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -305,8 +397,10 @@ describe('DirectoryController', () => {
         expect(item.body.permission).toContainEqual({method: 'READ'});
       });
 
-      test('Should add item with group registry-permission', async () => {
+      test('Should add item with group permission', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
+
         const item = await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -319,7 +413,9 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t add item with wrong group', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -330,7 +426,9 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t add item with wrong method', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -343,7 +441,9 @@ describe('DirectoryController', () => {
 
     describe('Directory addition with strings', () => {
       test('Should add with string', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
         const res = await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -360,7 +460,9 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t add with wrong attribute', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -375,7 +477,9 @@ describe('DirectoryController', () => {
 
     describe('Directory additions with flags', () => {
       test('Should add with flag', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
         const res = await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -388,7 +492,9 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t add with wrong flag', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
         await request(app.getHttpServer())
           .post('/registry/directory')
           .send({
@@ -401,32 +507,95 @@ describe('DirectoryController', () => {
   });
 
   describe('Directory update', () => {
-    test('Should update item', async () => {
-      await createDirectory('CITY');
+    describe('Directory update with fields', () => {
+      test('Should update item', async () => {
+        await createDirectory('CITY');
 
-      const res = await request(app.getHttpServer())
-        .put('/registry/directory/CITY')
-        .send({id: 'CITY', permission: [{method: 'ALL'}]})
-        .expect(200);
+        const res = await request(app.getHttpServer())
+          .put('/registry/directory/CITY')
+          .send({id: 'CITY', permission: [{method: 'ALL'}]})
+          .expect(200);
 
-      expect(res.body.id).toBe('CITY');
-      expect(res.body.permission).toEqual([{method: 'ALL'}]);
+        expect(res.body.id).toBe('CITY');
+        expect(res.body.permission).toEqual([{method: 'ALL'}]);
+      });
+
+      test('Shouldn`t update without access', async () => {
+        const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+        await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+        await Object.assign(new AccessEntity(), {method: AccessMethod.DELETE, target: AccessTarget.DIRECTORY}).save();
+
+        await request(app.getHttpServer())
+          .put('/registry/directory/CITY')
+          .send({id: 'CITY', permission: [{method: 'ALL'}]})
+          .expect(403);
+      });
+
+      test('Shouldn`t update without READ access', async () => {
+        await createDirectory('CITY', PermissionOperation.ALL, false);
+
+        await request(app.getHttpServer())
+          .put('/registry/directory/CITY')
+          .send({id: 'CITY', permission: [{method: 'ALL'}]})
+          .expect(403);
+      });
+
+      test('Should update id', async () => {
+        await createDirectory('CITY');
+
+        const res = await request(app.getHttpServer())
+          .put('/registry/directory/CITY')
+          .send({id: 'NEW', permission: [{method: 'ALL'}]})
+          .expect(200);
+
+        expect(res.body.id).toBe('NEW');
+        expect(res.body.permission).toEqual([{method: 'ALL'}]);
+      });
+
+      test('Shouldn`t update with wrong id', async () => {
+        await createDirectory('CITY');
+
+        await request(app.getHttpServer())
+          .put('/registry/directory/WRONG')
+          .send({id: 'WRONG', permission: [{method: 'ALL'}]})
+          .expect(404);
+      });
+
+      test('Should update only id', async () => {
+        await createDirectory('CITY');
+
+        const res = await request(app.getHttpServer())
+          .patch('/registry/directory/CITY')
+          .send({id: 'NEW'})
+          .expect(200);
+
+        expect(res.body.id).toBe('NEW');
+        expect(res.body.permission).toEqual([{method: 'ALL'}]);
+      });
+
+      test('Shouldn`t update only id without access', async () => {
+        await createDirectory('CITY', PermissionOperation.ALL, false);
+
+        await request(app.getHttpServer())
+          .patch('/registry/directory/CITY')
+          .send({id: 'NEW'})
+          .expect(403);
+      });
+
+      test('Shouldn`t update with wrong only id', async () => {
+        await createDirectory('CITY');
+
+        await request(app.getHttpServer())
+          .patch('/registry/directory/WRONG')
+          .send({id: 'UPDATE'})
+          .expect(404);
+      });
     });
 
-    test('Should update id', async () => {
-      await createDirectory('CITY');
-
-      const res = await request(app.getHttpServer())
-        .put('/registry/directory/CITY')
-        .send({id: 'NEW', permission: [{method: 'ALL'}]})
-        .expect(200);
-
-      expect(res.body.id).toBe('NEW');
-      expect(res.body.permission).toEqual([{method: 'ALL'}]);
-    });
-
-    describe('Directory update with registry-permission', () => {
-      test('Should update with registry-permission', async () => {
+    describe('Directory update with access', () => {
+      test('Should update with access', async () => {
         await createDirectory('CITY');
 
         const res = await request(app.getHttpServer())
@@ -446,7 +615,7 @@ describe('DirectoryController', () => {
         expect(res.body.permission).toContainEqual({method: 'WRITE'});
       });
 
-      test('Should update with only registry-permission', async () => {
+      test('Should update with only access', async () => {
         await createDirectory('CITY');
 
         const res = await request(app.getHttpServer())
@@ -587,6 +756,26 @@ describe('DirectoryController', () => {
       expect(res.body).toEqual(['CITY']);
     });
 
+    test('Shouldn`t delete without access', async () => {
+      await createDirectory('CITY', PermissionOperation.ALL, false);
+
+      await request(app.getHttpServer())
+        .delete('/registry/directory/CITY')
+        .expect(403);
+    });
+
+    test('Shouldn`t delete without DELETE access', async () => {
+      const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+      await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
+      await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+      await Object.assign(new AccessEntity(), {method: AccessMethod.PUT, target: AccessTarget.DIRECTORY}).save();
+
+      await request(app.getHttpServer())
+        .delete('/registry/directory/CITY')
+        .expect(403);
+    });
+
     test('Shouldn`t delete with wrong id', async () => {
       await createDirectory('CITY');
 
@@ -595,8 +784,9 @@ describe('DirectoryController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t delete without registry-permission', async () => {
+    test('Shouldn`t delete without permission]', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      await Object.assign(new AccessEntity(), {method: AccessMethod.ALL, target: AccessTarget.DIRECTORY}).save();
 
       await request(app.getHttpServer())
         .delete('/registry/directory/CITY')

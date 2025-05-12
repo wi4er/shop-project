@@ -1,7 +1,7 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { WithPermissionInput } from '../input/with-permission.input';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { CommonPermissionEntity } from '../model/common-permission.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 

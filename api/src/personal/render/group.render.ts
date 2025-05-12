@@ -1,4 +1,4 @@
-import { GroupEntity } from '../model/group.entity';
+import { GroupEntity } from '../model/group/group.entity';
 
 class GroupAttributeRender {
 

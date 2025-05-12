@@ -1,10 +1,10 @@
 import { EntityManager } from 'typeorm';
-import { GroupEntity } from '../../model/group.entity';
-import { Group4stringEntity } from '../../model/group4string.entity';
-import { Group2flagEntity } from '../../model/group2flag.entity';
+import { GroupEntity } from '../../model/group/group.entity';
+import { Group4stringEntity } from '../../model/group/group4string.entity';
+import { Group2flagEntity } from '../../model/group/group2flag.entity';
 import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
-import { UserGroupInput } from '../../input/user-group.input';
+import { GroupInput } from '../../input/group.input';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
@@ -33,7 +33,7 @@ export class UserGroupInsertOperation {
   /**
    *
    */
-  async save(input: UserGroupInput): Promise<string> {
+  async save(input: GroupInput): Promise<string> {
     this.created.id = input.id;
     this.created.parent = input.parent ? await this.checkGroup(input.parent) : null;
 

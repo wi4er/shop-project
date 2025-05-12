@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 import { ElementEntity } from './element.entity';
 import { CommonPermissionEntity } from '../../common/model/common-permission.entity';

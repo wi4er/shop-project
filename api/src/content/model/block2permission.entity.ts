@@ -8,7 +8,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { BlockEntity } from './block.entity';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
 

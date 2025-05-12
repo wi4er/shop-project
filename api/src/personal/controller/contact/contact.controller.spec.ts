@@ -3,9 +3,9 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { ContactEntity, UserContactType } from '../../model/contact.entity';
-import { Contact4stringEntity } from '../../model/contact4string.entity';
-import { Contact2flagEntity } from '../../model/contact2flag.entity';
+import { ContactEntity, UserContactType } from '../../model/contact/contact.entity';
+import { Contact4stringEntity } from '../../model/contact/contact4string.entity';
+import { Contact2flagEntity } from '../../model/contact/contact2flag.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 

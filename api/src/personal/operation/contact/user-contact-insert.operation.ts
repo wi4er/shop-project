@@ -1,10 +1,10 @@
 import { EntityManager } from "typeorm";
-import { ContactEntity } from "../../model/contact.entity";
-import { Contact4stringEntity } from "../../model/contact4string.entity";
-import { Contact2flagEntity } from "../../model/contact2flag.entity";
+import { ContactEntity } from "../../model/contact/contact.entity";
+import { Contact4stringEntity } from "../../model/contact/contact4string.entity";
+import { Contact2flagEntity } from "../../model/contact/contact2flag.entity";
 import { StringValueInsertOperation } from "../../../common/operation/string-value-insert.operation";
 import { FlagValueInsertOperation } from "../../../common/operation/flag-value-insert.operation";
-import { UserContactInput } from "../../input/user-contact.input";
+import { ContactInput } from "../../input/contact.input";
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
@@ -20,7 +20,7 @@ export class UserContactInsertOperation {
     this.created = new ContactEntity();
   }
 
-  async save(input: UserContactInput): Promise<string> {
+  async save(input: ContactInput): Promise<string> {
     this.created.id = WrongDataException.assert(input.id, 'Contact id expected');
     this.created.type = WrongDataException.assert(input.type, 'Contact type expected!');
 

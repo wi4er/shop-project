@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class UserDeleteOperation {

@@ -3,18 +3,18 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { Section2permissionEntity } from './section2permission.entity';
 import { SectionEntity } from './section.entity';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { BlockEntity } from './block.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 
-describe('Section registry-permission entity', () => {
+describe('Section access entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Section registry-permission fields', () => {
+  describe('Section access fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Section2permissionEntity);
       const list = await repo.find();
@@ -22,7 +22,7 @@ describe('Section registry-permission entity', () => {
       expect(list).toHaveLength(0);
     });
 
-    test('Should add registry-permission', async () => {
+    test('Should add access', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();
       const group = await Object.assign(new GroupEntity(), {}).save();

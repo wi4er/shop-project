@@ -3,17 +3,17 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { Block2permissionEntity } from './block2permission.entity';
 import { BlockEntity } from './block.entity';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 
-describe('Block registry-permission entity', () => {
+describe('Block access entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Block registry-permission fields', () => {
+  describe('Block access fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Block2permissionEntity);
       const list = await repo.find();

@@ -3,7 +3,8 @@ import { Response } from 'express';
 import { PermissionException } from './permission.exception';
 
 @Catch(PermissionException)
-export class PermissionFilter<T extends PermissionException> implements ExceptionFilter {
+export class PermissionFilter<T extends PermissionException>
+  implements ExceptionFilter {
 
   catch(exception: T, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

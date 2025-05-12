@@ -1,4 +1,4 @@
-import { UserEntity } from '../model/user.entity';
+import { UserEntity } from '../model/user/user.entity';
 
 export class MyselfRender {
 

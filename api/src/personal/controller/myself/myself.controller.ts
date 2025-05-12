@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import { EntityManager, Repository } from 'typeorm';
 import { ApiCreatedResponse, ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserUpdateOperation } from '../../operation/user/user-update.operation';

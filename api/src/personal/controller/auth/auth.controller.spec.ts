@@ -2,11 +2,11 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm/data-source/DataSource';
-import { GroupEntity } from '../../model/group.entity';
-import { User2groupEntity } from '../../model/user2group.entity';
+import { GroupEntity } from '../../model/group/group.entity';
+import { User2groupEntity } from '../../model/user/user2group.entity';
 
 describe('AuthController', () => {
   let source: DataSource;

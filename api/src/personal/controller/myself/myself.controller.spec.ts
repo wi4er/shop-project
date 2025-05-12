@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import * as request from 'supertest';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { GroupEntity } from '../../model/group.entity';
-import { User2groupEntity } from '../../model/user2group.entity';
+import { GroupEntity } from '../../model/group/group.entity';
+import { User2groupEntity } from '../../model/user/user2group.entity';
 import * as process from 'process';
 
 describe('MyselfController', () => {

@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { GroupEntity } from '../../model/group.entity';
+import { GroupEntity } from '../../model/group/group.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 export class UserGroupDeleteOperation {

@@ -1,14 +1,14 @@
-import { UserEntity } from './personal/model/user.entity';
-import { User4stringEntity } from './personal/model/user4string.entity';
+import { UserEntity } from './personal/model/user/user.entity';
+import { User4stringEntity } from './personal/model/user/user4string.entity';
 import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
 import { DirectoryEntity } from './registry/model/directory.entity';
 import { Directory4stringEntity } from './registry/model/directory4string.entity';
-import { GroupEntity } from './personal/model/group.entity';
+import { GroupEntity } from './personal/model/group/group.entity';
 import { PointEntity } from './registry/model/point.entity';
-import { User2flagEntity } from './personal/model/user2flag.entity';
-import { User4pointEntity } from './personal/model/user4point.entity';
-import { User4userEntity } from './personal/model/user4user.entity';
-import { User4descriptionEntity } from './personal/model/user4description.entity';
+import { User2flagEntity } from './personal/model/user/user2flag.entity';
+import { User4pointEntity } from './personal/model/user/user4point.entity';
+import { User4userEntity } from './personal/model/user/user4user.entity';
+import { User4descriptionEntity } from './personal/model/user/user4description.entity';
 import { Point4stringEntity } from './registry/model/point4string.entity';
 import { ElementEntity } from './content/model/element.entity';
 import { Element2sectionEntity } from './content/model/element2section.entity';
@@ -22,13 +22,13 @@ import { Section4stringEntity } from './content/model/section4string.entity';
 import { Element4elementEntity } from './content/model/element4element.entity';
 import { Directory2flagEntity } from './registry/model/directory2flag.entity';
 import { Point2flagEntity } from './registry/model/point2flag.entity';
-import { ContactEntity } from './personal/model/contact.entity';
-import { User2contactEntity } from './personal/model/user2contact.entity';
-import { Contact2flagEntity } from './personal/model/contact2flag.entity';
-import { Contact4stringEntity } from './personal/model/contact4string.entity';
-import { Group4stringEntity } from './personal/model/group4string.entity';
-import { Group2flagEntity } from './personal/model/group2flag.entity';
-import { User2groupEntity } from './personal/model/user2group.entity';
+import { ContactEntity } from './personal/model/contact/contact.entity';
+import { User2contactEntity } from './personal/model/user/user2contact.entity';
+import { Contact2flagEntity } from './personal/model/contact/contact2flag.entity';
+import { Contact4stringEntity } from './personal/model/contact/contact4string.entity';
+import { Group4stringEntity } from './personal/model/group/group4string.entity';
+import { Group2flagEntity } from './personal/model/group/group2flag.entity';
+import { User2groupEntity } from './personal/model/user/user2group.entity';
 import { Element2flagEntity } from './content/model/element2flag.entity';
 import { Section2flagEntity } from './content/model/section2flag.entity';
 import { Block2flagEntity } from './content/model/block2flag.entity';
@@ -62,7 +62,7 @@ import { Document2flagEntity } from './document/model/document2flag.entity';
 import { Element2permissionEntity } from './content/model/element2permission.entity';
 import { Section2permissionEntity } from './content/model/section2permission.entity';
 import { Element4sectionEntity } from './content/model/element4section.entity';
-import { User4groupEntity } from './personal/model/user4group.entity';
+import { User4groupEntity } from './personal/model/user/user4group.entity';
 import { ContentPermissionEntity } from './content/model/content-permission.entity';
 import { FileEntity } from './storage/model/file.entity';
 import { CollectionEntity } from './storage/model/collection.entity';
@@ -75,7 +75,7 @@ import { Element4fileEntity } from './content/model/element4file.entity';
 import { Section4fileEntity } from './content/model/section4file.entity';
 import { Section2imageEntity } from './content/model/section2image.entity';
 import { Block4fileEntity } from './content/model/block4file.entity';
-import { User2imageEntity } from './personal/model/user2image.entity';
+import { User2imageEntity } from './personal/model/user/user2image.entity';
 import { ConfigurationEntity } from './settings/model/configuration.entity';
 import { SettingsPermissionEntity } from './settings/model/settings-permission.entity';
 import { AttributeAsPointEntity } from './settings/model/attribute-as-point.entity';
@@ -83,10 +83,10 @@ import { AttributeAsSectionEntity } from './settings/model/attribute-as-section.
 import { AttributeAsElementEntity } from './settings/model/attribute-as-element.entity';
 import { AttributeAsFileEntity } from './settings/model/attribute-as-file.entity';
 import { Directory2permissionEntity } from './registry/model/directory2permission.entity';
-import { RegistryPermissionEntity } from './registry/model/registry-permission.entity';
+import { AccessEntity } from './personal/model/access/access.entity';
 import { Point2logEntity } from './registry/model/point2log.entity';
 import { Directory2logEntity } from './registry/model/directory2log.entity';
-import { RegistryPermission2permissionEntity } from './registry/model/registry-permission2permission.entity';
+import { Access2permissionEntity } from './personal/model/access/access2permission.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -108,7 +108,7 @@ export function createConnectionOptions(): DataSourceOptions {
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
       AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
       ConfigurationEntity,
-      RegistryPermissionEntity, RegistryPermission2permissionEntity,
+      AccessEntity, Access2permissionEntity,
       DirectoryEntity,
       Directory4stringEntity, Directory4pointEntity,
       Directory2flagEntity, Directory2permissionEntity, Directory2logEntity,

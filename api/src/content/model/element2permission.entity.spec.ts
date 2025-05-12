@@ -2,19 +2,19 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { Element2permissionEntity } from './element2permission.entity';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { BlockEntity } from './block.entity';
 import { ElementEntity } from './element.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 
-describe('Element registry-permission entity', () => {
+describe('Element access entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element registry-permission fields', () => {
+  describe('Element access fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Element2permissionEntity);
       const list = await repo.find();

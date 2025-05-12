@@ -1,6 +1,6 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringAttributeRender } from '../../common/render/string-attribute.render';
-import { ContactEntity } from '../model/contact.entity';
+import { ContactEntity } from '../model/contact/contact.entity';
 
 export class ContactRender {
 

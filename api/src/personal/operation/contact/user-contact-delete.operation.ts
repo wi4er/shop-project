@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { ContactEntity } from '../../model/contact.entity';
+import { ContactEntity } from '../../model/contact/contact.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 export class UserContactDeleteOperation {

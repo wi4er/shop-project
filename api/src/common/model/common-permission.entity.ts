@@ -1,5 +1,5 @@
 import { BaseEntity } from 'typeorm';
-import { GroupEntity } from '../../personal/model/group.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
 import { PermissionOperation } from '../../permission/model/permission-operation';
 
 export interface CommonPermissionEntity<T extends BaseEntity>

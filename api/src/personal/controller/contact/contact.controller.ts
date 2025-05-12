@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { ContactEntity } from '../../model/contact.entity';
-import { UserContactInput } from '../../input/user-contact.input';
+import { ContactEntity } from '../../model/contact/contact.entity';
+import { ContactInput } from '../../input/contact.input';
 import { UserContactInsertOperation } from '../../operation/contact/user-contact-insert.operation';
 import { UserContactUpdateOperation } from '../../operation/contact/user-contact-update.operation';
 import { UserContactDeleteOperation } from '../../operation/contact/user-contact-delete.operation';
@@ -66,7 +66,7 @@ export class ContactController {
   @Post()
   async addItem(
     @Body()
-      input: UserContactInput,
+      input: ContactInput,
   ) {
     return this.entityManager.transaction(
       trans => new UserContactInsertOperation(this.entityManager).save(input)
@@ -82,7 +82,7 @@ export class ContactController {
     @Param('id')
       id: string,
     @Body()
-      input: UserContactInput,
+      input: ContactInput,
   ) {
     return this.entityManager.transaction(
       trans => new UserContactUpdateOperation(this.entityManager).save(id, input)

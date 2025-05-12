@@ -18,17 +18,17 @@ export class DirectoryPatchOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    const dirRepo = this.transaction.getRepository(DirectoryEntity);
-
     return NoDataException.assert(
-      await dirRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-          permission: {group: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(DirectoryEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+            permission: {group: true},
+          },
+        }),
       `Directory with id >> ${id} << not found!`,
     );
   }
@@ -37,12 +37,13 @@ export class DirectoryPatchOperation {
    *
    */
   async save(id: string, input: DirectoryInput): Promise<string> {
-    const beforeItem = await this.checkDirectory(id);
+    if (input.id) await this.transaction.update(DirectoryEntity, {id}, {id: input.id});
 
+    const beforeItem = await this.checkDirectory(input.id ? input.id : id);
     if (input.flag) await new FlagValueUpdateOperation(this.transaction, Directory2flagEntity).save(beforeItem, input);
     if (input.permission) await new PermissionValueUpdateOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
 
-    return id;
+    return input.id ? input.id : id;
   }
 
 }

@@ -14,7 +14,7 @@ import { FlagEntity } from '../../../settings/model/flag.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
-import { GroupEntity } from '../../../personal/model/group.entity';
+import { GroupEntity } from '../../../personal/model/group/group.entity';
 
 describe('BlockController', () => {
   let source;
@@ -75,7 +75,7 @@ describe('BlockController', () => {
       expect(item.body.permission).toEqual([{method: 'ALL'}]);
     });
 
-    test('Shouldn`t get item without registry-permission', async () => {
+    test('Shouldn`t get item without access', async () => {
       await new BlockEntity().save();
 
       await request(app.getHttpServer())
@@ -83,7 +83,7 @@ describe('BlockController', () => {
         .expect(403);
     });
 
-    test('Should get block list with registry-permission', async () => {
+    test('Should get block list with access', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
         if (i % 2) {
@@ -161,7 +161,7 @@ describe('BlockController', () => {
       expect(item.body).toEqual({count: 10});
     });
 
-    test('Should get count with registry-permission', async () => {
+    test('Should get count with access', async () => {
       for (let i = 0; i < 10; i++) {
         const parent = await new BlockEntity().save();
         if (i % 2) {
@@ -389,7 +389,7 @@ describe('BlockController', () => {
       expect(inst.body.sort).toBe(345);
     });
 
-    test('Should update registry-permission and read', async () => {
+    test('Should update access and read', async () => {
       const parent = await createBlock();
 
       await request(app.getHttpServer())
@@ -490,7 +490,7 @@ describe('BlockController', () => {
     });
   });
 
-  describe('Content block update with registry-permission', () => {
+  describe('Content block update with access', () => {
     test('Should update permissions', async () => {
       await Object.assign(new GroupEntity(), {id: '222'}).save();
 
@@ -533,7 +533,7 @@ describe('BlockController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t delete without registry-permission', async () => {
+    test('Shouldn`t delete without access', async () => {
       const parent = await new BlockEntity().save();
 
       await request(app.getHttpServer())
@@ -541,7 +541,7 @@ describe('BlockController', () => {
         .expect(403);
     });
 
-    test('Shouldn`t delete without DELETE registry-permission', async () => {
+    test('Shouldn`t delete without DELETE access', async () => {
       const parent = await new BlockEntity().save();
       await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
       await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.WRITE}).save();

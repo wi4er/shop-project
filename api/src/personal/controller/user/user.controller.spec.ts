@@ -2,16 +2,16 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import * as request from 'supertest';
-import { User4stringEntity } from '../../model/user4string.entity';
-import { User2flagEntity } from '../../model/user2flag.entity';
+import { User4stringEntity } from '../../model/user/user4string.entity';
+import { User2flagEntity } from '../../model/user/user2flag.entity';
 import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { PointEntity } from '../../../registry/model/point.entity';
-import { User4pointEntity } from '../../model/user4point.entity';
+import { User4pointEntity } from '../../model/user/user4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { ContactEntity, UserContactType } from '../../model/contact.entity';
+import { ContactEntity, UserContactType } from '../../model/contact/contact.entity';
 
 describe('UserController', () => {
   let source;

@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
-import { UserEntity } from '../../model/user.entity';
-import { ContactEntity } from '../../model/contact.entity';
-import { User2contactEntity } from '../../model/user2contact.entity';
+import { UserEntity } from '../../model/user/user.entity';
+import { ContactEntity } from '../../model/contact/contact.entity';
+import { User2contactEntity } from '../../model/user/user2contact.entity';
 import { UserInput } from '../../input/user.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 

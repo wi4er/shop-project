@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import { EntityManager, Repository } from 'typeorm';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { UserInput } from '../../input/user.input';

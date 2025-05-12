@@ -14,9 +14,9 @@ import { SectionEntity } from '../../model/section.entity';
 import { Element2sectionEntity } from '../../model/element2section.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { UserEntity } from '../../../personal/model/user.entity';
-import { GroupEntity } from '../../../personal/model/group.entity';
-import { User2groupEntity } from '../../../personal/model/user2group.entity';
+import { UserEntity } from '../../../personal/model/user/user.entity';
+import { GroupEntity } from '../../../personal/model/group/group.entity';
+import { User2groupEntity } from '../../../personal/model/user/user2group.entity';
 import { Element2permissionEntity } from '../../model/element2permission.entity';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { Element4elementEntity } from '../../model/element4element.entity';
@@ -94,7 +94,7 @@ describe('ElementController', () => {
       expect(list.body).toHaveLength(10);
     });
 
-    test('Should get element with group registry-permission', async () => {
+    test('Should get element with group access', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -114,7 +114,7 @@ describe('ElementController', () => {
       expect(list.body).toHaveLength(5);
     });
 
-    test('Should get element with public registry-permission', async () => {
+    test('Should get element with public access', async () => {
       await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
@@ -242,7 +242,7 @@ describe('ElementController', () => {
         .expect(403);
     });
 
-    test('Shouldn`t get element without registry-permission', async () => {
+    test('Shouldn`t get element without access', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
       await Object.assign(new ElementEntity, {id: 'NAME', block: 1}).save();
@@ -277,7 +277,7 @@ describe('ElementController', () => {
       expect(list.body).toEqual({count: 10});
     });
 
-    test('Should get element count with group registry-permission ', async () => {
+    test('Should get element count with group access ', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -297,7 +297,7 @@ describe('ElementController', () => {
       expect(list.body).toEqual({count: 5});
     });
 
-    test('Should get element with registry-permission count', async () => {
+    test('Should get element with access count', async () => {
       const cookie = await createSession();
       await new BlockEntity().save();
 
@@ -733,8 +733,8 @@ describe('ElementController', () => {
       });
     });
 
-    describe('Element addition with registry-permission', () => {
-      test('Should add with registry-permission', async () => {
+    describe('Element addition with access', () => {
+      test('Should add with access', async () => {
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
 
         await new BlockEntity().save();
@@ -1084,8 +1084,8 @@ describe('ElementController', () => {
       });
     });
 
-    describe('Content element registry-permission update', () => {
-      test('Should add registry-permission', async () => {
+    describe('Content element access update', () => {
+      test('Should add access', async () => {
         const cookie = await createSession();
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
         await new BlockEntity().save();
@@ -1164,7 +1164,7 @@ describe('ElementController', () => {
           .expect(400);
       });
 
-      test('Should remove registry-permission', async () => {
+      test('Should remove access', async () => {
         const cookie = await createSession();
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
         await new BlockEntity().save();

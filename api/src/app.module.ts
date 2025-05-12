@@ -10,7 +10,7 @@ import { createConnectionOptions } from './createConnectionOptions';
 import { FormModule } from './form/form.module';
 import { ExceptionModule } from './exception/exception.module';
 import * as cors from 'cors';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
 import { SettingsModule } from './settings/settings.module';
 import { DocumentModule } from './document/document.module';
@@ -20,6 +20,9 @@ import redisPermission from './permission/redis.permission';
 import { PermissionFilter } from './exception/permission/permission.filter';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as process from 'process';
+import { CheckIdGuard } from './common/guard/check-id.guard';
+import { CheckAccessGuard } from './personal/guard/check-access.guard';
+import { CheckPermissionGuard } from './personal/guard/check-permission.guard';
 
 @Module({
   imports: [
@@ -52,9 +55,22 @@ import * as process from 'process';
       provide: APP_FILTER,
       useClass: PermissionFilter,
     },
+    {
+      provide: APP_GUARD,
+      useClass: CheckIdGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CheckAccessGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CheckPermissionGuard,
+    },
   ],
 })
 export class AppModule {
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(redisPermission())
@@ -67,4 +83,5 @@ export class AppModule {
       }))
       .forRoutes('/');
   }
+
 }

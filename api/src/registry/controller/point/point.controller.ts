@@ -13,8 +13,8 @@ import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { PointPatchOperation } from '../../operation/point/point-patch.operation';
+import { CheckId } from '../../../common/guard/check-id.guard';
 
 @Controller('registry/point')
 export class PointController {
@@ -113,19 +113,17 @@ export class PointController {
   }
 
   @Get(':id')
+  @CheckId(PointEntity)
   async getItem(
     @CurrentGroups()
       group: string[],
     @Param('id')
       id: string,
   ) {
-    const item = NoDataException.assert(
-      await this.pointRepo.findOne({
-        where: {id},
-        relations: this.relations,
-      }),
-      `Point with id >> ${id} << not foundQ`,
-    );
+    const item = await this.pointRepo.findOne({
+      where: {id},
+      relations: this.relations,
+    });
 
     PermissionException.assert(
       await this.permRepo.findOne({
@@ -142,6 +140,7 @@ export class PointController {
   }
 
   @Put(':id')
+  @CheckId(PointEntity)
   async updateItem(
     @CurrentGroups()
       group: string[],
@@ -152,13 +151,10 @@ export class PointController {
   ) {
     const item = await this.entityManager.transaction(
       async trans => {
-        const point = NoDataException.assert(
-          await trans.getRepository(PointEntity).findOne({
-            where: {id: pointId},
-            relations: {directory: true},
-          }),
-          `Point with id >> ${pointId} << not foundQ`,
-        );
+        const point = await trans.getRepository(PointEntity).findOne({
+          where: {id: pointId},
+          relations: {directory: true},
+        });
 
         PermissionException.assert(
           await trans.getRepository(Directory2permissionEntity).findOne({
@@ -182,6 +178,7 @@ export class PointController {
   }
 
   @Patch(':id')
+  @CheckId(PointEntity)
   async updateField(
     @CurrentGroups()
       group: string[],
@@ -192,13 +189,10 @@ export class PointController {
   ) {
     const item = await this.entityManager.transaction(
       async trans => {
-        const point = NoDataException.assert(
-          await trans.getRepository(PointEntity).findOne({
-            where: {id: pointId},
-            relations: {directory: true},
-          }),
-          `Point with id >> ${pointId} << not foundQ`,
-        );
+        const point = await trans.getRepository(PointEntity).findOne({
+          where: {id: pointId},
+          relations: {directory: true},
+        });
 
         PermissionException.assert(
           await trans.getRepository(Directory2permissionEntity).findOne({
@@ -222,6 +216,7 @@ export class PointController {
   }
 
   @Delete('/:id')
+  @CheckId(PointEntity)
   async deleteItem(
     @CurrentGroups()
       group: string[],
@@ -230,13 +225,10 @@ export class PointController {
   ): Promise<string[]> {
     return this.entityManager.transaction(
       async trans => {
-        const point = NoDataException.assert(
-          await trans.getRepository(PointEntity).findOne({
-            where: {id: pointId},
-            relations: {directory: true},
-          }),
-          `Point with id >> ${pointId} << not foundQ`,
-        );
+        const point = await trans.getRepository(PointEntity).findOne({
+          where: {id: pointId},
+          relations: {directory: true},
+        });
 
         PermissionException.assert(
           await trans.getRepository(Directory2permissionEntity).findOne({

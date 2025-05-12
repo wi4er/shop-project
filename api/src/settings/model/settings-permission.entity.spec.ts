@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { SettingsPermissionEntity } from './settings-permission.entity';
 
-describe('Settings registry-permission', () => {
+describe('Settings access', () => {
   let source: DataSource;
 
   beforeAll(async () => {

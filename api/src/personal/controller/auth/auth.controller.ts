@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SessionService } from '../../service/session/session.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../model/user.entity';
+import { UserEntity } from '../../model/user/user.entity';
 import { Repository } from 'typeorm';
 import { EncodeService } from '../../service/encode/encode.service';
 import { PermissionException } from '../../../exception/permission/permission.exception';

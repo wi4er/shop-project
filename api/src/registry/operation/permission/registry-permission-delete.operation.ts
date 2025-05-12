@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { RegistryPermissionEntity } from '../../model/registry-permission.entity';
+import { AccessEntity } from '../../../personal/model/access/access.entity';
 
 export class RegistryPermissionDeleteOperation {
 
@@ -10,7 +10,7 @@ export class RegistryPermissionDeleteOperation {
   }
 
   async save(idList: number[]): Promise<number[]> {
-    const dirRepo = this.manager.getRepository(RegistryPermissionEntity);
+    const dirRepo = this.manager.getRepository(AccessEntity);
 
     const result = [];
     const list = await dirRepo.find({where: {id: In(idList)}});

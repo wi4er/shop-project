@@ -59,7 +59,7 @@ describe('PointController', () => {
       expect(res.body[0].id).toBe('NAME');
     });
 
-    test('Should get list without registry-permission', async () => {
+    test('Should get list without access', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'London', directory}).save();
 
@@ -125,7 +125,7 @@ describe('PointController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t get point without registry-permission item', async () => {
+    test('Shouldn`t get point without access item', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -158,7 +158,7 @@ describe('PointController', () => {
       expect(res.body).toEqual({count: 10});
     });
 
-    test('Should get empty list without registry-permission', async () => {
+    test('Should get empty list without access', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'London', directory}).save();
 
@@ -353,7 +353,7 @@ describe('PointController', () => {
         expect(res.body.directory).toBe('CITY');
       });
 
-      test('Should update registry', async () => {
+      test('Should update directory', async () => {
         const directory = await createDirectory('CITY');
         await createDirectory('LOCATION');
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
@@ -370,7 +370,7 @@ describe('PointController', () => {
         expect(res.body.directory).toBe('LOCATION');
       });
 
-      test('Shouldn`t update with wrong registry', async () => {
+      test('Shouldn`t update with wrong directory', async () => {
         const directory = await createDirectory('CITY');
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -396,7 +396,7 @@ describe('PointController', () => {
           .expect(404);
       });
 
-      test('Shouldn`t update without registry-permission', async () => {
+      test('Shouldn`t update without access', async () => {
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -481,7 +481,7 @@ describe('PointController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t delete without registry-permission', async () => {
+    test('Shouldn`t delete without access', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 

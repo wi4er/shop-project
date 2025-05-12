@@ -12,10 +12,12 @@ import { DirectoryPatchOperation } from '../../operation/directory/directory-pat
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
-import { PermissionException } from '../../../exception/permission/permission.exception';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { CheckId } from '../../../common/guard/check-id.guard';
+import { CheckAccess } from '../../../personal/guard/check-access.guard';
+import { AccessTarget } from '../../../personal/model/access/access-target';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { CheckPermission } from '../../../personal/guard/check-permission.guard';
 
 @Controller('registry/directory')
 export class DirectoryController {
@@ -32,8 +34,6 @@ export class DirectoryController {
     private entityManager: EntityManager,
     @InjectRepository(DirectoryEntity)
     private directoryRepo: Repository<DirectoryEntity>,
-    @InjectRepository(Directory2permissionEntity)
-    private permRepo: Repository<Directory2permissionEntity>,
   ) {
   }
 
@@ -47,11 +47,11 @@ export class DirectoryController {
   toWhere(): FindOptionsWhere<DirectoryEntity> {
     const where = {};
 
-
     return where;
   }
 
   @Get()
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.GET)
   async getList(
     @CurrentGroups()
       group: string[],
@@ -75,6 +75,7 @@ export class DirectoryController {
   }
 
   @Get('count')
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.GET)
   async getCount(
     @CurrentGroups()
       group: string[],
@@ -91,23 +92,13 @@ export class DirectoryController {
   }
 
   @Get(':id')
+  @CheckId(DirectoryEntity)
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.GET)
+  @CheckPermission(Directory2permissionEntity, PermissionOperation.READ)
   async getItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
   ) {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied for element ${id}`,
-    );
-
     return this.directoryRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -115,39 +106,31 @@ export class DirectoryController {
   }
 
   @Post()
-  addItem(
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.POST)
+  async addItem(
     @Body()
       input: DirectoryInput,
   ) {
-    return this.entityManager.transaction(
+    const item = await this.entityManager.transaction(
       trans => new DirectoryInsertOperation(trans).save(input)
         .then(id => trans.getRepository(DirectoryEntity).findOne({
           where: {id},
           relations: this.relations,
-        })),
-    ).then(this.toView);
+        })));
+
+    return this.toView(item);
   }
 
   @Put(':id')
+  @CheckId(DirectoryEntity)
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.PUT)
+  @CheckPermission(Directory2permissionEntity, PermissionOperation.WRITE)
   async updateItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
     @Body()
       input: DirectoryInput,
   ) {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied for element ${id}`,
-    );
-
     const item = await this.entityManager.transaction(
       trans => new DirectoryUpdateOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(DirectoryEntity).findOne({
@@ -159,25 +142,15 @@ export class DirectoryController {
   }
 
   @Patch(':id')
+  @CheckId(DirectoryEntity)
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.PUT)
+  @CheckPermission(Directory2permissionEntity, PermissionOperation.WRITE)
   async updateField(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
     @Body()
       input: DirectoryInput,
   ) {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied for directory ${id}`,
-    );
-
     const item = await this.entityManager.transaction(
       trans => new DirectoryPatchOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(DirectoryEntity).findOne({
@@ -189,32 +162,15 @@ export class DirectoryController {
   }
 
   @Delete(':id')
+  @CheckId(DirectoryEntity)
+  @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.DELETE)
+  @CheckPermission(Directory2permissionEntity, PermissionOperation.DELETE)
   async deleteItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(DirectoryEntity).findOne({where: {id}}),
-          `Directory with id >> ${id} << not found!`,
-        );
-
-        PermissionException.assert(
-          await trans.getRepository(Directory2permissionEntity).findOne({
-            where: {
-              group: Or(In(group), IsNull()),
-              parent: {id},
-              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
-            },
-          }),
-          `Permission denied for directory ${id}`,
-        );
-
-        return new DirectoryDeleteOperation(trans).save([id]);
-      },
+      async trans =>  new DirectoryDeleteOperation(trans).save([id]),
     );
   }
 

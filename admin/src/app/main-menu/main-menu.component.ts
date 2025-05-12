@@ -105,7 +105,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'person',
       }, {
         title: 'Permission',
-        link: '/registry-permission',
+        link: '/access',
         icon: 'lock',
       }],
     },

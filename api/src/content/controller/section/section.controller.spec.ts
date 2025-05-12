@@ -18,7 +18,7 @@ import { FileEntity } from '../../../storage/model/file.entity';
 import { Section2imageEntity } from '../../model/section2image.entity';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
-import { GroupEntity } from '../../../personal/model/group.entity';
+import { GroupEntity } from '../../../personal/model/group/group.entity';
 
 describe('SectionController', () => {
   let source;
@@ -415,8 +415,8 @@ describe('SectionController', () => {
       });
     });
 
-    describe('Content section addition with registry-permission', () => {
-      test('Should add with registry-permission', async () => {
+    describe('Content section addition with access', () => {
+      test('Should add with access', async () => {
         await new BlockEntity().save();
 
         const inst = await request(app.getHttpServer())
@@ -436,7 +436,7 @@ describe('SectionController', () => {
           .expect(400);
       });
 
-      test('Should add with group registry-permission', async () => {
+      test('Should add with group access', async () => {
         await new BlockEntity().save();
         await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
 
@@ -470,7 +470,7 @@ describe('SectionController', () => {
           .expect(400);
       });
 
-      test('Should add and read with registry-permission', async () => {
+      test('Should add and read with access', async () => {
         await new BlockEntity().save();
 
         await request(app.getHttpServer())
@@ -719,8 +719,8 @@ describe('SectionController', () => {
       });
     });
 
-    describe('Content section update with registry-permission', () => {
-      test('Should update registry-permission', async () => {
+    describe('Content section update with access', () => {
+      test('Should update access', async () => {
         await createSection();
 
         const inst = await request(app.getHttpServer())
@@ -740,7 +740,7 @@ describe('SectionController', () => {
           .expect(400);
       });
 
-      test('Should add group registry-permission', async () => {
+      test('Should add group access', async () => {
         await createSection();
         await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
 
@@ -967,7 +967,7 @@ describe('SectionController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t delete without registry-permission', async () => {
+    test('Shouldn`t delete without access', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
 
@@ -976,7 +976,7 @@ describe('SectionController', () => {
         .expect(403);
     });
 
-    test('Shouldn`t delete without DELETE registry-permission', async () => {
+    test('Shouldn`t delete without DELETE access', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
       await Object.assign(new Section2permissionEntity(), {parent, method: PermissionOperation.READ}).save();

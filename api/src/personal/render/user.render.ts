@@ -1,7 +1,7 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringAttributeRender } from '../../common/render/string-attribute.render';
 import { PointAttributeRender } from '../../common/render/point-attribute.render';
-import { UserEntity } from '../model/user.entity';
+import { UserEntity } from '../model/user/user.entity';
 
 export class UserRender {
 
