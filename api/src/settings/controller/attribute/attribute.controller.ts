@@ -6,13 +6,13 @@ import { AttributeInput } from '../../input/attribute.input';
 import { AttributeInsertOperation } from '../../operation/attribute/attribute-insert.operation';
 import { AttributeUpdateOperation } from '../../operation/attribute/attribute-update.operation';
 import { AttributeDeleteOperation } from '../../operation/attribute/attribute-delete.operation';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { AttributePatchOperation } from '../../operation/attribute/attribute-patch.operation';
 import { AttributeRender } from '../../render/attribute.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { PermissionException } from '../../../exception/permission/permission.exception';
-import { Element2permissionEntity } from '../../../content/model/element2permission.entity';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { CheckAccess } from '../../../personal/guard/check-access.guard';
+import { AccessTarget } from '../../../personal/model/access/access-target';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { CheckId } from '../../../common/guard/check-id.guard';
 
 @Controller('attribute')
 export class AttributeController {
@@ -35,10 +35,11 @@ export class AttributeController {
   }
 
   toView(item: AttributeEntity) {
-    return new AttributeRender(item)
+    return new AttributeRender(item);
   }
 
   @Get()
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.GET)
   async getList(
     @Query('offset')
       offset?: number,
@@ -53,11 +54,14 @@ export class AttributeController {
   }
 
   @Get('count')
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.GET)
   async getCount() {
     return this.attributeRepo.count().then(count => ({count}));
   }
 
   @Get(':id')
+  @CheckId(AttributeEntity)
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.GET)
   async getItem(
     @Param('id')
       id: string,
@@ -65,12 +69,11 @@ export class AttributeController {
     return this.attributeRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(item => this.toView(
-      NoDataException.assert(item, `Attribute with id ${id} not found!`)
-    ));
+    }).then(item => this.toView(item));
   }
 
   @Post()
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.POST)
   async addItem(
     @Body()
       input: AttributeInput,
@@ -85,6 +88,8 @@ export class AttributeController {
   }
 
   @Put(':id')
+  @CheckId(AttributeEntity)
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.PUT)
   async updateItem(
     @Param('id')
       id: string,
@@ -101,6 +106,8 @@ export class AttributeController {
   }
 
   @Patch(':id')
+  @CheckId(AttributeEntity)
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.PUT)
   async updateField(
     @Param('id')
       id: string,
@@ -117,19 +124,14 @@ export class AttributeController {
   }
 
   @Delete(':id')
+  @CheckId(AttributeEntity)
+  @CheckAccess(AccessTarget.ATTRIBUTE, AccessMethod.DELETE)
   async deleteItem(
     @Param('id')
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(AttributeEntity).findOne({where: {id}}),
-          `Attribute with id >> ${id} << not found!`,
-        );
-
-        return new AttributeDeleteOperation(trans).save([id]);
-      },
+      async trans => new AttributeDeleteOperation(trans).save([id]),
     );
   }
 

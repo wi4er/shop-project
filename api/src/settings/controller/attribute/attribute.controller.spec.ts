@@ -15,15 +15,20 @@ import { AttributeAsElementEntity } from '../../model/attribute-as-element.entit
 import { AttributeAsSectionEntity } from '../../model/attribute-as-section.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
 import { AttributeAsFileEntity } from '../../model/attribute-as-file.entity';
+import { AccessEntity } from '../../../personal/model/access/access.entity';
+import { AccessTarget } from '../../../personal/model/access/access-target';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('AttributeController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -31,35 +36,60 @@ describe('AttributeController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
+
+  async function createAttribute(
+    id: string,
+    type: AttributeType = AttributeType.STRING,
+    method: AccessMethod | null = AccessMethod.ALL,
+  ): Promise<AttributeEntity> {
+    const res = new AttributeEntity();
+    res.id = id;
+    res.type = type;
+
+    if (method) await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method}).save();
+
+    return res.save();
+  }
+
   describe('Attribute fields', () => {
-    test('Should get empty list', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/attribute')
-        .expect(200);
+    describe('Attribute list', () => {
+      test('Should get empty list', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
 
-      expect(res.body).toHaveLength(0);
-    });
+        const res = await request(app.getHttpServer())
+          .get('/attribute')
+          .expect(200);
 
-    test('Should get list', async () => {
-      for (let i = 0; i < 10; i++) {
-        await Object.assign(new AttributeEntity(), {id: `ATTR_${i}`}).save();
-      }
+        expect(res.body).toHaveLength(0);
+      });
 
-      const res = await request(app.getHttpServer())
-        .get('/attribute')
-        .expect(200);
+      test('Shouldn`t get list without access', async () => {
+        await request(app.getHttpServer())
+          .get('/attribute')
+          .expect(403);
+      });
 
-      expect(res.body).toHaveLength(10);
-      expect(res.body[0].id).toBe('ATTR_0');
-      expect(res.body[0].type).toBe('STRING');
-      expect(res.body[9].id).toBe('ATTR_9');
-      expect(res.body[9].type).toBe('STRING');
+      test('Should get list', async () => {
+        for (let i = 0; i < 10; i++) {
+          await createAttribute(`ATTR_${i}`);
+        }
+
+        const res = await request(app.getHttpServer())
+          .get('/attribute')
+          .expect(200);
+
+        expect(res.body).toHaveLength(10);
+        expect(res.body[0].id).toBe('ATTR_0');
+        expect(res.body[0].type).toBe('STRING');
+        expect(res.body[9].id).toBe('ATTR_9');
+        expect(res.body[9].type).toBe('STRING');
+      });
     });
 
     describe('Attribute fields with pagination', () => {
       test('Should get attribute with limit', async () => {
         for (let i = 0; i < 10; i++) {
-          await Object.assign(new AttributeEntity(), {id: `NAME_${i}`}).save();
+          await createAttribute(`NAME_${i}`);
         }
 
         const res = await request(app.getHttpServer())
@@ -73,7 +103,7 @@ describe('AttributeController', () => {
 
       test('Should get attribute with offset', async () => {
         for (let i = 0; i < 10; i++) {
-          await Object.assign(new AttributeEntity(), {id: `NAME_${i}`}).save();
+          await createAttribute(`NAME_${i}`);
         }
 
         const res = await request(app.getHttpServer())
@@ -89,10 +119,7 @@ describe('AttributeController', () => {
     describe('Attribute fields with type', () => {
       test('Should get with registry type', async () => {
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-        const parent = await Object.assign(
-          new AttributeEntity(),
-          {id: 'NAME', type: AttributeType.POINT},
-        ).save();
+        const parent = await createAttribute('NAME', AttributeType.POINT);
         await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
 
         const res = await request(app.getHttpServer())
@@ -107,10 +134,7 @@ describe('AttributeController', () => {
 
       test('Should get with element type', async () => {
         const block = await Object.assign(new BlockEntity(), {}).save();
-        const parent = await Object.assign(
-          new AttributeEntity(),
-          {id: 'NAME', type: AttributeType.ELEMENT},
-        ).save();
+        const parent = await createAttribute('NAME', AttributeType.ELEMENT);
         await Object.assign(new AttributeAsElementEntity(), {block, parent}).save();
 
         const res = await request(app.getHttpServer())
@@ -125,10 +149,7 @@ describe('AttributeController', () => {
 
       test('Should get with section type', async () => {
         const block = await Object.assign(new BlockEntity(), {}).save();
-        const parent = await Object.assign(
-          new AttributeEntity(),
-          {id: 'NAME', type: AttributeType.SECTION},
-        ).save();
+        const parent = await createAttribute('NAME', AttributeType.SECTION);
         await Object.assign(new AttributeAsSectionEntity(), {block, parent}).save();
 
         const res = await request(app.getHttpServer())
@@ -143,10 +164,7 @@ describe('AttributeController', () => {
 
       test('Should get with file type', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'PREVIEW'}).save();
-        const parent = await Object.assign(
-          new AttributeEntity(),
-          {id: 'NAME', type: AttributeType.FILE},
-        ).save();
+        const parent = await createAttribute('NAME', AttributeType.FILE);
         await Object.assign(new AttributeAsFileEntity(), {collection, parent}).save();
 
         const res = await request(app.getHttpServer())
@@ -163,7 +181,7 @@ describe('AttributeController', () => {
 
   describe('Attribute item', () => {
     test('Should get attribute instance', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await createAttribute('NAME');
 
       const res = await request(app.getHttpServer())
         .get('/attribute/NAME')
@@ -172,8 +190,16 @@ describe('AttributeController', () => {
       expect(res.body.id).toBe('NAME');
     });
 
+    test('Shouldn`t get without access', async () => {
+      await createAttribute('NAME', AttributeType.STRING, null);
+
+      await request(app.getHttpServer())
+        .get('/attribute/NAME')
+        .expect(403);
+    });
+
     test('Shouldn`t get with wrong id', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await createAttribute('NAME');
 
       await request(app.getHttpServer())
         .get('/attribute/WRONG')
@@ -182,7 +208,9 @@ describe('AttributeController', () => {
   });
 
   describe('Attribute count', () => {
-    test('Should get empty list', async () => {
+    test('Should get zero count', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
+
       const res = await request(app.getHttpServer())
         .get('/attribute/count')
         .expect(200);
@@ -190,9 +218,15 @@ describe('AttributeController', () => {
       expect(res.body).toEqual({count: 0});
     });
 
-    test('Should get empty list', async () => {
+    test('Shouldn`t get count without access', async () => {
+      await request(app.getHttpServer())
+        .get('/attribute/count')
+        .expect(403);
+    });
+
+    test('Should get list count', async () => {
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new AttributeEntity(), {id: `NAME_${i}`}).save();
+        await createAttribute(`NAME_${i}`);
       }
 
       const res = await request(app.getHttpServer())
@@ -205,7 +239,7 @@ describe('AttributeController', () => {
 
   describe('Attribute with strings', () => {
     test('Should get attribute with strings', async () => {
-      const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const parent = await createAttribute(`NAME`);
       await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
@@ -221,7 +255,7 @@ describe('AttributeController', () => {
     });
 
     test('Should get attribute with lang strings', async () => {
-      const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const parent = await createAttribute(`NAME`);
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, lang, string: 'VALUE'}).save();
 
@@ -237,7 +271,7 @@ describe('AttributeController', () => {
 
   describe('Attribute with flags', () => {
     test('Should get attribute with flag', async () => {
-      const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      const parent = await createAttribute(`NAME`);
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
       await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
 
@@ -253,6 +287,8 @@ describe('AttributeController', () => {
   describe('Attribute addition', () => {
     describe('Attribute addition with fields', () => {
       test('Should add attribute', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
+
         const item = await request(app.getHttpServer())
           .post('/attribute')
           .send({id: 'NAME'})
@@ -262,8 +298,28 @@ describe('AttributeController', () => {
         expect(item.body.type).toBe('STRING');
       });
 
+      test('Shouldn`t add without access', async () => {
+        await request(app.getHttpServer())
+          .post('/attribute')
+          .send({id: 'NAME'})
+          .expect(403);
+      });
+
+      test('Shouldn`t add without POST access', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.PUT}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.DELETE}).save();
+
+        await request(app.getHttpServer())
+          .post('/attribute')
+          .send({id: 'NAME'})
+          .expect(403);
+      });
+
       test('Should add with type', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+
         const item = await request(app.getHttpServer())
           .post('/attribute')
           .send({id: 'NAME', type: 'POINT', directory: 'CITY'})
@@ -274,6 +330,8 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with wrong type', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
+
         await request(app.getHttpServer())
           .post('/attribute')
           .send({id: 'NAME', type: 'WRONG'})
@@ -281,6 +339,8 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with duplicate id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
+
         await request(app.getHttpServer())
           .post('/attribute')
           .send({id: 'NAME'})
@@ -293,6 +353,8 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with blank id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
+
         await request(app.getHttpServer())
           .post('/attribute')
           .send({id: ''})
@@ -302,6 +364,7 @@ describe('AttributeController', () => {
 
     describe('Attribute addition with type', () => {
       test('Should add with registry type', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         const item = await request(app.getHttpServer())
@@ -318,6 +381,7 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with wrong registry', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         await request(app.getHttpServer())
@@ -331,6 +395,7 @@ describe('AttributeController', () => {
       });
 
       test('Should add with element type', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new BlockEntity(), {}).save();
 
         const item = await request(app.getHttpServer())
@@ -347,6 +412,7 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with wrong element block', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new BlockEntity(), {}).save();
 
         await request(app.getHttpServer())
@@ -360,6 +426,7 @@ describe('AttributeController', () => {
       });
 
       test('Should add with section type', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new BlockEntity(), {}).save();
 
         const item = await request(app.getHttpServer())
@@ -376,6 +443,7 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with wrong section block', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new BlockEntity(), {}).save();
 
         await request(app.getHttpServer())
@@ -389,6 +457,7 @@ describe('AttributeController', () => {
       });
 
       test('Should add with file type', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
         const item = await request(app.getHttpServer())
@@ -403,10 +472,25 @@ describe('AttributeController', () => {
         expect(item.body.collection).toBe('DETAIL');
         expect(item.body.type).toBe('FILE');
       });
+
+      test('Shouldn`t add with wrong collection', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
+        await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
+
+        await request(app.getHttpServer())
+          .post('/attribute')
+          .send({
+            id: 'SOME',
+            type: 'FILE',
+            collection: 'WRONG',
+          })
+          .expect(400);
+      });
     });
 
     describe('Attribute addition with strings', () => {
       test('Should add with strings', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const item = await request(app.getHttpServer())
@@ -423,6 +507,7 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with wrong attribute', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         await request(app.getHttpServer())
@@ -437,6 +522,7 @@ describe('AttributeController', () => {
 
     describe('Attribute addition with flags', () => {
       test('Should add with flags', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
 
         const item = await request(app.getHttpServer())
@@ -451,6 +537,7 @@ describe('AttributeController', () => {
       });
 
       test('Shouldn`t add with wrong flags', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
 
         await request(app.getHttpServer())
@@ -465,36 +552,79 @@ describe('AttributeController', () => {
   });
 
   describe('Attribute update', () => {
-    test('Should update attribute', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+    describe('Attribute field update', () => {
+      test('Should update attribute', async () => {
+        await createAttribute('NAME', AttributeType.STRING, AccessMethod.PUT);
 
-      const item = await request(app.getHttpServer())
-        .put('/attribute/NAME')
-        .send({id: 'NAME'})
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'NAME'})
+          .expect(200);
 
-      expect(item.body.id).toBe('NAME');
+        expect(item.body.id).toBe('NAME');
+      });
+
+      test('Shouldn`t update without access', async () => {
+        await createAttribute('NAME', AttributeType.STRING, null);
+
+        await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'NAME'})
+          .expect(403);
+      });
+
+
+      test('Should update id', async () => {
+        await createAttribute('NAME', AttributeType.STRING, AccessMethod.ALL);
+
+        const item = await request(app.getHttpServer())
+          .put('/attribute/NAME')
+          .send({id: 'UPDATE'})
+          .expect(200);
+
+        const count = await request(app.getHttpServer())
+          .get('/attribute/count')
+          .expect(200);
+
+        expect(item.body.id).toBe('UPDATE');
+        expect(count.body.count).toBe(1);
+      });
     });
 
-    test('Should update id', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+    describe('Attribute patch', () => {
+      test('Should patch id only', async () => {
+        await createAttribute('NAME', AttributeType.STRING, AccessMethod.PUT);
 
-      const item = await request(app.getHttpServer())
-        .put('/attribute/NAME')
-        .send({id: 'UPDATE'})
-        .expect(200);
+        const item = await request(app.getHttpServer())
+          .patch('/attribute/NAME')
+          .send({id: 'UPDATE'})
+          .expect(200);
 
-      const count = await request(app.getHttpServer())
-        .get('/attribute/count')
-        .expect(200);
+        expect(item.body.id).toBe('UPDATE');
+      });
 
-      expect(item.body.id).toBe('UPDATE');
-      expect(count.body.count).toBe(1);
+      test('Shouldn`t patch without access', async () => {
+        await createAttribute('NAME', AttributeType.STRING, null);
+
+        await request(app.getHttpServer())
+          .patch('/attribute/NAME')
+          .send({id: 'UPDATE'})
+          .expect(403);
+      });
+
+      test('Shouldn`t patch with wrong id', async () => {
+        await createAttribute('NAME', AttributeType.STRING, AccessMethod.PUT);
+
+        await request(app.getHttpServer())
+          .patch('/attribute/WRONG')
+          .send({id: 'UPDATE'})
+          .expect(404);
+      });
     });
 
     describe('Attribute update with type', () => {
       test('Should update type to point', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await createAttribute('NAME');
         await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
 
         const item = await request(app.getHttpServer())
@@ -509,7 +639,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type from point to string', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME', type: "POINT"}).save();
+        const parent = await createAttribute('NAME', AttributeType.POINT);
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new AttributeAsPointEntity(), {parent, directory}).save();
 
@@ -525,7 +655,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type to element', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await createAttribute('NAME');
         const block = await Object.assign(new BlockEntity(), {}).save();
 
         const item = await request(app.getHttpServer())
@@ -540,7 +670,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type from element to string', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME', type: 'ELEMENT'}).save();
+        const parent = await createAttribute('NAME', AttributeType.ELEMENT);
         const block = await Object.assign(new BlockEntity(), {}).save();
         await Object.assign(new AttributeAsElementEntity(), {parent, block}).save();
 
@@ -556,7 +686,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type to section', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await createAttribute('NAME');
         const block = await Object.assign(new BlockEntity(), {}).save();
 
         const item = await request(app.getHttpServer())
@@ -571,7 +701,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type from section to string', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME', type: 'SECTION'}).save();
+        const parent = await createAttribute('NAME', AttributeType.SECTION);
         const block = await Object.assign(new BlockEntity(), {}).save();
         await Object.assign(new AttributeAsSectionEntity(), {parent, block}).save();
 
@@ -587,7 +717,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type to file', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await createAttribute('NAME');
         await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
         const item = await request(app.getHttpServer())
@@ -602,7 +732,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update type from file to string', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME', type: 'FILE'}).save();
+        const parent = await createAttribute('NAME', AttributeType.FILE);
         const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
         await Object.assign(new AttributeAsFileEntity(), {parent, collection}).save();
 
@@ -620,7 +750,7 @@ describe('AttributeController', () => {
 
     describe('Attribute update with strings', () => {
       test('Should update id with string', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await createAttribute('NAME');
         await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
 
         const item = await request(app.getHttpServer())
@@ -637,8 +767,8 @@ describe('AttributeController', () => {
       });
 
       test('Should add strings', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'TARGET'}).save();
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await createAttribute('TARGET');
+        await createAttribute('NAME');
 
         const item = await request(app.getHttpServer())
           .put('/attribute/TARGET')
@@ -655,7 +785,7 @@ describe('AttributeController', () => {
 
     describe('Attribute update with flags', () => {
       test('Should add flag', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await createAttribute('NAME');
         await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
 
         const item = await request(app.getHttpServer())
@@ -667,7 +797,7 @@ describe('AttributeController', () => {
       });
 
       test('Should remove flag', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await createAttribute('NAME');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
         await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
 
@@ -680,7 +810,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update flag', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await createAttribute('NAME');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
         await Object.assign(new FlagEntity(), {id: 'UPDATE'}).save();
         await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
@@ -694,7 +824,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update only flag', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await createAttribute('NAME');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
         await Object.assign(new FlagEntity(), {id: 'UPDATE'}).save();
         await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
@@ -708,7 +838,7 @@ describe('AttributeController', () => {
       });
 
       test('Should update id with flag', async () => {
-        const parent = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await createAttribute('NAME');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
         await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
 
@@ -727,7 +857,7 @@ describe('AttributeController', () => {
       });
 
       test('Should add flags', async () => {
-        await Object.assign(new AttributeEntity(), {id: 'TARGET'}).save();
+        await createAttribute('TARGET');
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
         const item = await request(app.getHttpServer())
@@ -745,7 +875,7 @@ describe('AttributeController', () => {
 
   describe('Attribute deletion', () => {
     test('Should delete attribute', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await createAttribute('NAME');
 
       const item = await request(app.getHttpServer())
         .delete('/attribute/NAME')
@@ -754,8 +884,27 @@ describe('AttributeController', () => {
       expect(item.body).toEqual(['NAME']);
     });
 
-    test('Shouldn`t delete with wrong id', async () => {
+    test('Shouldn`t delete without access', async () => {
+      await createAttribute('NAME', undefined, null);
+
+      await request(app.getHttpServer())
+        .delete('/attribute/NAME')
+        .expect(403);
+    });
+
+    test('Shouldn`t delete without DELETE access', async () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
+      await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
+      await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.PUT}).save();
+
+      await request(app.getHttpServer())
+        .delete('/attribute/NAME')
+        .expect(403);
+    });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      await createAttribute('NAME');
 
       await request(app.getHttpServer())
         .delete('/attribute/WRONG')

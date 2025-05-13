@@ -4,11 +4,12 @@ import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { AttributeInput } from '../../input/attribute.input';
 import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class AttributePatchOperation {
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
   }
 
@@ -16,16 +17,18 @@ export class AttributePatchOperation {
    *
    */
   private async checkAttribute(id: string): Promise<AttributeEntity> {
-    const propRepo = this.manager.getRepository(AttributeEntity);
+    const propRepo = this.transaction.getRepository(AttributeEntity);
 
     return NoDataException.assert(
-      await propRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(AttributeEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `Attribute with id >> ${id} << not found!`,
     );
   }
@@ -36,9 +39,10 @@ export class AttributePatchOperation {
   async save(id: string, input: AttributeInput): Promise<string> {
     const beforeItem = await this.checkAttribute(id);
 
-    if (input.flag) await new FlagValueUpdateOperation(this.manager, Attribute2flagEntity).save(beforeItem, input);
+    if (input.id) await this.transaction.update(AttributeEntity, {id}, {id: input.id});
+    await new FlagValueUpdateOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input);
 
-    return beforeItem.id;
+    return input.id ? input.id : beforeItem.id;
   }
 
 }
