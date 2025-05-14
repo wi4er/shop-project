@@ -7,10 +7,12 @@ import { LangInput } from '../../input/lang.input';
 import { LangInsertOperation } from '../../operation/lang/lang-insert.operation';
 import { LangUpdateOperation } from '../../operation/lang/lang-update.operation';
 import { LangDeleteOperation } from '../../operation/lang/lang-delete.operation';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { LangRender } from '../../render/lang.render';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { CheckAccess } from '../../../personal/guard/check-access.guard';
+import { AccessTarget } from '../../../personal/model/access/access-target';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { CheckId } from '../../../common/guard/check-id.guard';
 
 @Controller('lang')
 export class LangController {
@@ -33,6 +35,7 @@ export class LangController {
   }
 
   @Get()
+  @CheckAccess(AccessTarget.LANG, AccessMethod.GET)
   async getList(
     @Query('offset')
       offset?: number,
@@ -47,66 +50,70 @@ export class LangController {
   }
 
   @Get('count')
+  @CheckAccess(AccessTarget.LANG, AccessMethod.GET)
   async countList() {
     return this.langRepo.count().then(count => ({count}));
   }
 
   @Get(':id')
+  @CheckId(LangEntity)
+  @CheckAccess(AccessTarget.LANG, AccessMethod.GET)
   async getItem(
     @Param('id')
       id: string,
   ) {
-    return this.langRepo.findOne({
+    const item = await this.langRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(item => this.toView(NoDataException.assert(item, `Lang with id ${id} not found!`)));
+    });
+
+    return this.toView(item);
   }
 
   @Post()
-  addItem(
+  @CheckAccess(AccessTarget.LANG, AccessMethod.POST)
+  async addItem(
     @Body()
       input: LangInput,
   ) {
-    return this.entityManager.transaction(
+    const item = await this.entityManager.transaction(
       trans => new LangInsertOperation(trans).save(input)
         .then(id => trans.getRepository(LangEntity).findOne({
           where: {id},
           relations: this.relations,
-        })),
-    ).then(this.toView);
+        })));
+
+    return this.toView(item);
   }
 
   @Put(':id')
-  updateItem(
+  @CheckId(LangEntity)
+  @CheckAccess(AccessTarget.LANG, AccessMethod.PUT)
+  async updateItem(
     @Param('id')
       id: string,
     @Body()
       input: FlagInput,
   ) {
-    return this.entityManager.transaction(
+    const item = await this.entityManager.transaction(
       trans => new LangUpdateOperation(trans).save(id, input)
-        .then(id => trans.getRepository(LangEntity).findOne({
-          where: {id},
+        .then(langId => trans.getRepository(LangEntity).findOne({
+          where: {id: langId},
           relations: this.relations,
-        })),
-    ).then(this.toView);
+        })));
+
+    return this.toView(item);
   }
 
-
   @Delete('/:id')
+  @CheckId(LangEntity)
+  @CheckAccess(AccessTarget.LANG, AccessMethod.DELETE)
   async deleteItem(
     @Param('id')
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(LangEntity).findOne({where: {id}}),
-          `Language with id >> ${id} << not found!`,
-        );
-
-        return new LangDeleteOperation(trans).save([id]);
-      },
+      async trans => new LangDeleteOperation(trans).save([id]),
     );
   }
 

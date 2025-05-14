@@ -936,15 +936,13 @@ describe('ElementController', () => {
         await new BlockEntity().save();
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-        const inst = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .post('/element')
           .send({
             block: 1,
             flag: ['ACTIVE', 'ACTIVE'],
           })
           .expect(400);
-
-        console.log(inst.body);
       });
     });
 

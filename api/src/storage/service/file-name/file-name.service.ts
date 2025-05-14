@@ -39,7 +39,7 @@ export class FileCreateOperation {
     const filePath = path.resolve(this.root, this.dirName, this.fileName + this.ext)
 
     await fs.writeFile(filePath, file)
-      .then(res => console.log('WRITE'));
+     // .then(res => console.log('WRITE'));
 
     return this;
   }

@@ -36,7 +36,6 @@ describe('AttributeController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-
   async function createAttribute(
     id: string,
     type: AttributeType = AttributeType.STRING,

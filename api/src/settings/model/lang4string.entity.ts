@@ -12,7 +12,9 @@ import { CommonStringEntity } from '../../common/model/common-string.entity';
 import { AttributeEntity } from './attribute.entity';
 
 @Entity('settings-lang4string')
-export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<LangEntity> {
+export class Lang4stringEntity
+  extends BaseEntity
+  implements CommonStringEntity<LangEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -43,7 +45,7 @@ export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<
   lang?: LangEntity | null;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     lang => lang.string,
     {
       onDelete: 'CASCADE',
@@ -54,7 +56,7 @@ export class Lang4stringEntity extends BaseEntity implements CommonStringEntity<
   parent: LangEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
