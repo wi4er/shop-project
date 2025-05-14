@@ -13,4 +13,5 @@ export enum AccessTarget {
   CONTACT = 'CONTACT',
   USER = 'USER',
 
+  ALL = 'ALL',
 }

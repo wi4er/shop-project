@@ -6,11 +6,13 @@ import { FlagInput } from '../../input/flag.input';
 import { FlagInsertOperation } from '../../operation/flag/flag-insert.operation';
 import { FlagUpdateOperation } from '../../operation/flag/flag-update.operation';
 import { FlagDeleteOperation } from '../../operation/flag/flag-delete.operation';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FlagPatchOperation } from '../../operation/flag/flag-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { FlagRender } from '../../render/flag.render';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { CheckAccess } from '../../../personal/guard/check-access.guard';
+import { AccessTarget } from '../../../personal/model/access/access-target';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { CheckId } from '../../../common/guard/check-id.guard';
 
 @Controller('flag')
 export class FlagController {
@@ -33,41 +35,47 @@ export class FlagController {
   }
 
   @Get()
-  getList(
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.GET)
+  async getList(
     @Query('offset')
       offset?: number,
     @Query('limit')
       limit?: number,
   ) {
-    return this.flagRepo.find({
+    const list = await this.flagRepo.find({
       relations: this.relations,
       take: limit,
       skip: offset,
-    }).then(list => list.map(this.toView));
+    });
+
+    return list.map(this.toView);
   }
 
   @Get('count')
-  getCount() {
-    return this.flagRepo.count().then(count => ({count}));
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.GET)
+  async getCount() {
+    const count = await this.flagRepo.count();
+
+    return ({count});
   }
 
   @Get(':id')
+  @CheckId(FlagEntity)
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.GET)
   async getItem(
     @Param('id')
       id: string,
   ) {
     return this.toView(
-      NoDataException.assert(
-        await this.flagRepo.findOne({
-          where: {id},
-          relations: this.relations,
-        }),
-        `Flag with id >> ${id} << not found`,
-      ),
+      await this.flagRepo.findOne({
+        where: {id},
+        relations: this.relations,
+      }),
     );
   }
 
   @Post()
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.POST)
   async addItem(
     @Body()
       input: FlagInput,
@@ -84,6 +92,7 @@ export class FlagController {
   }
 
   @Put(':id')
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.PUT)
   async updateItem(
     @Param('id')
       id: string,
@@ -101,6 +110,8 @@ export class FlagController {
   }
 
   @Patch(':id')
+  @CheckId(FlagEntity)
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.PUT)
   async updateFields(
     @Param('id')
       id: string,
@@ -118,19 +129,14 @@ export class FlagController {
   }
 
   @Delete('/:id')
+  @CheckId(FlagEntity)
+  @CheckAccess(AccessTarget.FLAG, AccessMethod.DELETE)
   async deleteItem(
     @Param('id')
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(FlagEntity).findOne({where: {id}}),
-          `Flag with id >> ${id} << not found!`,
-        );
-
-        return new FlagDeleteOperation(trans).save([id]);
-      },
+      async trans => new FlagDeleteOperation(trans).save([id]),
     );
   }
 

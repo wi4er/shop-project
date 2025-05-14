@@ -7,11 +7,12 @@ import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
 import { Flag4stringEntity } from '../../model/flag4string.entity';
+import { AttributeEntity } from '../../model/attribute.entity';
 
 export class FlagPatchOperation {
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
   }
 
@@ -19,16 +20,16 @@ export class FlagPatchOperation {
    *
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
-    const flagRepo = this.manager.getRepository(FlagEntity);
-
     return NoDataException.assert(
-      await flagRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true, lang: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(FlagEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true, lang: true},
+            flag: {flag: true},
+          },
+        }),
       `Flag with id >> ${id} << not found!`,
     );
   }
@@ -37,16 +38,17 @@ export class FlagPatchOperation {
    *
    */
   async save(id: string, input: FlagInput): Promise<string> {
-    const beforeItem = await this.checkFlag(id);
+    if (input.id) await this.transaction.update(FlagEntity, {id}, {id: input.id});
 
-    if (input.flag) await new FlagValueUpdateOperation(this.manager, Flag2flagEntity).save(beforeItem, input);
+    const beforeItem = await this.checkFlag(input.id ? input.id : id);
+    if (input.flag) await new FlagValueUpdateOperation(this.transaction, Flag2flagEntity).save(beforeItem, input);
 
     if (input.attribute) {
       const [stringList] = filterAttributes(input.attribute);
-      await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, stringList);
+      await new StringValueUpdateOperation(this.transaction, Flag4stringEntity).save(beforeItem, stringList);
     }
 
-    return beforeItem.id;
+    return input.id ? input.id : id;
   }
 
 }

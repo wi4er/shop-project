@@ -6,8 +6,11 @@ import * as request from 'supertest';
 import { FlagEntity } from '../../model/flag.entity';
 import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
-import { AttributeEntity } from '../../model/attribute.entity';
+import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
 import { LangEntity } from '../../model/lang.entity';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { AccessEntity } from '../../../personal/model/access/access.entity';
+import { AccessTarget } from '../../../personal/model/access/access-target';
 
 describe('FlagController', () => {
   let source;
@@ -24,46 +27,69 @@ describe('FlagController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
+  async function createFlag(
+    id: string,
+    method: AccessMethod | null = AccessMethod.ALL,
+  ): Promise<FlagEntity> {
+    const res = new FlagEntity();
+    res.id = id;
+
+    if (method) await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method}).save();
+
+    return res.save();
+  }
+
   describe('Flag fields', () => {
-    test('Should get empty list', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/flag')
-        .expect(200);
+    describe('Flag list', () => {
+      test('Should get empty list', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
 
-      expect(res.body).toHaveLength(0);
-    });
+        const res = await request(app.getHttpServer())
+          .get('/flag')
+          .expect(200);
 
-    test('Should get flag with limit', async () => {
-      for (let i = 0; i < 10; i++) {
-        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
-      }
+        expect(res.body).toHaveLength(0);
+      });
 
-      const res = await request(app.getHttpServer())
-        .get('/flag?limit=3')
-        .expect(200);
+      test('Shouldn`t get without access', async () => {
+        await request(app.getHttpServer())
+          .get('/flag')
+          .expect(403);
+      });
 
-      expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('flag_0');
-      expect(res.body[1].id).toBe('flag_1');
-      expect(res.body[2].id).toBe('flag_2');
-    });
+      test('Should get flag with limit', async () => {
+        for (let i = 0; i < 10; i++) {
+          await createFlag(`flag_${i}`);
+        }
 
-    test('Should get flag with offset', async () => {
-      for (let i = 0; i < 10; i++) {
-        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
-      }
+        const res = await request(app.getHttpServer())
+          .get('/flag?limit=3')
+          .expect(200);
 
-      const res = await request(app.getHttpServer())
-        .get('/flag?offset=9')
-        .expect(200);
+        expect(res.body).toHaveLength(3);
+        expect(res.body[0].id).toBe('flag_0');
+        expect(res.body[1].id).toBe('flag_1');
+        expect(res.body[2].id).toBe('flag_2');
+      });
 
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('flag_9');
+      test('Should get flag with offset', async () => {
+        for (let i = 0; i < 10; i++) {
+          await createFlag(`flag_${i}`);
+        }
+
+        const res = await request(app.getHttpServer())
+          .get('/flag?offset=9')
+          .expect(200);
+
+        expect(res.body).toHaveLength(1);
+        expect(res.body[0].id).toBe('flag_9');
+      });
     });
   });
 
   describe('Flag item', () => {
     test('Should get flag instance', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
       await Object.assign(new FlagEntity(), {
         id: 'ACTIVE',
         color: 'FFF',
@@ -79,8 +105,16 @@ describe('FlagController', () => {
       expect(res.body.icon).toBe('folder');
     });
 
-    test('Shouldn`t get with wrong id', async () => {
+    test('Shouldn`t get instance without permission', async () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      await request(app.getHttpServer())
+        .get('/flag/ACTIVE')
+        .expect(403);
+    });
+
+    test('Shouldn`t get with wrong id', async () => {
+      await createFlag('ACTIVE');
 
       await request(app.getHttpServer())
         .get('/flag/WRONG')
@@ -90,6 +124,8 @@ describe('FlagController', () => {
 
   describe('Flag count', () => {
     test('Should get empty count', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
       const res = await request(app.getHttpServer())
         .get('/flag/count')
         .expect(200);
@@ -97,9 +133,15 @@ describe('FlagController', () => {
       expect(res.body).toEqual({count: 0});
     });
 
+    test('Should get count without permission', async () => {
+      await request(app.getHttpServer())
+        .get('/flag/count')
+        .expect(403);
+    });
+
     test('Should get flag count', async () => {
       for (let i = 0; i < 10; i++) {
-        await Object.assign(new FlagEntity(), {id: `flag_${i}`}).save();
+        await createFlag(`flag_${i}`);
       }
 
       const res = await request(app.getHttpServer())
@@ -112,7 +154,7 @@ describe('FlagController', () => {
 
   describe('Flag with strings', () => {
     test('Should get flag with strings', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await createFlag('ACTIVE');
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new Flag4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
@@ -129,7 +171,7 @@ describe('FlagController', () => {
     });
 
     test('Should get flag with lang strings', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await createFlag('ACTIVE');
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
       await Object.assign(new Flag4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
@@ -146,7 +188,7 @@ describe('FlagController', () => {
 
   describe('Flag with flags', () => {
     test('Should get flag with flag', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await createFlag('ACTIVE');
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
       await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
 
@@ -159,7 +201,7 @@ describe('FlagController', () => {
     });
 
     test('Should get flag with multi flags', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      const parent = await createFlag('ACTIVE');
       for (let i = 1; i < 4; i++) {
         const flag = await Object.assign(new FlagEntity(), {id: `FLAG_${i}`}).save();
         await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
@@ -176,6 +218,8 @@ describe('FlagController', () => {
   describe('Flag addition', () => {
     describe('Flag addition with fields', () => {
       test('Should add item', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
         const inst = await request(app.getHttpServer())
           .post('/flag')
           .send({id: 'NEW'})
@@ -184,7 +228,27 @@ describe('FlagController', () => {
         expect(inst.body.id).toBe('NEW');
       });
 
+      test('Shouldn`t add without access', async () => {
+        await request(app.getHttpServer())
+          .post('/flag')
+          .send({id: 'NEW'})
+          .expect(403);
+      });
+
+      test('Shouldn`t add without POST access', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.GET}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.PUT}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.DELETE}).save();
+
+        await request(app.getHttpServer())
+          .post('/flag')
+          .send({id: 'NEW'})
+          .expect(403);
+      });
+
       test('Should add with fields', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
         const inst = await request(app.getHttpServer())
           .post('/flag')
           .send({
@@ -202,6 +266,8 @@ describe('FlagController', () => {
       });
 
       test('Shouldn`t add with blank id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
         await request(app.getHttpServer())
           .post('/flag')
           .send({id: ''})
@@ -209,6 +275,8 @@ describe('FlagController', () => {
       });
 
       test('Shouldn`t add without id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
         await request(app.getHttpServer())
           .post('/flag')
           .send({})
@@ -216,6 +284,8 @@ describe('FlagController', () => {
       });
 
       test('Shouldn`t duplicate item', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
         await request(app.getHttpServer())
           .post('/flag')
           .send({id: 'NEW'})
@@ -230,6 +300,7 @@ describe('FlagController', () => {
 
     describe('Flag addition with strings', () => {
       test('Should add with string', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         const inst = await request(app.getHttpServer())
@@ -249,6 +320,7 @@ describe('FlagController', () => {
       });
 
       test('Shouldn`r add with wrong attribute', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
         await request(app.getHttpServer())
@@ -265,6 +337,7 @@ describe('FlagController', () => {
 
     describe('Flag addition with flag', () => {
       test('Should add with flag', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
         const inst = await request(app.getHttpServer())
@@ -280,6 +353,7 @@ describe('FlagController', () => {
       });
 
       test('Shouldn`t add with wrong flag', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
         await request(app.getHttpServer())
@@ -296,7 +370,8 @@ describe('FlagController', () => {
   describe('Flag updating', () => {
     describe('Flag updating with fields', () => {
       test('Should update flag', async () => {
-        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+        await createFlag('NEW');
+
         const res = await request(app.getHttpServer())
           .put('/flag/NEW')
           .send({id: 'NEW'})
@@ -305,8 +380,18 @@ describe('FlagController', () => {
         expect(res.body.id).toBe('NEW');
       });
 
-      test('Should add fields', async () => {
+      test('Shouldn`t update flag without access', async () => {
         await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+        await request(app.getHttpServer())
+          .put('/flag/NEW')
+          .send({id: 'NEW'})
+          .expect(403);
+      });
+
+      test('Should add fields', async () => {
+        await createFlag('NEW');
+
         const res = await request(app.getHttpServer())
           .put('/flag/NEW')
           .send({
@@ -323,8 +408,32 @@ describe('FlagController', () => {
         expect(res.body.iconSvg).toBe('SOME');
       });
 
+      test('Should update id only', async () => {
+        await createFlag('OLD');
+
+        const res = await request(app.getHttpServer())
+          .patch('/flag/OLD')
+          .send({id: 'NEW'})
+          .expect(200);
+
+        expect(res.body.id).toBe('NEW');
+      });
+
+      test('Shouldn`t update id only without access', async () => {
+        await createFlag('OLD');
+
+        const res = await request(app.getHttpServer())
+          .patch('/flag/OLD')
+          .send({id: 'NEW'})
+          .expect(200);
+
+        expect(res.body.id).toBe('NEW');
+      });
+
       test('Should change id', async () => {
         await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+
         const res = await request(app.getHttpServer())
           .put('/flag/OLD')
           .send({id: 'UPDATED'})
@@ -339,82 +448,86 @@ describe('FlagController', () => {
       });
     });
 
-    test('Should change id with string', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
-      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Flag4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
+    describe('Flag updating with strings', () => {
+      test('Should change id with string', async () => {
+        const parent = await createFlag('OLD');
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new Flag4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
-      const res = await request(app.getHttpServer())
-        .put('/flag/OLD')
-        .send({id: 'UPDATED', attribute: [{attribute: 'NAME', string: 'VALUE'}]})
-        .expect(200);
+        const res = await request(app.getHttpServer())
+          .put('/flag/OLD')
+          .send({id: 'UPDATED', attribute: [{attribute: 'NAME', string: 'VALUE'}]})
+          .expect(200);
 
-      const count = await request(app.getHttpServer())
-        .get('/flag/count')
-        .expect(200);
+        const count = await request(app.getHttpServer())
+          .get('/flag/count')
+          .expect(200);
 
-      expect(res.body.id).toBe('UPDATED');
-      expect(res.body.attribute).toEqual([{attribute: 'NAME', string: 'VALUE'}]);
-      expect(count.body.count).toBe(1);
+        expect(res.body.id).toBe('UPDATED');
+        expect(res.body.attribute).toEqual([{attribute: 'NAME', string: 'VALUE'}]);
+        expect(count.body.count).toBe(1);
+      });
+
+      test('Should add string', async () => {
+        await createFlag('NEW');
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
+        const res = await request(app.getHttpServer())
+          .put('/flag/NEW')
+          .send({
+            id: 'NEW',
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE'},
+            ],
+          })
+          .expect(200);
+
+        expect(res.body.attribute).toHaveLength(1);
+        expect(res.body.attribute[0].attribute).toBe('NAME');
+        expect(res.body.attribute[0].string).toBe('VALUE');
+      });
     });
 
-    test('Should change id with flag', async () => {
-      const parent = await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
-      const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-      await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
+    describe('Flag update with flag', () => {
+      test('Should change id with flag', async () => {
+        const parent = await createFlag('OLD');
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
 
-      const res = await request(app.getHttpServer())
-        .put('/flag/OLD')
-        .send({id: 'UPDATED', flag: ['FLAG']})
-        .expect(200);
+        const res = await request(app.getHttpServer())
+          .put('/flag/OLD')
+          .send({id: 'UPDATED', flag: ['FLAG']})
+          .expect(200);
 
-      const count = await request(app.getHttpServer())
-        .get('/flag/count')
-        .expect(200);
+        const count = await request(app.getHttpServer())
+          .get('/flag/count')
+          .expect(200);
 
-      expect(res.body.id).toBe('UPDATED');
-      expect(res.body.flag).toEqual(['FLAG']);
-      expect(count.body.count).toBe(2);
-    });
+        expect(res.body.id).toBe('UPDATED');
+        expect(res.body.flag).toEqual(['FLAG']);
+        expect(count.body.count).toBe(2);
+      });
 
-    test('Should add string', async () => {
-      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+      test('Should add flag', async () => {
+        await createFlag('NEW');
+        await createFlag('ACTIVE');
 
-      const res = await request(app.getHttpServer())
-        .put('/flag/NEW')
-        .send({
-          id: 'NEW',
-          attribute: [
-            {attribute: 'NAME', string: 'VALUE'},
-          ],
-        })
-        .expect(200);
+        const res = await request(app.getHttpServer())
+          .put('/flag/NEW')
+          .send({
+            id: 'NEW',
+            flag: ['ACTIVE'],
+          })
+          .expect(200);
 
-      expect(res.body.attribute).toHaveLength(1);
-      expect(res.body.attribute[0].attribute).toBe('NAME');
-      expect(res.body.attribute[0].string).toBe('VALUE');
-    });
-
-    test('Should add flag', async () => {
-      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-
-      const res = await request(app.getHttpServer())
-        .put('/flag/NEW')
-        .send({
-          id: 'NEW',
-          flag: ['ACTIVE'],
-        })
-        .expect(200);
-
-      expect(res.body.flag).toEqual(['ACTIVE']);
+        expect(res.body.flag).toEqual(['ACTIVE']);
+      });
     });
   });
 
   describe('Flag deletion', () => {
     test('Should delete', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await createFlag('ACTIVE');
 
       const inst = await request(app.getHttpServer())
         .delete('/flag/ACTIVE')
@@ -423,8 +536,16 @@ describe('FlagController', () => {
       expect(inst.body).toEqual(['ACTIVE']);
     });
 
-    test('Shouldn`t delete with wrong id', async () => {
+    test('Shouldn`t delete without access', async () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+      await request(app.getHttpServer())
+        .delete('/flag/ACTIVE')
+        .expect(403);
+    });
+
+    test('Shouldn`t delete with wrong id', async () => {
+      await createFlag('ACTIVE');
 
       await request(app.getHttpServer())
         .delete('/flag/WRONG')
