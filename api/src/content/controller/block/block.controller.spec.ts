@@ -15,10 +15,12 @@ import { LangEntity } from '../../../settings/model/lang.entity';
 import { Block2permissionEntity } from '../../model/block2permission.entity';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('BlockController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   async function createBlock(): Promise<BlockEntity> {
     const parent = await new BlockEntity().save();
@@ -30,7 +32,7 @@ describe('BlockController', () => {
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -41,7 +43,7 @@ describe('BlockController', () => {
   describe('Content block fields', () => {
     test('Should get empty block list', async () => {
       const list = await request(app.getHttpServer())
-        .get('/block')
+        .get('/content/block')
         .expect(200);
 
       expect(list.body).toEqual([]);
@@ -51,7 +53,7 @@ describe('BlockController', () => {
       await createBlock();
 
       const list = await request(app.getHttpServer())
-        .get('/block')
+        .get('/content/block')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -62,7 +64,7 @@ describe('BlockController', () => {
       await createBlock();
 
       const item = await request(app.getHttpServer())
-        .get('/block/1')
+        .get('/content/block/1')
         .expect(200);
 
       expect(item.body.id).toBe(1);
@@ -79,7 +81,7 @@ describe('BlockController', () => {
       await new BlockEntity().save();
 
       await request(app.getHttpServer())
-        .get('/block/1')
+        .get('/content/block/1')
         .expect(403);
     });
 
@@ -92,7 +94,7 @@ describe('BlockController', () => {
       }
 
       const list = await request(app.getHttpServer())
-        .get('/block')
+        .get('/content/block')
         .expect(200);
 
       expect(list.body).toHaveLength(5);
@@ -110,7 +112,7 @@ describe('BlockController', () => {
       }
 
       const list = await request(app.getHttpServer())
-        .get('/block?limit=4')
+        .get('/content/block?limit=4')
         .expect(200);
 
       expect(list.body).toHaveLength(4);
@@ -127,7 +129,7 @@ describe('BlockController', () => {
       }
 
       const list = await request(app.getHttpServer())
-        .get('/block?offset=5')
+        .get('/content/block?offset=5')
         .expect(200);
 
       expect(list.body).toHaveLength(5);
@@ -142,7 +144,7 @@ describe('BlockController', () => {
   describe('Content block count', () => {
     test('Should get empty block count', async () => {
       const item = await request(app.getHttpServer())
-        .get('/block/count')
+        .get('/content/block/count')
         .expect(200);
 
       expect(item.body).toEqual({count: 0});
@@ -155,7 +157,7 @@ describe('BlockController', () => {
       }
 
       const item = await request(app.getHttpServer())
-        .get('/block/count')
+        .get('/content/block/count')
         .expect(200);
 
       expect(item.body).toEqual({count: 10});
@@ -170,7 +172,7 @@ describe('BlockController', () => {
       }
 
       const item = await request(app.getHttpServer())
-        .get('/block/count')
+        .get('/content/block/count')
         .expect(200);
 
       expect(item.body).toEqual({count: 5});
@@ -184,7 +186,7 @@ describe('BlockController', () => {
       await Object.assign(new Block4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/block')
+        .get('/content/block')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -201,7 +203,7 @@ describe('BlockController', () => {
       await Object.assign(new Block4stringEntity(), {parent, attribute, lang, string: 'WITH_LANG'}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/block')
+        .get('/content/block')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -220,7 +222,7 @@ describe('BlockController', () => {
       await Object.assign(new Block2flagEntity(), {parent, flag}).save();
 
       const item = await request(app.getHttpServer())
-        .get('/block/1')
+        .get('/content/block/1')
         .expect(200);
 
       expect(item.body.flag).toEqual(['ACTIVE']);
@@ -237,7 +239,7 @@ describe('BlockController', () => {
       await Object.assign(new Block4pointEntity(), {parent, attribute, point}).save();
 
       const item = await request(app.getHttpServer())
-        .get('/block/1')
+        .get('/content/block/1')
         .expect(200);
 
       expect(item.body.attribute).toHaveLength(1);
@@ -249,7 +251,7 @@ describe('BlockController', () => {
   describe('Content block addition', () => {
     test('Should add block', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({permission: [{method: 'READ'}]})
         .expect(201);
 
@@ -258,7 +260,7 @@ describe('BlockController', () => {
 
     test('Should add with sort', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({sort: 333})
         .expect(201);
 
@@ -267,7 +269,7 @@ describe('BlockController', () => {
 
     test('Should add and read', async () => {
       await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           permission: [{method: 'READ'}],
           sort: 444,
@@ -275,7 +277,7 @@ describe('BlockController', () => {
         .expect(201);
 
       const inst = await request(app.getHttpServer())
-        .get('/block/1')
+        .get('/content/block/1')
         .expect(200);
 
       expect(inst.body.id).toBe(1);
@@ -286,7 +288,7 @@ describe('BlockController', () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           attribute: [
             {attribute: 'NAME', string: 'VALUE'},
@@ -307,7 +309,7 @@ describe('BlockController', () => {
       await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           attribute: [
             {attribute: 'CURRENT', point: 'London'},
@@ -325,7 +327,7 @@ describe('BlockController', () => {
       await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           attribute: [
             {attribute: 'CURRENT', point: 'WRONG'},
@@ -338,7 +340,7 @@ describe('BlockController', () => {
       await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           attribute: [
             {attribute: 'CURRENT'},
@@ -353,7 +355,7 @@ describe('BlockController', () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           flag: ['ACTIVE'],
         })
@@ -366,7 +368,7 @@ describe('BlockController', () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       await request(app.getHttpServer())
-        .post('/block')
+        .post('/content/block')
         .send({
           flag: ['WRONG'],
         })
@@ -379,7 +381,7 @@ describe('BlockController', () => {
       const parent = await createBlock();
 
       const inst = await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({
           sort: 345
         })
@@ -393,14 +395,14 @@ describe('BlockController', () => {
       const parent = await createBlock();
 
       await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({
           permission: [{method: 'READ'}]
         })
         .expect(200);
 
       const inst = await request(app.getHttpServer())
-        .get(`/block/${parent.id}`)
+        .get(`/content/block/${parent.id}`)
         .expect(200);
 
       expect(inst.body.permission).toEqual([{method: 'READ'}]);
@@ -413,7 +415,7 @@ describe('BlockController', () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({
           attribute: [
             {attribute: 'NAME', string: 'John'},
@@ -432,7 +434,7 @@ describe('BlockController', () => {
       await Object.assign(new Block4stringEntity(), {attribute, parent, string: 'VALUE'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/block/1')
+        .put('/content/block/1')
         .send({
           attribute: [],
         })
@@ -448,7 +450,7 @@ describe('BlockController', () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({flag: ['NEW']})
         .expect(200);
 
@@ -460,7 +462,7 @@ describe('BlockController', () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
 
       const inst = await request(app.getHttpServer())
-        .patch(`/block/${parent.id}`)
+        .patch(`/content/block/${parent.id}`)
         .send({flag: ['NEW']})
         .expect(200);
 
@@ -471,7 +473,7 @@ describe('BlockController', () => {
       const parent = await createBlock();
 
       await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({flag: ['WRONG']})
         .expect(400);
     });
@@ -482,7 +484,7 @@ describe('BlockController', () => {
       await Object.assign(new Block2flagEntity(), {flag, parent}).save();
 
       const inst = await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({flag: []})
         .expect(200);
 
@@ -499,7 +501,7 @@ describe('BlockController', () => {
       await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
 
       const inst = await request(app.getHttpServer())
-        .put(`/block/${parent.id}`)
+        .put(`/content/block/${parent.id}`)
         .send({
           permission: [
             {method: 'READ'},
@@ -519,7 +521,7 @@ describe('BlockController', () => {
       const parent = await createBlock();
 
       const inst = await request(app.getHttpServer())
-        .delete(`/block/${parent.id}`)
+        .delete(`/content/block/${parent.id}`)
         .expect(200);
 
       expect(inst.body).toEqual([1]);
@@ -529,7 +531,7 @@ describe('BlockController', () => {
       await new BlockEntity().save();
 
       await request(app.getHttpServer())
-        .delete(`/block/777`)
+        .delete(`/content/block/777`)
         .expect(404);
     });
 
@@ -537,7 +539,7 @@ describe('BlockController', () => {
       const parent = await new BlockEntity().save();
 
       await request(app.getHttpServer())
-        .delete(`/block/${parent.id}`)
+        .delete(`/content/block/${parent.id}`)
         .expect(403);
     });
 
@@ -547,7 +549,7 @@ describe('BlockController', () => {
       await Object.assign(new Block2permissionEntity(), {parent, method: PermissionOperation.WRITE}).save();
 
       await request(app.getHttpServer())
-        .delete(`/block/${parent.id}`)
+        .delete(`/content/block/${parent.id}`)
         .expect(403);
     });
   });

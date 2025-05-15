@@ -5,7 +5,7 @@ import { PermissionMethod } from '../../app/model/permission/permission-method';
 import { PermissionEdit } from '../permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-group-permission',
+  selector: 'app-group-access',
   templateUrl: './group-permission.component.html',
   styleUrls: ['./group-permission.component.css'],
 })

@@ -5,7 +5,7 @@ import { PermissionMethod } from '../../app/model/permission/permission-method';
 import { PermissionEdit } from '../permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-permission-edit',
+  selector: 'app-access-edit',
   templateUrl: './permission-edit.component.html',
   styleUrls: ['./permission-edit.component.css'],
 })

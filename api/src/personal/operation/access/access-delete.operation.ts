@@ -1,7 +1,7 @@
 import { EntityManager, In } from 'typeorm';
-import { AccessEntity } from '../../../personal/model/access/access.entity';
+import { AccessEntity } from '../../model/access/access.entity';
 
-export class RegistryPermissionDeleteOperation {
+export class AccessDeleteOperation {
 
   constructor(
     private manager: EntityManager,

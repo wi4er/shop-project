@@ -1,12 +1,7 @@
-import { WithPermissionInput } from '../../common/input/with-permission.input';
-import { PermissionValueInput } from '../../common/input/permission-value.input';
-
-export class AccessInput
-  implements WithPermissionInput {
+export class AccessInput {
 
   id: number;
-  directory: string;
-
-  permission: PermissionValueInput[];
+  target: string;
+  method: string;
 
 }

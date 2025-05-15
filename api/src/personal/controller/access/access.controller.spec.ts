@@ -5,7 +5,9 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { PermissionMethod, AccessEntity, AccessEntity } from '../../model/access/access.entity';
+import { AccessEntity } from '../../model/access/access.entity';
+import { AccessTarget } from '../../model/access/access-target';
+import { AccessMethod } from '../../model/access/access-method';
 
 describe('Registry Permission Controller', () => {
   let source: DataSource;
@@ -22,7 +24,18 @@ describe('Registry Permission Controller', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Permission fields', () => {
+  async function createAccess(
+    target = AccessTarget.ALL,
+    method = AccessMethod.ALL,
+  ): Promise<AccessEntity> {
+    const inst = new AccessEntity();
+    inst.method = method;
+    inst.target = target;
+
+    return inst.save();
+  }
+
+  describe('Access fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/personal/access')
@@ -32,31 +45,107 @@ describe('Registry Permission Controller', () => {
     });
   });
 
-  describe('Permission item', () => {
+  describe('Access item', () => {
     test('Should get item', async () => {
-      const parent = await Object.assign(
-        new AccessEntity(),
-        {method: PermissionMethod.GET, entity: RegistryEntity.DIRECTORY}
-      ).save();
+      const parent = await createAccess(AccessTarget.DIRECTORY, AccessMethod.GET);
 
       const res = await request(app.getHttpServer())
         .get(`/personal/access/${parent.id}`)
         .expect(200);
 
       expect(res.body.id).toBe(1);
-      expect(res.body.method).toBe('GET');
-      expect(res.body.entity).toBe('DIRECTORY');
+      expect(res.body).toMatchObject({
+        target: 'DIRECTORY',
+        method: 'GET',
+      });
     });
 
     test('Shouldn`t get with wrong id', async () => {
-      await Object.assign(
-        new AccessEntity(),
-        {method: PermissionMethod.GET, entity: RegistryEntity.DIRECTORY}
-      ).save();
+      await createAccess(AccessTarget.DIRECTORY, AccessMethod.GET);
 
       await request(app.getHttpServer())
         .get(`/personal/access/7777`)
         .expect(404);
+    });
+  });
+
+  describe('Access addition', () => {
+    test('Should add access', async () => {
+      const inst = await request(app.getHttpServer())
+        .post(`/personal/access`)
+        .send({
+          target: 'BLOCK',
+          method: 'GET',
+        })
+        .expect(201);
+
+      expect(inst.body).toMatchObject({
+        target: 'BLOCK',
+        method: 'GET',
+      });
+    });
+
+    test('Shouldn`t add with wrong target', async () => {
+      await request(app.getHttpServer())
+        .post(`/personal/access`)
+        .send({
+          target: 'WRONG',
+          method: 'GET',
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t add with wrong method', async () => {
+      await request(app.getHttpServer())
+        .post(`/personal/access`)
+        .send({
+          target: 'BLOCK',
+          method: 'WRONG',
+        })
+        .expect(400);
+    });
+  });
+
+  describe('Access updating', () => {
+    test('Should update access', async () => {
+      const parent = await createAccess(AccessTarget.DIRECTORY, AccessMethod.DELETE);
+
+      const inst = await request(app.getHttpServer())
+        .put(`/personal/access/${parent.id}`)
+        .send({
+          target: 'BLOCK',
+          method: 'GET',
+        })
+        .expect(200);
+
+      expect(inst.body).toMatchObject({
+        target: 'BLOCK',
+        method: 'GET',
+      });
+    });
+
+    test('Shouldn`t update with wrong target', async () => {
+      const parent = await createAccess(AccessTarget.DIRECTORY, AccessMethod.DELETE);
+
+      await request(app.getHttpServer())
+        .put(`/personal/access/${parent.id}`)
+        .send({
+          target: 'WRONG',
+          method: 'GET',
+        })
+        .expect(400);
+    });
+
+    test('Shouldn`t update with wrong methods', async () => {
+      const parent = await createAccess(AccessTarget.DIRECTORY, AccessMethod.DELETE);
+
+      await request(app.getHttpServer())
+        .put(`/personal/access/${parent.id}`)
+        .send({
+          target: 'BLOCK',
+          method: 'WRONG',
+        })
+        .expect(400);
     });
   });
 });

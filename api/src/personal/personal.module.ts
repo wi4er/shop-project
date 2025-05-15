@@ -29,13 +29,12 @@ import { LangEntity } from '../settings/model/lang.entity';
 import { FlagEntity } from '../settings/model/flag.entity';
 import { User2imageEntity } from './model/user/user2image.entity';
 import { AccessEntity } from './model/access/access.entity';
-import { Access2permissionEntity } from './model/access/access2permission.entity';
 import { AccessController } from './controller/access/access.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      AccessEntity, Access2permissionEntity,
+      AccessEntity,
       UserEntity, User2flagEntity, User2contactEntity, User2groupEntity, User2imageEntity,
       User4stringEntity, User4userEntity, User4pointEntity, User4descriptionEntity,
       GroupEntity, Group4stringEntity, Group2flagEntity,

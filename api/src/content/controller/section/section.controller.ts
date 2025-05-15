@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section.entity';
 import { SectionFilterInput } from '../../input/section-filter.input';
 import { SectionInput } from '../../input/section.input';
@@ -11,18 +11,16 @@ import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SectionRender } from '../../render/section.render';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { SectionOrderInput } from '../../input/section-order.input';
-import { PermissionException } from '../../../exception/permission/permission.exception';
 import { PermissionOperation } from '../../../permission/model/permission-operation';
-import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { Section2permissionEntity } from '../../model/section2permission.entity';
 import { SectionPatchOperation } from '../../operation/section/section-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { BlockEntity } from '../../model/block.entity';
+import { CheckId } from '../../../common/guard/check-id.guard';
+import { CheckPermission } from '../../../personal/guard/check-permission.guard';
 
 @ApiTags('Content section')
 @ApiCookieAuth()
-@Controller('section')
+@Controller('content/section')
 export class SectionController {
 
   relations = {
@@ -40,8 +38,6 @@ export class SectionController {
     private entityManager: EntityManager,
     @InjectRepository(SectionEntity)
     private sectionRepo: Repository<SectionEntity>,
-    @InjectRepository(Section2permissionEntity)
-    private permRepo: Repository<Section2permissionEntity>,
   ) {
   }
 
@@ -147,23 +143,12 @@ export class SectionController {
     type: SectionRender,
   })
   @Get(':id')
+  @CheckId(SectionEntity)
+  @CheckPermission(Section2permissionEntity, PermissionOperation.READ)
   async getItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
   ): Promise<SectionRender> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.sectionRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -195,25 +180,14 @@ export class SectionController {
     type: SectionRender,
   })
   @Put(':id')
+  @CheckId(SectionEntity)
+  @CheckPermission(Section2permissionEntity, PermissionOperation.WRITE)
   async updateItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
     @Body()
       input: SectionInput,
   ): Promise<SectionRender> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.entityManager.transaction(
       trans => new SectionUpdateOperation(trans).save(id, input)
         .then(id => trans.getRepository(SectionEntity).findOne({
@@ -229,25 +203,14 @@ export class SectionController {
     type: SectionRender,
   })
   @Patch(':id')
+  @CheckId(SectionEntity)
+  @CheckPermission(Section2permissionEntity, PermissionOperation.WRITE)
   async updateFields(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
     @Body()
       input: SectionInput,
   ): Promise<SectionRender> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.entityManager.transaction(
       trans => new SectionPatchOperation(trans).save(id, input)
         .then(id => trans.getRepository(SectionEntity).findOne({
@@ -258,32 +221,14 @@ export class SectionController {
   }
 
   @Delete(':id')
+  @CheckId(SectionEntity)
+  @CheckPermission(Section2permissionEntity, PermissionOperation.DELETE)
   async deleteItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
   ): Promise<number[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(SectionEntity).findOne({where: {id}}),
-          `Section with id >> ${id} << not found!`,
-        );
-
-        PermissionException.assert(
-          await trans.getRepository(Section2permissionEntity).findOne({
-            where: {
-              group: Or(In(group), IsNull()),
-              parent: {id},
-              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
-            },
-          }),
-          `Permission denied!`,
-        );
-
-        return new SectionDeleteOperation(trans).save([id]);
-      },
+      async trans => new SectionDeleteOperation(trans).save([id]),
     );
   }
 

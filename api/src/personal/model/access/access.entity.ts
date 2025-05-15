@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { Access2permissionEntity } from './access2permission.entity';
 import { AccessMethod } from './access-method';
 import { AccessTarget } from './access-target';
 import { GroupEntity } from '../group/group.entity';
@@ -53,11 +52,5 @@ export class AccessEntity
     },
   )
   group: GroupEntity;
-
-  @OneToMany(
-    type => Access2permissionEntity,
-    permission => permission.parent,
-  )
-  permission: Access2permissionEntity[];
 
 }

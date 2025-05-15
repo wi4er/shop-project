@@ -135,7 +135,7 @@ describe('DirectoryController', () => {
         .expect(403);
     });
 
-    test('Shouldn`t get without item permission', async () => {
+    test('Shouldn`t get without item access', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
       await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
 
@@ -145,8 +145,8 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('Directory with permission', () => {
-    test('Should get with item permission', async () => {
+  describe('Directory with access', () => {
+    test('Should get with item access', async () => {
       for (let i = 0; i <= 9; i++) {
         await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
       }
@@ -159,7 +159,7 @@ describe('DirectoryController', () => {
       expect(res.body[0].id).toBe('NAME_1');
     });
 
-    test('Should get with item permission', async () => {
+    test('Should get with item access', async () => {
       for (let i = 0; i <= 9; i++) {
         await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
       }
@@ -172,7 +172,7 @@ describe('DirectoryController', () => {
       expect(res.body[0].id).toBe('NAME_1');
     });
 
-    test('Should get instance with READ permission', async () => {
+    test('Should get instance with READ access', async () => {
       await createDirectory('NAME', PermissionOperation.READ);
 
       const res = await request(app.getHttpServer())
@@ -182,7 +182,7 @@ describe('DirectoryController', () => {
       expect(res.body.id).toBe('NAME');
     });
 
-    test('Shouldn`t get instance without item permission', async () => {
+    test('Shouldn`t get instance without item access', async () => {
       await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
       await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
 
@@ -382,8 +382,8 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('Directory addition with permission', () => {
-      test('Should add item with permission', async () => {
+    describe('Directory addition with access', () => {
+      test('Should add item with access', async () => {
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
 
         const item = await request(app.getHttpServer())
@@ -397,7 +397,7 @@ describe('DirectoryController', () => {
         expect(item.body.permission).toContainEqual({method: 'READ'});
       });
 
-      test('Should add item with group permission', async () => {
+      test('Should add item with group access', async () => {
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new GroupEntity(), {id: 'GROUP'}).save();
 
@@ -784,7 +784,7 @@ describe('DirectoryController', () => {
         .expect(404);
     });
 
-    test('Shouldn`t delete without permission]', async () => {
+    test('Shouldn`t delete without access]', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new AccessEntity(), {method: AccessMethod.ALL, target: AccessTarget.DIRECTORY}).save();
 

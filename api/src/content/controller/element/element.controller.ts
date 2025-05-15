@@ -18,11 +18,11 @@ import { CurrentGroups } from '../../../personal/decorator/current-groups/curren
 import { ElementRender } from '../../render/element.render';
 import { ElementPatchOperation } from '../../operation/element/element-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { BlockEntity } from '../../model/block.entity';
+import { CheckId } from '../../../common/guard/check-id.guard';
+import { CheckPermission } from '../../../personal/guard/check-permission.guard';
 
 @ApiTags('Content element')
-@Controller('element')
+@Controller('content/element')
 export class ElementController {
 
   relations = {
@@ -280,32 +280,14 @@ export class ElementController {
   }
 
   @Delete(':id')
+  @CheckId(ElementEntity)
+  @CheckPermission(Element2permissionEntity, PermissionOperation.DELETE)
   async deleteItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(ElementEntity).findOne({where: {id}}),
-          `Element with id >> ${id} << not found!`,
-        );
-
-        PermissionException.assert(
-          await trans.getRepository(Element2permissionEntity).findOne({
-            where: {
-              group: Or(In(group), IsNull()),
-              parent: {id},
-              method: In([PermissionOperation.DELETE, PermissionOperation.ALL]),
-            },
-          }),
-          `Permission denied!`,
-        );
-
-        return new ElementDeleteOperation(trans).save([id]);
-      },
+      async trans => new ElementDeleteOperation(trans).save([id]),
     );
   }
 

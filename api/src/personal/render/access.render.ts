@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PermissionRender } from '../../common/render/permission.render';
 import { AccessEntity } from '../model/access/access.entity';
 import { AccessTarget } from '../model/access/access-target';
 import { AccessMethod } from '../model/access/access-method';
@@ -13,11 +12,6 @@ export class AccessRender {
     this.version = item.version;
     this.method = item.method;
     this.target = item.target;
-
-    this.permission = item.permission?.map(it => ({
-      method: it.method,
-      group: it.group?.id,
-    }));
   }
 
   @ApiProperty()
@@ -34,10 +28,5 @@ export class AccessRender {
 
   method: AccessMethod;
   target: AccessTarget;
-
-  @ApiProperty({
-    type: [PermissionRender],
-  })
-  permission?: Array<PermissionRender>;
 
 }

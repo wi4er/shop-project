@@ -17,7 +17,7 @@ import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations'
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @ApiTags('Content block')
-@Controller('block')
+@Controller('content/block')
 export class BlockController {
 
   relations = {

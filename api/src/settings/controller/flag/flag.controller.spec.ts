@@ -105,7 +105,7 @@ describe('FlagController', () => {
       expect(res.body.icon).toBe('folder');
     });
 
-    test('Shouldn`t get instance without permission', async () => {
+    test('Shouldn`t get instance without access', async () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       await request(app.getHttpServer())
@@ -133,7 +133,7 @@ describe('FlagController', () => {
       expect(res.body).toEqual({count: 0});
     });
 
-    test('Should get count without permission', async () => {
+    test('Should get count without access', async () => {
       await request(app.getHttpServer())
         .get('/flag/count')
         .expect(403);

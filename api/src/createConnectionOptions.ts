@@ -86,7 +86,6 @@ import { Directory2permissionEntity } from './registry/model/directory2permissio
 import { AccessEntity } from './personal/model/access/access.entity';
 import { Point2logEntity } from './registry/model/point2log.entity';
 import { Directory2logEntity } from './registry/model/directory2log.entity';
-import { Access2permissionEntity } from './personal/model/access/access2permission.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -108,7 +107,7 @@ export function createConnectionOptions(): DataSourceOptions {
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
       AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
       ConfigurationEntity,
-      AccessEntity, Access2permissionEntity,
+      AccessEntity,
       DirectoryEntity,
       Directory4stringEntity, Directory4pointEntity,
       Directory2flagEntity, Directory2permissionEntity, Directory2logEntity,
