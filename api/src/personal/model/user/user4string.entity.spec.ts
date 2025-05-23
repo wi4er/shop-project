@@ -12,8 +12,8 @@ describe('User2String entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('User with string attribute', () => {
-    test('Should create user with string', async () => {
+  describe('UserEntity with string attribute', () => {
+    test('Should create personal with string', async () => {
       const repo = source.getRepository(UserEntity);
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new UserEntity(), {id: '1', login: 'USER'}).save();
@@ -30,7 +30,7 @@ describe('User2String entity', () => {
       expect(inst.string[0].attribute.id).toBe('NAME');
     });
 
-    test('Should create user with list of attributes', async () => {
+    test('Should create personal with list of attributes', async () => {
       const repo = source.getRepository(UserEntity);
 
       const prop1 = await Object.assign(new AttributeEntity(), {id: 'PROP_1'}).save();
@@ -59,21 +59,21 @@ describe('User2String entity', () => {
       expect(inst.string[2].attribute.id).toBe('PROP_3');
     });
 
-    test('Shouldn`t create user without parent', async () => {
+    test('Shouldn`t create personal without parent', async () => {
       const attribute = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const inst = Object.assign(new User4stringEntity(), {string: 'VALUE', attribute});
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create user without attribute', async () => {
+    test('Shouldn`t create personal without attribute', async () => {
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
       const inst = Object.assign(new User4stringEntity(), {string: 'VALUE', parent});
 
       await expect(inst.save()).rejects.toThrow('attributeId');
     });
 
-    test('Shouldn`t create user without string', async () => {
+    test('Shouldn`t create personal without string', async () => {
       const attribute = await Object.assign(new AttributeEntity(), {id: 'PARENT'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'PARENT'}).save();
       const inst = Object.assign(new User4stringEntity(), {parent, attribute});

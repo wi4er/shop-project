@@ -2,31 +2,25 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AccessEntity } from '../model/access/access.entity';
 import { AccessTarget } from '../model/access/access-target';
 import { AccessMethod } from '../model/access/access-method';
+import { AccessGroup } from '../controller/access/access.controller';
 
 export class AccessRender {
 
-  constructor(item: AccessEntity) {
-    this.id = item.id;
-    this.created_at = item.created_at.toISOString();
-    this.updated_at = item.updated_at.toISOString();
-    this.version = item.version;
-    this.method = item.method;
+  constructor(item: AccessGroup) {
     this.target = item.target;
+    this.group = item.list.map(it => ({
+      group: it.group?.id ?? null,
+      method: it.method,
+    }))
   }
 
   @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  created_at: string;
-
-  @ApiProperty()
-  updated_at: string;
-
-  @ApiProperty()
-  version: number;
-
-  method: AccessMethod;
   target: AccessTarget;
+
+  @ApiProperty()
+  group: Array<{
+    group: string | null;
+    method: AccessMethod;
+  }>;
 
 }

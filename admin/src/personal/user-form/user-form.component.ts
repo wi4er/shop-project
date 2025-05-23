@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { UserInput } from '../../app/model/user/user.input';
-import { User } from '../../app/model/user/user';
-import { Group } from '../../app/model/user/group';
-import { Contact } from '../../app/model/user/contact';
+import { UserInput } from '../../app/model/personal/user.input';
+import { UserEntity } from '../../app/model/personal/user.entity';
+import { GroupEntity } from '../../app/model/personal/group.entity';
+import { ContactEntity } from '../../app/model/personal/contact.entity';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-user-form',
+  selector: 'app-personal-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css'],
 })
@@ -22,8 +22,8 @@ export class UserFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  groupList: Array<Group> = [];
-  contactList: Array<Contact> = [];
+  groupList: Array<GroupEntity> = [];
+  contactList: Array<ContactEntity> = [];
 
   editAttributes: AttributeEdit = {};
   editContact: { [attribute: string]: { value: string, error?: string } } = {};
@@ -44,9 +44,9 @@ export class UserFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Group>(ApiEntity.GROUP),
-      this.apiService.fetchList<Contact>(ApiEntity.CONTACT),
-      this.data?.id ? this.apiService.fetchItem<User>(ApiEntity.USER, this.id) : null,
+      this.apiService.fetchList<GroupEntity>(ApiEntity.GROUP),
+      this.apiService.fetchList<ContactEntity>(ApiEntity.CONTACT),
+      this.data?.id ? this.apiService.fetchItem<UserEntity>(ApiEntity.USER, this.id) : null,
     ]).then(([group, contact, data]) => {
       this.groupList = group;
       this.contactList = contact;
@@ -60,7 +60,7 @@ export class UserFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: User) {
+  toEdit(item: UserEntity) {
     this.id = item.id;
     this.login = item.login;
     this.created_at = item.created_at;

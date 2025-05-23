@@ -10,7 +10,7 @@ import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations'
 import { ContactRender } from '../../render/contact.render';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
-@Controller('contact')
+@Controller('personal/contact')
 export class ContactController {
 
   relations = {

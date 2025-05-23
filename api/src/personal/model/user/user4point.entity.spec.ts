@@ -7,7 +7,7 @@ import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { User4pointEntity } from './user4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 
-describe('User point attribute entity', () => {
+describe('UserEntity point attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -16,7 +16,7 @@ describe('User point attribute entity', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe('User point fields', () => {
+  describe('UserEntity point fields', () => {
     test('Should create attribute', async () => {
       const parent = await Object.assign(new UserEntity(), {login: 'user'}).save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
@@ -58,8 +58,8 @@ describe('User point attribute entity', () => {
     });
   });
 
-  describe('User with point attribute', () => {
-    test('Should create user with value', async () => {
+  describe('UserEntity with point attribute', () => {
+    test('Should create personal with value', async () => {
       const repo = source.getRepository(UserEntity);
 
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
@@ -75,7 +75,7 @@ describe('User point attribute entity', () => {
       expect(inst.point[0].point.directory.id).toBe('CITY');
     });
 
-    test('Should create user with multi value', async () => {
+    test('Should create personal with multi value', async () => {
       const repo = source.getRepository(UserEntity);
 
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
@@ -94,7 +94,7 @@ describe('User point attribute entity', () => {
       expect(inst.point).toHaveLength(3);
     });
 
-    test('Shouldn`t create user with same value and attribute', async () => {
+    test('Shouldn`t create personal with same value and attribute', async () => {
       await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory: 'CITY'}).save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT_CITY'}).save();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Contact } from '../../app/model/user/contact';
+import { ContactEntity } from '../../app/model/personal/contact.entity';
 import { ContactFormComponent } from '../contact-form/contact-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -84,7 +84,7 @@ export class ContactListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Contact>(ApiEntity.CONTACT),
+      this.apiService.fetchList<ContactEntity>(ApiEntity.CONTACT),
       this.apiService.countData(ApiEntity.CONTACT),
     ]).then(([contacts, count]) => {
       this.setData(contacts);
@@ -95,7 +95,7 @@ export class ContactListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Contact[]) {
+  private setData(data: ContactEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.contactList = [];

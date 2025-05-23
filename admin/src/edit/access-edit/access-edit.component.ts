@@ -1,23 +1,26 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Group } from '../../app/model/user/group';
-import { PermissionMethod } from '../../app/model/permission/permission-method';
+import { GroupEntity } from '../../app/model/personal/group.entity';
 import { PermissionEdit } from '../permission-value/permission-value.service';
+import { AccessEntity } from '../../app/model/personal/access.entity';
 
 @Component({
   selector: 'app-access-edit',
-  templateUrl: './permission-edit.component.html',
-  styleUrls: ['./permission-edit.component.css'],
+  templateUrl: './access-edit.component.html',
+  styleUrls: ['./access-edit.component.css'],
 })
-export class PermissionEditComponent implements OnInit {
-
-  loading: boolean = true;
-  groupList: Array<Group> = [];
-  methodList: Array<string> = ['GET', 'POST', 'PUT', 'DELETE'];
-  displayedColumns = ['groupId', ...this.methodList];
+export class AccessEditComponent implements OnInit {
 
   @Input()
-  permission: PermissionEdit = {};
+  target!: string;
+
+  @Input()
+  edit!: PermissionEdit;
+
+  loading: boolean = true;
+  groupList: Array<GroupEntity> = [];
+  methodList: Array<string> = ['GET', 'POST', 'PUT', 'DELETE'];
+  displayedColumns = ['groupId', ...this.methodList];
 
   constructor(
     private apiService: ApiService,
@@ -28,15 +31,15 @@ export class PermissionEditComponent implements OnInit {
    *
    */
   handleChange(group: string, method: string) {
-    if (!this.permission[group]) this.permission[group] = {};
-    this.permission[group][method] = !this.permission[group][method];
+    if (!this.edit[group]) this.edit[group] = {};
+    this.edit[group][method] = !this.edit[group][method];
   }
 
   /**
    *
    */
   getChecked(group: string, method: string) {
-    return this.permission[group]?.[method] ?? false
+    return this.edit[group]?.[method] ?? false
   }
 
   /**
@@ -56,9 +59,15 @@ export class PermissionEditComponent implements OnInit {
    */
   ngOnInit() {
     Promise.all([
-      this.apiService.fetchList<Group>(ApiEntity.GROUP),
-    ]).then(([groups]) => {
-      this.groupList = groups;
+      this.apiService.fetchList<GroupEntity>(ApiEntity.GROUP),
+      this.apiService.fetchList<AccessEntity>(ApiEntity.ACCESS, {
+        target: this.target,
+      })
+    ]).then(([groupList, accessList]) => {
+
+      console.log(accessList);
+
+      this.groupList = groupList;
       this.loading = false;
     });
   }

@@ -26,7 +26,7 @@ describe('UserGroup entity', () => {
     });
   });
 
-  describe('Group with parent', () => {
+  describe('GroupEntity with parent', () => {
     test('Should create with parent', async () => {
       const repo = source.getRepository(GroupEntity);
       const parent = await new GroupEntity().save();

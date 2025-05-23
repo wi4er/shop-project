@@ -21,7 +21,7 @@ export class UserInsertOperation {
   }
 
   async save(input: UserInput): Promise<string> {
-    this.created.login = WrongDataException.assert(input.login, 'User login expected!');
+    this.created.login = WrongDataException.assert(input.login, 'UserEntity login expected!');
 
     await this.manager.save(this.created);
 

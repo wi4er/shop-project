@@ -3,14 +3,14 @@ import { createConnection } from 'typeorm';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 
-describe('User entity', () => {
+describe('UserEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('User fields', () => {
+  describe('UserEntity fields', () => {
     test('Should find empty list', async () => {
       const repo = source.getRepository(UserEntity);
       const list = await repo.find();

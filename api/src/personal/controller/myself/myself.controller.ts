@@ -13,7 +13,7 @@ import { EncodeService } from '../../service/encode/encode.service';
 import { MyselfInsertOperation } from '../../operation/myself-insert.operation';
 import { AuthInput } from '../../input/auth.input';
 
-@Controller('myself')
+@Controller('personal/myself')
 export class MyselfController {
 
   relations = {
@@ -61,8 +61,8 @@ export class MyselfController {
   }
 
   @Put()
-  @ApiOperation({description: 'Update user by current session'})
-  @ApiCreatedResponse({description: 'Current user updated successfully', type: UserSchema})
+  @ApiOperation({description: 'Update personal by current session'})
+  @ApiCreatedResponse({description: 'Current personal updated successfully', type: UserSchema})
   @ApiUnauthorizedResponse({description: 'There is no current session'})
   async updateMyself(
     @CurrentUser()

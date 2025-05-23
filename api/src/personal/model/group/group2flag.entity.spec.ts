@@ -13,7 +13,7 @@ describe('UserGroup 2 flag entity', () => {
   afterAll(() => source.destroy());
 
   describe('UserGroup2flag fields', () => {
-    test('Should create user contact flag', async () => {
+    test('Should create personal contact flag', async () => {
       const parent = await new GroupEntity().save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
@@ -47,8 +47,8 @@ describe('UserGroup 2 flag entity', () => {
     });
   });
 
-  describe('User group with flag', () => {
-    test('Should create user contact with flag', async () => {
+  describe('UserEntity group with flag', () => {
+    test('Should create personal contact with flag', async () => {
       const repo = source.getRepository(GroupEntity);
 
       const parent = await await Object.assign(new GroupEntity(), {id: '222'}).save();

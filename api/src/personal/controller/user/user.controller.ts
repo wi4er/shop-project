@@ -12,8 +12,8 @@ import { UserRender } from '../../render/user.render';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { ElementEntity } from '../../../content/model/element.entity';
 
-@ApiTags('User object')
-@Controller('user')
+@ApiTags('UserEntity object')
+@Controller('personal/user')
 export class UserController {
 
   relations = {
@@ -83,7 +83,7 @@ export class UserController {
   }
 
   @Put(':id')
-  @ApiParam({name: 'id', description: 'User id'})
+  @ApiParam({name: 'id', description: 'UserEntity id'})
   async updateUser(
     @Body()
       input: UserInput,

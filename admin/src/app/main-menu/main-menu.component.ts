@@ -101,7 +101,7 @@ export class MainMenuComponent implements OnInit {
       title: 'Personalization',
       child: [{
         title: 'Users',
-        link: '/user',
+        link: '/personal',
         icon: 'person',
       }, {
         title: 'Permission',

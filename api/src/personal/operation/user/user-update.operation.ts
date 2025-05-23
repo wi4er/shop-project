@@ -41,7 +41,7 @@ export class UserUpdateOperation {
   async save(id: string, input: UserInput): Promise<string> {
     const beforeItem = await this.checkUser(id);
 
-    beforeItem.login = WrongDataException.assert(input.login, 'User login expected');
+    beforeItem.login = WrongDataException.assert(input.login, 'UserEntity login expected');
     await this.trans.save(beforeItem);
 
     await new FlagValueUpdateOperation(this.trans, User2flagEntity).save(beforeItem, input);

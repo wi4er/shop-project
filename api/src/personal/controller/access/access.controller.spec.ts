@@ -9,7 +9,7 @@ import { AccessEntity } from '../../model/access/access.entity';
 import { AccessTarget } from '../../model/access/access-target';
 import { AccessMethod } from '../../model/access/access-method';
 
-describe('Registry Permission Controller', () => {
+describe('Access Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 
@@ -43,6 +43,45 @@ describe('Registry Permission Controller', () => {
 
       expect(res.body).toHaveLength(0);
     });
+
+    test('Should get list', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createAccess();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/access')
+        .expect(200);
+
+      console.log(res.body);
+      // expect(res.body).toHaveLength(10);
+    });
+
+    test('Should get list with target filter', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createAccess(i % 2 ? AccessTarget.ALL : AccessTarget.FLAG);
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/access?target=FLAG')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+
+      console.log(res.body);
+    });
+
+    test('Should get list with method filter', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createAccess(AccessTarget.ALL, i % 2 ? AccessMethod.ALL : AccessMethod.POST);
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/access?method=POST')
+        .expect(200);
+
+      expect(res.body).toHaveLength(5);
+    });
   });
 
   describe('Access item', () => {
@@ -66,6 +105,52 @@ describe('Registry Permission Controller', () => {
       await request(app.getHttpServer())
         .get(`/personal/access/7777`)
         .expect(404);
+    });
+  });
+
+  describe('Access count', () => {
+    test('Should get zero count', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/personal/access/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 0});
+    });
+
+    test('Should get count', async () => {
+      for (let i = 0; i < 7; i++) {
+        await createAccess();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/access/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 7});
+    });
+
+    test('Should get count with target filter', async () => {
+      for (let i = 0; i < 12; i++) {
+        await createAccess(i % 2 ? AccessTarget.ALL : AccessTarget.FLAG);
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/access/count?target=FLAG')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 6});
+    });
+
+    test('Should get count with method filter', async () => {
+      for (let i = 0; i < 8; i++) {
+        await createAccess(AccessTarget.ALL, i % 2 ? AccessMethod.ALL : AccessMethod.POST);
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/access/count?method=POST')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 4});
     });
   });
 

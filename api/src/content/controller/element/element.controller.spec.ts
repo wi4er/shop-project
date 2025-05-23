@@ -51,7 +51,7 @@ describe('ElementController', () => {
     await Object.assign(new User2groupEntity(), {id: '1', group, parent}).save();
 
     const res = await request(app.getHttpServer())
-      .post('/auth')
+      .post('/personal/auth')
       .send({
         login: 'USER',
         password: 'qwerty',

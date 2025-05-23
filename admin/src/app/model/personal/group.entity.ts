@@ -1,6 +1,6 @@
 import { StringAttributeValue } from '../string-attribute-value';
 
-export interface Group {
+export interface GroupEntity {
 
   id: string;
   created_at: string;

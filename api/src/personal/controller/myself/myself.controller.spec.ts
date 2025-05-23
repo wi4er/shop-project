@@ -7,15 +7,17 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { GroupEntity } from '../../model/group/group.entity';
 import { User2groupEntity } from '../../model/user/user2group.entity';
 import * as process from 'process';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('MyselfController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -31,7 +33,7 @@ describe('MyselfController', () => {
       }).save();
 
       const {headers} = await request(app.getHttpServer())
-        .post(`/auth`)
+        .post(`/personal/auth`)
         .send({
           login: 'user',
           password: 'qwerty',
@@ -39,7 +41,7 @@ describe('MyselfController', () => {
         .expect(201);
 
       const res = await request(app.getHttpServer())
-        .get(`/myself`)
+        .get(`/personal/myself`)
         .set('cookie', headers['set-cookie']);
 
       expect(res.body.id).toBe('user');
@@ -56,7 +58,7 @@ describe('MyselfController', () => {
       await Object.assign(new User2groupEntity(), {parent, group}).save();
 
       const {headers} = await request(app.getHttpServer())
-        .post(`/auth`)
+        .post(`/personal/auth`)
         .send({
           login: 'user',
           password: 'qwerty',
@@ -64,7 +66,7 @@ describe('MyselfController', () => {
         .expect(201);
 
       const res = await request(app.getHttpServer())
-        .get(`/myself`)
+        .get(`/personal/myself`)
         .set('cookie', headers['set-cookie'])
         .expect(200);
 
@@ -75,7 +77,7 @@ describe('MyselfController', () => {
 
     test('Shouldn`t get without authorization', async () => {
       await request(app.getHttpServer())
-        .get(`/myself`)
+        .get(`/personal/myself`)
         .expect(403);
     });
   });
@@ -88,14 +90,14 @@ describe('MyselfController', () => {
       }).save();
 
       const {headers} = await request(app.getHttpServer())
-        .post(`/auth`)
+        .post(`/personal/auth`)
         .send({
           login: 'user',
           password: 'qwerty',
         });
 
       const res = await request(app.getHttpServer())
-        .put(`/myself`)
+        .put(`/personal/myself`)
         .send({
           login: 'admin',
           hash: '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5',
@@ -112,7 +114,7 @@ describe('MyselfController', () => {
 
     test('Shouldn`t update without authorization', async () => {
       const res = await request(app.getHttpServer())
-        .put(`/myself`)
+        .put(`/personal/myself`)
         .send({
           login: 'admin',
         })
@@ -120,10 +122,10 @@ describe('MyselfController', () => {
     });
   });
 
-  describe('User registration', () => {
-    test('Should register user', async () => {
+  describe('UserEntity registration', () => {
+    test('Should register personal', async () => {
       const res = await request(app.getHttpServer())
-        .post('/myself')
+        .post('/personal/myself')
         .send({
           login: 'user',
           password: 'qwerty123',
@@ -140,7 +142,7 @@ describe('MyselfController', () => {
       process.env.PUBLIC_GROUP = String(group.id);
 
       const res = await request(app.getHttpServer())
-        .post('/myself')
+        .post('/personal/myself')
         .send({
           login: 'user',
           password: 'qwerty123',
@@ -154,14 +156,14 @@ describe('MyselfController', () => {
 
     test('Shouldn`t create with same login', async () => {
       await request(app.getHttpServer())
-        .post('/myself')
+        .post('/personal/myself')
         .send({
           login: 'user',
           password: 'qwerty123',
         });
 
       await request(app.getHttpServer())
-        .post('/myself')
+        .post('/personal/myself')
         .send({
           login: 'user',
           password: 'qwerty123',
@@ -171,14 +173,14 @@ describe('MyselfController', () => {
 
     test('Shouldn`t create without login', async () => {
       await request(app.getHttpServer())
-        .post('/myself')
+        .post('/personal/myself')
         .send({password: 'qwerty123'})
         .expect(400);
     });
 
     test('Shouldn`t create without password', async () => {
       await request(app.getHttpServer())
-        .post('/myself')
+        .post('/personal/myself')
         .send({login: 'user'})
         .expect(400);
     });

@@ -1,18 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Group } from '../../app/model/user/group';
+import { GroupEntity } from '../../app/model/personal/group.entity';
 import { PermissionMethod } from '../../app/model/permission/permission-method';
 import { PermissionEdit } from '../permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-group-access',
+  selector: 'app-group-permission',
   templateUrl: './group-permission.component.html',
   styleUrls: ['./group-permission.component.css'],
 })
 export class GroupPermissionComponent implements OnInit {
 
   loading: boolean = true;
-  groupList: Array<Group> = [];
+  groupList: Array<GroupEntity> = [];
   methodList: Array<string> = Object.keys(PermissionMethod);
   displayedColumns = ['groupId', ...this.methodList];
 
@@ -53,7 +53,7 @@ export class GroupPermissionComponent implements OnInit {
    */
   ngOnInit() {
     Promise.all([
-      this.apiService.fetchList<Group>(ApiEntity.GROUP),
+      this.apiService.fetchList<GroupEntity>(ApiEntity.GROUP),
     ]).then(([groups]) => {
       this.groupList = groups;
       this.loading = false;

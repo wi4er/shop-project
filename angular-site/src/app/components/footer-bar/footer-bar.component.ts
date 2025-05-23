@@ -79,7 +79,7 @@ export class FooterBarComponent {
       text: 'About',
       link: '/about',
     }, {
-      text: 'Contact us',
+      text: 'ContactEntity us',
       link: '/',
     }, {
       text: 'Careerss',

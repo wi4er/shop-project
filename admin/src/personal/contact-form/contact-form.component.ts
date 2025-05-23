@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { ContactInput } from '../../app/model/user/contact.input';
-import { Contact } from '../../app/model/user/contact';
+import { ContactInput } from '../../app/model/personal/contact.input';
+import { ContactEntity } from '../../app/model/personal/contact.entity';
 import { FormControl, Validators } from '@angular/forms';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
@@ -40,7 +40,7 @@ export class ContactFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.data?.id ? this.apiService.fetchItem<Contact>(ApiEntity.CONTACT, this.data.id) : null,
+      this.data?.id ? this.apiService.fetchItem<ContactEntity>(ApiEntity.CONTACT, this.data.id) : null,
     ]).then(([data]) => {
       if (data) this.toEdit(data);
     });
@@ -49,7 +49,7 @@ export class ContactFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Contact) {
+  toEdit(item: ContactEntity) {
     this.id = item.id;
     this.typeSelect.setValue(item.type);
     this.created_at = item.created_at;

@@ -5,7 +5,7 @@ import { GroupEntity } from '../group/group.entity';
 import { UserEntity } from './user.entity';
 import { User2groupEntity } from './user2group.entity';
 
-describe('User to Group entity', () => {
+describe('UserEntity to GroupEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -34,8 +34,8 @@ describe('User to Group entity', () => {
     });
   });
 
-  describe('User groups field', () => {
-    test('Should create user with group', async () => {
+  describe('UserEntity groups field', () => {
+    test('Should create personal with group', async () => {
       const repo = source.getRepository(UserEntity);
 
       const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'user'}).save();
@@ -52,8 +52,8 @@ describe('User to Group entity', () => {
     });
   });
 
-  describe('User with groups', () => {
-    test('Should create user with group', async () => {
+  describe('UserEntity with groups', () => {
+    test('Should create personal with group', async () => {
       const repo = source.getRepository(UserEntity);
 
       const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'user'}).save();

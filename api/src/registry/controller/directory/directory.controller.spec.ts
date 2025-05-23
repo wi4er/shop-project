@@ -42,7 +42,13 @@ describe('DirectoryController', () => {
   ) {
     const parent = await Object.assign(new DirectoryEntity(), {id}).save();
     if (permission) await Object.assign(new Directory2permissionEntity(), {parent, method}).save();
-    await Object.assign(new AccessEntity(), {method: AccessMethod.ALL, target: AccessTarget.DIRECTORY}).save();
+    await source.getRepository(AccessEntity).findOne({where: {method: AccessMethod.ALL, target: AccessTarget.DIRECTORY}})
+      .then(inst => {
+        if (!inst) return Object.assign(new AccessEntity(), {
+          method: AccessMethod.ALL,
+          target: AccessTarget.DIRECTORY,
+        }).save();
+      });
 
     return parent;
   }

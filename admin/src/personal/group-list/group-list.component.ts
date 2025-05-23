@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Group } from '../../app/model/user/group';
+import { GroupEntity } from '../../app/model/personal/group.entity';
 import { GroupFormComponent } from '../group-form/group-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,7 +10,7 @@ import { GroupSettingsComponent } from '../group-settings/group-settings.compone
 import { Flag } from '../../app/model/settings/flag';
 
 @Component({
-  selector: 'app-user-group-list',
+  selector: 'app-group-list',
   templateUrl: './group-list.component.html',
   styleUrls: ['./group-list.component.css']
 })
@@ -75,7 +75,7 @@ export class GroupListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Group>(ApiEntity.GROUP),
+      this.apiService.fetchList<GroupEntity>(ApiEntity.GROUP),
       this.apiService.countData(ApiEntity.GROUP),
     ]).then(([contacts, count]) => {
       this.setData(contacts);
@@ -86,7 +86,7 @@ export class GroupListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Group[]) {
+  private setData(data: GroupEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.contactList = [];

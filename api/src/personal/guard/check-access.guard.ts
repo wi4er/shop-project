@@ -1,4 +1,4 @@
-import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
+import { EntityManager, In, IsNull, Or } from 'typeorm';
 import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { InjectEntityManager } from '@nestjs/typeorm';
@@ -49,7 +49,7 @@ export class CheckAccessGuard
         .getRepository(AccessEntity)
         .findOne({
           where: {
-            target: check.target,
+            target: In([check.target, AccessTarget.ALL]),
             method: In([check.method, AccessMethod.ALL]),
             group: Or(In(group), IsNull()),
           },

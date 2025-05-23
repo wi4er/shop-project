@@ -19,7 +19,7 @@ export class UserDeleteOperation {
     const userRepo = this.manager.getRepository<UserEntity>(UserEntity);
     const inst = await userRepo.findOne({where: {id}});
 
-    return WrongDataException.assert(inst, 'Wrong user id!');
+    return WrongDataException.assert(inst, 'Wrong personal id!');
   }
 
   /**

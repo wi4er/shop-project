@@ -39,8 +39,8 @@ export class UserContactUpdateOperation {
   async save(id: string, input: ContactInput): Promise<string> {
     const beforeItem = await this.checkContact(input.id);
 
-    beforeItem.id = WrongDataException.assert(input.id, 'Contact id expected');
-    beforeItem.type = WrongDataException.assert(input.type, 'Contact type expected!');
+    beforeItem.id = WrongDataException.assert(input.id, 'ContactEntity id expected');
+    beforeItem.type = WrongDataException.assert(input.type, 'ContactEntity type expected!');
 
     await this.trans.save(beforeItem);
 

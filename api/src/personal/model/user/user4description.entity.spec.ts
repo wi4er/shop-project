@@ -12,8 +12,8 @@ describe('User2description entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe("User with description attribute", () => {
-    test("Should create user with description", async () => {
+  describe("UserEntity with description attribute", () => {
+    test("Should create personal with description", async () => {
       const repo = source.getRepository(UserEntity);
       const attribute = await Object.assign(new AttributeEntity(), { id: "NAME" }).save();
       const parent = await Object.assign(new UserEntity(), { id: '1', login: "USER" }).save();
@@ -30,7 +30,7 @@ describe('User2description entity', () => {
       expect(inst.description[0].attribute.id).toBe("NAME");
     });
 
-    test("Should create user with list of properties", async () => {
+    test("Should create personal with list of properties", async () => {
       const repo = source.getRepository(UserEntity);
 
       const prop1 = await Object.assign(new AttributeEntity(), { id: "PROP_1" }).save();
@@ -59,21 +59,21 @@ describe('User2description entity', () => {
       expect(inst.description[2].attribute.id).toBe("PROP_3");
     });
 
-    test('Shouldn`t create user without parent', async () => {
+    test('Shouldn`t create personal without parent', async () => {
       const attribute = await Object.assign(new AttributeEntity(), { id: 'PARENT' }).save();
       const inst = await Object.assign(new User4descriptionEntity(), { description: 'VALUE', attribute });
 
       await expect(inst.save()).rejects.toThrow('parentId');
     });
 
-    test('Shouldn`t create user without attribute', async () => {
+    test('Shouldn`t create personal without attribute', async () => {
       const parent = await Object.assign(new UserEntity(), { login: 'PARENT' }).save();
       const inst = await Object.assign(new User4descriptionEntity(), { description: 'VALUE', parent });
 
       await expect(inst.save()).rejects.toThrow('attributeId');
     });
 
-    test('Shouldn`t create user without string', async () => {
+    test('Shouldn`t create personal without string', async () => {
       const attribute = await Object.assign(new AttributeEntity(), { id: 'PARENT' }).save();
       const parent = await Object.assign(new UserEntity(), { login: 'PARENT' }).save();
       const inst = await Object.assign(new User4descriptionEntity(), { parent, attribute });

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserFormComponent } from '../user-form/user-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { User } from '../../app/model/user/user';
+import { UserEntity } from '../../app/model/personal/user.entity';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
@@ -84,7 +84,7 @@ export class UserListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<User>(ApiEntity.USER),
+      this.apiService.fetchList<UserEntity>(ApiEntity.USER),
       this.apiService.countData(ApiEntity.USER),
     ]).then(([users, count]) => {
       this.setData(users);
@@ -95,7 +95,7 @@ export class UserListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: User[]) {
+  private setData(data: UserEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.userList = [];

@@ -4,9 +4,9 @@ import { StringifiableRecord } from 'query-string/base';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export enum ApiEntity {
-  BLOCK = 'block',
-  ELEMENT = 'element',
-  SECTION = 'section',
+  BLOCK = 'content/block',
+  ELEMENT = 'content/element',
+  SECTION = 'content/section',
   FLAG = 'flag',
   ATTRIBUTE = 'attribute',
   DIRECTORY = 'registry/directory',
@@ -15,12 +15,13 @@ export enum ApiEntity {
   FORM = 'form',
   RESULT = 'result',
   LANG = 'lang',
-  USER = 'user',
-  CONTACT = 'contact',
-  GROUP = 'group',
   DOCUMENT = 'document',
   COLLECTION = 'collection',
   FILE = 'file',
+  USER = 'user',
+  CONTACT = 'contact',
+  GROUP = 'personal/group',
+  ACCESS = 'personal/access',
   MYSELF = 'myself',
 }
 
@@ -38,8 +39,6 @@ export class ApiService {
 
   /**
    *
-   * @param entity
-   * @param query
    */
   fetchList<T>(entity: ApiEntity, query?: StringifiableRecord): Promise<T[]> {
     const url = qs.stringifyUrl({

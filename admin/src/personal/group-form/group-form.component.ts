@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { GroupInput } from '../../app/model/user/group.input';
-import { Group } from '../../app/model/user/group';
+import { GroupInput } from '../../app/model/personal/group.input';
+import { GroupEntity } from '../../app/model/personal/group.entity';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-user-group-form',
+  selector: 'app-personal-group-form',
   templateUrl: './group-form.component.html',
   styleUrls: ['./group-form.component.css'],
 })
@@ -36,7 +36,7 @@ export class GroupFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.data?.id ? this.apiService.fetchItem<Group>(ApiEntity.GROUP, String(this.data.id)) : null,
+      this.data?.id ? this.apiService.fetchItem<GroupEntity>(ApiEntity.GROUP, String(this.data.id)) : null,
     ]).then(([data]) => {
       if (data) this.toEdit(data);
     });
@@ -45,7 +45,7 @@ export class GroupFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Group) {
+  toEdit(item: GroupEntity) {
     this.id = String(item.id);
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;

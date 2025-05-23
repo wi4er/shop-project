@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Contact } from '../../app/model/user/contact';
+import { ContactEntity } from '../../app/model/personal/contact.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Flag } from '../../app/model/settings/flag';
 
@@ -11,7 +11,7 @@ import { Flag } from '../../app/model/settings/flag';
 export class ContactEditComponent implements OnInit {
 
   loading = true;
-  list: Array<Contact> = [];
+  list: Array<ContactEntity> = [];
 
   @Input()
   edit: { [property: string]: { value: string, error?: string } } = {};
@@ -25,7 +25,7 @@ export class ContactEditComponent implements OnInit {
    *
    */
   ngOnInit() {
-    this.apiService.fetchList<Contact>(ApiEntity.CONTACT)
+    this.apiService.fetchList<ContactEntity>(ApiEntity.CONTACT)
       .then(list => {
         this.list = list;
         this.initValues();

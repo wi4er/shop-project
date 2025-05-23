@@ -21,8 +21,8 @@ export class UserContactInsertOperation {
   }
 
   async save(input: ContactInput): Promise<string> {
-    this.created.id = WrongDataException.assert(input.id, 'Contact id expected');
-    this.created.type = WrongDataException.assert(input.type, 'Contact type expected!');
+    this.created.id = WrongDataException.assert(input.id, 'ContactEntity id expected');
+    this.created.type = WrongDataException.assert(input.type, 'ContactEntity type expected!');
 
     await this.trans.save(this.created);
 

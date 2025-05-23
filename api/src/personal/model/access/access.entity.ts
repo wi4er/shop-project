@@ -2,7 +2,7 @@ import {
   BaseEntity, Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, ManyToOne, OneToMany,
+  Entity, Index, ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
@@ -11,6 +11,8 @@ import { AccessTarget } from './access-target';
 import { GroupEntity } from '../group/group.entity';
 
 @Entity('personal-access')
+@Index(['target', 'method', 'group'], {unique: true, where: '"groupId" IS NOT NULL'})
+@Index(['target', 'method'], {unique: true, where: '"groupId" IS NULL'})
 export class AccessEntity
   extends BaseEntity {
 

@@ -5,7 +5,7 @@ import { Contact4stringEntity } from './contact4string.entity';
 import { ContactEntity, UserContactType } from './contact.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 
-describe('Contact string attribute entity', () => {
+describe('ContactEntity string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -13,7 +13,7 @@ describe('Contact string attribute entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Contact string fields', () => {
+  describe('ContactEntity string fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Contact4stringEntity);
       const list = await repo.find();
@@ -56,7 +56,7 @@ describe('Contact string attribute entity', () => {
     });
   });
 
-  describe('Contact with strings', () => {
+  describe('ContactEntity with strings', () => {
     test('Should create contact with string', async () => {
       const repo = source.getRepository(ContactEntity);
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();

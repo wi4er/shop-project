@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { Attribute } from '../../app/model/settings/attribute';
-import { Flag } from '../../app/model/settings/flag';
 import { FormControl } from '@angular/forms';
+import { PermissionEdit } from '../../edit/permission-value/permission-value.service';
 
 @Component({
   selector: 'app-registry-settings',
@@ -10,14 +9,22 @@ import { FormControl } from '@angular/forms';
 })
 export class DirectorySettingsComponent {
 
-  attributeList: Attribute[] = [];
-  flagList: Flag[] = [];
+  permissionEdit: PermissionEdit = {};
 
   pages: { [key: number]: string } = {
-    0: 'attributes',
-    1: 'orders',
+    0: 'permissions',
+    1: 'attributes',
+    2: 'flags',
+    3: 'sorts',
   };
 
   selected = new FormControl(0);
+
+  /**
+   *
+   */
+  saveItem() {
+    console.log('SAVE');
+  }
 
 }

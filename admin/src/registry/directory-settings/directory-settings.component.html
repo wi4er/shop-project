@@ -6,16 +6,18 @@
     [selectedIndex]="selected.value"
   >
     <mat-tab label="Permissions">
-      <app-permission-edit></app-permission-edit>
+      <app-access-edit
+        target="DIRECTORY"
+        [edit]="permissionEdit"
+      ></app-access-edit>
     </mat-tab>
 
-    <mat-tab label="Properties">
+    <mat-tab label="Attributes">
 
     </mat-tab>
 
     <mat-tab label="Flags">
       <mat-selection-list >
-
       </mat-selection-list>
     </mat-tab>
 

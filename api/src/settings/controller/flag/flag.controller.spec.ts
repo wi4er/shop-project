@@ -6,95 +6,114 @@ import * as request from 'supertest';
 import { FlagEntity } from '../../model/flag.entity';
 import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
+import { AttributeEntity } from '../../model/attribute.entity';
 import { LangEntity } from '../../model/lang.entity';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { AccessEntity } from '../../../personal/model/access/access.entity';
 import { AccessTarget } from '../../../personal/model/access/access-target';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('FlagController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  async function createFlag(
+  function createFlag(
     id: string,
     method: AccessMethod | null = AccessMethod.ALL,
-  ): Promise<FlagEntity> {
-    const res = new FlagEntity();
-    res.id = id;
+  ): Promise<FlagEntity> & any {
+    const item = new FlagEntity();
+    item.id = id;
 
-    if (method) await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method}).save();
-
-    return res.save();
+    return Object.assign(Promise.resolve({
+      then: resolve => resolve(
+        source.getRepository(AccessEntity)
+          .findOne({where: {method, target: AccessTarget.FLAG}})
+          .then(inst => {
+            if (!inst && method) return Object.assign(new AccessEntity(), {
+              method,
+              target: AccessTarget.FLAG,
+            }).save();
+          })
+          .then(() => item.save()),
+      ),
+    }), {
+      withAccess(updated: AccessMethod) {
+        method = updated;
+        return this;
+      },
+      withColor(color: string) {
+        item.color = color;
+        return this;
+      },
+      withIcon(icon: string) {
+        item.icon = icon;
+        return this;
+      },
+    });
   }
 
-  describe('Flag fields', () => {
-    describe('Flag list', () => {
-      test('Should get empty list', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+  describe('Flag list', () => {
+    test('Should get empty list', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
 
-        const res = await request(app.getHttpServer())
-          .get('/flag')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/flag')
+        .expect(200);
 
-        expect(res.body).toHaveLength(0);
-      });
+      expect(res.body).toHaveLength(0);
+    });
 
-      test('Shouldn`t get without access', async () => {
-        await request(app.getHttpServer())
-          .get('/flag')
-          .expect(403);
-      });
+    test('Shouldn`t get without access', async () => {
+      await request(app.getHttpServer())
+        .get('/flag')
+        .expect(403);
+    });
 
-      test('Should get flag with limit', async () => {
-        for (let i = 0; i < 10; i++) {
-          await createFlag(`flag_${i}`);
-        }
+    test('Should get flag with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createFlag(`flag_${i}`);
+      }
 
-        const res = await request(app.getHttpServer())
-          .get('/flag?limit=3')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/flag?limit=3')
+        .expect(200);
 
-        expect(res.body).toHaveLength(3);
-        expect(res.body[0].id).toBe('flag_0');
-        expect(res.body[1].id).toBe('flag_1');
-        expect(res.body[2].id).toBe('flag_2');
-      });
+      expect(res.body).toHaveLength(3);
+      expect(res.body[0].id).toBe('flag_0');
+      expect(res.body[1].id).toBe('flag_1');
+      expect(res.body[2].id).toBe('flag_2');
+    });
 
-      test('Should get flag with offset', async () => {
-        for (let i = 0; i < 10; i++) {
-          await createFlag(`flag_${i}`);
-        }
+    test('Should get flag with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createFlag(`flag_${i}`);
+      }
 
-        const res = await request(app.getHttpServer())
-          .get('/flag?offset=9')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/flag?offset=9')
+        .expect(200);
 
-        expect(res.body).toHaveLength(1);
-        expect(res.body[0].id).toBe('flag_9');
-      });
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('flag_9');
     });
   });
 
   describe('Flag item', () => {
     test('Should get flag instance', async () => {
-      await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
-      await Object.assign(new FlagEntity(), {
-        id: 'ACTIVE',
-        color: 'FFF',
-        icon: 'folder',
-      }).save();
+      await createFlag('ACTIVE')
+        .withColor('FFF')
+        .withIcon('folder');
 
       const res = await request(app.getHttpServer())
         .get('/flag/ACTIVE')
@@ -106,7 +125,8 @@ describe('FlagController', () => {
     });
 
     test('Shouldn`t get instance without access', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await createFlag('ACTIVE')
+        .withAccess(null);
 
       await request(app.getHttpServer())
         .get('/flag/ACTIVE')
@@ -381,7 +401,8 @@ describe('FlagController', () => {
       });
 
       test('Shouldn`t update flag without access', async () => {
-        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+        await createFlag('NEW')
+          .withAccess(null);
 
         await request(app.getHttpServer())
           .put('/flag/NEW')
@@ -431,8 +452,7 @@ describe('FlagController', () => {
       });
 
       test('Should change id', async () => {
-        await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
-        await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
+        await createFlag('OLD');
 
         const res = await request(app.getHttpServer())
           .put('/flag/OLD')
@@ -537,7 +557,7 @@ describe('FlagController', () => {
     });
 
     test('Shouldn`t delete without access', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      await createFlag('ACTIVE').withAccess(null);
 
       await request(app.getHttpServer())
         .delete('/flag/ACTIVE')

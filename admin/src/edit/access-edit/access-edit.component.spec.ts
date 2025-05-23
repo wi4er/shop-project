@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PermissionEditComponent } from './permission-edit.component';
+import { AccessEditComponent } from './access-edit.component';
 
 describe('GroupPermissionComponent', () => {
-  let component: PermissionEditComponent;
-  let fixture: ComponentFixture<PermissionEditComponent>;
+  let component: AccessEditComponent;
+  let fixture: ComponentFixture<AccessEditComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PermissionEditComponent]
+      declarations: [AccessEditComponent]
     });
-    fixture = TestBed.createComponent(PermissionEditComponent);
+    fixture = TestBed.createComponent(AccessEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

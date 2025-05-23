@@ -3,20 +3,22 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
+import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { FlagEntity } from '../../../settings/model/flag.entity';
 import { ContactEntity, UserContactType } from '../../model/contact/contact.entity';
 import { Contact4stringEntity } from '../../model/contact/contact4string.entity';
 import { Contact2flagEntity } from '../../model/contact/contact2flag.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('ContactController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -24,10 +26,10 @@ describe('ContactController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Contact fields', () => {
+  describe('ContactEntity fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
-        .get('/contact')
+        .get('/personal/contact')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
@@ -37,7 +39,7 @@ describe('ContactController', () => {
       await Object.assign(new ContactEntity(), {id: 'MAIL', type: UserContactType.EMAIL}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/contact/MAIL')
+        .get('/personal/contact/MAIL')
         .expect(200);
 
       expect(res.body.id).toBe('MAIL');
@@ -53,7 +55,7 @@ describe('ContactController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/contact?limit=3')
+        .get('/personal/contact?limit=3')
         .expect(200);
 
       expect(res.body).toHaveLength(3);
@@ -71,7 +73,7 @@ describe('ContactController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/contact?offset=3')
+        .get('/personal/contact?offset=3')
         .expect(200);
 
       expect(res.body).toHaveLength(7);
@@ -80,10 +82,10 @@ describe('ContactController', () => {
     });
   });
 
-  describe('Contact count', () => {
+  describe('ContactEntity count', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
-        .get('/contact/count')
+        .get('/personal/contact/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
@@ -98,14 +100,14 @@ describe('ContactController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/contact/count')
+        .get('/personal/contact/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 10});
     });
   });
 
-  describe('Contact with strings', () => {
+  describe('ContactEntity with strings', () => {
     test('Should get contact with strings', async () => {
       const parent = await Object.assign(
         new ContactEntity(),
@@ -115,7 +117,7 @@ describe('ContactController', () => {
       await Object.assign(new Contact4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/contact')
+        .get('/personal/contact')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -127,7 +129,7 @@ describe('ContactController', () => {
     });
   });
 
-  describe('Contact with flags', () => {
+  describe('ContactEntity with flags', () => {
     test('Should get contact with flag', async () => {
       const parent = await Object.assign(
         new ContactEntity(),
@@ -137,7 +139,7 @@ describe('ContactController', () => {
       await Object.assign(new Contact2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/contact')
+        .get('/personal/contact')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -145,10 +147,10 @@ describe('ContactController', () => {
     });
   });
 
-  describe('Contact addition', () => {
+  describe('ContactEntity addition', () => {
     test('Should add', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/contact')
+        .post('/personal/contact')
         .send({
           id: 'mail',
           type: 'EMAIL',
@@ -158,27 +160,27 @@ describe('ContactController', () => {
 
     test('Shouldn`t add without type', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/contact')
+        .post('/personal/contact')
         .send({id: 'mail'})
         .expect(400);
     });
 
     test('Shouldn`t add without id', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/contact')
+        .post('/personal/contact')
         .send({type: 'EMAIL'})
         .expect(400);
     });
 
     test('Shouldn`t add with blank id', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/contact')
+        .post('/personal/contact')
         .send({id: '', type: 'EMAIL'})
         .expect(400);
     });
   });
 
-  describe('Contact update', () => {
+  describe('ContactEntity update', () => {
     test('Should update contact', async () => {
       await Object.assign(
         new ContactEntity(),
@@ -186,7 +188,7 @@ describe('ContactController', () => {
       ).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/contact/MAIL')
+        .put('/personal/contact/MAIL')
         .send({
           id: 'MAIL',
           type: 'PHONE',
@@ -205,7 +207,7 @@ describe('ContactController', () => {
       ).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/contact/MAIL')
+        .put('/personal/contact/MAIL')
         .send({
           id: 'MAIL',
           type: 'PHONE',
@@ -226,7 +228,7 @@ describe('ContactController', () => {
       ).save();
 
       await request(app.getHttpServer())
-        .put('/contact/MAIL')
+        .put('/personal/contact/MAIL')
         .send({
           id: 'MAIL',
           type: 'PHONE',
@@ -243,7 +245,7 @@ describe('ContactController', () => {
       ).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/contact/MAIL')
+        .put('/personal/contact/MAIL')
         .send({
           id: 'MAIL',
           type: 'PHONE',
@@ -262,7 +264,7 @@ describe('ContactController', () => {
       ).save();
 
       await request(app.getHttpServer())
-        .put('/contact/MAIL')
+        .put('/personal/contact/MAIL')
         .send({
           id: 'MAIL',
           type: 'PHONE',
@@ -272,7 +274,7 @@ describe('ContactController', () => {
     });
   });
 
-  describe('Contact delete', () => {
+  describe('ContactEntity delete', () => {
     test('Should delete contact', async () => {
       await Object.assign(
         new ContactEntity(),
@@ -280,7 +282,7 @@ describe('ContactController', () => {
       ).save();
 
       const inst = await request(app.getHttpServer())
-        .delete('/contact/MAIL')
+        .delete('/personal/contact/MAIL')
         .expect(200);
 
       expect(inst.body).toEqual(['MAIL']);
@@ -293,7 +295,7 @@ describe('ContactController', () => {
       ).save();
 
       await request(app.getHttpServer())
-        .delete('/contact/WRONG')
+        .delete('/personal/contact/WRONG')
         .expect(404);
     });
   });

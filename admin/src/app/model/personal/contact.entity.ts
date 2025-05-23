@@ -1,11 +1,11 @@
 import { StringAttributeValue } from '../string-attribute-value';
 
-export interface User {
+export interface ContactEntity {
 
   id: string;
   created_at: string;
   updated_at: string;
-  login: string;
+  type: string;
 
   flag: string[];
   attribute: StringAttributeValue[];

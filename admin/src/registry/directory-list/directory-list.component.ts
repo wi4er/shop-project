@@ -120,6 +120,8 @@ export class DirectoryListComponent implements OnInit {
       }),
       this.apiService.countData(ApiEntity.DIRECTORY),
     ]).then(([flagList, AttributeList, data, count]) => {
+
+      console.log(data);
       this.flagList = flagList;
       this.attributeList = AttributeList.map((item: { id: string }) => item.id);
       this.setData(data);

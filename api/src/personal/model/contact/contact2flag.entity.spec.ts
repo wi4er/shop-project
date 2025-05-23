@@ -5,7 +5,7 @@ import { Contact2flagEntity } from "./contact2flag.entity";
 import { ContactEntity, UserContactType } from "./contact.entity";
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
-describe('Contact 2 flag entity', () => {
+describe('ContactEntity 2 flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe('Contact 2 flag entity', () => {
   beforeEach(() => source.synchronize(true));
 
   describe('UserContact2flag fields', () => {
-    test('Should create user contact flag', async () => {
+    test('Should create personal contact flag', async () => {
       const parent = await Object.assign(new ContactEntity(), {
         id: 'EMAIL',
         type: UserContactType.EMAIL,
@@ -56,8 +56,8 @@ describe('Contact 2 flag entity', () => {
     });
   });
 
-  describe('User contact with flag', () => {
-    test('Should create user contact with flag', async () => {
+  describe('UserEntity contact with flag', () => {
+    test('Should create personal contact with flag', async () => {
       const repo = source.getRepository(ContactEntity);
 
       const parent = await Object.assign(new ContactEntity(), {

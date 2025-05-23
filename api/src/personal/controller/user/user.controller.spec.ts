@@ -2,25 +2,27 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { UserEntity } from '../../model/user/user.entity';
 import * as request from 'supertest';
-import { User4stringEntity } from '../../model/user/user4string.entity';
-import { User2flagEntity } from '../../model/user/user2flag.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
-import { User4pointEntity } from '../../model/user/user4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { ContactEntity, UserContactType } from '../../model/contact/contact.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
+import { UserEntity } from '../../model/user/user.entity';
+import { User4stringEntity } from '../../model/user/user4string.entity';
+import { DirectoryEntity } from '../../../registry/model/directory.entity';
+import { PointEntity } from '../../../registry/model/point.entity';
+import { User4pointEntity } from '../../model/user/user4point.entity';
+import { User2flagEntity } from '../../model/user/user2flag.entity';
 
 describe('UserController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -28,12 +30,12 @@ describe('UserController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('User fields', () => {
+  describe('UserEntity fields', () => {
     test('Should get empty list', async () => {
       await Object.assign(new UserEntity(), {login: 'USER'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/user')
+        .get('/personal/user')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -41,35 +43,35 @@ describe('UserController', () => {
       expect(res.body[0].login).toBe('USER');
     });
 
-    test('Should get user item', async () => {
+    test('Should get personal item', async () => {
       await Object.assign(new UserEntity(), {id: '222', login: 'USER'}).save();
 
       const res = await request(app.getHttpServer())
-        .get(`/user/222`)
+        .get(`/personal/user/222`)
         .expect(200);
 
       expect(res.body.id).toBe('222');
       expect(res.body.login).toBe('USER');
     });
 
-    test('Should get user list', async () => {
+    test('Should get personal list', async () => {
       await Object.assign(new UserEntity(), {id: '111', login: 'USER'}).save();
 
       const res = await request(app.getHttpServer())
-        .get(`/user`)
+        .get(`/personal/user`)
         .expect(200);
 
       expect(res.body[0].id).toBe('111');
       expect(res.body[0].login).toBe('USER');
     });
 
-    test('Should get user with limit', async () => {
+    test('Should get personal with limit', async () => {
       for (let i = 0; i < 10; i++) {
         await Object.assign(new UserEntity(), {login: `USER_${i}`}).save();
       }
 
       const res = await request(app.getHttpServer())
-        .get(`/user?limit=3`)
+        .get(`/personal/user?limit=3`)
         .expect(200);
 
       expect(res.body).toHaveLength(3);
@@ -78,13 +80,13 @@ describe('UserController', () => {
       expect(res.body[2].login).toBe('USER_2');
     });
 
-    test('Should get user with offset', async () => {
+    test('Should get personal with offset', async () => {
       for (let i = 0; i < 10; i++) {
         await Object.assign(new UserEntity(), {login: `USER_${i}`}).save();
       }
 
       const res = await request(app.getHttpServer())
-        .get(`/user?offset=7`)
+        .get(`/personal/user?offset=7`)
         .expect(200);
 
       expect(res.body).toHaveLength(3);
@@ -94,36 +96,36 @@ describe('UserController', () => {
     });
   });
 
-  describe('User count', () => {
+  describe('UserEntity count', () => {
     test('Should get empty count', async () => {
       const res = await request(app.getHttpServer())
-        .get('/user/count')
+        .get('/personal/user/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
     });
 
-    test('Should get user count', async () => {
+    test('Should get personal count', async () => {
       for (let i = 0; i < 10; i++) {
         await Object.assign(new UserEntity(), {login: `USER_${i}`}).save();
       }
 
       const res = await request(app.getHttpServer())
-        .get('/user/count')
+        .get('/personal/user/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 10});
     });
   });
 
-  describe('User with strings', () => {
-    test('Should get user with strings', async () => {
+  describe('UserEntity with strings', () => {
+    test('Should get personal with strings', async () => {
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
       await Object.assign(new User4stringEntity(), {parent, attribute, string: 'John'}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/user')
+        .get('/personal/user')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -132,14 +134,14 @@ describe('UserController', () => {
     });
   });
 
-  describe('User with flags', () => {
-    test('Should get user with flag', async () => {
+  describe('UserEntity with flags', () => {
+    test('Should get personal with flag', async () => {
       const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       await Object.assign(new User2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/user')
+        .get('/personal/user')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -147,7 +149,7 @@ describe('UserController', () => {
     });
   });
 
-  describe('User with points', () => {
+  describe('UserEntity with points', () => {
     test('Should get section with point', async () => {
       const parent = await Object.assign(new UserEntity(), {login: 'USER'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'GENDER'}).save();
@@ -157,7 +159,7 @@ describe('UserController', () => {
       await Object.assign(new User4pointEntity(), {point, parent, attribute}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/user')
+        .get('/personal/user')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -168,10 +170,10 @@ describe('UserController', () => {
     });
   });
 
-  describe('User addition', () => {
-    test('Should add user', async () => {
+  describe('UserEntity addition', () => {
+    test('Should add personal', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/user')
+        .post('/personal/user')
         .send({login: 'user'})
         .expect(201);
 
@@ -181,16 +183,16 @@ describe('UserController', () => {
 
     test('Shouldn`t add without login', async () => {
       await request(app.getHttpServer())
-        .post('/user')
+        .post('/personal/user')
         .send({})
         .expect(400);
     });
 
-    test('Should add user with strings', async () => {
+    test('Should add personal with strings', async () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/user')
+        .post('/personal/user')
         .send({
           login: 'user',
           attribute: [{attribute: 'NAME', string: 'VALUE'}],
@@ -202,11 +204,11 @@ describe('UserController', () => {
       expect(inst.body.attribute[0].string).toBe('VALUE');
     });
 
-    test('Should add user with flag', async () => {
+    test('Should add personal with flag', async () => {
       await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/user')
+        .post('/personal/user')
         .send({
           login: 'user',
           flag: ['ACTIVE'],
@@ -216,11 +218,11 @@ describe('UserController', () => {
       expect(inst.body.flag).toEqual(['ACTIVE']);
     });
 
-    test('Should add user with contact', async () => {
+    test('Should add personal with contact', async () => {
       await Object.assign(new ContactEntity(), {id: 'PHONE', type: UserContactType.PHONE}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/user')
+        .post('/personal/user')
         .send({
           login: 'user',
           contact: [{contact: 'PHONE', value: 'VALUE'}],
@@ -236,7 +238,7 @@ describe('UserController', () => {
       await Object.assign(new ContactEntity(), {id: 'PHONE', type: UserContactType.PHONE}).save();
 
       await request(app.getHttpServer())
-        .post('/user')
+        .post('/personal/user')
         .send({
           login: 'user',
           contact: [{contact: 'WRONG', value: 'VALUE'}],
@@ -245,12 +247,12 @@ describe('UserController', () => {
     });
   });
 
-  describe('User update', () => {
+  describe('UserEntity update', () => {
     test('Should update', async () => {
       await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/111')
+        .put('/personal/user/111')
         .send({login: 'user'})
         .expect(200);
 
@@ -262,7 +264,7 @@ describe('UserController', () => {
       await Object.assign(new UserEntity(), {id: '111', login: 'user'}).save();
 
       await request(app.getHttpServer())
-        .put('/user/111')
+        .put('/personal/user/111')
         .send({})
         .expect(400);
     });
@@ -272,7 +274,7 @@ describe('UserController', () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/111')
+        .put('/personal/user/111')
         .send({
           login: 'user',
           attribute: [{attribute: 'NAME', string: 'VALUE'}],
@@ -290,7 +292,7 @@ describe('UserController', () => {
       await Object.assign(new User4stringEntity(), {parent, attribute, string: 'OLD'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/111')
+        .put('/personal/user/111')
         .send({
           login: 'user',
           attribute: [{attribute: 'NEW', string: 'NEW'}],
@@ -307,7 +309,7 @@ describe('UserController', () => {
       await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/111')
+        .put('/personal/user/111')
         .send({
           login: 'user',
           flag: ['NEW'],
@@ -324,7 +326,7 @@ describe('UserController', () => {
       await Object.assign(new User2flagEntity(), {parent, flag}).save();
 
       const res = await request(app.getHttpServer())
-        .put('/user/111')
+        .put('/personal/user/111')
         .send({
           login: 'user',
           flag: ['NEW'],
@@ -335,17 +337,17 @@ describe('UserController', () => {
     });
   });
 
-  describe('User deletion', () => {
+  describe('UserEntity deletion', () => {
     test('Should delete', async () => {
       await Object.assign(new UserEntity(), {id: '1', login: 'USER'}).save();
 
       const drop = await request(app.getHttpServer())
-        .delete('/user/1');
+        .delete('/personal/user/1');
 
       expect(drop.body).toEqual([1]);
 
       const rest = await request(app.getHttpServer())
-        .get('/user');
+        .get('/personal/user');
 
       expect(rest.body).toEqual([]);
     });
@@ -354,7 +356,7 @@ describe('UserController', () => {
       await Object.assign(new UserEntity(), {id: '1', login: 'USER'}).save();
 
       await request(app.getHttpServer())
-        .delete('/user/WRONG')
+        .delete('/personal/user/WRONG')
         .expect(404);
     });
   });

@@ -7,14 +7,14 @@ import { FileEntity } from '../../../storage/model/file.entity';
 import { User2imageEntity } from './user2image.entity';
 import { UserEntity } from './user.entity';
 
-describe('User image entity', () => {
+describe('UserEntity image entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('User image fields', () => {
+  describe('UserEntity image fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(User2imageEntity);
       const list = await repo.find();
@@ -69,7 +69,7 @@ describe('User image entity', () => {
     });
   });
 
-  describe('User with image', () => {
+  describe('UserEntity with image', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(UserEntity);
       const parent = await Object.assign(new UserEntity(), {id: 'USER', login: 'USER'}).save();

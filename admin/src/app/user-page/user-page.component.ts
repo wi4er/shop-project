@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-user-page',
+  selector: 'app-personal-page',
   templateUrl: './user-page.component.html',
   styleUrls: ['./user-page.component.css'],
 })

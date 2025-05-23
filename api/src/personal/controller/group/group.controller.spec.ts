@@ -3,21 +3,23 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { GroupEntity } from '../../model/group/group.entity';
-import { Group4stringEntity } from '../../model/group/group4string.entity';
-import { Group2flagEntity } from '../../model/group/group2flag.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
+import { GroupEntity } from '../../model/group/group.entity';
+import { Group4stringEntity } from '../../model/group/group4string.entity';
+import { Group2flagEntity } from '../../model/group/group2flag.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
 describe('GroupController', () => {
-  let source;
-  let app;
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -25,10 +27,10 @@ describe('GroupController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Group fields', () => {
+  describe('GroupEntity fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
-        .get('/group')
+        .get('/personal/group')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
@@ -38,7 +40,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/group/111')
+        .get('/personal/group/111')
         .expect(200);
 
       expect(res.body.id).toBe('111');
@@ -49,7 +51,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '222', parent}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/group/222')
+        .get('/personal/group/222')
         .expect(200);
 
       expect(res.body.id).toBe('222');
@@ -64,7 +66,7 @@ describe('GroupController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/group')
+        .get('/personal/group')
         .expect(200);
 
       expect(res.body).toHaveLength(5);
@@ -80,7 +82,7 @@ describe('GroupController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/group?limit=2')
+        .get('/personal/group?limit=2')
         .expect(200);
 
       expect(res.body).toHaveLength(2);
@@ -94,7 +96,7 @@ describe('GroupController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/group?offset=2')
+        .get('/personal/group?offset=2')
         .expect(200);
 
       expect(res.body).toHaveLength(8);
@@ -103,10 +105,10 @@ describe('GroupController', () => {
     });
   });
 
-  describe('Group count', () => {
+  describe('GroupEntity count', () => {
     test('Should get empty count', async () => {
       const res = await request(app.getHttpServer())
-        .get('/group/count')
+        .get('/personal/group/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
@@ -118,21 +120,21 @@ describe('GroupController', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/group/count')
+        .get('/personal/group/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 10});
     });
   });
 
-  describe('Group with strings', () => {
+  describe('GroupEntity with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await new GroupEntity().save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       await Object.assign(new Group4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/group')
+        .get('/personal/group')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -149,7 +151,7 @@ describe('GroupController', () => {
       await Object.assign(new Group4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/group')
+        .get('/personal/group')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -158,14 +160,14 @@ describe('GroupController', () => {
     });
   });
 
-  describe('Group with flags', () => {
+  describe('GroupEntity with flags', () => {
     test('Should get group with flag', async () => {
       const parent = await new GroupEntity().save();
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
       await Object.assign(new Group2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/group')
+        .get('/personal/group')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -173,10 +175,10 @@ describe('GroupController', () => {
     });
   });
 
-  describe('Group addition', () => {
+  describe('GroupEntity addition', () => {
     test('Should add group', async () => {
       const inst = await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .expect(201);
 
       expect(inst.body.id).toHaveLength(36);
@@ -185,7 +187,7 @@ describe('GroupController', () => {
     test('Should add with parent', async () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
       const inst = await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .send({parent: '111'})
         .expect(201);
 
@@ -196,7 +198,7 @@ describe('GroupController', () => {
     test('Shouldn`t add with wrong parent', async () => {
       await new GroupEntity().save();
       const inst = await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .send({
           parent: 777,
         })
@@ -207,7 +209,7 @@ describe('GroupController', () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .send({
           attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
@@ -222,7 +224,7 @@ describe('GroupController', () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .send({
           attribute: [{attribute: 'WRONG', string: 'VALUE'}],
         })
@@ -233,7 +235,7 @@ describe('GroupController', () => {
       await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
 
       const inst = await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .send({
           flag: ['OLD'],
         })
@@ -246,17 +248,17 @@ describe('GroupController', () => {
       await Object.assign(new FlagEntity(), {id: 'OLD'}).save();
 
       await request(app.getHttpServer())
-        .post('/group')
+        .post('/personal/group')
         .send({flag: ['WRONG']})
         .expect(400);
     });
   });
 
-  describe('Group update', () => {
+  describe('GroupEntity update', () => {
     test('Should update group', async () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
       const inst = await request(app.getHttpServer())
-        .put('/group/111')
+        .put('/personal/group/111')
         .expect(200);
 
       expect(inst.body.id).toBe('111');
@@ -267,7 +269,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '222'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/group/222')
+        .put('/personal/group/222')
         .send({parent: '111'})
         .expect(200);
 
@@ -280,7 +282,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '222'}).save();
 
       await request(app.getHttpServer())
-        .put('/group/222')
+        .put('/personal/group/222')
         .send({parent: '777'})
         .expect(400);
     });
@@ -290,7 +292,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/group/111')
+        .put('/personal/group/111')
         .send({
           attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
@@ -305,7 +307,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       await request(app.getHttpServer())
-        .put('/group/111')
+        .put('/personal/group/111')
         .send({
           attribute: [{attribute: 'WRONG', string: 'VALUE'}],
         })
@@ -317,7 +319,7 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       const inst = await request(app.getHttpServer())
-        .put('/group/111')
+        .put('/personal/group/111')
         .send({flag: ['NEW']})
         .expect(200);
 
@@ -329,17 +331,17 @@ describe('GroupController', () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
 
       await request(app.getHttpServer())
-        .put('/group/111')
+        .put('/personal/group/111')
         .send({flag: ['WRONG']})
         .expect(400);
     });
   });
 
-  describe('Group delete', () => {
+  describe('GroupEntity delete', () => {
     test('Should delete group', async () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
       const inst = await request(app.getHttpServer())
-        .delete('/group/111')
+        .delete('/personal/group/111')
         .expect(200);
 
       expect(inst.body).toEqual(['111']);
@@ -348,7 +350,7 @@ describe('GroupController', () => {
     test('Shouldn`t delete with wrong group', async () => {
       await Object.assign(new GroupEntity(), {id: '111'}).save();
       await request(app.getHttpServer())
-        .delete('/group/777')
+        .delete('/personal/group/777')
         .expect(404);
     });
   });

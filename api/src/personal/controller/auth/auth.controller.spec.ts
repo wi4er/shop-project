@@ -23,7 +23,7 @@ describe('AuthController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('User auth', () => {
+  describe('UserEntity auth', () => {
     test('Should auth', async () => {
       await Object.assign(new UserEntity(), {
         id: 'USER',
@@ -32,7 +32,7 @@ describe('AuthController', () => {
       }).save();
 
       const res = await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .send({
           login: 'USER',
           password: 'qwerty',
@@ -54,7 +54,7 @@ describe('AuthController', () => {
       await Object.assign(new User2groupEntity(), {group, parent}).save();
 
       const res = await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .send({
           login: 'USER',
           password: 'qwerty',
@@ -82,7 +82,7 @@ describe('AuthController', () => {
       await Object.assign(new User2groupEntity(), {group, parent: parent2}).save();
 
       const res = await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .send({
           login: 'USER_2',
           password: 'qwerty',
@@ -102,7 +102,7 @@ describe('AuthController', () => {
       }).save();
 
       await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .send({
           login: 'USER',
           password: 'wrong',
@@ -118,7 +118,7 @@ describe('AuthController', () => {
       }).save();
 
       await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .send({
           login: 'USER',
         })
@@ -132,7 +132,7 @@ describe('AuthController', () => {
       }).save();
 
       const res = await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .set('Content-Type', 'text/plain')
         .send('123')
         .expect(400);
@@ -147,7 +147,7 @@ describe('AuthController', () => {
       }).save();
 
       const user = await request(app.getHttpServer())
-        .post('/auth')
+        .post('/personal/auth')
         .send({
           login: 'USER',
           password: 'qwerty'
@@ -157,7 +157,7 @@ describe('AuthController', () => {
       const cookie = user.headers['set-cookie'];
 
       const res = await request(app.getHttpServer())
-        .delete('/auth')
+        .delete('/personal/auth')
         .set('cookie', cookie)
         .expect(200);
 
@@ -166,7 +166,7 @@ describe('AuthController', () => {
 
     test('Shouldn`t close without session', async () => {
       const res = await request(app.getHttpServer())
-        .delete('/auth')
+        .delete('/personal/auth')
         .expect(400);
 
       expect(res.body).toBe(false);

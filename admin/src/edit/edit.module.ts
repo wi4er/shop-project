@@ -16,7 +16,7 @@ import { ImageEditComponent } from './image-edit/image-edit.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PermissionEditComponent } from './permission-edit/permission-edit.component';
+import { AccessEditComponent } from './access-edit/access-edit.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { PermissionEditComponent } from './permission-edit/permission-edit.compo
     ImageEditComponent,
     ItemMenuComponent,
     GroupPermissionComponent,
-    PermissionEditComponent,
+    AccessEditComponent,
   ],
   imports: [
     CommonModule,
@@ -48,7 +48,7 @@ import { PermissionEditComponent } from './permission-edit/permission-edit.compo
     ImageEditComponent,
     ItemMenuComponent,
     GroupPermissionComponent,
-    PermissionEditComponent,
+    AccessEditComponent,
   ],
 })
 export class EditModule {

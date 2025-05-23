@@ -34,6 +34,7 @@ export class User2groupEntity extends BaseEntity {
     {
       nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   )
   group: GroupEntity;
@@ -44,6 +45,7 @@ export class User2groupEntity extends BaseEntity {
     {
       nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   )
   parent: UserEntity;

@@ -10,8 +10,8 @@ import { PermissionException } from '../../../exception/permission/permission.ex
 import { MyselfRender } from '../../render/myself.render';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
-@ApiTags('User authorization')
-@Controller('auth')
+@ApiTags('UserEntity authorization')
+@Controller('personal/auth')
 export class AuthController {
 
   relations = {
@@ -27,7 +27,7 @@ export class AuthController {
   }
 
   @Post()
-  @ApiResponse({status: 403, description: 'User login or password incorrect!'})
+  @ApiResponse({status: 403, description: 'UserEntity login or password incorrect!'})
   @ApiResponse({status: 200, description: 'Successfully authorized!'})
   async createSession(
     @Body() body: {
@@ -38,14 +38,14 @@ export class AuthController {
       req: Request,
   ): Promise<MyselfRender> {
     const user = await this.userRepo.findOne({
-      where: {login: WrongDataException.assert(body.login, 'User login expected')},
+      where: {login: WrongDataException.assert(body.login, 'UserEntity login expected')},
       relations: this.relations,
     });
 
-    const password = WrongDataException.assert(body.password, 'User password expected');
+    const password = WrongDataException.assert(body.password, 'UserEntity password expected');
     PermissionException.assert(
       user?.hash === this.encodeService.toSha256(password),
-      'Wrong user or password',
+      'Wrong personal or password',
     );
     this.sessionService.open(req, user);
 

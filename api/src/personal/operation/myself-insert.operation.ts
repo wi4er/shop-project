@@ -32,7 +32,7 @@ export class MyselfInsertOperation {
    * @private
    */
   private async checkLogin(login: string): Promise<string> {
-    WrongDataException.assert(login, 'User login expected!');
+    WrongDataException.assert(login, 'UserEntity login expected!');
 
     const contactRepo = this.trans.getRepository(UserEntity);
     const inst = await contactRepo.findOne({where: {login}});
@@ -47,7 +47,7 @@ export class MyselfInsertOperation {
    * @private
    */
   private async checkPassword(password: string): Promise<string> {
-    WrongDataException.assert(password, 'User password expected!');
+    WrongDataException.assert(password, 'UserEntity password expected!');
 
     return this.encodeService.toSha256(password);
   }

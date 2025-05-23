@@ -8,10 +8,9 @@ import { UserGroupUpdateOperation } from '../../operation/group/user-group-updat
 import { UserGroupDeleteOperation } from '../../operation/group/user-group-delete.operation';
 import { GroupRender } from '../../render/group.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { CheckId } from '../../../common/guard/check-id.guard';
 
-@Controller('group')
+@Controller('personal/group')
 export class GroupController {
 
   relations = {
@@ -48,6 +47,7 @@ export class GroupController {
   }
 
   @Get(':id')
+  @CheckId(GroupEntity)
   async getItem(
     @Param('id')
       id: string,
@@ -73,6 +73,7 @@ export class GroupController {
   }
 
   @Put(':id')
+  @CheckId(GroupEntity)
   async updateItem(
     @Param('id')
       id: string,
@@ -89,19 +90,13 @@ export class GroupController {
   }
 
   @Delete(':id')
+  @CheckId(GroupEntity)
   async deleteItem(
     @Param('id')
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => {
-        NoDataException.assert(
-          await trans.getRepository(GroupEntity).findOne({where: {id}}),
-          `Group with id >> ${id} << not found!`,
-        );
-
-        return new UserGroupDeleteOperation(trans).save([id])
-      },
+      async trans => new UserGroupDeleteOperation(trans).save([id]),
     );
   }
 

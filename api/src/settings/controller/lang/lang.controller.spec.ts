@@ -14,7 +14,7 @@ import { AccessTarget } from '../../../personal/model/access/access-target';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
-describe('LangController', () => {
+describe('Lang Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 
@@ -29,16 +29,30 @@ describe('LangController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  async function createLang(
-    id: string,
-    method: AccessMethod | null = AccessMethod.ALL,
-  ): Promise<LangEntity> {
-    const res = new LangEntity();
-    res.id = id;
+  function createLang(id: string): Promise<LangEntity> & any {
+    const item = new LangEntity();
+    item.id = id;
 
-    if (method) await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method}).save();
+    let method: AccessMethod = AccessMethod.ALL;
 
-    return res.save();
+    return Object.assign(Promise.resolve({
+      then: resolve => resolve(
+        source.getRepository(AccessEntity)
+          .findOne({where: {method, target: AccessTarget.LANG}})
+          .then(inst => {
+            if (!inst && method) return Object.assign(new AccessEntity(), {
+              method,
+              target: AccessTarget.LANG,
+            }).save();
+          })
+          .then(() => item.save()),
+      ),
+    }), {
+      withAccess(updated: AccessMethod) {
+        method = updated;
+        return this;
+      },
+    });
   }
 
   describe('Lang list', () => {
@@ -100,7 +114,7 @@ describe('LangController', () => {
     });
 
     test('Shouldn`t get instance without access', async () => {
-      await createLang('EN', null);
+      await createLang('EN').withAccess(null);
 
       await request(app.getHttpServer())
         .get('/lang/EN')
@@ -128,13 +142,9 @@ describe('LangController', () => {
     });
 
     test('Shouldn`t count without access', async () => {
-      await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get('/lang/count')
-        .expect(200);
-
-      expect(res.body.count).toBe(0);
+        .expect(403);
     });
 
     test('Should count lang list', async () => {
@@ -220,6 +230,13 @@ describe('LangController', () => {
       expect(res.body.id).toBe('EN');
     });
 
+    test('Shouldn`t add without access', async () => {
+      await request(app.getHttpServer())
+        .post('/lang')
+        .send({id: 'EN'})
+        .expect(403);
+    });
+
     test('Shouldn`t add with duplicate id', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -280,7 +297,7 @@ describe('LangController', () => {
     });
 
     test('Shouldn`t update without access', async () => {
-      await createLang('EN', null);
+      await createLang('EN').withAccess(null);
 
       await request(app.getHttpServer())
         .put('/lang/EN')
@@ -332,7 +349,7 @@ describe('LangController', () => {
     });
   });
 
-  describe('Lang delete', () => {
+  describe('Lang deletion', () => {
     test('Should delete lang', async () => {
       await createLang('EN');
 
@@ -344,7 +361,7 @@ describe('LangController', () => {
     });
 
     test('Shouldn`t delete without access', async () => {
-      await Object.assign(new LangEntity(), {id: 'EN'}).save();
+      await createLang('EN').withAccess(null);
 
       await request(app.getHttpServer())
         .delete('/lang/EN')

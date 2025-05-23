@@ -3,7 +3,7 @@ import { createConnection } from "typeorm";
 import { createConnectionOptions } from "../../../createConnectionOptions";
 import { ContactEntity, UserContactType } from "./contact.entity";
 
-describe('Contact entity', () => {
+describe('ContactEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,7 +13,7 @@ describe('Contact entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Contact fields', () => {
+  describe('ContactEntity fields', () => {
     test('Should create', async () => {
       const inst = new ContactEntity();
       inst.id = 'mail';

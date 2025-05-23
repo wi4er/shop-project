@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiEntity, ApiService } from './api.service';
-import { User } from '../model/user/user';
+import { UserEntity } from '../model/personal/user.entity';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -8,15 +8,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class UserService {
 
-  private userSubject = new BehaviorSubject<User | null | undefined>(undefined);
-  user: Observable<User | null | undefined> = this.userSubject.asObservable();
+  private userSubject = new BehaviorSubject<UserEntity | null | undefined>(undefined);
+  user: Observable<UserEntity | null | undefined> = this.userSubject.asObservable();
 
   authorize: boolean = false;
 
   constructor(
     private apiService: ApiService,
   ) {
-    fetch('http://localhost:3030/myself', {
+    fetch('http://localhost:3030/personal/myself', {
       credentials: 'include',
     }).then(res => {
       if (res.ok) {
@@ -34,8 +34,8 @@ export class UserService {
   async authUser(
     login: string,
     password: string,
-  ): Promise<User | null> {
-    await fetch('http://localhost:3030/auth', {
+  ): Promise<UserEntity | null> {
+    await fetch('http://localhost:3030/personal/auth', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -56,7 +56,7 @@ export class UserService {
    *
    */
   async logOutUser() {
-    await fetch('http://localhost:3030/auth', {
+    await fetch('http://localhost:3030/personal/auth', {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',

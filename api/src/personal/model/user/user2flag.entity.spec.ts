@@ -16,7 +16,7 @@ describe('User2flag entity', () => {
   beforeEach(() => source.synchronize(true));
 
   describe('User2flag fields', () => {
-    test('Should create user flag', async () => {
+    test('Should create personal flag', async () => {
       const parent = await Object.assign(new UserEntity(), { login: 'user' }).save();
       const flag = await Object.assign(new FlagEntity(), { id: 'ACTIVE' }).save();
 
@@ -51,7 +51,7 @@ describe('User2flag entity', () => {
     });
   });
 
-  describe("User with flags", () => {
+  describe("UserEntity with flags", () => {
     test('Should add item', async () => {
       const repo = source.getRepository(UserEntity);
       const flag = await Object.assign(new FlagEntity(), { id: 'DATA' }).save();

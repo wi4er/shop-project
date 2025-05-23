@@ -5,15 +5,15 @@ import { UserEntity } from './user.entity';
 import { ContactEntity, UserContactType } from '../contact/contact.entity';
 import { User2contactEntity } from './user2contact.entity';
 
-describe('User Contact entity', () => {
+describe('UserEntity ContactEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('User with contacts', () => {
-    test('Should create user with contact', async () => {
+  describe('UserEntity with contacts', () => {
+    test('Should create personal with contact', async () => {
       const repo = source.getRepository(UserEntity);
       const parent = await Object.assign(new UserEntity(), {id: 'user', login: 'user'}).save();
       const contact = await Object.assign(
