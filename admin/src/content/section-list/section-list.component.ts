@@ -12,6 +12,9 @@ import { Element } from '../../app/model/content/element';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SectionSettingsComponent } from '../section-settings/section-settings.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ElementHistoryComponent } from '../element-history/element-history.component';
+import { SectionHistoryComponent } from '../section-history/section-history.component';
+import { DateService } from '../../app/service/date.service';
 
 @Component({
   selector: 'content-section-list',
@@ -55,6 +58,7 @@ export class SectionListComponent implements OnChanges {
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
     private messageBar: MatSnackBar,
+    public dateService: DateService,
   ) {
   }
 
@@ -66,6 +70,8 @@ export class SectionListComponent implements OnChanges {
       'select',
       'action',
       'flags',
+      'created_at',
+      'updated_at',
       ...this.columns,
       'image',
     ];
@@ -195,7 +201,7 @@ export class SectionListComponent implements OnChanges {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', 'sort', ...col];
+    this.columns = ['id', 'sort', ...col];
   }
 
   /**
@@ -281,6 +287,20 @@ export class SectionListComponent implements OnChanges {
     );
 
     dialog.afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      SectionHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

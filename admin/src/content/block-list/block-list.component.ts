@@ -10,6 +10,8 @@ import { Flag } from '../../app/model/settings/flag';
 import { Attribute } from '../../app/model/settings/attribute';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BlockSettingsComponent } from '../block-settings/block-settings.component';
+import { DateService } from '../../app/service/date.service';
+import { BlockHistoryComponent } from '../block-history/block-history.component';
 
 @Component({
   selector: 'app-block-list',
@@ -36,6 +38,7 @@ export class BlockListComponent implements OnInit {
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
     private router: Router,
+    public dateService: DateService,
   ) {
   }
 
@@ -242,6 +245,20 @@ export class BlockListComponent implements OnInit {
       {
         width: '1000px',
         panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      BlockHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
       },
     ).afterClosed().subscribe(() => this.refreshData());
   }

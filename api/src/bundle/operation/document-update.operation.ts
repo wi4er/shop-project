@@ -18,7 +18,7 @@ export class DocumentUpdateOperation {
   /**
    *
    */
-  private async checkBlock(id: number): Promise<DocumentEntity> {
+  private async checkDocument(id: string): Promise<DocumentEntity> {
     const docRepo = this.manager.getRepository(DocumentEntity);
 
     return NoDataException.assert(
@@ -36,8 +36,8 @@ export class DocumentUpdateOperation {
   /**
    *
    */
-  async save(id: number, input: DocumentInput): Promise<number> {
-    const beforeItem = await this.checkBlock(id);
+  async save(id: string, input: DocumentInput): Promise<string> {
+    const beforeItem = await this.checkDocument(id);
 
     await beforeItem.save();
 

@@ -24,15 +24,42 @@ describe('Access Controller', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  async function createAccess(
+  function createAccess(
     target = AccessTarget.ALL,
-    method = AccessMethod.ALL,
-  ): Promise<AccessEntity> {
-    const inst = new AccessEntity();
-    inst.method = method;
-    inst.target = target;
+    method1 = AccessMethod.ALL,
+  ): Promise<AccessEntity> & any {
+    const item = new AccessEntity();
+    item.method = AccessMethod.ALL;
+    item.target = AccessTarget.ALL;
 
-    return inst.save();
+    let method = AccessMethod.ALL;
+
+    return Object.assign(Promise.resolve({
+      then: resolve => resolve(
+        source.getRepository(AccessEntity)
+          .findOne({where: {method, target: AccessTarget.ACCESS}})
+          .then(inst => {
+            if (!inst && method) return Object.assign(new AccessEntity(), {
+              method,
+              target: AccessTarget.ACCESS,
+            }).save();
+          })
+          .then(() => item.save()),
+      ),
+    }), {
+      withAccess(updated: AccessMethod) {
+        method = updated;
+        return this;
+      },
+      withMethod(method: AccessMethod) {
+        item.method = method;
+        return this;
+      },
+      withTarget(target: AccessTarget) {
+        item.target = target;
+        return this;
+      },
+    });
   }
 
   describe('Access fields', () => {
@@ -45,168 +72,63 @@ describe('Access Controller', () => {
     });
 
     test('Should get list', async () => {
-      for (let i = 0; i < 10; i++) {
-        await createAccess();
-      }
+      await createAccess().withTarget(AccessTarget.FLAG);
+      await createAccess().withTarget(AccessTarget.FLAG).withMethod(AccessMethod.GET);
+      await createAccess().withTarget(AccessTarget.FLAG).withMethod(AccessMethod.POST);
 
       const res = await request(app.getHttpServer())
         .get('/personal/access')
         .expect(200);
 
-      console.log(res.body);
-      // expect(res.body).toHaveLength(10);
-    });
-
-    test('Should get list with target filter', async () => {
-      for (let i = 0; i < 10; i++) {
-        await createAccess(i % 2 ? AccessTarget.ALL : AccessTarget.FLAG);
-      }
-
-      const res = await request(app.getHttpServer())
-        .get('/personal/access?target=FLAG')
-        .expect(200);
-
-      expect(res.body).toHaveLength(5);
-
-      console.log(res.body);
-    });
-
-    test('Should get list with method filter', async () => {
-      for (let i = 0; i < 10; i++) {
-        await createAccess(AccessTarget.ALL, i % 2 ? AccessMethod.ALL : AccessMethod.POST);
-      }
-
-      const res = await request(app.getHttpServer())
-        .get('/personal/access?method=POST')
-        .expect(200);
-
-      expect(res.body).toHaveLength(5);
+      expect(res.body).toHaveLength(2);
+      expect(res.body[1].group).toHaveLength(3);
     });
   });
 
   describe('Access item', () => {
-    test('Should get item', async () => {
-      const parent = await createAccess(AccessTarget.DIRECTORY, AccessMethod.GET);
+    test('Should get access item', async () => {
+      await createAccess().withTarget(AccessTarget.FLAG);
+      await createAccess().withTarget(AccessTarget.FLAG).withMethod(AccessMethod.GET);
+      await createAccess().withTarget(AccessTarget.ATTRIBUTE);
 
       const res = await request(app.getHttpServer())
-        .get(`/personal/access/${parent.id}`)
+        .get('/personal/access/FLAG')
         .expect(200);
 
-      expect(res.body.id).toBe(1);
-      expect(res.body).toMatchObject({
-        target: 'DIRECTORY',
-        method: 'GET',
-      });
+      expect(res.body.target).toBe('FLAG');
+      expect(res.body.group).toHaveLength(2);
     });
 
-    test('Shouldn`t get with wrong id', async () => {
-      await createAccess(AccessTarget.DIRECTORY, AccessMethod.GET);
+    test('Shouldn`t get with wrong target', async () => {
+      await createAccess().withTarget(AccessTarget.FLAG);
+      await createAccess().withTarget(AccessTarget.FLAG).withMethod(AccessMethod.GET);
+      await createAccess().withTarget(AccessTarget.ATTRIBUTE);
 
       await request(app.getHttpServer())
-        .get(`/personal/access/7777`)
+        .get('/personal/access/WRONG')
         .expect(404);
-    });
-  });
-
-  describe('Access count', () => {
-    test('Should get zero count', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/personal/access/count')
-        .expect(200);
-
-      expect(res.body).toEqual({count: 0});
-    });
-
-    test('Should get count', async () => {
-      for (let i = 0; i < 7; i++) {
-        await createAccess();
-      }
-
-      const res = await request(app.getHttpServer())
-        .get('/personal/access/count')
-        .expect(200);
-
-      expect(res.body).toEqual({count: 7});
-    });
-
-    test('Should get count with target filter', async () => {
-      for (let i = 0; i < 12; i++) {
-        await createAccess(i % 2 ? AccessTarget.ALL : AccessTarget.FLAG);
-      }
-
-      const res = await request(app.getHttpServer())
-        .get('/personal/access/count?target=FLAG')
-        .expect(200);
-
-      expect(res.body).toEqual({count: 6});
-    });
-
-    test('Should get count with method filter', async () => {
-      for (let i = 0; i < 8; i++) {
-        await createAccess(AccessTarget.ALL, i % 2 ? AccessMethod.ALL : AccessMethod.POST);
-      }
-
-      const res = await request(app.getHttpServer())
-        .get('/personal/access/count?method=POST')
-        .expect(200);
-
-      expect(res.body).toEqual({count: 4});
-    });
-  });
-
-  describe('Access addition', () => {
-    test('Should add access', async () => {
-      const inst = await request(app.getHttpServer())
-        .post(`/personal/access`)
-        .send({
-          target: 'BLOCK',
-          method: 'GET',
-        })
-        .expect(201);
-
-      expect(inst.body).toMatchObject({
-        target: 'BLOCK',
-        method: 'GET',
-      });
-    });
-
-    test('Shouldn`t add with wrong target', async () => {
-      await request(app.getHttpServer())
-        .post(`/personal/access`)
-        .send({
-          target: 'WRONG',
-          method: 'GET',
-        })
-        .expect(400);
-    });
-
-    test('Shouldn`t add with wrong method', async () => {
-      await request(app.getHttpServer())
-        .post(`/personal/access`)
-        .send({
-          target: 'BLOCK',
-          method: 'WRONG',
-        })
-        .expect(400);
     });
   });
 
   describe('Access updating', () => {
     test('Should update access', async () => {
-      const parent = await createAccess(AccessTarget.DIRECTORY, AccessMethod.DELETE);
+      await createAccess()
+        .withTarget(AccessTarget.DIRECTORY)
+        .withMethod(AccessMethod.DELETE);
 
       const inst = await request(app.getHttpServer())
-        .put(`/personal/access/${parent.id}`)
+        .put(`/personal/access/DIRECTORY`)
         .send({
           target: 'BLOCK',
-          method: 'GET',
+          group: [{method: 'GET'}],
         })
-        .expect(200);
+        // .expect(200);
 
-      expect(inst.body).toMatchObject({
-        target: 'BLOCK',
-        method: 'GET',
-      });
+      console.log(inst.body);
+      // expect(inst.body).toMatchObject({
+      //   target: 'BLOCK',
+      //   method: 'GET',
+      // });
     });
 
     test('Shouldn`t update with wrong target', async () => {

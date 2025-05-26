@@ -21,6 +21,7 @@ import { AccessDeleteOperation } from '../../operation/access/access-delete.oper
 import { CheckId } from '../../../common/guard/check-id.guard';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AccessTarget } from '../../model/access/access-target';
+import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 export interface AccessGroup {
 
@@ -94,7 +95,7 @@ export class AccessController {
   ) {
     return this.accessRepo.find({
       where: {
-        target: WrongDataException.assert(
+        target: NoDataException.assert(
           AccessTarget[target],
           `Wrong access target [${Reflect.ownKeys(AccessTarget).join(', ')}] expected!`,
         ),
@@ -107,48 +108,26 @@ export class AccessController {
     });
   }
 
-  // @Post()
-  // async addItem(
-  //   @Body()
-  //     input: AccessInput,
-  // ) {
-  //   const item = await this.entityManager.transaction(
-  //     trans => new AccessInsertOperation(trans).save(input)
-  //       .then(id => trans.getRepository(AccessEntity).findOne({
-  //         where: {id},
-  //         relations: this.relations,
-  //       })));
-  //
-  //   return this.toView(item);
-  // }
-  //
-  // @Put(':id')
-  // @CheckId(AccessEntity)
-  // async updateItem(
-  //   @Param('id')
-  //     id: number,
-  //   @Body()
-  //     input: AccessInput,
-  // ) {
-  //   const item = await this.entityManager.transaction(
-  //     trans => new AccessUpdateOperation(trans).save(id, input)
-  //       .then(updatedId => trans.getRepository(AccessEntity).findOne({
-  //         where: {id: updatedId},
-  //         relations: this.relations,
-  //       })));
-  //
-  //   return this.toView(item);
-  // }
-  //
-  // @Delete(':id')
-  // @CheckId(AccessEntity)
-  // async deleteItem(
-  //   @Param('id')
-  //     id: number,
-  // ): Promise<number[]> {
-  //   return this.entityManager.transaction(
-  //     async trans => new AccessDeleteOperation(trans).save([id]),
-  //   );
-  // }
+  @Put(':id')
+  async updateItem(
+    @Param('id')
+      id: string,
+    @Body()
+      input: AccessInput,
+  ) {
+    const item = await this.entityManager.transaction(
+      trans => new AccessUpdateOperation(trans).save(id, input)
+        .then(updatedId => trans.getRepository(AccessEntity).find({
+          where: {
+            target: NoDataException.assert(
+              AccessTarget[id],
+              `Wrong access target [${Reflect.ownKeys(AccessTarget).join(', ')}] expected!`,
+            ),
+          },
+          relations: this.relations,
+        })));
+
+    return this.toView(this.toGroup(item)[0]);
+  }
 
 }

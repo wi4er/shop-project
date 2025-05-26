@@ -21,7 +21,7 @@ export class DocumentInsertOperation {
    *
    * @param input
    */
-  async save(input: DocumentInput): Promise<number> {
+  async save(input: DocumentInput): Promise<string> {
     await this.manager.save(this.created);
 
     const [stringList, pointList] = filterAttributes(input.attribute);

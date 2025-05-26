@@ -19,14 +19,14 @@ export class AccessInsertOperation {
    *
    */
   async save(input: AccessInput): Promise<number> {
-    this.created.target = WrongDataException.assert(
-      AccessTarget[input.target],
-      `Wrong access target, [${Reflect.ownKeys(AccessTarget).join(', ')}] expected!`,
-    );
-    this.created.method = WrongDataException.assert(
-      AccessMethod[input.method],
-      `Wrong access method, [${Reflect.ownKeys(AccessMethod).join(', ')}] expected!`,
-    );
+    // this.created.target = WrongDataException.assert(
+    //   AccessTarget[input.target],
+    //   `Wrong access target, [${Reflect.ownKeys(AccessTarget).join(', ')}] expected!`,
+    // );
+    // this.created.method = WrongDataException.assert(
+    //   AccessMethod[input.method],
+    //   `Wrong access method, [${Reflect.ownKeys(AccessMethod).join(', ')}] expected!`,
+    // );
 
     try {
       await this.transaction.insert(AccessEntity, this.created);

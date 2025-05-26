@@ -76,6 +76,7 @@ export class FlagListComponent implements OnInit {
       'select',
       'action',
       'flags',
+      'icon',
       ...this.columns,
     ];
   }
@@ -138,6 +139,8 @@ export class FlagListComponent implements OnInit {
         'id': String(item.id),
         created_at: item.created_at,
         updated_at: item.updated_at,
+        icon: item.icon ?? '',
+        color: item.color ?? '',
       };
 
       for (const it of item.attribute) {

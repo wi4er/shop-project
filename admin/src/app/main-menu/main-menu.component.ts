@@ -69,7 +69,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'folder',
       }, {
         title: 'Documents',
-        link: '/document',
+        link: '/bundle',
         icon: 'notes',
       }, {
         title: 'Storage',

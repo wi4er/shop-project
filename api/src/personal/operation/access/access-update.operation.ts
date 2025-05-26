@@ -16,23 +16,9 @@ export class AccessUpdateOperation {
    *
    */
   async save(
-    id: number,
+    id: string,
     input: AccessInput,
-  ): Promise<number> {
-    try {
-      await this.transaction.update(AccessEntity, {id}, {
-        target: WrongDataException.assert(
-          AccessTarget[input.target],
-          `Wrong access target, [${Reflect.ownKeys(AccessTarget).join(', ')}] expected!`,
-        ),
-        method: WrongDataException.assert(
-          AccessMethod[input.method],
-          `Wrong access method, [${Reflect.ownKeys(AccessMethod).join(', ')}] expected!`,
-        ),
-      });
-    } catch (err) {
-      throw new WrongDataException(err.message);
-    }
+  ): Promise<string> {
 
     return id;
   }

@@ -56,9 +56,9 @@ import { Flag2flagEntity } from './settings/model/flag2flag.entity';
 import { LangEntity } from './settings/model/lang.entity';
 import { Lang4stringEntity } from './settings/model/lang4string.entity';
 import { Lang2flagEntity } from './settings/model/lang2flag.entity';
-import { DocumentEntity } from './document/model/document.entity';
-import { Document4stringEntity } from './document/model/document4string.entity';
-import { Document2flagEntity } from './document/model/document2flag.entity';
+import { DocumentEntity } from './bundle/model/document.entity';
+import { Document4stringEntity } from './bundle/model/document4string.entity';
+import { Document2flagEntity } from './bundle/model/document2flag.entity';
 import { Element2permissionEntity } from './content/model/element2permission.entity';
 import { Section2permissionEntity } from './content/model/section2permission.entity';
 import { Element4sectionEntity } from './content/model/element4section.entity';
@@ -86,6 +86,7 @@ import { Directory2permissionEntity } from './registry/model/directory2permissio
 import { AccessEntity } from './personal/model/access/access.entity';
 import { Point2logEntity } from './registry/model/point2log.entity';
 import { Directory2logEntity } from './registry/model/directory2log.entity';
+import { InstanceEntity } from './bundle/model/instance.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -131,6 +132,7 @@ export function createConnectionOptions(): DataSourceOptions {
       FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
       ResultEntity,
       DocumentEntity, Document2flagEntity, Document4stringEntity,
+      InstanceEntity,
       FileEntity, File2flagEntity, File4stringEntity,
       CollectionEntity, Collection2flagEntity, Collection4stringEntity,
     ],

@@ -14,6 +14,9 @@ import { ElementSettingsComponent } from '../element-settings/element-settings.c
 import { PermissionValue } from '../../app/model/permission/permission-value';
 import { PermissionMethod } from '../../app/model/permission/permission-method';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DirectoryHistoryComponent } from '../../registry/directory-history/directory-history.component';
+import { ElementHistoryComponent } from '../element-history/element-history.component';
+import { DateService } from '../../app/service/date.service';
 
 @Component({
   selector: 'content-element-list',
@@ -60,6 +63,7 @@ export class ElementListComponent implements OnChanges {
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
     private messageBar: MatSnackBar,
+    public dateService: DateService,
   ) {
   }
 
@@ -308,6 +312,20 @@ export class ElementListComponent implements OnChanges {
         width: '500px',
         panelClass: 'wrapper',
         data: {block: this.blockId},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      ElementHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
       },
     ).afterClosed().subscribe(() => this.refreshData());
   }

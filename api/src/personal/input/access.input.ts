@@ -3,6 +3,9 @@ export class AccessInput {
   id: number;
 
   target: string;
-  method: string;
+  group: Array<{
+    group: string;
+    method: string;
+  }>;
 
 }

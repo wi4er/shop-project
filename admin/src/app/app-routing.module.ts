@@ -59,7 +59,7 @@ const routes: Routes = [{
   path: 'document',
   component: DocumentListComponent,
 }, {
-  path: 'document/:id',
+  path: 'bundle/:id',
   component: DocumentPageComponent,
 }, {
   path: 'storage',

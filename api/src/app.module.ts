@@ -13,7 +13,7 @@ import * as cors from 'cors';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { WrongDataFilter } from './exception/wrong-data/wrong-data.filter';
 import { SettingsModule } from './settings/settings.module';
-import { DocumentModule } from './document/document.module';
+import { DocumentModule } from './bundle/document.module';
 import { ReportModule } from './report/report.module';
 import { NoDataFilter } from './exception/no-data/no-data.filter';
 import redisPermission from './permission/redis.permission';

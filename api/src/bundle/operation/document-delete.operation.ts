@@ -8,7 +8,7 @@ export class DocumentDeleteOperation {
   ) {
   }
 
-  async save(idList: number[]) {
+  async save(idList: string[]) {
     const docRepo = this.manager.getRepository(DocumentEntity);
 
     const result = [];

@@ -87,6 +87,7 @@
           [onDelete]="deleteItem.bind(this, element.id)"
           [onEdit]="updateItem.bind(this, element.id)"
           [onFlag]="toggleFlag.bind(this, +element.id)"
+          [onHistory]="openHistory.bind(this, element.id)"
         ></app-item-menu>
       </mat-menu>
     </td>
@@ -154,7 +155,14 @@
       mat-cell
       *matCellDef="let element"
     >
-      <span [innerHTML]="element.created_at | date:'dd MMM y, HH:mm:ss'"></span>
+      <button
+        mat-button
+        [matTooltip]="dateService.calculateTimeAgo(element.created_at)"
+        matTooltipPosition="above"
+        (click)="openHistory(element.id)"
+      >
+        <span> {{ element.created_at | date:'dd MMM y, HH:mm:ss' }}</span>
+      </button>
     </td>
   </ng-container>
 
@@ -172,7 +180,14 @@
       mat-cell
       *matCellDef="let element"
     >
-      <span [innerHTML]="element.updated_at | date:'dd MMM y, HH:mm:ss'"></span>
+      <button
+        mat-button
+        [matTooltip]="dateService.calculateTimeAgo(element.updated_at)"
+        matTooltipPosition="above"
+        (click)="openHistory(element.id)"
+      >
+        <span> {{ element.updated_at | date:'dd MMM y, HH:mm:ss' }}</span>
+      </button>
     </td>
   </ng-container>
 

@@ -36,5 +36,10 @@
     <mat-icon *ngIf="active.includes(flag.id)">check</mat-icon>
     <mat-icon *ngIf="!active.includes(flag.id)"></mat-icon>
     <span> {{ getFlagName(flag) }} </span>
+    <mat-icon
+      *ngIf="flag.icon"
+      [style]="'color:' + flag.color"
+    > {{ flag.icon }}
+    </mat-icon>
   </button>
 </ng-container>

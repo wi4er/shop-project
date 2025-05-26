@@ -2,22 +2,26 @@ import {
   BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, OneToMany,
-  PrimaryGeneratedColumn,
+  Entity, OneToMany, PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { WithFlagEntity } from '../../common/model/with-flag.entity';
 import { WithStringEntity } from '../../common/model/with-string.entity';
 import { Document2flagEntity } from './document2flag.entity';
 import { Document4stringEntity } from './document4string.entity';
+import { InstanceEntity } from './instance.entity';
 
-@Entity('document')
+@Entity('bundle-document')
 export class DocumentEntity
   extends BaseEntity
   implements WithFlagEntity<DocumentEntity>, WithStringEntity<DocumentEntity> {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({
+    type: "varchar",
+    length: 36,
+    default: () => 'uuid_generate_v4()',
+  })
+  id: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -30,6 +34,12 @@ export class DocumentEntity
 
   @VersionColumn()
   version: number;
+
+  @OneToMany(
+    type => InstanceEntity,
+    entity => entity.document,
+  )
+  instance: Array<InstanceEntity>;
 
   @OneToMany(
     type => Document4stringEntity,

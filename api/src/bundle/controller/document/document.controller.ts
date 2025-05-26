@@ -6,8 +6,13 @@ import { DocumentInput } from '../../input/document.input';
 import { DocumentInsertOperation } from '../../operation/document-insert.operation';
 import { DocumentUpdateOperation } from '../../operation/document-update.operation';
 import { DocumentDeleteOperation } from '../../operation/document-delete.operation';
+import { CheckAccess } from '../../../personal/guard/check-access.guard';
+import { AccessTarget } from '../../../personal/model/access/access-target';
+import { AccessMethod } from '../../../personal/model/access/access-method';
+import { CheckId } from '../../../common/guard/check-id.guard';
+import { DocumentRender } from '../../render/document.render';
 
-@Controller('document')
+@Controller('bundle/document')
 export class DocumentController {
 
   relations = {
@@ -24,23 +29,11 @@ export class DocumentController {
   }
 
   toView(item: DocumentEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new DocumentRender(item)
   }
 
   @Get()
+  @CheckAccess(AccessTarget.DOCUMENT, AccessMethod.GET)
   async getList(
     @Query('offset')
       offset?: number,
@@ -55,14 +48,17 @@ export class DocumentController {
   }
 
   @Get('count')
+  @CheckAccess(AccessTarget.DOCUMENT, AccessMethod.GET)
   async getCount() {
     return this.docRepo.count().then(count => ({count}));
   }
 
   @Get(':id')
+  @CheckId(DocumentEntity)
+  @CheckAccess(AccessTarget.DOCUMENT, AccessMethod.GET)
   async getItem(
     @Param('id')
-      id: number,
+      id: string,
   ) {
     return this.docRepo.findOne({
       where: {id},
@@ -71,39 +67,46 @@ export class DocumentController {
   }
 
   @Post()
-  addItem(
+  @CheckAccess(AccessTarget.DOCUMENT, AccessMethod.POST)
+  async addItem(
     @Body()
       input: DocumentInput,
   ) {
-    return this.entityManager.transaction(
+    const item = await this.entityManager.transaction(
       trans => new DocumentInsertOperation(trans).save(input)
         .then(id => trans.getRepository(DocumentEntity).findOne({
           where: {id},
           relations: this.relations,
-        })),
-    ).then(this.toView);
+        })));
+
+    return this.toView(item);
   }
 
   @Put(':id')
-  updateItem(
+  @CheckId(DocumentEntity)
+  @CheckAccess(AccessTarget.DOCUMENT, AccessMethod.PUT)
+  async updateItem(
     @Param('id')
-      id: number,
+      id: string,
     @Body()
       input: DocumentInput,
   ) {
-    return this.entityManager.transaction(
+    const item = await this.entityManager.transaction(
       trans => new DocumentUpdateOperation(trans).save(id, input)
-        .then(id => trans.getRepository(DocumentEntity).findOne({
+        .then(id_2 => trans.getRepository(DocumentEntity).findOne({
           where: {id},
           relations: this.relations,
-        })),
-    ).then(this.toView);
+        })));
+
+    return this.toView(item);
   }
 
   @Delete(':id')
+  @CheckId(DocumentEntity)
+  @CheckAccess(AccessTarget.DOCUMENT, AccessMethod.DELETE)
   deleteItem(
     @Param('id')
-      id: number,
+      id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
       trans => new DocumentDeleteOperation(trans).save([id]),

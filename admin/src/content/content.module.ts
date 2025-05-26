@@ -31,6 +31,9 @@ import { SectionSettingsComponent } from './section-settings/section-settings.co
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditModule } from '../edit/edit.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BlockHistoryComponent } from './block-history/block-history.component';
+import { ElementHistoryComponent } from './element-history/element-history.component';
+import { SectionHistoryComponent } from './section-history/section-history.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +46,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ElementSettingsComponent,
     BlockSettingsComponent,
     SectionSettingsComponent,
+    BlockHistoryComponent,
+    ElementHistoryComponent,
+    SectionHistoryComponent,
   ],
   exports: [
     ElementListComponent,

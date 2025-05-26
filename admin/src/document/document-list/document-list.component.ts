@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { StringifiableRecord } from 'query-string/base';
 
 @Component({
-  selector: 'app-document-list',
+  selector: 'app-bundle-list',
   templateUrl: './document-list.component.html',
   styleUrls: ['./document-list.component.css']
 })

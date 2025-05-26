@@ -10,7 +10,7 @@ import { CommonFlagEntity } from '../../common/model/common-flag.entity';
 import { FlagEntity } from '../../settings/model/flag.entity';
 import { DocumentEntity } from './document.entity';
 
-@Entity('document2flag')
+@Entity('bundle-document2flag')
 @Index(['parent', 'flag'], {unique: true})
 export class Document2flagEntity
   extends BaseEntity
@@ -32,19 +32,21 @@ export class Document2flagEntity
   version: number;
 
   @ManyToOne(
-    () => DocumentEntity,
+    type => DocumentEntity,
     document => document.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: DocumentEntity;
 
   @ManyToOne(
-    () => FlagEntity,
+    type => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

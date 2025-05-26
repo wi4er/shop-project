@@ -11,7 +11,7 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 import { DocumentEntity } from './document.entity';
 
-@Entity('document4string')
+@Entity('bundle-document4string')
 export class Document4stringEntity
   extends BaseEntity
   implements CommonStringEntity<DocumentEntity> {
@@ -35,17 +35,18 @@ export class Document4stringEntity
   string: string;
 
   @ManyToOne(
-    () => DocumentEntity,
+    type => DocumentEntity,
     document => document.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: DocumentEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -55,7 +56,7 @@ export class Document4stringEntity
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

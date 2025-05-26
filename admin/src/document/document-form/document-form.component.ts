@@ -7,7 +7,7 @@ import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.ser
 import { Document } from '../../app/model/document';
 
 @Component({
-  selector: 'app-document-form',
+  selector: 'app-bundle-form',
   templateUrl: './document-form.component.html',
   styleUrls: ['./document-form.component.css']
 })
