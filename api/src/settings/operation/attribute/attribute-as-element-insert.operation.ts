@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeEntity } from '../../model/attribute.entity';
 import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
-import { BlockEntity } from '../../../content/model/block.entity';
+import { BlockEntity } from '../../../content/model/block/block.entity';
 
 export class AttributeAsElementInsertOperation {
 
@@ -17,7 +17,7 @@ export class AttributeAsElementInsertOperation {
   /**
    *
    */
-  private async checkBlock(id: number): Promise<BlockEntity> {
+  private async checkBlock(id: string): Promise<BlockEntity> {
     const blockRepo = this.transaction.getRepository<BlockEntity>(BlockEntity);
 
     return WrongDataException.assert(
@@ -29,7 +29,10 @@ export class AttributeAsElementInsertOperation {
   /**
    *
    */
-  async save(created: AttributeEntity, block: number): Promise<any> {
+  async save(
+    created: AttributeEntity,
+    block: string,
+  ): Promise<any> {
     this.created.block = await this.checkBlock(block);
     this.created.parent = created;
 

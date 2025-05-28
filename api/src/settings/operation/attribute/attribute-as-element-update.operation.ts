@@ -3,7 +3,7 @@ import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
 import { AttributeInput } from '../../input/attribute.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
-import { BlockEntity } from '../../../content/model/block.entity';
+import { BlockEntity } from '../../../content/model/block/block.entity';
 
 export class AttributeAsElementUpdateOperation {
 
@@ -15,11 +15,11 @@ export class AttributeAsElementUpdateOperation {
   /**
    *
    */
-  private async checkBlock(id: number): Promise<BlockEntity> {
-    const blockRepo = this.transaction.getRepository<BlockEntity>(BlockEntity);
-
+  private async checkBlock(id: string): Promise<BlockEntity> {
     return WrongDataException.assert(
-      await blockRepo.findOne({where: {id}}),
+      await this.transaction
+        .getRepository<BlockEntity>(BlockEntity)
+        .findOne({where: {id}}),
       `Block with id >> ${id} << not found!`,
     );
   }

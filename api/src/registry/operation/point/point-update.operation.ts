@@ -9,6 +9,8 @@ import { PointEntity } from '../../model/point.entity';
 import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
+import { PointValueUpdateOperation } from '../../../common/operation/point-value-update.operation';
+import { Point4pointEntity } from '../../model/point4point.entity';
 
 export class PointUpdateOperation {
 
@@ -21,10 +23,10 @@ export class PointUpdateOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    const dirRepo = this.transaction.getRepository<DirectoryEntity>(DirectoryEntity);
-
     return WrongDataException.assert(
-      await dirRepo.findOne({where: {id}}),
+      await this.transaction
+        .getRepository<DirectoryEntity>(DirectoryEntity)
+        .findOne({where: {id}}),
       `Directory with id >> ${id} << not found!`,
     );
   }
@@ -33,16 +35,16 @@ export class PointUpdateOperation {
    *
    */
   private async checkPoint(id: string): Promise<PointEntity> {
-    const pointRepo = this.transaction.getRepository(PointEntity);
-
     return NoDataException.assert(
-      await pointRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(PointEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `Point with id >> ${id} << not found!`,
     );
   }
@@ -64,8 +66,9 @@ export class PointUpdateOperation {
 
     await new FlagValueUpdateOperation(this.transaction, Point2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.transaction, Point4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.transaction, Point4stringEntity).save(beforeItem, pack.string);
+    await new PointValueUpdateOperation(this.transaction, Point4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;
   }

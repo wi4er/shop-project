@@ -1,20 +1,20 @@
 import { EntityManager } from 'typeorm';
-import { BlockEntity } from '../../model/block.entity';
+import { BlockEntity } from '../../model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
 import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
 import { SectionInput } from '../../input/section.input';
-import { Section4stringEntity } from '../../model/section4string.entity';
-import { Section2flagEntity } from '../../model/section2flag.entity';
-import { SectionEntity } from '../../model/section.entity';
+import { Section4stringEntity } from '../../model/section/section4string.entity';
+import { Section2flagEntity } from '../../model/section/section2flag.entity';
+import { SectionEntity } from '../../model/section/section.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { ImageUpdateOperation } from '../../../common/operation/image-update.operation';
-import { Section2imageEntity } from '../../model/section2image.entity';
+import { Section2imageEntity } from '../../model/section/section2image.entity';
 import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
-import { Section2permissionEntity } from '../../model/section2permission.entity';
+import { Section2permissionEntity } from '../../model/section/section2permission.entity';
 import { PointValueUpdateOperation } from '../../../common/operation/point-value-update.operation';
-import { Section4pointEntity } from '../../model/section4point.entity';
+import { Section4pointEntity } from '../../model/section/section4point.entity';
 
 export class SectionUpdateOperation {
 
@@ -26,7 +26,7 @@ export class SectionUpdateOperation {
   /**
    *
    */
-  private async checkBlock(id?: number): Promise<BlockEntity> {
+  private async checkBlock(id?: string): Promise<BlockEntity> {
     WrongDataException.assert(id, 'Block id expected!');
 
     return WrongDataException.assert(
@@ -41,19 +41,19 @@ export class SectionUpdateOperation {
    *
    */
   private async checkSection(id: string): Promise<SectionEntity> {
-    const sectionRepo = this.manager.getRepository(SectionEntity);
-
     return NoDataException.assert(
-      await sectionRepo.findOne({
-        where: {id},
-        relations: {
-          image: {image: true},
-          string: {attribute: true},
-          flag: {flag: true},
-          point: {point: true, attribute: true},
-          permission: {group: true},
-        },
-      }),
+      await this.manager
+        .getRepository(SectionEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            image: {image: true},
+            string: {attribute: true},
+            flag: {flag: true},
+            point: {point: true, attribute: true},
+            permission: {group: true},
+          },
+        }),
       `Section id >> ${id} << not found!`,
     );
   }
@@ -91,9 +91,9 @@ export class SectionUpdateOperation {
     await new ImageUpdateOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);
     await new PermissionValueUpdateOperation(this.manager, Section2permissionEntity).save(beforeItem, input);
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, stringList);
-    await new PointValueUpdateOperation(this.manager, Section4pointEntity).save(beforeItem, pointList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Section4stringEntity).save(beforeItem, pack.string);
+    await new PointValueUpdateOperation(this.manager, Section4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;
   }

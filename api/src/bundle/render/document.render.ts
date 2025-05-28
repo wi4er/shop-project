@@ -1,4 +1,4 @@
-import { DocumentEntity } from '../model/document.entity';
+import { DocumentEntity } from '../model/document/document.entity';
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringAttributeRender } from '../../common/render/string-attribute.render';
 import { PointAttributeRender } from '../../common/render/point-attribute.render';

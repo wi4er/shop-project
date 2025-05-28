@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { BlockEntity } from '../../../content/model/block.entity';
+import { BlockEntity } from '../../../content/model/block/block.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
 import { FileEntity } from '../../../storage/model/file.entity';
 import { User2imageEntity } from './user2image.entity';

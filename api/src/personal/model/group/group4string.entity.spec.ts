@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { BlockEntity } from '../../../content/model/block.entity';
+import { BlockEntity } from '../../../content/model/block/block.entity';
 import { Group4stringEntity } from './group4string.entity';
 import { GroupEntity } from './group.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';

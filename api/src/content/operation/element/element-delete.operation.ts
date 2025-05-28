@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { ElementEntity } from '../../model/element.entity';
+import { ElementEntity } from '../../model/element/element.entity';
 
 
 export class ElementDeleteOperation {

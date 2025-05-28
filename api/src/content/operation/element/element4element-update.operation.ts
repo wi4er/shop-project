@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { ElementEntity } from '../../model/element.entity';
-import { Element4elementEntity } from '../../model/element4element.entity';
-import { PropertyElementInput } from '../../../common/input/property-element.input';
+import { ElementEntity } from '../../model/element/element.entity';
+import { Element4elementEntity } from '../../model/element/element4element.entity';
+import { AttributeElementInput } from '../../../common/input/attribute-element.input';
 
 export class Element4elementUpdateOperation {
 
@@ -35,7 +35,7 @@ export class Element4elementUpdateOperation {
   /**
    *
    */
-  async save(beforeItem: ElementEntity, list: PropertyElementInput[]) {
+  async save(beforeItem: ElementEntity, list: AttributeElementInput[]) {
     const current: { [key: string]: Element4elementEntity[] } = {};
 
     for (const item of beforeItem.element) {

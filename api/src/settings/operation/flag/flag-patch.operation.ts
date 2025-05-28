@@ -7,7 +7,6 @@ import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
 import { Flag4stringEntity } from '../../model/flag4string.entity';
-import { AttributeEntity } from '../../model/attribute.entity';
 
 export class FlagPatchOperation {
 
@@ -44,8 +43,8 @@ export class FlagPatchOperation {
     if (input.flag) await new FlagValueUpdateOperation(this.transaction, Flag2flagEntity).save(beforeItem, input);
 
     if (input.attribute) {
-      const [stringList] = filterAttributes(input.attribute);
-      await new StringValueUpdateOperation(this.transaction, Flag4stringEntity).save(beforeItem, stringList);
+      const pack = filterAttributes(input.attribute);
+      await new StringValueUpdateOperation(this.transaction, Flag4stringEntity).save(beforeItem, pack.string);
     }
 
     return input.id ? input.id : id;

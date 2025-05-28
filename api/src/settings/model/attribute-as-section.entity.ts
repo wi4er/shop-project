@@ -8,7 +8,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { AttributeEntity } from './attribute.entity';
-import { BlockEntity } from '../../content/model/block.entity';
+import { BlockEntity } from '../../content/model/block/block.entity';
 
 @Entity('settings-attribute-as-section')
 @Index([ 'parent', 'block'], {unique: true})

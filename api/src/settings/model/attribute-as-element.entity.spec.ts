@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { AttributeEntity } from './attribute.entity';
 import { AttributeAsElementEntity } from './attribute-as-element.entity';
-import { BlockEntity } from '../../content/model/block.entity';
+import { BlockEntity } from '../../content/model/block/block.entity';
 
 describe('Attribute as element entity', () => {
   let source: DataSource;

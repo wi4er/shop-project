@@ -1,19 +1,19 @@
 import { EntityManager } from 'typeorm';
-import { BlockEntity } from '../../model/block.entity';
+import { BlockEntity } from '../../model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
 import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
-import { SectionEntity } from '../../model/section.entity';
+import { SectionEntity } from '../../model/section/section.entity';
 import { SectionInput } from '../../input/section.input';
-import { Section4stringEntity } from '../../model/section4string.entity';
-import { Section2flagEntity } from '../../model/section2flag.entity';
+import { Section4stringEntity } from '../../model/section/section4string.entity';
+import { Section2flagEntity } from '../../model/section/section2flag.entity';
 import { PointValueInsertOperation } from '../../../common/operation/point-value-insert.operation';
-import { Section4pointEntity } from '../../model/section4point.entity';
+import { Section4pointEntity } from '../../model/section/section4point.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { ImageInsertOperation } from '../../../common/operation/image-insert.operation';
-import { Section2imageEntity } from '../../model/section2image.entity';
+import { Section2imageEntity } from '../../model/section/section2image.entity';
 import { PermissionValueInsertOperation } from '../../../common/operation/permission-value-insert.operation';
-import { Section2permissionEntity } from '../../model/section2permission.entity';
+import { Section2permissionEntity } from '../../model/section/section2permission.entity';
 
 export class SectionInsertOperation {
 
@@ -28,7 +28,7 @@ export class SectionInsertOperation {
   /**
    *
    */
-  private async checkBlock(id: number): Promise<BlockEntity> {
+  private async checkBlock(id: string): Promise<BlockEntity> {
     return WrongDataException.assert(
       await this.manager
         .getRepository<BlockEntity>(BlockEntity)
@@ -68,9 +68,9 @@ export class SectionInsertOperation {
     await new ImageInsertOperation(this.manager, Section2imageEntity).save(this.created, input.image);
     await new PermissionValueInsertOperation(this.manager, Section2permissionEntity).save(this.created, input);
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pointList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, pack.string);
+    await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pack.point);
 
     return this.created.id;
   }

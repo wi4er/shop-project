@@ -33,9 +33,9 @@ export class FlagInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const [stringList] = filterAttributes(input.attribute);
+    const pack = filterAttributes(input.attribute);
 
-    await new StringValueInsertOperation(this.manager, Flag4stringEntity).save(this.created, stringList);
+    await new StringValueInsertOperation(this.manager, Flag4stringEntity).save(this.created, pack.string);
     await new FlagValueInsertOperation(this.manager, Flag2flagEntity).save(this.created, input);
 
     return this.created.id;

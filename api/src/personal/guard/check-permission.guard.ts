@@ -5,14 +5,14 @@ import { InjectEntityManager } from '@nestjs/typeorm';
 import {  EntityManager, In, IsNull, Or } from 'typeorm';
 import { CHECK_ACCESS } from './check-access.guard';
 import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
-import { PermissionOperation } from '../../permission/model/permission-operation';
+import { PermissionMethod } from '../../permission/model/permission-method';
 import { PermissionException } from '../../exception/permission/permission.exception';
 
 export const CHECK_PERMISSION = 'CHECK_PERMISSION';
 
 export function CheckPermission(
   entity: new() => CommonPermissionEntity<any>,
-  method: PermissionOperation
+  method: PermissionMethod
 ) {
   return SetMetadata(CHECK_PERMISSION, {entity, method});
 }
@@ -34,7 +34,7 @@ export class CheckPermissionGuard
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const check = this.reflector.get<{
       entity: new() => CommonPermissionEntity<any>,
-      method: PermissionOperation,
+      method: PermissionMethod,
     }>(
       CHECK_PERMISSION,
       context.getHandler(),

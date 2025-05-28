@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
-import { ElementEntity } from '../../model/element.entity';
+import { ElementEntity } from '../../model/element/element.entity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
@@ -11,8 +11,8 @@ import { ElementOrder } from '../../input/element.order';
 import { ElementInsertOperation } from '../../operation/element/element-insert.operation';
 import { ElementUpdateOperation } from '../../operation/element/element-update.operation';
 import { ElementDeleteOperation } from '../../operation/element/element-delete.operation';
-import { Element2permissionEntity } from '../../model/element2permission.entity';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { Element2permissionEntity } from '../../model/element/element2permission.entity';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { ElementRender } from '../../render/element.render';
@@ -133,7 +133,7 @@ export class ElementController {
         ...(filter ? this.toWhere(filter) : {}),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
       order: sort ? this.toOrder(sort) : null,
@@ -155,35 +155,24 @@ export class ElementController {
         ...(filter ? this.toWhere(filter) : {}),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
     }).then(count => ({count}));
   }
 
   @Get(':id')
+  @CheckId(ElementEntity)
+  @CheckPermission(Element2permissionEntity, PermissionMethod.READ)
   @ApiResponse({
     status: 200,
     description: 'Content element',
     type: ElementRender,
   })
   async getItem(
-    @CurrentGroups()
-      group: number[],
     @Param('id')
       id: string,
   ): Promise<ElementRender> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
-        },
-      }),
-      `Permission denied for element ${id}`,
-    );
-
     return this.elementRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -230,7 +219,7 @@ export class ElementController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
         },
       }),
       `Permission denied!`,
@@ -264,7 +253,7 @@ export class ElementController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id},
-          method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
+          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
         },
       }),
       `Permission denied!`,
@@ -281,7 +270,7 @@ export class ElementController {
 
   @Delete(':id')
   @CheckId(ElementEntity)
-  @CheckPermission(Element2permissionEntity, PermissionOperation.DELETE)
+  @CheckPermission(Element2permissionEntity, PermissionMethod.DELETE)
   async deleteItem(
     @Param('id')
       id: string,

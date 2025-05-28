@@ -10,7 +10,7 @@ import { UserDeleteOperation } from '../../operation/user/user-delete.operation'
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { UserRender } from '../../render/user.render';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { ElementEntity } from '../../../content/model/element/element.entity';
 
 @ApiTags('UserEntity object')
 @Controller('personal/user')

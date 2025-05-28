@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { AttributeEntity, AttributeType } from './attribute.entity';
-import { BlockEntity } from '../../content/model/block.entity';
+import { BlockEntity } from '../../content/model/block/block.entity';
 import { AttributeAsSectionEntity } from './attribute-as-section.entity';
 
 describe('Attribute as section entity', () => {

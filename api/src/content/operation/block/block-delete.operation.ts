@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { BlockEntity } from '../../model/block.entity';
+import { BlockEntity } from '../../model/block/block.entity';
 
 export class BlockDeleteOperation {
 
@@ -8,7 +8,7 @@ export class BlockDeleteOperation {
   ) {
   }
 
-  async save(idList: number[]) {
+  async save(idList: string[]) {
     const blockRepo = this.manager.getRepository(BlockEntity);
 
     const result = [];

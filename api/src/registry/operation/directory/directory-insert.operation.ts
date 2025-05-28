@@ -39,9 +39,9 @@ export class DirectoryInsertOperation {
     await new FlagValueInsertOperation(this.transaction, Directory2flagEntity).save(this.created, input);
     await new PermissionValueInsertOperation(this.transaction, Directory2permissionEntity).save(this.created, input);
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.transaction, Directory4stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.transaction, Directory4pointEntity).save(this.created, pointList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.transaction, Directory4stringEntity).save(this.created, pack.string);
+    await new PointValueInsertOperation(this.transaction, Directory4pointEntity).save(this.created, pack.point);
 
     return this.created.id;
   }

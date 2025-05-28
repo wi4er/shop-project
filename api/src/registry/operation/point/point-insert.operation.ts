@@ -51,9 +51,9 @@ export class PointInsertOperation {
 
     await new FlagValueInsertOperation(this.transaction, Point2flagEntity).save(this.created, input);
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.transaction, Point4stringEntity).save(this.created, stringList);
-    await new PointValueInsertOperation(this.transaction, Point4pointEntity).save(this.created, pointList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.transaction, Point4stringEntity).save(this.created, pack.string);
+    await new PointValueInsertOperation(this.transaction, Point4pointEntity).save(this.created, pack.point);
 
     return this.created.id;
   }

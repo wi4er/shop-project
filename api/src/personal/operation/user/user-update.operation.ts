@@ -20,17 +20,17 @@ export class UserUpdateOperation {
    *
    */
   private async checkUser(id: string): Promise<UserEntity> {
-    const userRepo = this.trans.getRepository<UserEntity>(UserEntity);
-
     return WrongDataException.assert(
-      await userRepo.findOne({
-        where: {id},
-        relations: {
-          contact: {contact: true},
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.trans
+        .getRepository<UserEntity>(UserEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            contact: {contact: true},
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `User with id >> ${id} << not found!`,
     );
   }
@@ -47,8 +47,8 @@ export class UserUpdateOperation {
     await new FlagValueUpdateOperation(this.trans, User2flagEntity).save(beforeItem, input);
     await new User2userContactUpdateOperation(this.trans).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.trans, User4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.trans, User4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

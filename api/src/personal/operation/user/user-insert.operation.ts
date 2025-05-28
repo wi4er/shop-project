@@ -29,8 +29,8 @@ export class UserInsertOperation {
     await new User2userContactInsertOperation(this.manager).save(this.created, input);
     await new User2userGroupInsertOperation(this.manager).save(this.created, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, User4stringEntity).save(this.created, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.manager, User4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

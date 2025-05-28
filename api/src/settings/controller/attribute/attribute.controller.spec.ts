@@ -10,7 +10,7 @@ import { FlagEntity } from '../../model/flag.entity';
 import { LangEntity } from '../../model/lang.entity';
 import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { AttributeAsPointEntity } from '../../model/attribute-as-point.entity';
-import { BlockEntity } from '../../../content/model/block.entity';
+import { BlockEntity } from '../../../content/model/block/block.entity';
 import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
 import { AttributeAsSectionEntity } from '../../model/attribute-as-section.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
@@ -52,7 +52,7 @@ describe('AttributeController', () => {
               target: AccessTarget.ATTRIBUTE,
             }).save();
           })
-          .then(() => item.save())
+          .then(() => item.save()),
       ),
     }), {
       withAccess(updated: AccessMethod) {

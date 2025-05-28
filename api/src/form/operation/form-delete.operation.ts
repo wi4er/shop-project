@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { BlockEntity } from '../../content/model/block.entity';
+import { BlockEntity } from '../../content/model/block/block.entity';
 import { FormEntity } from '../model/form.entity';
 
 export class FormDeleteOperation {

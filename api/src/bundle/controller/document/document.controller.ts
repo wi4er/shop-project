@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { DocumentEntity } from '../../model/document.entity';
+import { DocumentEntity } from '../../model/document/document.entity';
 import { DocumentInput } from '../../input/document.input';
-import { DocumentInsertOperation } from '../../operation/document-insert.operation';
-import { DocumentUpdateOperation } from '../../operation/document-update.operation';
-import { DocumentDeleteOperation } from '../../operation/document-delete.operation';
+import { DocumentInsertOperation } from '../../operation/document/document-insert.operation';
+import { DocumentUpdateOperation } from '../../operation/document/document-update.operation';
+import { DocumentDeleteOperation } from '../../operation/document/document-delete.operation';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';

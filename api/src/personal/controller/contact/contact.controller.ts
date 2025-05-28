@@ -3,9 +3,9 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { ContactEntity } from '../../model/contact/contact.entity';
 import { ContactInput } from '../../input/contact.input';
-import { UserContactInsertOperation } from '../../operation/contact/user-contact-insert.operation';
-import { UserContactUpdateOperation } from '../../operation/contact/user-contact-update.operation';
-import { UserContactDeleteOperation } from '../../operation/contact/user-contact-delete.operation';
+import { ContactInsertOperation } from '../../operation/contact/contact-insert.operation';
+import { ContactUpdateOperation } from '../../operation/contact/contact-update.operation';
+import { ContactDeleteOperation } from '../../operation/contact/contact-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { ContactRender } from '../../render/contact.render';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
@@ -69,7 +69,7 @@ export class ContactController {
       input: ContactInput,
   ) {
     return this.entityManager.transaction(
-      trans => new UserContactInsertOperation(this.entityManager).save(input)
+      trans => new ContactInsertOperation(this.entityManager).save(input)
         .then(id => trans.getRepository(ContactEntity).findOne({
           where: {id},
           relations: this.relations,
@@ -85,7 +85,7 @@ export class ContactController {
       input: ContactInput,
   ) {
     return this.entityManager.transaction(
-      trans => new UserContactUpdateOperation(this.entityManager).save(id, input)
+      trans => new ContactUpdateOperation(this.entityManager).save(id, input)
         .then(contactId => trans.getRepository(ContactEntity).findOne({
           where: {id: contactId},
           relations: this.relations,
@@ -105,7 +105,7 @@ export class ContactController {
           `Contact with id >> ${id} << not found!`,
         );
 
-        return new UserContactDeleteOperation(trans).save([id]);
+        return new ContactDeleteOperation(trans).save([id]);
       },
     );
   }

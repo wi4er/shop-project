@@ -3,7 +3,7 @@ import { WithPointEntity } from '../model/with-point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { PointEntity } from '../../registry/model/point.entity';
-import { PropertyPointInput } from '../input/property-point.input';
+import { AttributePointInput } from '../input/attribute-point.input';
 import { CommonPointEntity } from '../model/common-point.entity';
 
 export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
@@ -41,7 +41,7 @@ export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
   /**
    *
    */
-  async save(beforeItem: T, list: PropertyPointInput[]) {
+  async save(beforeItem: T, list: AttributePointInput[]) {
     const current: { [key: string]: Array<CommonPointEntity<BaseEntity>> } = {};
 
     for (const item of beforeItem.point ?? []) {

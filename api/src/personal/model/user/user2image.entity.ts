@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { CommonImageEntity } from '../../../common/model/common-image.entity';
 import { UserEntity } from './user.entity';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { ElementEntity } from '../../../content/model/element/element.entity';
 import { FileEntity } from '../../../storage/model/file.entity';
 
 @Entity('personal-user2image')

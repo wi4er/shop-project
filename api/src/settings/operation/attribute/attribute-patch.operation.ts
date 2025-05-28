@@ -17,8 +17,6 @@ export class AttributePatchOperation {
    *
    */
   private async checkAttribute(id: string): Promise<AttributeEntity> {
-    const propRepo = this.transaction.getRepository(AttributeEntity);
-
     return NoDataException.assert(
       await this.transaction
         .getRepository(AttributeEntity)
@@ -40,7 +38,7 @@ export class AttributePatchOperation {
     const beforeItem = await this.checkAttribute(id);
 
     if (input.id) await this.transaction.update(AttributeEntity, {id}, {id: input.id});
-    await new FlagValueUpdateOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input);
+    if (input.flag) await new FlagValueUpdateOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input);
 
     return input.id ? input.id : beforeItem.id;
   }

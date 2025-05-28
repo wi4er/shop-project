@@ -21,10 +21,17 @@ export enum AttributeType {
 
   STRING = 'STRING',
   DESCRIPTION = 'DESCRIPTION',
+  INTERVAL = 'INTERVAL',
+
   POINT = 'POINT',
+  COUNTER = 'COUNTER',
+
   ELEMENT = 'ELEMENT',
   SECTION = 'SECTION',
+
   FILE = 'FILE',
+
+  INSTANCE = 'INSTANCE',
 
 }
 

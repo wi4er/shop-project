@@ -3,25 +3,25 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { BlockEntity } from '../../model/block.entity';
-import { ElementEntity } from '../../model/element.entity';
-import { Element4stringEntity } from '../../model/element4string.entity';
-import { Element2flagEntity } from '../../model/element2flag.entity';
+import { BlockEntity } from '../../model/block/block.entity';
+import { ElementEntity } from '../../model/element/element.entity';
+import { Element4stringEntity } from '../../model/element/element4string.entity';
+import { Element2flagEntity } from '../../model/element/element2flag.entity';
 import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { PointEntity } from '../../../registry/model/point.entity';
-import { Element4pointEntity } from '../../model/element4point.entity';
-import { SectionEntity } from '../../model/section.entity';
-import { Element2sectionEntity } from '../../model/element2section.entity';
+import { Element4pointEntity } from '../../model/element/element4point.entity';
+import { SectionEntity } from '../../model/section/section.entity';
+import { Element2sectionEntity } from '../../model/element/element2section.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { UserEntity } from '../../../personal/model/user/user.entity';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { User2groupEntity } from '../../../personal/model/user/user2group.entity';
-import { Element2permissionEntity } from '../../model/element2permission.entity';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
-import { Element4elementEntity } from '../../model/element4element.entity';
+import { Element2permissionEntity } from '../../model/element/element2permission.entity';
+import { PermissionMethod } from '../../../permission/model/permission-method';
+import { Element4elementEntity } from '../../model/element/element4element.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
-import { Element2imageEntity } from '../../model/element2image.entity';
+import { Element2imageEntity } from '../../model/element/element2image.entity';
 import { FileEntity } from '../../../storage/model/file.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
@@ -61,14 +61,58 @@ describe('ElementController', () => {
     return res.headers['set-cookie'];
   }
 
-  async function createElement(block: number = 1): Promise<ElementEntity> {
+  async function createElement1(block: number = 1): Promise<ElementEntity> {
     const parent = await Object.assign(new ElementEntity, {block}).save();
     await Object.assign(
       new Element2permissionEntity(),
-      {parent, group: '1', method: PermissionOperation.ALL},
+      {parent, group: '1', method: PermissionMethod.ALL},
     ).save();
 
     return parent;
+  }
+
+  function createElement(id?: string): Promise<ElementEntity> & any {
+    const item = new ElementEntity();
+    item.id = id;
+    item.block = null;
+
+    let permission = null;
+
+    const operations = {
+      withBlock(block: BlockEntity) {
+        item.block = block;
+        return this;
+      },
+      withSort(sort: number) {
+        item.sort = sort;
+        return this;
+      },
+      withVersion(version: number) {
+        item.version = version;
+        return this;
+      },
+      withPermission(
+        group: string | null,
+        method: PermissionMethod | null = PermissionMethod.ALL,
+      ) {
+        if (!permission) permission = [];
+        if (method) permission.push({group, method});
+        return this;
+      },
+    };
+
+    return Object.assign(Promise.resolve({
+      then: resolve => resolve(item.save().then(async parent => {
+        for (const perm of permission ?? [{group: null, method: PermissionMethod.ALL}]) {
+          await Object.assign(
+            new Element2permissionEntity(),
+            {parent, group: perm.group, method: perm.method},
+          ).save();
+        }
+
+        return parent;
+      })),
+    }), operations);
   }
 
   describe('Content element list', () => {
@@ -82,10 +126,10 @@ describe('ElementController', () => {
 
     test('Should get element list', async () => {
       const cookie = await createSession();
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        await createElement();
+        await createElement().withBlock(block);
       }
 
       const list = await request(app.getHttpServer())
@@ -98,14 +142,12 @@ describe('ElementController', () => {
 
     test('Should get element with group access', async () => {
       const cookie = await createSession();
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, {block: 1}).save();
-        if (i % 2) await Object.assign(
-          new Element2permissionEntity(),
-          {parent, group: 1, method: PermissionOperation.READ},
-        ).save();
+        await createElement()
+          .withBlock(block)
+          .withPermission('1', i % 2 ? PermissionMethod.READ : PermissionMethod.WRITE);
       }
 
       const list = await request(app.getHttpServer())
@@ -117,14 +159,12 @@ describe('ElementController', () => {
     });
 
     test('Should get element with public access', async () => {
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, {block: 1}).save();
-        if (i % 2) await Object.assign(
-          new Element2permissionEntity(),
-          {parent, group: null, method: PermissionOperation.READ},
-        ).save();
+        await createElement()
+          .withBlock(block)
+          .withPermission(null, i % 2 ? PermissionMethod.READ : PermissionMethod.WRITE);
       }
 
       const list = await request(app.getHttpServer())
@@ -136,11 +176,11 @@ describe('ElementController', () => {
 
     test('Should get list with block filter', async () => {
       const cookie = await createSession();
-      await new BlockEntity().save();
-      await new BlockEntity().save();
+      const block1 = await new BlockEntity().save();
+      const block2 = await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        await createElement(i % 2 + 1);
+        await createElement().withBlock(i % 2 === 1 ? block1 : block2);
       }
 
       const list = await request(app.getHttpServer())
@@ -153,9 +193,9 @@ describe('ElementController', () => {
 
     test('Should get list with offset', async () => {
       const cookie = await createSession();
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
-      for (let i = 0; i < 10; i++) await createElement();
+      for (let i = 0; i < 10; i++) await createElement(`ELEMENT_${i}`).withBlock(block);
 
       const list = await request(app.getHttpServer())
         .get('/content/element?offset=5')
@@ -163,15 +203,15 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(5);
-      // expect(list.body[0].id).toBe(6);
-      // expect(list.body[4].id).toBe(10);
+      expect(list.body[0].id).toBe('ELEMENT_5');
+      expect(list.body[4].id).toBe('ELEMENT_9');
     });
 
     test('Should get list with limit', async () => {
       const cookie = await createSession();
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
-      for (let i = 0; i < 10; i++) await createElement();
+      for (let i = 0; i < 10; i++) await createElement(`ELEMENT_${i}`).withBlock(block);
 
       const list = await request(app.getHttpServer())
         .get('/content/element?limit=2')
@@ -179,8 +219,8 @@ describe('ElementController', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(2);
-      // expect(list.body[0].id).toBe(1);
-      // expect(list.body[4].id).toBe(5);
+      expect(list.body[0].id).toBe('ELEMENT_0');
+      expect(list.body[1].id).toBe('ELEMENT_1');
     });
   });
 
@@ -190,14 +230,10 @@ describe('ElementController', () => {
       const block = await new BlockEntity().save();
 
       for (let i = 1; i <= 10; i++) {
-        const parent = await Object.assign(
-          new ElementEntity,
-          {block, sort: 1000 - i * 100, version: i % 2 ? 1 : 10},
-        ).save();
-        await Object.assign(
-          new Element2permissionEntity(),
-          {parent, method: PermissionOperation.ALL},
-        ).save();
+        await createElement()
+          .withBlock(block)
+          .withSort(1000 - i * 100)
+          .withVersion(i % 2 ? 1 : 10);
       }
 
       const list = await request(app.getHttpServer())
@@ -216,16 +252,13 @@ describe('ElementController', () => {
 
   describe('Content element item', () => {
     test('Should get element item', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      const parent = await createElement();
+      await createElement('ELEMENT').withBlock(await new BlockEntity().save());
 
       const item = await request(app.getHttpServer())
-        .get(`/content/element/${parent.id}`)
-        .set('cookie', cookie)
+        .get(`/content/element/ELEMENT`)
         .expect(200);
 
-      expect(item.body.id).toBe(parent.id);
+      expect(item.body.id).toBe('ELEMENT');
       expect(item.body.created_at).toBeDefined();
       expect(item.body.updated_at).toBeDefined();
       expect(item.body.version).toBe(1);
@@ -234,24 +267,20 @@ describe('ElementController', () => {
     });
 
     test('Shouldn`t get with wrong id', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      await createElement();
+      await createElement('ELEMENT').withBlock(await new BlockEntity().save());
 
       await request(app.getHttpServer())
         .get('/content/element/999')
-        .set('cookie', cookie)
-        .expect(403);
+        .expect(404);
     });
 
-    test('Shouldn`t get element without access', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
-      await Object.assign(new ElementEntity, {id: 'NAME', block: 1}).save();
+    test('Shouldn`t get element without item permission', async () => {
+      await createElement('NAME')
+        .withBlock(await new BlockEntity().save())
+        .withPermission(null, null);
 
       await request(app.getHttpServer())
         .get('/content/element/NAME')
-        .set('cookie', cookie)
         .expect(403);
     });
   });
@@ -266,49 +295,41 @@ describe('ElementController', () => {
     });
 
     test('Should get element count', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
-      for (let i = 0; i < 10; i++) await createElement();
+      for (let i = 0; i < 10; i++) await createElement().withBlock(block);
 
       const list = await request(app.getHttpServer())
         .get('/content/element/count')
-        .set('cookie', cookie)
         .expect(200);
 
       expect(list.body).toEqual({count: 10});
     });
 
-    test('Should get element count with group access ', async () => {
-      const cookie = await createSession();
-      await new BlockEntity().save();
+    test('Should get element count with permission ', async () => {
+      const block = await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, {block: 1}).save();
-        if (i % 2) await Object.assign(
-          new Element2permissionEntity(),
-          {parent, group: 1, method: PermissionOperation.READ},
-        ).save();
+        await createElement(`ELEMENT_${i}`)
+          .withBlock(block)
+          .withPermission(null, i % 2 ? PermissionMethod.READ : null);
       }
 
       const list = await request(app.getHttpServer())
         .get('/content/element/count')
-        .set('cookie', cookie)
         .expect(200);
 
       expect(list.body).toEqual({count: 5});
     });
 
-    test('Should get element with access count', async () => {
+    test('Should get element count with group permission', async () => {
       const cookie = await createSession();
-      await new BlockEntity().save();
+      const block = await new BlockEntity().save();
 
       for (let i = 0; i < 10; i++) {
-        const parent = await Object.assign(new ElementEntity, {block: 1}).save();
-        if (i % 2) await Object.assign(
-          new Element2permissionEntity(),
-          {parent, method: PermissionOperation.READ},
-        ).save();
+        await createElement()
+          .withBlock(block)
+          .withPermission('1', i % 2 ? PermissionMethod.READ : null);
       }
 
       const list = await request(app.getHttpServer())
@@ -334,7 +355,7 @@ describe('ElementController', () => {
           path: `txt/txt.txt`,
         },
       ).save();
-      const parent = await createElement(block.id);
+      const parent = await createElement().withBlock(block);
       await Object.assign(new Element2imageEntity(), {parent, image, collection}).save();
 
       const item = await request(app.getHttpServer())
@@ -354,7 +375,7 @@ describe('ElementController', () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      const parent = await createElement(block.id);
+      const parent = await createElement().withBlock(block);
       await Object.assign(new Element4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
       const list = await request(app.getHttpServer())
@@ -406,7 +427,7 @@ describe('ElementController', () => {
         ).save();
         await Object.assign(
           new Element2permissionEntity(),
-          {parent, group: 1, method: PermissionOperation.ALL},
+          {parent, group: 1, method: PermissionMethod.ALL},
         ).save();
 
         await Object.assign(new Element4stringEntity(), {parent, attribute: attribute1, string: 'VALUE'}).save();
@@ -524,7 +545,7 @@ describe('ElementController', () => {
     test('Should get element with flag', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const parent = await createElement(block.id);
+      const parent = await createElement().withBlock(block);
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       await Object.assign(new Element2flagEntity(), {parent, flag}).save();
 
@@ -540,7 +561,7 @@ describe('ElementController', () => {
     test('Should get element with flag filter', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const parent = await createElement(block.id);
+      const parent = await createElement().withBlock(block);
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
       await Object.assign(new Element2flagEntity(), {parent, flag, string: 'VALUE'}).save();
 
@@ -635,7 +656,7 @@ describe('ElementController', () => {
     test('Should get element with element', async () => {
       const cookie = await createSession();
       const block = await new BlockEntity().save();
-      const parent = await createElement(block.id);
+      const parent = await createElement().withBlock(block);
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const element = await Object.assign(
         new ElementEntity(),

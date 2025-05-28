@@ -17,12 +17,12 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
   /**
    *
    */
-  private async checkProperty(id: string): Promise<AttributeEntity> {
-    const propRepo = this.trans.getRepository(AttributeEntity);
-
+  private async checkAttribute(id: string): Promise<AttributeEntity> {
     return WrongDataException.assert(
-      await propRepo.findOne({where: {id}}),
-      `Property with id >> ${id} << not found`
+      await this.trans
+        .getRepository(AttributeEntity)
+        .findOne({where: {id}}),
+      `Attribute with id >> ${id} << not found`,
     );
   }
 
@@ -32,11 +32,11 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
   private async checkLang(id?: string): Promise<LangEntity> {
     if (!id) return null;
 
-    const langRepo = this.trans.getRepository(LangEntity);
-
     return WrongDataException.assert(
-      await langRepo.findOne({where: {id}}),
-      `Language with id >> ${id} << not found`
+      await this.trans
+        .getRepository(LangEntity)
+        .findOne({where: {id}}),
+      `Language with id >> ${id} << not found`,
     );
   }
 
@@ -47,7 +47,7 @@ export class StringValueInsertOperation<T extends WithStringEntity<T>> {
     for (const item of list ?? []) {
       const inst = new this.entity();
       inst.parent = created;
-      inst.attribute = await this.checkProperty(item.attribute);
+      inst.attribute = await this.checkAttribute(item.attribute);
       inst.string = item.string;
       inst.lang = await this.checkLang(item.lang);
 

@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { CommonPointEntity } from '../model/common-point.entity';
-import { PropertyPointInput } from '../input/property-point.input';
+import { AttributePointInput } from '../input/attribute-point.input';
 import { WithPointEntity } from '../model/with-point.entity';
 import { PointEntity } from '../../registry/model/point.entity';
 
@@ -41,7 +41,7 @@ export class PointValueInsertOperation<T extends WithPointEntity<T>> {
   /**
    *
    */
-  async save(created: T, list: PropertyPointInput[]) {
+  async save(created: T, list: AttributePointInput[]) {
     for (const item of list) {
       const inst = new this.entity();
       inst.parent = created;

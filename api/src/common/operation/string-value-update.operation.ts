@@ -17,10 +17,12 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
   /**
    *
    */
-  private async checkProperty(id: string): Promise<AttributeEntity> {
+  private async checkAttribute(id: string): Promise<AttributeEntity> {
     return WrongDataException.assert(
-      await this.transaction.getRepository(AttributeEntity).findOne({where: {id}}),
-      `Property with id >> ${id} << not found!`
+      await this.transaction
+        .getRepository(AttributeEntity)
+        .findOne({where: {id}}),
+      `Attribute with id >> ${id} << not found!`,
     );
   }
 
@@ -31,7 +33,9 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
     if (!id) return null;
 
     return WrongDataException.assert(
-      await this.transaction.getRepository(LangEntity).findOne({where: {id}}),
+      await this.transaction
+        .getRepository(LangEntity)
+        .findOne({where: {id}}),
       `Language with id >> ${id} << not found!`,
     );
   }
@@ -55,8 +59,8 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
         : new this.entity();
 
       inst.parent = beforeItem;
-      inst.attribute = await this.checkProperty(item.attribute);
-      inst.string = WrongDataException.assert(item.string, 'Property string value expected');
+      inst.attribute = await this.checkAttribute(item.attribute);
+      inst.string = WrongDataException.assert(item.string, 'Attribute string value expected!');
       inst.lang = await this.checkLang(item.lang);
 
       await this.transaction.save(inst);

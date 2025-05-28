@@ -10,7 +10,7 @@ import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations'
 import { DirectoryRender } from '../../render/directory.render';
 import { DirectoryPatchOperation } from '../../operation/directory/directory-patch.operation';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { CheckId } from '../../../common/guard/check-id.guard';
@@ -65,7 +65,7 @@ export class DirectoryController {
         ...this.toWhere(),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
       relations: this.relations,
@@ -85,7 +85,7 @@ export class DirectoryController {
         ...this.toWhere(),
         permission: {
           group: Or(In(group), IsNull()),
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
     }).then(count => ({count}));
@@ -94,7 +94,7 @@ export class DirectoryController {
   @Get(':id')
   @CheckId(DirectoryEntity)
   @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.GET)
-  @CheckPermission(Directory2permissionEntity, PermissionOperation.READ)
+  @CheckPermission(Directory2permissionEntity, PermissionMethod.READ)
   async getItem(
     @Param('id')
       id: string,
@@ -124,7 +124,7 @@ export class DirectoryController {
   @Put(':id')
   @CheckId(DirectoryEntity)
   @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.PUT)
-  @CheckPermission(Directory2permissionEntity, PermissionOperation.WRITE)
+  @CheckPermission(Directory2permissionEntity, PermissionMethod.WRITE)
   async updateItem(
     @Param('id')
       id: string,
@@ -144,7 +144,7 @@ export class DirectoryController {
   @Patch(':id')
   @CheckId(DirectoryEntity)
   @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.PUT)
-  @CheckPermission(Directory2permissionEntity, PermissionOperation.WRITE)
+  @CheckPermission(Directory2permissionEntity, PermissionMethod.WRITE)
   async updateField(
     @Param('id')
       id: string,
@@ -164,7 +164,7 @@ export class DirectoryController {
   @Delete(':id')
   @CheckId(DirectoryEntity)
   @CheckAccess(AccessTarget.DIRECTORY, AccessMethod.DELETE)
-  @CheckPermission(Directory2permissionEntity, PermissionOperation.DELETE)
+  @CheckPermission(Directory2permissionEntity, PermissionMethod.DELETE)
   async deleteItem(
     @Param('id')
       id: string,

@@ -1,8 +1,8 @@
-import { PermissionOperation } from '../../permission/model/permission-operation';
+import { PermissionMethod } from '../../permission/model/permission-method';
 
 export interface PermissionValueInput {
 
   group: string;
-  method: PermissionOperation;
+  method: PermissionMethod;
 
 }

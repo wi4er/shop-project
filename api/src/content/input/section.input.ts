@@ -8,7 +8,7 @@ export class SectionInput
   implements WithAttributeInput, WithFlagInput, WithPermissionInput {
 
   id: string;
-  block: number;
+  block: string;
   sort: number;
   parent?: string;
 

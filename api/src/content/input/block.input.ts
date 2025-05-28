@@ -5,8 +5,11 @@ import { WithPermissionInput } from '../../common/input/with-permission.input';
 import { PermissionValueInput } from '../../common/input/permission-value.input';
 
 export class BlockInput
-  implements WithAttributeInput, WithFlagInput, WithPermissionInput {
+  implements WithAttributeInput,
+    WithFlagInput,
+    WithPermissionInput {
 
+  id: string;
   sort: number;
 
   attribute: AttributeValueInput[];

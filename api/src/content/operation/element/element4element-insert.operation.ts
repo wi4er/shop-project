@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
-import { ElementEntity } from '../../model/element.entity';
-import { PropertyElementInput } from '../../../common/input/property-element.input';
-import { Element4elementEntity } from '../../model/element4element.entity';
+import { ElementEntity } from '../../model/element/element.entity';
+import { AttributeElementInput } from '../../../common/input/attribute-element.input';
+import { Element4elementEntity } from '../../model/element/element4element.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
@@ -39,7 +39,7 @@ export class Element4elementInsertOperation {
   /**
    *
    */
-  async save(created: ElementEntity, list: PropertyElementInput[]) {
+  async save(created: ElementEntity, list: AttributeElementInput[]) {
     for (const item of list ?? []) {
       const inst = new Element4elementEntity();
       inst.parent = created;

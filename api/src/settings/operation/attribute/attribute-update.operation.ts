@@ -24,16 +24,16 @@ export class AttributeUpdateOperation {
    *
    */
   private async checkAttribute(id: string): Promise<AttributeEntity> {
-    const propRepo = this.transaction.getRepository(AttributeEntity);
-
     return NoDataException.assert(
-      await propRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(AttributeEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `Attribute with id >> ${id} << not found!`,
     );
   }
@@ -63,8 +63,8 @@ export class AttributeUpdateOperation {
 
     await new FlagValueUpdateOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.transaction, Attribute4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.transaction, Attribute4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

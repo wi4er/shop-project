@@ -20,17 +20,17 @@ export class FlagUpdateOperation {
    *
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
-    const flagRepo = this.manager.getRepository(FlagEntity);
-
     return NoDataException.assert(
-      await flagRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true, lang: true},
-          flag: {flag: true},
-        },
-      }),
-      `Flag with id >> ${id} << not found!`
+      await this.manager
+        .getRepository(FlagEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true, lang: true},
+            flag: {flag: true},
+          },
+        }),
+      `Flag with id >> ${id} << not found!`,
     );
   }
 
@@ -40,7 +40,7 @@ export class FlagUpdateOperation {
   async save(id: string, input: FlagInput): Promise<string> {
     try {
       await this.manager.update(FlagEntity, {id}, {
-        id:  WrongDataException.assert(input.id, 'Flag id expected'),
+        id: WrongDataException.assert(input.id, 'Flag id expected'),
         color: input.color,
         icon: input.icon,
         iconSvg: input.iconSvg,
@@ -53,8 +53,8 @@ export class FlagUpdateOperation {
 
     await new FlagValueUpdateOperation(this.manager, Flag2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

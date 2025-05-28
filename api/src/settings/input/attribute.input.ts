@@ -9,7 +9,7 @@ export class AttributeInput
   type: string;
 
   directory: string | null;
-  block: number | null;
+  block: string | null;
   collection: string | null;
 
   attribute: AttributeValueInput[];

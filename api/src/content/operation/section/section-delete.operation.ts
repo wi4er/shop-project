@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { SectionEntity } from '../../model/section.entity';
+import { SectionEntity } from '../../model/section/section.entity';
 
 export class SectionDeleteOperation {
 

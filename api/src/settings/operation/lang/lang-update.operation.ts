@@ -20,17 +20,17 @@ export class LangUpdateOperation {
    *
    */
   private async checkFlag(id: string): Promise<LangEntity> {
-    const flagRepo = this.manager.getRepository(LangEntity);
-
     return NoDataException.assert(
-      await flagRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
-      `Lang with id >> ${id} << not found!`
+      await this.manager
+        .getRepository(LangEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
+      `Lang with id >> ${id} << not found!`,
     );
   }
 
@@ -40,7 +40,7 @@ export class LangUpdateOperation {
   async save(id: string, input: LangInput): Promise<string> {
     try {
       await this.manager.update(LangEntity, {id}, {
-        id:  WrongDataException.assert(input.id, 'Lang id expected'),
+        id: WrongDataException.assert(input.id, 'Lang id expected'),
       });
     } catch (err) {
       throw new WrongDataException(err.message);
@@ -50,8 +50,8 @@ export class LangUpdateOperation {
 
     await new FlagValueUpdateOperation(this.manager, Lang2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Lang4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Lang4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

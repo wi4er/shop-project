@@ -21,10 +21,10 @@ export class PointPatchOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    const dirRepo = this.transaction.getRepository<DirectoryEntity>(DirectoryEntity);
-
     return WrongDataException.assert(
-      await dirRepo.findOne({where: {id}}),
+      await this.transaction
+        .getRepository<DirectoryEntity>(DirectoryEntity)
+        .findOne({where: {id}}),
       `Directory with id >> ${id} << not found!`,
     );
   }
@@ -33,16 +33,16 @@ export class PointPatchOperation {
    *
    */
   private async checkPoint(id: string): Promise<PointEntity> {
-    const pointRepo = this.transaction.getRepository(PointEntity);
-
     return NoDataException.assert(
-      await pointRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(PointEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `Point with id >> ${id} << not found!`,
     );
   }
@@ -64,8 +64,8 @@ export class PointPatchOperation {
 
     if (input.flag) await new FlagValueUpdateOperation(this.transaction, Point2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    if (input.attribute) await new StringValueUpdateOperation(this.transaction, Point4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    if (input.attribute) await new StringValueUpdateOperation(this.transaction, Point4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

@@ -11,6 +11,8 @@ import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exc
 import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { DirectoryLogInsertOperation } from '../log/directory-log.insert.operation';
+import { PointValueUpdateOperation } from '../../../common/operation/point-value-update.operation';
+import { Directory4pointEntity } from '../../model/directory4point.entity';
 
 export class DirectoryUpdateOperation {
 
@@ -23,17 +25,17 @@ export class DirectoryUpdateOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    const dirRepo = this.transaction.getRepository(DirectoryEntity);
-
     return NoDataException.assert(
-      await dirRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-          permission: {group: true},
-        },
-      }),
+      await this.transaction
+        .getRepository(DirectoryEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+            permission: {group: true},
+          },
+        }),
       `Directory with id >> ${id} << not found!`,
     );
   }
@@ -64,8 +66,9 @@ export class DirectoryUpdateOperation {
     await new FlagValueUpdateOperation(this.transaction, Directory2flagEntity).save(beforeItem, input);
     await new PermissionValueUpdateOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.transaction, Directory4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.transaction, Directory4stringEntity).save(beforeItem, pack.string);
+    await new PointValueUpdateOperation(this.transaction, Directory4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;
   }

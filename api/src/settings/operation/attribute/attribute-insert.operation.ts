@@ -58,8 +58,8 @@ export class AttributeInsertOperation {
 
     await new FlagValueInsertOperation(this.manager, Attribute2flagEntity).save(this.created, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, Attribute4stringEntity).save(this.created, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.manager, Attribute4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

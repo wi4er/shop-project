@@ -8,7 +8,7 @@ export class ElementInput
   implements WithAttributeInput, WithFlagInput, WithPermissionInput {
 
   id: string;
-  block: number;
+  block: string;
   sort: number;
 
   image: Array<number>;

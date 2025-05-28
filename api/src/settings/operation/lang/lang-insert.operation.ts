@@ -27,9 +27,9 @@ export class LangInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
+    const pack = filterAttributes(input.attribute);
 
-    await new StringValueInsertOperation(this.manager, Lang4stringEntity).save(this.created, stringList);
+    await new StringValueInsertOperation(this.manager, Lang4stringEntity).save(this.created, pack.string);
     await new FlagValueInsertOperation(this.manager, Lang2flagEntity).save(this.created, input);
 
     return this.created.id;

@@ -25,9 +25,9 @@ export class FormInsertOperation {
     this.created.id = input.id;
     await this.manager.save(this.created);
 
-    const [stringList, pointList] = filterAttributes(input.attribute);
+    const pack = filterAttributes(input.attribute);
 
-    await new StringValueInsertOperation(this.manager, Form4stringEntity).save(this.created, stringList);
+    await new StringValueInsertOperation(this.manager, Form4stringEntity).save(this.created, pack.string);
     await new FlagValueInsertOperation(this.manager, Form2flagEntity).save(this.created, input);
 
     return this.created.id;

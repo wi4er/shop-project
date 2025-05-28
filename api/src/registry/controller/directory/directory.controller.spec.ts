@@ -11,7 +11,7 @@ import { Directory4pointEntity } from '../../model/directory4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
@@ -37,7 +37,7 @@ describe('DirectoryController', () => {
 
   async function createDirectory(
     id: string,
-    method: PermissionOperation = PermissionOperation.ALL,
+    method: PermissionMethod = PermissionMethod.ALL,
     permission: boolean = true,
   ) {
     const parent = await Object.assign(new DirectoryEntity(), {id}).save();
@@ -134,7 +134,7 @@ describe('DirectoryController', () => {
 
     test('Shouldn`t get without access', async () => {
       const parent = await Object.assign(new DirectoryEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
 
       await request(app.getHttpServer())
         .get('/registry/directory/NAME')
@@ -154,7 +154,7 @@ describe('DirectoryController', () => {
   describe('Directory with access', () => {
     test('Should get with item access', async () => {
       for (let i = 0; i <= 9; i++) {
-        await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
+        await createDirectory(`NAME_${i}`, PermissionMethod.ALL, i % 2 === 1);
       }
 
       const res = await request(app.getHttpServer())
@@ -167,7 +167,7 @@ describe('DirectoryController', () => {
 
     test('Should get with item access', async () => {
       for (let i = 0; i <= 9; i++) {
-        await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
+        await createDirectory(`NAME_${i}`, PermissionMethod.ALL, i % 2 === 1);
       }
 
       const res = await request(app.getHttpServer())
@@ -179,7 +179,7 @@ describe('DirectoryController', () => {
     });
 
     test('Should get instance with READ access', async () => {
-      await createDirectory('NAME', PermissionOperation.READ);
+      await createDirectory('NAME', PermissionMethod.READ);
 
       const res = await request(app.getHttpServer())
         .get('/registry/directory/NAME')
@@ -229,7 +229,7 @@ describe('DirectoryController', () => {
 
     test('Should get count with access', async () => {
       for (let i = 0; i <= 9; i++) {
-        await createDirectory(`NAME_${i}`, PermissionOperation.ALL, i % 2 === 1);
+        await createDirectory(`NAME_${i}`, PermissionMethod.ALL, i % 2 === 1);
       }
 
       const res = await request(app.getHttpServer())
@@ -528,7 +528,7 @@ describe('DirectoryController', () => {
 
       test('Shouldn`t update without access', async () => {
         const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-        await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+        await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
         await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new AccessEntity(), {method: AccessMethod.DELETE, target: AccessTarget.DIRECTORY}).save();
@@ -540,7 +540,7 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t update without READ access', async () => {
-        await createDirectory('CITY', PermissionOperation.ALL, false);
+        await createDirectory('CITY', PermissionMethod.ALL, false);
 
         await request(app.getHttpServer())
           .put('/registry/directory/CITY')
@@ -582,7 +582,7 @@ describe('DirectoryController', () => {
       });
 
       test('Shouldn`t update only id without access', async () => {
-        await createDirectory('CITY', PermissionOperation.ALL, false);
+        await createDirectory('CITY', PermissionMethod.ALL, false);
 
         await request(app.getHttpServer())
           .patch('/registry/directory/CITY')
@@ -763,7 +763,7 @@ describe('DirectoryController', () => {
     });
 
     test('Shouldn`t delete without access', async () => {
-      await createDirectory('CITY', PermissionOperation.ALL, false);
+      await createDirectory('CITY', PermissionMethod.ALL, false);
 
       await request(app.getHttpServer())
         .delete('/registry/directory/CITY')
@@ -772,7 +772,7 @@ describe('DirectoryController', () => {
 
     test('Shouldn`t delete without DELETE access', async () => {
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+      await Object.assign(new Directory2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
       await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
       await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
       await Object.assign(new AccessEntity(), {method: AccessMethod.PUT, target: AccessTarget.DIRECTORY}).save();

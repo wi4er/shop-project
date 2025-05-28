@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
 import { GroupEntity } from '../../personal/model/group/group.entity';
-import { PermissionOperation } from '../../permission/model/permission-operation';
+import { PermissionMethod } from '../../permission/model/permission-method';
 import { DirectoryEntity } from './directory.entity';
 
 @Entity('registry-directory2permission')
@@ -57,9 +57,9 @@ export class Directory2permissionEntity
 
   @Column({
     type: 'enum',
-    enum: PermissionOperation,
+    enum: PermissionMethod,
     nullable: false,
   })
-  method: PermissionOperation;
+  method: PermissionMethod;
 
 }

@@ -11,7 +11,7 @@ import { Point4pointEntity } from '../../model/point4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
@@ -31,7 +31,7 @@ describe('PointController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  async function createDirectory(id: string, method: PermissionOperation = PermissionOperation.ALL) {
+  async function createDirectory(id: string, method: PermissionMethod = PermissionMethod.ALL) {
     const parent = await Object.assign(new DirectoryEntity(), {id}).save();
     await Object.assign(new Directory2permissionEntity(), {parent, method}).save();
 

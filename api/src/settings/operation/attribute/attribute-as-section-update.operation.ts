@@ -1,9 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
 import { AttributeInput } from '../../input/attribute.input';
-import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { BlockEntity } from '../../../content/model/block.entity';
+import { BlockEntity } from '../../../content/model/block/block.entity';
 import { AttributeAsSectionEntity } from '../../model/attribute-as-section.entity';
 
 export class AttributeAsSectionUpdateOperation {
@@ -13,11 +12,11 @@ export class AttributeAsSectionUpdateOperation {
   ) {
   }
 
-  private async checkBlock(id: number): Promise<BlockEntity> {
-    const blockRepo = this.transaction.getRepository<BlockEntity>(BlockEntity);
-
+  private async checkBlock(id: string): Promise<BlockEntity> {
     return WrongDataException.assert(
-      await blockRepo.findOne({where: {id}}),
+      await this.transaction
+        .getRepository<BlockEntity>(BlockEntity)
+        .findOne({where: {id}}),
       `Block with id >> ${id} << not found!`,
     );
   }

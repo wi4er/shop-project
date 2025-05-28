@@ -19,17 +19,17 @@ export class UserGroupUpdateOperation {
    *
    */
   private async checkGroup(id: string): Promise<GroupEntity> {
-    const groupRepo = this.trans.getRepository(GroupEntity);
-
     return WrongDataException.assert(
-      await groupRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
-      `User group with id ${id} not found!`
+      await this.trans
+        .getRepository(GroupEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
+      `User group with id >> ${id} << not found!`,
     );
   }
 
@@ -44,8 +44,8 @@ export class UserGroupUpdateOperation {
 
     await new FlagValueUpdateOperation(this.trans, Group2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.trans, Group4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.trans, Group4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

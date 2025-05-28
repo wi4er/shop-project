@@ -68,7 +68,7 @@ export class AttributeRender {
   directory: string | null;
 
   @ApiProperty()
-  block: number | null;
+  block: string | null;
 
   @ApiProperty()
   collection: string | null;

@@ -19,16 +19,16 @@ export class FormUpdateOperation {
    *
    */
   private async checkForm(id: string): Promise<FormEntity> {
-    const formRepo = this.manager.getRepository(FormEntity);
-
     return NoDataException.assert(
-      await formRepo.findOne({
-        where: {id},
-        relations: {
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.manager
+        .getRepository(FormEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `Form with id >> ${id} << not found!`,
     );
   }
@@ -44,8 +44,8 @@ export class FormUpdateOperation {
 
     await new FlagValueUpdateOperation(this.manager, Form2flagEntity).save(beforeItem, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Form4stringEntity).save(beforeItem, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueUpdateOperation(this.manager, Form4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { FormFieldEntity } from './form-field.entity';
-import { SectionEntity } from '../../content/model/section.entity';
+import { SectionEntity } from '../../content/model/section/section.entity';
 
 @Entity('form-field-section')
 export class FormFieldSectionEntity extends BaseEntity {

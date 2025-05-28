@@ -10,7 +10,7 @@ import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations'
 import { PointRender } from '../../render/point.render';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { PointPatchOperation } from '../../operation/point/point-patch.operation';
@@ -70,7 +70,7 @@ export class PointController {
           id: directory,
           permission: {
             group: Or(In(group), IsNull()),
-            method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+            method: In([PermissionMethod.READ, PermissionMethod.ALL]),
           },
         },
       },
@@ -91,7 +91,7 @@ export class PointController {
         directory: {
           permission: {
             group: Or(In(group), IsNull()),
-            method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+            method: In([PermissionMethod.READ, PermissionMethod.ALL]),
           },
         },
       },
@@ -130,7 +130,7 @@ export class PointController {
         where: {
           group: Or(In(group), IsNull()),
           parent: {id: item.directory.id},
-          method: In([PermissionOperation.READ, PermissionOperation.ALL]),
+          method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       }),
       `Permission denied for element ${id}`,
@@ -161,7 +161,7 @@ export class PointController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id: point.directory.id},
-              method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
+              method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
             },
           }),
           `Permission denied for directory ${point.directory.id}`,
@@ -199,7 +199,7 @@ export class PointController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id: point.directory.id},
-              method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
+              method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
             },
           }),
           `Permission denied for directory ${point.directory.id}`,
@@ -235,7 +235,7 @@ export class PointController {
             where: {
               group: Or(In(group), IsNull()),
               parent: {id: point.directory.id},
-              method: In([PermissionOperation.WRITE, PermissionOperation.ALL]),
+              method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
             },
           }),
           `Permission denied for directory ${point.directory.id}`,

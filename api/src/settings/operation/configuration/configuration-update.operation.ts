@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { ConfigurationInput } from '../../input/configuration.input';
 import { ConfigurationEntity } from '../../model/configuration.entity';
-import { ElementEntity } from '../../../content/model/element.entity';
+import { ElementEntity } from '../../../content/model/element/element.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class ConfigurationUpdateOperation {

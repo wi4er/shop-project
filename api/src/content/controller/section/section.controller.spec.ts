@@ -3,21 +3,21 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { BlockEntity } from '../../model/block.entity';
-import { SectionEntity } from '../../model/section.entity';
-import { Section4stringEntity } from '../../model/section4string.entity';
-import { Section2flagEntity } from '../../model/section2flag.entity';
+import { BlockEntity } from '../../model/block/block.entity';
+import { SectionEntity } from '../../model/section/section.entity';
+import { Section4stringEntity } from '../../model/section/section4string.entity';
+import { Section2flagEntity } from '../../model/section/section2flag.entity';
 import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { PointEntity } from '../../../registry/model/point.entity';
-import { Section4pointEntity } from '../../model/section4point.entity';
+import { Section4pointEntity } from '../../model/section/section4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
 import { FileEntity } from '../../../storage/model/file.entity';
-import { Section2imageEntity } from '../../model/section2image.entity';
-import { Section2permissionEntity } from '../../model/section2permission.entity';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
+import { Section2imageEntity } from '../../model/section/section2image.entity';
+import { Section2permissionEntity } from '../../model/section/section2permission.entity';
+import { PermissionMethod } from '../../../permission/model/permission-method';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
@@ -29,7 +29,7 @@ describe('SectionController', () => {
   async function createSection(id = 'SECTION'): Promise<SectionEntity> {
     await new BlockEntity().save();
     const parent = await Object.assign(new SectionEntity(), {id, block: 1}).save();
-    await Object.assign(new Section2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+    await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
 
     return parent;
   }
@@ -823,7 +823,7 @@ describe('SectionController', () => {
       test('Should update parent', async () => {
         await createSection();
         const parent = await Object.assign(new SectionEntity(), {id: 'CHILD', block: 1}).save();
-        await Object.assign(new Section2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+        await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
 
         const inst = await request(app.getHttpServer())
           .put('/content/section/CHILD')
@@ -837,7 +837,7 @@ describe('SectionController', () => {
       test('Shouldn`t update with wrong parent', async () => {
         const block = await new BlockEntity().save();
         const parent = await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
-        await Object.assign(new Section2permissionEntity(), {parent, method: PermissionOperation.ALL}).save();
+        await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
 
         await request(app.getHttpServer())
           .put('/content/section/SECTION')
@@ -981,8 +981,8 @@ describe('SectionController', () => {
     test('Shouldn`t delete without DELETE permission', async () => {
       const block = await Object.assign(new BlockEntity(), {}).save();
       const parent = await Object.assign(new SectionEntity(), {id: 'SECTION', block}).save();
-      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionOperation.READ}).save();
-      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionOperation.WRITE}).save();
+      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.READ}).save();
+      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.WRITE}).save();
 
       await request(app.getHttpServer())
         .delete('/content/section/SECTION')

@@ -3,7 +3,7 @@ import { WrongDataException } from '../../exception/wrong-data/wrong-data.except
 import { WithPermissionInput } from '../input/with-permission.input';
 import { GroupEntity } from '../../personal/model/group/group.entity';
 import { CommonPermissionEntity } from '../model/common-permission.entity';
-import { PermissionOperation } from '../../permission/model/permission-operation';
+import { PermissionMethod } from '../../permission/model/permission-method';
 
 export class PermissionValueInsertOperation<T extends BaseEntity> {
 
@@ -36,7 +36,7 @@ export class PermissionValueInsertOperation<T extends BaseEntity> {
     const inst = new this.entity();
     inst.parent = created;
     inst.group = await this.checkGroup(process.env.ADMIN_GROUP);
-    inst.method = PermissionOperation.ALL;
+    inst.method = PermissionMethod.ALL;
 
     await this.trans.save(inst);
   }

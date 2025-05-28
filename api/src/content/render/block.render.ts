@@ -2,7 +2,8 @@ import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringAttributeRender } from '../../common/render/string-attribute.render';
 import { PointAttributeRender } from '../../common/render/point-attribute.render';
 import { PermissionRender } from '../../common/render/permission.render';
-import { BlockEntity } from '../model/block.entity';
+import { BlockEntity } from '../model/block/block.entity';
+import { DescriptionAttributeRender } from '../../common/render/description-attribute.render';
 
 @ApiExtraModels(
   StringAttributeRender,
@@ -23,6 +24,11 @@ export class BlockRender {
         attribute: str.attribute.id,
         lang: str.lang?.id,
       })),
+      ...item.description.map(str => ({
+        description: str.description,
+        attribute: str.attribute.id,
+        lang: str.lang?.id,
+      })),
       ...item.point.map(val => ({
         attribute: val.attribute.id,
         point: val.point.id,
@@ -37,7 +43,7 @@ export class BlockRender {
   }
 
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   created_at: string;
@@ -57,14 +63,15 @@ export class BlockRender {
       oneOf: [
         {$ref: getSchemaPath(StringAttributeRender)},
         {$ref: getSchemaPath(PointAttributeRender)},
+        {$ref: getSchemaPath(DescriptionAttributeRender)},
       ],
     },
   })
-  attribute: Array<StringAttributeRender | PointAttributeRender>;
+  attribute: Array<StringAttributeRender | PointAttributeRender | DescriptionAttributeRender>;
 
   @ApiProperty()
   flag: Array<string>;
 
-  permission: Array<PermissionRender>
+  permission: Array<PermissionRender>;
 
 }

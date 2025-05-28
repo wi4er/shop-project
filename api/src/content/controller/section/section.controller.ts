@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { SectionEntity } from '../../model/section.entity';
+import { SectionEntity } from '../../model/section/section.entity';
 import { SectionFilterInput } from '../../input/section-filter.input';
 import { SectionInput } from '../../input/section.input';
 import { SectionInsertOperation } from '../../operation/section/section-insert.operation';
@@ -11,8 +11,8 @@ import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SectionRender } from '../../render/section.render';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
 import { SectionOrderInput } from '../../input/section-order.input';
-import { PermissionOperation } from '../../../permission/model/permission-operation';
-import { Section2permissionEntity } from '../../model/section2permission.entity';
+import { PermissionMethod } from '../../../permission/model/permission-method';
+import { Section2permissionEntity } from '../../model/section/section2permission.entity';
 import { SectionPatchOperation } from '../../operation/section/section-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { CheckId } from '../../../common/guard/check-id.guard';
@@ -144,7 +144,7 @@ export class SectionController {
   })
   @Get(':id')
   @CheckId(SectionEntity)
-  @CheckPermission(Section2permissionEntity, PermissionOperation.READ)
+  @CheckPermission(Section2permissionEntity, PermissionMethod.READ)
   async getItem(
     @Param('id')
       id: string,
@@ -181,7 +181,7 @@ export class SectionController {
   })
   @Put(':id')
   @CheckId(SectionEntity)
-  @CheckPermission(Section2permissionEntity, PermissionOperation.WRITE)
+  @CheckPermission(Section2permissionEntity, PermissionMethod.WRITE)
   async updateItem(
     @Param('id')
       id: string,
@@ -204,7 +204,7 @@ export class SectionController {
   })
   @Patch(':id')
   @CheckId(SectionEntity)
-  @CheckPermission(Section2permissionEntity, PermissionOperation.WRITE)
+  @CheckPermission(Section2permissionEntity, PermissionMethod.WRITE)
   async updateFields(
     @Param('id')
       id: string,
@@ -222,7 +222,7 @@ export class SectionController {
 
   @Delete(':id')
   @CheckId(SectionEntity)
-  @CheckPermission(Section2permissionEntity, PermissionOperation.DELETE)
+  @CheckPermission(Section2permissionEntity, PermissionMethod.DELETE)
   async deleteItem(
     @Param('id')
       id: string,

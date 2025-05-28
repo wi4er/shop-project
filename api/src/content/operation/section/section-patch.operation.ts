@@ -1,10 +1,10 @@
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { SectionEntity } from '../../model/section.entity';
+import { SectionEntity } from '../../model/section/section.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { SectionInput } from '../../input/section.input';
 import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
-import { Section2flagEntity } from '../../model/section2flag.entity';
+import { Section2flagEntity } from '../../model/section/section2flag.entity';
 
 export class SectionPatchOperation {
 
@@ -17,17 +17,17 @@ export class SectionPatchOperation {
    *
    */
   private async checkSection(id: string): Promise<SectionEntity> {
-    const sectionRepo = this.manager.getRepository(SectionEntity);
-
     return NoDataException.assert(
-      await sectionRepo.findOne({
-        where: {id},
-        relations: {
-          image: {image: true},
-          string: {attribute: true},
-          flag: {flag: true},
-        },
-      }),
+      await this.manager
+        .getRepository(SectionEntity)
+        .findOne({
+          where: {id},
+          relations: {
+            image: {image: true},
+            string: {attribute: true},
+            flag: {flag: true},
+          },
+        }),
       `Section id >> ${id} << not found!`,
     );
   }

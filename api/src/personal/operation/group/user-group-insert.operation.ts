@@ -22,10 +22,10 @@ export class UserGroupInsertOperation {
    *
    */
   async checkGroup(id: string): Promise<GroupEntity> {
-    const groupRepo = this.trans.getRepository<GroupEntity>(GroupEntity);
-
     return WrongDataException.assert(
-      await groupRepo.findOne({where: {id}}),
+      await this.trans
+        .getRepository<GroupEntity>(GroupEntity)
+        .findOne({where: {id}}),
       `Group with id >> ${id} << not found!`,
     );
   }
@@ -41,8 +41,8 @@ export class UserGroupInsertOperation {
 
     await new FlagValueInsertOperation(this.trans, Group2flagEntity).save(this.created, input);
 
-    const [stringList] = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.trans, Group4stringEntity).save(this.created, stringList);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueInsertOperation(this.trans, Group4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }
