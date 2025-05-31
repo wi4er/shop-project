@@ -13,7 +13,7 @@ describe('Form field string attribute entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Form field sting fields', () => {
+  describe('Form field string fields', () => {
     test('Should create field attribute', async () => {
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const parent = await Object.assign(new FormFieldEntity(), {id: 'FIELD', form}).save();

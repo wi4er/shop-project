@@ -10,8 +10,8 @@ import {
 } from 'typeorm';
 import { Attribute4stringEntity } from './attribute4string.entity';
 import { Attribute2flagEntity } from './attribute2flag.entity';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
 import { AttributeAsPointEntity } from './attribute-as-point.entity';
 import { AttributeAsElementEntity } from './attribute-as-element.entity';
 import { AttributeAsSectionEntity } from './attribute-as-section.entity';

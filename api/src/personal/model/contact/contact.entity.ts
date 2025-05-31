@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import { Contact2flagEntity } from "./contact2flag.entity";
 import { Contact4stringEntity } from "./contact4string.entity";
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
 
 export enum UserContactType {
 

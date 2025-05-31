@@ -9,12 +9,12 @@ import {
 import { Directory4stringEntity } from './directory4string.entity';
 import { PointEntity } from './point.entity';
 import { Directory2flagEntity } from './directory2flag.entity';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
 import { Directory4pointEntity } from './directory4point.entity';
-import { WithPointEntity } from '../../common/model/with-point.entity';
+import { WithPointEntity } from '../../common/model/with/with-point.entity';
 import { Directory2permissionEntity } from './directory2permission.entity';
-import { WithLogEntity } from '../../common/model/with-log.entity';
+import { WithLogEntity } from '../../common/model/with/with-log.entity';
 import { Directory2logEntity } from './directory2log.entity';
 
 @Entity('registry-registry')

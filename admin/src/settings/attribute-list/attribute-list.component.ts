@@ -8,6 +8,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Flag } from '../../app/model/settings/flag';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateService } from '../../app/service/date.service';
+import { BlockHistoryComponent } from '../../content/block-history/block-history.component';
+import { AttributeHistoryComponent } from '../attribute-history/attribute-history.component';
+import { ElementSettingsComponent } from '../../content/element-settings/element-settings.component';
+import { AttributeSettingsComponent } from '../attribute-settings/attribute-settings.component';
 
 @Component({
   selector: 'app-attribute-list',
@@ -31,6 +36,7 @@ export class AttributeListComponent implements OnInit {
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
     private messageBar: MatSnackBar,
+    public dateService: DateService,
   ) {
   }
 
@@ -82,6 +88,8 @@ export class AttributeListComponent implements OnInit {
       'select',
       'action',
       'flags',
+      'created_at',
+      'updated_at',
       ...this.columns,
     ];
   }
@@ -155,7 +163,7 @@ export class AttributeListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = [ 'id', 'created_at', 'updated_at', ...col ];
+    this.columns = [ 'id', ...col ];
   }
 
   /**
@@ -221,6 +229,34 @@ export class AttributeListComponent implements OnInit {
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.ATTRIBUTE, [id])
       .then(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      AttributeSettingsComponent,
+      {
+        width: '500px',
+        panelClass: 'wrapper',
+        data: {},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      AttributeHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

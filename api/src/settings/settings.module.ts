@@ -19,12 +19,13 @@ import { AttributeAsPointEntity } from './model/attribute-as-point.entity';
 import { AttributeAsSectionEntity } from './model/attribute-as-section.entity';
 import { AttributeAsElementEntity } from './model/attribute-as-element.entity';
 import { AttributeAsFileEntity } from './model/attribute-as-file.entity';
+import { AttributeAsInstanceEntity } from './model/attribute-as-instance.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
-      AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
+      AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity, AttributeAsInstanceEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       FlagEntity, Flag2flagEntity, Flag4stringEntity,
       ConfigurationEntity,

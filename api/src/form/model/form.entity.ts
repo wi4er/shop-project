@@ -5,8 +5,8 @@ import {
   Entity, Index, OneToMany, PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
 import { Form2flagEntity } from './form2flag.entity';
 import { Form4stringEntity } from './form4string.entity';
 import { FormFieldEntity } from './form-field.entity';

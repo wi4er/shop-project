@@ -2,15 +2,17 @@ import {
   BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity, ManyToOne,
+  Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn
-} from "typeorm";
-import { ElementEntity } from "./element.entity";
+  UpdateDateColumn, VersionColumn,
+} from 'typeorm';
+import { ElementEntity } from './element.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 
 @Entity('content-element4element')
-export class Element4elementEntity extends BaseEntity {
+@Index(['element', 'parent', 'attribute'], {unique: true})
+export class Element4elementEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,7 +30,7 @@ export class Element4elementEntity extends BaseEntity {
   version: number;
 
   @ManyToOne(
-    () => ElementEntity,
+    type => ElementEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -38,7 +40,7 @@ export class Element4elementEntity extends BaseEntity {
   element: ElementEntity;
 
   @ManyToOne(
-    () => ElementEntity,
+    type => ElementEntity,
     element => element.point,
     {
       onDelete: 'CASCADE',
@@ -49,7 +51,7 @@ export class Element4elementEntity extends BaseEntity {
   parent: ElementEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

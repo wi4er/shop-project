@@ -7,7 +7,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { ContactEntity } from './contact.entity';
-import { CommonFlagEntity } from '../../../common/model/common-flag.entity';
+import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
 @Entity('personal-contact2flag')

@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { BlockInput } from '../../input/block.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Block2flagEntity } from '../../model/block/block2flag.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 

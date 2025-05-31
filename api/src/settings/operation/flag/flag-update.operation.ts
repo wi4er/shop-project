@@ -4,8 +4,8 @@ import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { FlagInput } from '../../input/flag.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 

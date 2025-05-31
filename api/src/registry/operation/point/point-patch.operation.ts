@@ -4,10 +4,10 @@ import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exc
 import { PointEntity } from '../../model/point.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { PointInput } from '../../input/point.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
 import { Point4stringEntity } from '../../model/point4string.entity';
 
 export class PointPatchOperation {

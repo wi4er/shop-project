@@ -2,18 +2,18 @@ import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { SectionInput } from '../../input/section.input';
 import { Section4stringEntity } from '../../model/section/section4string.entity';
 import { Section2flagEntity } from '../../model/section/section2flag.entity';
 import { SectionEntity } from '../../model/section/section.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { ImageUpdateOperation } from '../../../common/operation/image-update.operation';
+import { ImageUpdateOperation } from '../../../common/operation/image/image-update.operation';
 import { Section2imageEntity } from '../../model/section/section2image.entity';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
+import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Section2permissionEntity } from '../../model/section/section2permission.entity';
-import { PointValueUpdateOperation } from '../../../common/operation/point-value-update.operation';
+import { PointValueUpdateOperation } from '../../../common/operation/point/point-value-update.operation';
 import { Section4pointEntity } from '../../model/section/section4point.entity';
 
 export class SectionUpdateOperation {

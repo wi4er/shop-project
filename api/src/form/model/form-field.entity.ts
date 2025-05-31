@@ -6,8 +6,8 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { FormEntity } from './form.entity';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
 import { FormField2flagEntity } from './form-field2flag.entity';
 import { FormField4stringEntity } from './form-field4string.entity';
 import { FormFieldStringEntity } from './form-field-string.entity';

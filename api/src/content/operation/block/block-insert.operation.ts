@@ -1,17 +1,17 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { Block4stringEntity } from '../../model/block/block4string.entity';
 import { Block2flagEntity } from '../../model/block/block2flag.entity';
 import { BlockInput } from '../../input/block.input';
-import { PointValueInsertOperation } from '../../../common/operation/point-value-insert.operation';
+import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Block4pointEntity } from '../../model/block/block4point.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PermissionValueInsertOperation } from '../../../common/operation/permission-value-insert.operation';
+import { PermissionValueInsertOperation } from '../../../common/operation/permission/permission-value-insert.operation';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { Block2permissionEntity } from '../../model/block/block2permission.entity';
-import { DescriptionValueInsertOperation } from '../../../common/operation/description-value-insert.operation';
+import { DescriptionValueInsertOperation } from '../../../common/operation/description/description-value-insert.operation';
 import { Block4descriptionEntity } from '../../model/block/block4description.entity';
 
 export class BlockInsertOperation {

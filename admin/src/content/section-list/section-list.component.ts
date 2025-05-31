@@ -33,7 +33,7 @@ export class SectionListComponent implements OnChanges {
   loading: boolean = true;
 
   @Input()
-  blockId?: number;
+  blockId?: string;
   list: { [key: string]: string }[] = [];
 
   totalCount: number = 0;

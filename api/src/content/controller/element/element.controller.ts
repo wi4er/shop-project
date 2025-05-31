@@ -28,10 +28,12 @@ export class ElementController {
   relations = {
     block: true,
     parent: {section: true},
+    flag: {flag: true},
     permission: {group: true},
     image: {image: {collection: true}},
     string: {attribute: true, lang: true},
-    flag: {flag: true},
+    description: {attribute: true, lang: true},
+    interval: {attribute: true},
     point: {point: {directory: true}, attribute: true},
     element: {element: true, attribute: true},
     section: {section: true, attribute: true},
@@ -186,8 +188,6 @@ export class ElementController {
     type: ElementRender,
   })
   async addItem(
-    @CurrentGroups()
-      group: string[],
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
@@ -201,30 +201,19 @@ export class ElementController {
   }
 
   @Put(':id')
+  @CheckId(ElementEntity)
+  @CheckPermission(Element2permissionEntity, PermissionMethod.WRITE)
   @ApiResponse({
     status: 200,
     description: 'Content element updated successfully',
     type: ElementRender,
   })
   async updateItem(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.entityManager.transaction(
       trans => new ElementUpdateOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(ElementEntity).findOne({
@@ -235,30 +224,19 @@ export class ElementController {
   }
 
   @Patch(':id')
+  @CheckId(ElementEntity)
+  @CheckPermission(Element2permissionEntity, PermissionMethod.WRITE)
   @ApiResponse({
     status: 200,
     description: 'Content element updated successfully',
     type: ElementRender,
   })
   async updateField(
-    @CurrentGroups()
-      group: string[],
     @Param('id')
       id: string,
     @Body()
       input: ElementInput,
   ): Promise<ElementRender> {
-    PermissionException.assert(
-      await this.permRepo.findOne({
-        where: {
-          group: Or(In(group), IsNull()),
-          parent: {id},
-          method: In([PermissionMethod.WRITE, PermissionMethod.ALL]),
-        },
-      }),
-      `Permission denied!`,
-    );
-
     return this.entityManager.transaction(
       trans => new ElementPatchOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(ElementEntity).findOne({

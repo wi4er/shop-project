@@ -11,12 +11,12 @@ import { Element2sectionEntity } from '../element/element2section.entity';
 import { BlockEntity } from '../block/block.entity';
 import { Section4stringEntity } from './section4string.entity';
 import { Section2flagEntity } from './section2flag.entity';
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
 import { Section4pointEntity } from './section4point.entity';
 import { Section2permissionEntity } from './section2permission.entity';
-import { WithPointEntity } from '../../../common/model/with-point.entity';
-import { WithPermissionEntity } from '../../../common/model/with-permission.entity';
+import { WithPointEntity } from '../../../common/model/with/with-point.entity';
+import { WithPermissionEntity } from '../../../common/model/with/with-permission.entity';
 import { Section4fileEntity } from './section4file.entity';
 import { Section2imageEntity } from './section2image.entity';
 

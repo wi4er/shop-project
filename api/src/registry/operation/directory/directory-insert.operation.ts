@@ -1,14 +1,14 @@
 import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { DirectoryInput } from '../../input/directory.input';
 import { Directory4stringEntity } from '../../model/directory4string.entity';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueInsertOperation } from '../../../common/operation/point-value-insert.operation';
+import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Directory4pointEntity } from '../../model/directory4point.entity';
-import { PermissionValueInsertOperation } from '../../../common/operation/permission-value-insert.operation';
+import { PermissionValueInsertOperation } from '../../../common/operation/permission/permission-value-insert.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 

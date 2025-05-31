@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { CollectionEntity } from '../../model/collection.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { CollectionInput } from '../../input/Collection.input';
 import { Collection4stringEntity } from '../../model/collection4string.entity';
 import { Collection2flagEntity } from '../../model/collection2flag.entity';

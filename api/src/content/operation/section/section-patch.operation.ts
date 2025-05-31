@@ -3,7 +3,7 @@ import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exc
 import { SectionEntity } from '../../model/section/section.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { SectionInput } from '../../input/section.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Section2flagEntity } from '../../model/section/section2flag.entity';
 
 export class SectionPatchOperation {

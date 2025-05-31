@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { AttributeEntity } from '../../model/attribute.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { AttributeInput } from '../../input/attribute.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 

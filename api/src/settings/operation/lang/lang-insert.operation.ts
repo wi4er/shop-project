@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { LangEntity } from '../../model/lang.entity';
 import { LangInput } from '../../input/lang.input';
 import { Lang4stringEntity } from '../../model/lang4string.entity';

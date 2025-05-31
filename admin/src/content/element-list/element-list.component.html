@@ -6,6 +6,15 @@
 </div>
 
 <mat-toolbar *ngIf="list.length">
+  <a routerLink="/content">
+    <button
+      mat-icon-button
+      title="to blocks"
+    >
+      <mat-icon>navigate_before</mat-icon>
+    </button>
+  </a>
+
   <span>{{ blockName ?? "Element " + blockId }} </span>
 
   <span class="spacer"></span>

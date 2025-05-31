@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from '../../../registry/model/point.entity';
-import { CommonPointEntity } from '../../../common/model/common-point.entity';
+import { CommonPointEntity } from '../../../common/model/common/common-point.entity';
 import { BlockEntity } from './block.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 

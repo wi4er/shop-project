@@ -16,6 +16,7 @@ export class BlockFormComponent implements OnInit {
 
   loading = true;
 
+  id: string = '';
   created_at: string = '';
   updated_at: string = '';
   sort: number = 100;
@@ -51,6 +52,7 @@ export class BlockFormComponent implements OnInit {
    *
    */
   toEdit(item: Block) {
+    this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
     this.sort = item.sort;
@@ -65,7 +67,7 @@ export class BlockFormComponent implements OnInit {
    */
   toInput(): BlockInput {
     return {
-      id: +(this.data?.id ?? 0),
+      id: this.id || undefined,
       sort: +this.sort,
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),

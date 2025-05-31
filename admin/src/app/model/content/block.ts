@@ -3,7 +3,7 @@ import { PermissionValue } from '../permission/permission-value';
 
 export interface Block {
 
-  id: number;
+  id: string;
   created_at: string;
   updated_at: string;
   sort: number;

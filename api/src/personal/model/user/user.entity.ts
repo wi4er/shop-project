@@ -16,9 +16,9 @@ import { User4userEntity } from './user4user.entity';
 import { User4descriptionEntity } from './user4description.entity';
 import { User2contactEntity } from './user2contact.entity';
 import { User2groupEntity } from './user2group.entity';
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
-import { WithPointEntity } from '../../../common/model/with-point.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
+import { WithPointEntity } from '../../../common/model/with/with-point.entity';
 import { User2imageEntity } from './user2image.entity';
 
 @Entity('personal-user')

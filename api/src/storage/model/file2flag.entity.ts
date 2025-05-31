@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { CommonFlagEntity } from '../../common/model/common-flag.entity';
+import { CommonFlagEntity } from '../../common/model/common/common-flag.entity';
 import { FlagEntity } from '../../settings/model/flag.entity';
 import { FileEntity } from './file.entity';
 

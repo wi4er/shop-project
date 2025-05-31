@@ -7,6 +7,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateService } from '../../app/service/date.service';
+import { AttributeHistoryComponent } from '../attribute-history/attribute-history.component';
+import { FlagHistoryComponent } from '../flag-history/flag-history.component';
+import { AttributeSettingsComponent } from '../attribute-settings/attribute-settings.component';
+import { FlagSettingsComponent } from '../flag-settings/flag-settings.component';
 
 @Component({
   selector: 'app-flag-list',
@@ -30,6 +35,7 @@ export class FlagListComponent implements OnInit {
     private apiService: ApiService,
     public sanitizer: DomSanitizer,
     private messageBar: MatSnackBar,
+    public dateService: DateService,
   ) {
   }
 
@@ -77,6 +83,8 @@ export class FlagListComponent implements OnInit {
       'action',
       'flags',
       'icon',
+      'created_at',
+      'updated_at',
       ...this.columns,
     ];
   }
@@ -153,7 +161,7 @@ export class FlagListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = ['id', 'created_at', 'updated_at', ...col];
+    this.columns = ['id', ...col];
   }
 
   /**
@@ -221,6 +229,34 @@ export class FlagListComponent implements OnInit {
   deleteItem(id: string) {
     this.apiService.deleteList(ApiEntity.FLAG, [id])
       .then(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      FlagSettingsComponent,
+      {
+        width: '500px',
+        panelClass: 'wrapper',
+        data: {},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      FlagHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
 }

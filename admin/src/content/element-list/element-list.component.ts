@@ -14,7 +14,6 @@ import { ElementSettingsComponent } from '../element-settings/element-settings.c
 import { PermissionValue } from '../../app/model/permission/permission-value';
 import { PermissionMethod } from '../../app/model/permission/permission-method';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DirectoryHistoryComponent } from '../../registry/directory-history/directory-history.component';
 import { ElementHistoryComponent } from '../element-history/element-history.component';
 import { DateService } from '../../app/service/date.service';
 
@@ -35,7 +34,7 @@ export class ElementListComponent implements OnChanges {
   loading: boolean = true;
 
   @Input()
-  blockId?: number;
+  blockId?: string;
   blockName?: string;
 
   totalCount: number = 0;

@@ -91,6 +91,7 @@ import { Element4CounterEntity } from './content/model/element/element4counter.e
 import { Element4InstanceEntity } from './content/model/element/element4instance.entity';
 import { Block4descriptionEntity } from './content/model/block/block4description.entity';
 import { Element4descriptionEntity } from './content/model/element/element4description.entity';
+import { AttributeAsInstanceEntity } from './settings/model/attribute-as-instance.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -110,7 +111,7 @@ export function createConnectionOptions(): DataSourceOptions {
       GroupEntity, Group2flagEntity,
       Group4stringEntity,
       AttributeEntity, Attribute4stringEntity, Attribute2flagEntity,
-      AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity,
+      AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity, AttributeAsInstanceEntity,
       ConfigurationEntity,
       AccessEntity,
       DirectoryEntity,

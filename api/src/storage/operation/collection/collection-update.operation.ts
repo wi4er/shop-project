@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { CollectionInput } from '../../input/Collection.input';
 import { CollectionEntity } from '../../model/collection.entity';
 import { Collection4stringEntity } from '../../model/collection4string.entity';

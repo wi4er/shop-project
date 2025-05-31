@@ -7,7 +7,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { SectionEntity } from './section.entity';
-import { CommonStringEntity } from '../../../common/model/common-string.entity';
+import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 

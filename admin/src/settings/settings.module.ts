@@ -21,6 +21,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditModule } from '../edit/edit.module';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AttributeHistoryComponent } from './attribute-history/attribute-history.component';
+import { FlagHistoryComponent } from './flag-history/flag-history.component';
+import { LangHistoryComponent } from './lang-history/lang-history.component';
+import { AttributeSettingsComponent } from './attribute-settings/attribute-settings.component';
+import { FlagSettingsComponent } from './flag-settings/flag-settings.component';
+import { LangSettingsComponent } from './lang-settings/lang-settings.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +37,12 @@ import { MatSelectModule } from '@angular/material/select';
     LangListComponent,
     AttributeFormComponent,
     AttributeListComponent,
+    AttributeHistoryComponent,
+    FlagHistoryComponent,
+    LangHistoryComponent,
+    AttributeSettingsComponent,
+    FlagSettingsComponent,
+    LangSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +61,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatToolbarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   exports: [
   ],

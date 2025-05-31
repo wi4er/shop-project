@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import {  EntityManager, In, IsNull, Or } from 'typeorm';
 import { CHECK_ACCESS } from './check-access.guard';
-import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
+import { CommonPermissionEntity } from '../../common/model/common/common-permission.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 import { PermissionException } from '../../exception/permission/permission.exception';
 

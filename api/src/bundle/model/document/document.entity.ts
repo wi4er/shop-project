@@ -5,8 +5,8 @@ import {
   Entity, OneToMany, PrimaryColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
 import { Document2flagEntity } from './document2flag.entity';
 import { Document4stringEntity } from './document4string.entity';
 import { InstanceEntity } from '../instance/instance.entity';

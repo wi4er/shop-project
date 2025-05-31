@@ -13,7 +13,7 @@ describe('Attribute as registry entity', () => {
   afterAll(() => source.destroy());
 
   describe('Entity fields', () => {
-    test('Should create and find instance', async () => {
+    test('Should create and find item', async () => {
       const parent = await Object.assign(new AttributeEntity(), {id: 'LOCATION'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       await Object.assign(new AttributeAsPointEntity(), {parent, directory}).save();

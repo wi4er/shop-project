@@ -10,7 +10,7 @@ import {
 import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { CommonPermissionEntity } from '../../../common/model/common-permission.entity';
+import { CommonPermissionEntity } from '../../../common/model/common/common-permission.entity';
 
 @Entity('content-block2permission')
 @Index(['parent', 'group', 'method'], {unique: true})

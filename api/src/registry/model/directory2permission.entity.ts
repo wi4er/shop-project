@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { CommonPermissionEntity } from '../../common/model/common-permission.entity';
+import { CommonPermissionEntity } from '../../common/model/common/common-permission.entity';
 import { GroupEntity } from '../../personal/model/group/group.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 import { DirectoryEntity } from './directory.entity';

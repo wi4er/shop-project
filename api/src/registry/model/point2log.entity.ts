@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { CommonLogEntity } from '../../common/model/common-log.entity';
+import { CommonLogEntity } from '../../common/model/common/common-log.entity';
 import { PointEntity } from './point.entity';
 
 @Entity('registry-pont2log')

@@ -1,15 +1,15 @@
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { PointInput } from '../../input/point.input';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { PointEntity } from '../../model/point.entity';
 import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueUpdateOperation } from '../../../common/operation/point-value-update.operation';
+import { PointValueUpdateOperation } from '../../../common/operation/point/point-value-update.operation';
 import { Point4pointEntity } from '../../model/point4point.entity';
 
 export class PointUpdateOperation {

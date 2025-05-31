@@ -9,7 +9,7 @@ import {
 import { ElementEntity } from './element.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
-import { CommonDescriptionEntity } from '../../../common/model/common-description.entity';
+import { CommonDescriptionEntity } from '../../../common/model/common/common-description.entity';
 
 @Entity('content-element4description')
 export class Element4descriptionEntity

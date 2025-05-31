@@ -10,8 +10,8 @@ import {
 } from 'typeorm';
 import { Flag4stringEntity } from "./flag4string.entity";
 import { Flag2flagEntity } from "./flag2flag.entity";
-import { WithStringEntity } from '../../common/model/with-string.entity';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
 
 @Entity('settings-flag')
 @Check('not_empty_id', '"id" > \'\'')

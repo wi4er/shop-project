@@ -1,18 +1,18 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { SectionEntity } from '../../model/section/section.entity';
 import { SectionInput } from '../../input/section.input';
 import { Section4stringEntity } from '../../model/section/section4string.entity';
 import { Section2flagEntity } from '../../model/section/section2flag.entity';
-import { PointValueInsertOperation } from '../../../common/operation/point-value-insert.operation';
+import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Section4pointEntity } from '../../model/section/section4point.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { ImageInsertOperation } from '../../../common/operation/image-insert.operation';
+import { ImageInsertOperation } from '../../../common/operation/image/image-insert.operation';
 import { Section2imageEntity } from '../../model/section/section2image.entity';
-import { PermissionValueInsertOperation } from '../../../common/operation/permission-value-insert.operation';
+import { PermissionValueInsertOperation } from '../../../common/operation/permission/permission-value-insert.operation';
 import { Section2permissionEntity } from '../../model/section/section2permission.entity';
 
 export class SectionInsertOperation {

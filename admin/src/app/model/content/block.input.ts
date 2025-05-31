@@ -3,7 +3,7 @@ import { PermissionInput } from '../permission/permission-input';
 
 export interface BlockInput {
 
-  id?: number;
+  id?: string;
   sort: number;
 
   flag: string[];

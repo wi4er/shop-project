@@ -12,7 +12,7 @@ export class DashboardContentComponent implements OnInit {
 
   list: {
     [id: string]: {
-      id: number;
+      id: string;
       section: number;
       element: number;
     }
@@ -35,7 +35,7 @@ export class DashboardContentComponent implements OnInit {
     console.log('EDIT');
   }
 
-  handleMove(id: number) {
+  handleMove(id: string) {
     this.router.navigate(
       ['/content', id],
       {},

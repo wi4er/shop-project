@@ -10,10 +10,10 @@ import {
 import { DirectoryEntity } from './directory.entity';
 import { Point4stringEntity } from './point4string.entity';
 import { Point2flagEntity } from './point2flag.entity';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
 import { Point4pointEntity } from './point4point.entity';
-import { WithPointEntity } from '../../common/model/with-point.entity';
+import { WithPointEntity } from '../../common/model/with/with-point.entity';
 import { Point2logEntity } from './point2log.entity';
 
 @Entity('registry-point')

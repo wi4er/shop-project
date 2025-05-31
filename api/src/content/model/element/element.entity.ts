@@ -10,19 +10,21 @@ import { Element2sectionEntity } from './element2section.entity';
 import { Element4stringEntity } from './element4string.entity';
 import { BlockEntity } from '../block/block.entity';
 import { Element4pointEntity } from './element4point.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
 import { Element2flagEntity } from './element2flag.entity';
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithPointEntity } from '../../../common/model/with-point.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithPointEntity } from '../../../common/model/with/with-point.entity';
 import { Element2permissionEntity } from './element2permission.entity';
 import { Element4elementEntity } from './element4element.entity';
 import { Element4sectionEntity } from './element4section.entity';
-import { WithPermissionEntity } from '../../../common/model/with-permission.entity';
+import { WithPermissionEntity } from '../../../common/model/with/with-permission.entity';
 import { Element4fileEntity } from './element4file.entity';
 import { Element2imageEntity } from './element2image.entity';
-import { WithImageEntity } from '../../../common/model/with-image.entity';
-import { WithDescriptionEntity } from '../../../common/model/with-description.entity';
+import { WithImageEntity } from '../../../common/model/with/with-image.entity';
+import { WithDescriptionEntity } from '../../../common/model/with/with-description.entity';
 import { Element4descriptionEntity } from './element4description.entity';
+import { WithIntervalEntity } from '../../../common/model/with/with-interval.entity';
+import { Element4IntervalEntity } from './element4interval.entity';
 
 @Entity('content-element')
 @Check('not_empty_id', '"id" > \'\'')
@@ -34,7 +36,8 @@ export class ElementEntity
     WithPointEntity<ElementEntity>,
     WithPermissionEntity<ElementEntity>,
     WithImageEntity<ElementEntity>,
-    WithDescriptionEntity<ElementEntity> {
+    WithDescriptionEntity<ElementEntity>,
+    WithIntervalEntity<ElementEntity> {
 
   @PrimaryColumn({
     type: "varchar",
@@ -92,6 +95,12 @@ export class ElementEntity
     attribute => attribute.parent,
   )
   description: Element4descriptionEntity[];
+
+  @OneToMany(
+    type => Element4IntervalEntity,
+    attribute => attribute.parent,
+  )
+  interval: Element4IntervalEntity[];
 
   @OneToMany(
     type => Element2flagEntity,

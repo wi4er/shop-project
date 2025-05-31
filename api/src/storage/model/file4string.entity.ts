@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { CommonStringEntity } from '../../common/model/common/common-string.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 import { FileEntity } from './file.entity';

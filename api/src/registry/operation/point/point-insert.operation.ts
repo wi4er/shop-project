@@ -2,13 +2,13 @@ import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { PointEntity } from '../../model/point.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { PointInput } from '../../input/point.input';
 import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueInsertOperation } from '../../../common/operation/point-value-insert.operation';
+import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Point4pointEntity } from '../../model/point4point.entity';
 
 export class PointInsertOperation {

@@ -9,7 +9,7 @@ import {
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { SectionEntity } from './section.entity';
-import { CommonPermissionEntity } from '../../../common/model/common-permission.entity';
+import { CommonPermissionEntity } from '../../../common/model/common/common-permission.entity';
 
 @Entity('content-section2permission')
 @Index(['parent', 'group', 'method'], {unique: true})

@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { StringValueUpdateOperation } from '../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../common/operation/flag-value-update.operation';
+import { StringValueUpdateOperation } from '../../common/operation/string/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../common/operation/flag/flag-value-update.operation';
 import { FormEntity } from '../model/form.entity';
 import { Form4stringEntity } from '../model/form4string.entity';
 import { Form2flagEntity } from '../model/form2flag.entity';

@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { DocumentEntity } from '../../model/document/document.entity';
 import { DocumentInput } from '../../input/document.input';
 import { Document4stringEntity } from '../../model/document/document4string.entity';

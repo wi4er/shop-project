@@ -1,5 +1,5 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -16,19 +16,19 @@ export class ContentPageComponent implements OnInit {
 
   selected = new FormControl(0);
 
-  blockId: number;
+  blockId: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
   ) {
-    this.blockId = +this.route.snapshot.paramMap.get('id')!;
+    this.blockId = this.route.snapshot.paramMap.get('id')!;
   }
 
   ngOnInit(): void {
     this.route.paramMap
       .subscribe(value => {
-        this.blockId = +(value.get('id') ?? 0);
+        this.blockId = value.get('id') ?? '';
       });
 
     this.route.queryParams

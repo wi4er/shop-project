@@ -1,17 +1,17 @@
 import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { StringValueUpdateOperation } from '../../../common/operation/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Directory4stringEntity } from '../../model/directory4string.entity';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
 import { DirectoryInput } from '../../input/directory.input';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
+import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { DirectoryLogInsertOperation } from '../log/directory-log.insert.operation';
-import { PointValueUpdateOperation } from '../../../common/operation/point-value-update.operation';
+import { PointValueUpdateOperation } from '../../../common/operation/point/point-value-update.operation';
 import { Directory4pointEntity } from '../../model/directory4point.entity';
 
 export class DirectoryUpdateOperation {

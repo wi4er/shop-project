@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { CommonPointEntity } from '../../common/model/common-point.entity';
+import { CommonPointEntity } from '../../common/model/common/common-point.entity';
 import { PointEntity } from './point.entity';
 import { DirectoryEntity } from './directory.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';

@@ -2,9 +2,9 @@ import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { DirectoryInput } from '../../input/directory.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
+import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 
 export class DirectoryPatchOperation {

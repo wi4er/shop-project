@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { AttributeEntity } from './attribute.entity';
-import { CommonFlagEntity } from '../../common/model/common-flag.entity';
+import { CommonFlagEntity } from '../../common/model/common/common-flag.entity';
 import { FlagEntity } from './flag.entity';
 
 @Entity('settings-attribute2flag')

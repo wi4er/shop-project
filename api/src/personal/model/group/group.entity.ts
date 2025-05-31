@@ -7,8 +7,8 @@ import {
 import { Group4stringEntity } from './group4string.entity';
 import { Group2flagEntity } from './group2flag.entity';
 import { User2groupEntity } from '../user/user2group.entity';
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
 
 @Entity('personal-group')
 export class GroupEntity

@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { CommonFlagEntity } from '../../common/model/common-flag.entity';
+import { CommonFlagEntity } from '../../common/model/common/common-flag.entity';
 import { CollectionEntity } from './collection.entity';
 import { FlagEntity } from '../../settings/model/flag.entity';
 

@@ -9,7 +9,7 @@ import {
 import { BlockEntity } from './block.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang.entity';
-import { CommonDescriptionEntity } from '../../../common/model/common-description.entity';
+import { CommonDescriptionEntity } from '../../../common/model/common/common-description.entity';
 
 @Entity('content-block4description')
 export class Block4descriptionEntity
@@ -41,6 +41,7 @@ export class Block4descriptionEntity
     block => block.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

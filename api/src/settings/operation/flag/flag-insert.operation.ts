@@ -3,8 +3,8 @@ import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { FlagEntity } from '../../model/flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../../common/operation/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag-value-insert.operation';
+import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
+import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { FlagInput } from '../../input/flag.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 

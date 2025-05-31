@@ -11,12 +11,13 @@ import { SectionEntity } from '../section/section.entity';
 import { Block4stringEntity } from './block4string.entity';
 import { Block2flagEntity } from './block2flag.entity';
 import { Block2permissionEntity } from './block2permission.entity';
-import { WithFlagEntity } from '../../../common/model/with-flag.entity';
-import { WithStringEntity } from '../../../common/model/with-string.entity';
+import { WithFlagEntity } from '../../../common/model/with/with-flag.entity';
+import { WithStringEntity } from '../../../common/model/with/with-string.entity';
 import { Block4pointEntity } from './block4point.entity';
-import { WithPointEntity } from '../../../common/model/with-point.entity';
+import { WithPointEntity } from '../../../common/model/with/with-point.entity';
 import { Block4fileEntity } from './block4file.entity';
 import { Block4descriptionEntity } from './block4description.entity';
+import { WithDescriptionEntity } from '../../../common/model/with/with-description.entity';
 
 @Entity('content-block')
 @Index(['sort'])
@@ -24,7 +25,14 @@ export class BlockEntity
   extends BaseEntity
   implements WithFlagEntity<BlockEntity>,
     WithStringEntity<BlockEntity>,
-    WithPointEntity<BlockEntity> {
+    WithPointEntity<BlockEntity>,
+    WithDescriptionEntity<BlockEntity> {
+
+  constructor(id?: string) {
+    super();
+
+    if (id) this.id = id;
+  }
 
   @PrimaryColumn({
     type: 'varchar',

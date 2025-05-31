@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
-import { CommonFlagEntity } from '../../../common/model/common-flag.entity';
+import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
 import { FlagEntity } from '../../../settings/model/flag.entity';
 
 @Entity('content-element2flag')

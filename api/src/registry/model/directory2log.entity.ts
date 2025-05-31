@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DirectoryEntity } from './directory.entity';
-import { CommonLogEntity } from '../../common/model/common-log.entity';
+import { CommonLogEntity } from '../../common/model/common/common-log.entity';
 
 @Entity('registry-directory2log')
 export class Directory2logEntity

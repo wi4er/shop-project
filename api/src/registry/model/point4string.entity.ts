@@ -8,7 +8,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from './point.entity';
-import { CommonStringEntity } from '../../common/model/common-string.entity';
+import { CommonStringEntity } from '../../common/model/common/common-string.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { LangEntity } from '../../settings/model/lang.entity';
 

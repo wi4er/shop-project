@@ -9,8 +9,8 @@ import {
 import { CollectionEntity } from './collection.entity';
 import { File2flagEntity } from './file2flag.entity';
 import { File4stringEntity } from './file4string.entity';
-import { WithStringEntity } from '../../common/model/with-string.entity';
-import { WithFlagEntity } from '../../common/model/with-flag.entity';
+import { WithStringEntity } from '../../common/model/with/with-string.entity';
+import { WithFlagEntity } from '../../common/model/with/with-flag.entity';
 
 @Entity('storage-file')
 @Index(['path'], {unique: true})

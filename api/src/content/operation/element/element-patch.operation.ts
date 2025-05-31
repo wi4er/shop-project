@@ -2,9 +2,9 @@ import { EntityManager } from 'typeorm';
 import { ElementEntity } from '../../model/element/element.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { ElementInput } from '../../input/element.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag-value-update.operation';
+import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Element2flagEntity } from '../../model/element/element2flag.entity';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission-value-update.operation';
+import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
 
 export class ElementPatchOperation {

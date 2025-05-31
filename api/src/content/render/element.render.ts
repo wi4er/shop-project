@@ -7,6 +7,8 @@ import { SectionAttributeRender } from '../../common/render/section-attribute.re
 import { PermissionRender } from '../../common/render/permission.render';
 import { FileAttributeRender } from '../../common/render/file-attribute.render';
 import { ImageRender } from '../../common/render/image.render';
+import { DescriptionAttributeRender } from '../../common/render/description-attribute.render';
+import { IntervalAttributeRender } from '../../common/render/interval-attribute.render';
 
 @ApiExtraModels(
   StringAttributeRender,
@@ -36,6 +38,16 @@ export class ElementRender {
         string: str.string,
         attribute: str.attribute.id,
         lang: str.lang?.id,
+      })),
+      ...item.description.map(descr => ({
+        description: descr.description,
+        attribute: descr.attribute.id,
+        lang: descr.lang?.id,
+      })),
+      ...item.interval.map(int => ({
+        from: int.from.toISOString(),
+        to: int.to.toISOString(),
+        attribute: int.attribute.id,
       })),
       ...item.point.map(val => ({
         attribute: val.attribute.id,
@@ -101,6 +113,8 @@ export class ElementRender {
   })
   attribute: Array<
     StringAttributeRender
+    | DescriptionAttributeRender
+    | IntervalAttributeRender
     | PointAttributeRender
     | ElementAttributeRender
     | SectionAttributeRender

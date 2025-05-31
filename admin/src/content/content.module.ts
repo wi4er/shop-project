@@ -34,6 +34,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BlockHistoryComponent } from './block-history/block-history.component';
 import { ElementHistoryComponent } from './element-history/element-history.component';
 import { SectionHistoryComponent } from './section-history/section-history.component';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { SectionHistoryComponent } from './section-history/section-history.compo
     PersonalModule,
     StorageModule,
     MatTooltipModule,
+    RouterLink,
   ],
 })
 export class ContentModule { }

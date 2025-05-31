@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -9,9 +10,12 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { CommonIntervalEntity } from '../../../common/model/common/common-interval.entity';
 
 @Entity('content-element4interval')
-export class Element4IntervalEntity {
+export class Element4IntervalEntity
+  extends BaseEntity
+  implements CommonIntervalEntity<ElementEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
