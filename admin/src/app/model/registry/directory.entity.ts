@@ -1,7 +1,7 @@
 import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionValue } from '../permission/permission-value';
 
-export interface Directory {
+export interface DirectoryEntity {
 
   id: string;
   created_at: string;

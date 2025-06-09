@@ -4,14 +4,14 @@ import { createConnectionOptions } from '../../createConnectionOptions';
 import { Directory2logEntity } from './directory2log.entity';
 import { DirectoryEntity } from './directory.entity';
 
-describe('Directory to registry-log entity', () => {
+describe('DirectoryEntity to registry-log entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Directory registry-log fields', () => {
+  describe('DirectoryEntity registry-log fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Directory2logEntity);
       const list = await repo.find();

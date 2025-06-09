@@ -25,7 +25,7 @@ describe('CollectionController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Collection fields', () => {
+  describe('CollectionEntity fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/collection')
@@ -64,7 +64,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection item', () => {
+  describe('CollectionEntity item', () => {
     test('Should get collection instance', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 
@@ -82,7 +82,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection count', () => {
+  describe('CollectionEntity count', () => {
     test('Should get empty count', async () => {
       const res = await request(app.getHttpServer())
         .get('/collection/count')
@@ -104,7 +104,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection with strings', () => {
+  describe('CollectionEntity with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -137,7 +137,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection with flags', () => {
+  describe('CollectionEntity with flags', () => {
     test('Should get collection with flag', async () => {
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -167,7 +167,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection addition', () => {
+  describe('CollectionEntity addition', () => {
     test('Should add item', async () => {
       const inst = await request(app.getHttpServer())
         .post('/collection')
@@ -232,7 +232,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection updating', () => {
+  describe('CollectionEntity updating', () => {
     test('Should update collection', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const res = await request(app.getHttpServer())
@@ -296,7 +296,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('Collection deletion', () => {
+  describe('CollectionEntity deletion', () => {
     test('Should delete', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 

@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Element } from '../../app/model/content/element';
 import { ElementInput } from '../../app/model/content/element.input';
-import { Collection } from '../../app/model/storage/collection';
+import { CollectionEntity } from '../../app/model/storage/collection.entity';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
@@ -58,7 +58,7 @@ export class ElementFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Collection>(ApiEntity.COLLECTION),
+      this.apiService.fetchList<CollectionEntity>(ApiEntity.COLLECTION),
       this.data?.id ? this.apiService.fetchItem<Element>(ApiEntity.ELEMENT, this.id) : null,
     ]).then(([collection, data]) => {
       if (data) this.toEdit(data);

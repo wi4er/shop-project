@@ -1,0 +1,21 @@
+<form
+  [formGroup]="form"
+  *ngIf="!loading"
+>
+  <mat-selection-list
+    [formControl]="dirControl"
+    name="directory"
+    [multiple]="false"
+  >
+    <mat-list-option
+      *ngFor="let item of list"
+      [value]="item.id"
+    >
+      {{ item.id }}
+    </mat-list-option>
+  </mat-selection-list>
+
+  <p>
+    Option selected: {{ dirControl.value ? dirControl.value[0] : 'None' }}
+  </p>
+</form>

@@ -3,14 +3,14 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { DirectoryEntity } from './directory.entity';
 
-describe('Directory entity', () => {
+describe('DirectoryEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Directory fields', () => {
+  describe('DirectoryEntity fields', () => {
     test('Should create with id', async () => {
       const inst = new DirectoryEntity();
       inst.id = 'NAME';

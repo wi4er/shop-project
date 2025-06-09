@@ -5,14 +5,14 @@ import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { CollectionEntity } from './collection.entity';
 import { Collection4stringEntity } from './collection4string.entity';
 
-describe('Collection string attribute entity', () => {
+describe('CollectionEntity string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Collection string fields', () => {
+  describe('CollectionEntity string fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Collection4stringEntity);
       const list = await repo.find();
@@ -52,7 +52,7 @@ describe('Collection string attribute entity', () => {
     });
   });
 
-  describe('Collection with strings', () => {
+  describe('CollectionEntity with strings', () => {
     test('Should create collection with string', async () => {
       const repo = source.getRepository(CollectionEntity);
 

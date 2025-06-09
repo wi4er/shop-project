@@ -12,6 +12,9 @@ export class AttributeAsSectionUpdateOperation {
   ) {
   }
 
+  /**
+   *
+   */
   private async checkBlock(id: string): Promise<BlockEntity> {
     return WrongDataException.assert(
       await this.transaction
@@ -36,9 +39,13 @@ export class AttributeAsSectionUpdateOperation {
           throw new WrongDataException(err.message);
         });
     } else {
-      const inst = await repo.findOne({where: {parent: item}}) ?? new AttributeAsSectionEntity();
+      const inst = await repo.findOne({
+        where: {parent: {id: item.id}}
+      }) ?? new AttributeAsSectionEntity();
 
-      inst.block = await this.checkBlock(input.block);
+      inst.block = await this.checkBlock(
+        WrongDataException.assert(input.block, 'Block id expected!'),
+      );
       inst.parent = item;
 
       await this.transaction.save(inst)

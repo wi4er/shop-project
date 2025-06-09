@@ -6,14 +6,14 @@ import { BlockEntity } from './block.entity';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 
-describe('Block access entity', () => {
+describe('BlockEntity access entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Block access fields', () => {
+  describe('BlockEntity access fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Block2permissionEntity);
       const list = await repo.find();

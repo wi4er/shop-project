@@ -26,4 +26,4 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
   ],
 })
-export class DocumentModule { }
+export class BundleModule { }

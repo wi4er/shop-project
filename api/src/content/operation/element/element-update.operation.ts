@@ -32,7 +32,7 @@ export class ElementUpdateOperation {
    *
    */
   private async checkBlock(id?: string): Promise<BlockEntity> {
-    WrongDataException.assert(id, 'Block id expected!');
+    WrongDataException.assert(id, 'BlockEntity id expected!');
 
     return WrongDataException.assert(
       await this.transaction

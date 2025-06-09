@@ -104,7 +104,7 @@ describe('DocumentController', () => {
   });
 
   describe('Document item', () => {
-    test('Should get document item', async () => {
+    test('Should get bundle item', async () => {
       await createDocument('DOCUMENT');
 
       const res = await request(app.getHttpServer())
@@ -142,7 +142,7 @@ describe('DocumentController', () => {
       expect(res.body).toEqual({count: 0});
     });
 
-    test('Should get document count', async () => {
+    test('Should get bundle count', async () => {
       for (let i = 0; i < 10; i++) {
         await createDocument(`DOCUMENT_${i}`);
       }

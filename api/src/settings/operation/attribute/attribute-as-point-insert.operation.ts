@@ -18,10 +18,10 @@ export class AttributeAsPointInsertOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    const dirRepo = this.manager.getRepository(DirectoryEntity);
-
     return WrongDataException.assert(
-      await dirRepo.findOne({where: {id}}),
+      await this.manager
+        .getRepository(DirectoryEntity)
+        .findOne({where: {id}}),
       `Directory with id >> ${id} << not found!`,
     );
   }
@@ -30,7 +30,9 @@ export class AttributeAsPointInsertOperation {
    *
    */
   async save(created: AttributeEntity, directory: string): Promise<any> {
-    this.created.directory = await this.checkDirectory(directory);
+    this.created.directory = await this.checkDirectory(
+      WrongDataException.assert(directory, 'Directory id expected!')
+    );
     this.created.parent = created;
 
     await this.manager.save(this.created)

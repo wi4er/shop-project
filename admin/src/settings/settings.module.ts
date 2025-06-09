@@ -10,7 +10,7 @@ import { AttributeFormComponent } from './attribute-form/attribute-form.componen
 import { AttributeListComponent } from './attribute-list/attribute-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
@@ -52,6 +52,7 @@ import { LangSettingsComponent } from './lang-settings/lang-settings.component';
     MatDialogModule,
     MatFormFieldModule,
     FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatTabsModule,
     MatButtonModule,

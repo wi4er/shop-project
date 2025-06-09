@@ -16,7 +16,7 @@ export class AttributeAsFileUpadteOperation {
    *
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
-    WrongDataException.assert(id, 'Collection id expected!');
+    WrongDataException.assert(id, 'CollectionEntity id expected!');
 
     return WrongDataException.assert(
       await this.transaction

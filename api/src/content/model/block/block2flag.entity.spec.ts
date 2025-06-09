@@ -47,7 +47,7 @@ describe('Block2flag entity', () => {
     });
   });
 
-  describe('Block with flags', () => {
+  describe('BlockEntity with flags', () => {
     test('Shouldn`t have duplicate flag', async () => {
       const parent = await new BlockEntity().save();
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();

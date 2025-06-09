@@ -10,7 +10,7 @@ import { FormListComponent } from '../form/form-list/form-list.component';
 import { ResultListComponent } from '../form/result-list/result-list.component';
 import { PermissionListComponent } from '../personal/permission-list/permission-list.component';
 import { UserPageComponent } from './user-page/user-page.component';
-import { DocumentListComponent } from '../document/document-list/document-list.component';
+import { DocumentListComponent } from '../bundle/document-list/document-list.component';
 import { DocumentPageComponent } from './document-page/document-page.component';
 import { BlockListComponent } from '../content/block-list/block-list.component';
 import { StoragePageComponent } from './storage-page/storage-page.component';

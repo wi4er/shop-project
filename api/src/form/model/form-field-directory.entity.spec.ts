@@ -5,7 +5,7 @@ import { FormEntity } from './form.entity';
 import { FormFieldEntity } from './form-field.entity';
 import { FormFieldDirectoryEntity } from './form-field-directory.entity';
 
-describe('Directory field entity', () => {
+describe('DirectoryEntity field entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe('Directory field entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Directory field', () => {
+  describe('DirectoryEntity field', () => {
     test('Should create registry field', async () => {
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const field = await Object.assign(new FormFieldEntity(), {id: 'DIRECTORY', form}).save();

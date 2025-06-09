@@ -7,7 +7,7 @@ import { ItemMenuComponent } from './item-menu/item-menu.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { GroupPermissionComponent } from './group-permission/group-permission.component';
@@ -17,6 +17,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AccessEditComponent } from './access-edit/access-edit.component';
+import { MatListModule } from '@angular/material/list';
+import { DirectoryEditComponent } from './directory-edit/directory-edit.component';
+import { BlockEditComponent } from './block-edit/block-edit.component';
+import { CollectionEditComponent } from './collection-edit/collection-edit.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +31,9 @@ import { AccessEditComponent } from './access-edit/access-edit.component';
     ItemMenuComponent,
     GroupPermissionComponent,
     AccessEditComponent,
+    DirectoryEditComponent,
+    BlockEditComponent,
+    CollectionEditComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +47,8 @@ import { AccessEditComponent } from './access-edit/access-edit.component';
     MatCardModule,
     MatDividerModule,
     MatTooltipModule,
+    MatListModule,
+    ReactiveFormsModule,
   ],
   exports: [
     AddButtonComponent,
@@ -49,6 +58,9 @@ import { AccessEditComponent } from './access-edit/access-edit.component';
     ItemMenuComponent,
     GroupPermissionComponent,
     AccessEditComponent,
+    BlockEditComponent,
+    DirectoryEditComponent,
+    CollectionEditComponent,
   ],
 })
 export class EditModule {

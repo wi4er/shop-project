@@ -1,24 +1,61 @@
-<form (submit)="saveItem()">
+<div
+  *ngIf="loading"
+  class="loader"
+>
+  <mat-spinner></mat-spinner>
+</div>
+
+<form
+  (submit)="saveItem()"
+  *ngIf="!loading"
+>
   <h2 *ngIf="!data?.id" mat-dialog-title>
     Create new attribute
   </h2>
 
   <h2 *ngIf="data?.id" mat-dialog-title>
-    Update attribute #{{data?.id}}
+    Update attribute #{{ data?.id }}
   </h2>
 
   <mat-dialog-content>
-    <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
+    <div class="line">
+      <mat-form-field appearance="fill">
+        <mat-label>ID</mat-label>
 
-      <input
-        matInput
-        name="id"
-        [(ngModel)]="id"
-      />
-    </mat-form-field>
+        <input
+          matInput
+          name="id"
+          [(ngModel)]="id"
+        />
+      </mat-form-field>
 
-    <div *ngIf="!!data?.id">
+      <mat-form-field>
+        <mat-label>Choose an option</mat-label>
+        <mat-select [formControl]="type">
+          <mat-option
+            *ngFor="let item of typeList"
+            [value]="item"
+          > {{ item }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Block</mat-label>
+
+        <input
+          matInput
+          name="block"
+          disabled
+          [ngModel]="block"
+        />
+      </mat-form-field>
+    </div>
+
+    <div
+      *ngIf="!!data?.id"
+      class="line"
+    >
       <mat-form-field appearance="fill">
         <mat-label>Created at</mat-label>
 
@@ -43,12 +80,44 @@
     </div>
 
     <mat-tab-group dynamicHeight>
-      <mat-tab label="Properties">
-        <app-attribute-edit [edit]="editAttributes"></app-attribute-edit>
+      <mat-tab
+        label="Content block"
+        *ngIf="type.value === AttributeType.SECTION || type.value === AttributeType.ELEMENT"
+      >
+        <app-block-edit
+          [(block)]="block"
+        ></app-block-edit>
+      </mat-tab>
+
+      <mat-tab
+        label="Directory"
+        *ngIf="type.value === AttributeType.POINT || type.value === AttributeType.COUNTER"
+      >
+        <app-directory-edit
+          [(directory)]="directory"
+        ></app-directory-edit>
+      </mat-tab>
+
+      <mat-tab
+        label="Directory"
+        *ngIf="type.value === AttributeType.FILE"
+      >
+        <app-collection-edit
+          [(collection)]="collection"
+        ></app-collection-edit>
+      </mat-tab>
+
+
+      <mat-tab label="Attributes">
+        <app-attribute-edit
+          [edit]="editAttributes"
+        ></app-attribute-edit>
       </mat-tab>
 
       <mat-tab label="Flags">
-        <app-flag-edit [edit]="editFlags"></app-flag-edit>
+        <app-flag-edit
+          [edit]="editFlags"
+        ></app-flag-edit>
       </mat-tab>
     </mat-tab-group>
   </mat-dialog-content>
@@ -71,3 +140,4 @@
     </button>
   </mat-dialog-actions>
 </form>
+

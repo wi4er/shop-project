@@ -7,7 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent } from '@angular/material/paginator';
 import { Attribute } from '../../app/model/settings/attribute';
-import { Directory } from '../../app/model/registry/directory';
+import { DirectoryEntity } from '../../app/model/registry/directory.entity';
 import { PointSettingsComponent } from '../point-settings/point-settings.component';
 import { PointFormComponent } from '../point-form/point-form.component';
 import { Point } from '../../app/model/registry/point';
@@ -25,7 +25,7 @@ export class PointListComponent implements OnChanges {
   directoryId: string = '';
 
   list: { [key: string]: string }[] = [];
-  directoryItem?: Directory;
+  directoryItem?: DirectoryEntity;
 
   totalCount: number = 0;
   pageSize: number = 10;
@@ -128,7 +128,7 @@ export class PointListComponent implements OnChanges {
     return Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.apiService.fetchItem<Directory>(ApiEntity.DIRECTORY, this.directoryId),
+      this.apiService.fetchItem<DirectoryEntity>(ApiEntity.DIRECTORY, this.directoryId),
       this.apiService.fetchList<Point>(ApiEntity.POINT, {
         directory: this.directoryId,
         limit: this.pageSize,

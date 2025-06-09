@@ -39,7 +39,7 @@ export class PointInsertOperation {
   async save(input: PointInput): Promise<string> {
     this.created.id = WrongDataException.assert(input.id, 'Point id expected');
     this.created.directory = await this.checkDirectory(
-      WrongDataException.assert(input.directory, 'Directory id expected!'),
+      WrongDataException.assert(input.directory, 'DirectoryEntity id expected!'),
     );
 
     try {

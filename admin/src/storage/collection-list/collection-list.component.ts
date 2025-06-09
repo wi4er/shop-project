@@ -7,7 +7,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Flag } from '../../app/model/settings/flag';
 import { Attribute } from '../../app/model/settings/attribute';
 import { CollectionFormComponent } from '../collection-form/collection-form.component';
-import { Collection } from '../../app/model/storage/collection';
+import { CollectionEntity } from '../../app/model/storage/collection.entity';
 import { CollectionSettingsComponent } from '../collection-settings/collection-settings.component';
 
 @Component({
@@ -91,7 +91,7 @@ export class CollectionListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Collection[]) {
+  private setData(data: CollectionEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -120,7 +120,7 @@ export class CollectionListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Collection>(
+      this.apiService.fetchList<CollectionEntity>(
         ApiEntity.COLLECTION,
         {
           limit: this.pageSize,

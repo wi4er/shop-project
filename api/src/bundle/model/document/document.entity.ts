@@ -11,7 +11,7 @@ import { Document2flagEntity } from './document2flag.entity';
 import { Document4stringEntity } from './document4string.entity';
 import { InstanceEntity } from '../instance/instance.entity';
 
-@Entity('bundle-document')
+@Entity('bundle-bundle')
 export class DocumentEntity
   extends BaseEntity
   implements WithFlagEntity<DocumentEntity>, WithStringEntity<DocumentEntity> {

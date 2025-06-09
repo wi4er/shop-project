@@ -18,11 +18,11 @@ export class AttributeAsFileInsertOperation {
    *
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
-    const colRepo = this.transaction.getRepository(CollectionEntity);
-
     return WrongDataException.assert(
-      await colRepo.findOne({where: {id}}),
-      `Collection with id >> ${id} << not found!`
+      await this.transaction
+        .getRepository(CollectionEntity)
+        .findOne({where: {id}}),
+      `Collection with id >> ${id} << not found!`,
     );
   }
 
@@ -30,7 +30,9 @@ export class AttributeAsFileInsertOperation {
    *
    */
   async save(created: AttributeEntity, collection: string): Promise<any> {
-    this.created.collection = await this.checkCollection(collection);
+    this.created.collection = await this.checkCollection(
+      WrongDataException.assert(collection, 'Collection id expected!'),
+    );
     this.created.parent = created;
 
     await this.transaction.save(this.created)

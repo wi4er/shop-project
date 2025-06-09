@@ -10,6 +10,7 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 })
 export class AttributeEditComponent implements OnInit {
 
+  loading = true;
   list: Attribute[] = [];
   lang: Lang[] = [];
 
@@ -27,11 +28,12 @@ export class AttributeEditComponent implements OnInit {
     Promise.all([
       this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
       this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([property, lang]) => {
-      this.list = property;
+    ]).then(([attribute, lang]) => {
+      this.list = attribute;
       this.lang = lang;
 
       this.initValues();
+      this.loading = false;
     });
   }
 

@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { CollectionEntity } from './collection.entity';
 
-describe('Collection entity', () => {
+describe('CollectionEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,7 +13,7 @@ describe('Collection entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Collection fields', () => {
+  describe('CollectionEntity fields', () => {
     test('Should create collection', async () => {
       const inst = new CollectionEntity();
       inst.id = 'detail';

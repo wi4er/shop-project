@@ -9,7 +9,7 @@ import { Element } from '../../app/model/content/element';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Block } from '../../app/model/content/block';
+import { BlockEntity } from '../../app/model/content/block.entity';
 import { ElementSettingsComponent } from '../element-settings/element-settings.component';
 import { PermissionValue } from '../../app/model/permission/permission-value';
 import { PermissionMethod } from '../../app/model/permission/permission-method';
@@ -184,7 +184,7 @@ export class ElementListComponent implements OnChanges {
     return Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.blockId ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, String(this.blockId)) : null,
+      this.blockId ? this.apiService.fetchItem<BlockEntity>(ApiEntity.BLOCK, String(this.blockId)) : null,
       this.apiService.fetchList<Element>(
         ApiEntity.ELEMENT,
         {

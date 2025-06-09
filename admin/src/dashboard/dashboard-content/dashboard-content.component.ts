@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Block } from '../../app/model/content/block';
+import { BlockEntity } from '../../app/model/content/block.entity';
 
 @Component({
   selector: 'app-dashboard-content',
@@ -43,7 +43,7 @@ export class DashboardContentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiService.fetchList<Block>(ApiEntity.BLOCK)
+    this.apiService.fetchList<BlockEntity>(ApiEntity.BLOCK)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
           id: it.id,

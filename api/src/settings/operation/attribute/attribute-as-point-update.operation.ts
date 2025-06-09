@@ -16,8 +16,6 @@ export class AttributeAsPointUpdateOperation {
    *
    */
   private async checkDirectory(id: string): Promise<DirectoryEntity> {
-    WrongDataException.assert(id, 'Directory field expected!');
-
     return WrongDataException.assert(
       await this.transaction
         .getRepository(DirectoryEntity)
@@ -41,9 +39,13 @@ export class AttributeAsPointUpdateOperation {
           throw new WrongDataException(err.message);
         });
     } else {
-      const inst = await repo.findOne({where: {parent: item}}) ?? new AttributeAsPointEntity();
+      const inst = await repo.findOne({
+        where: {parent: {id: item.id}},
+      }) ?? new AttributeAsPointEntity();
 
-      inst.directory = await this.checkDirectory(input.directory);
+      inst.directory = await this.checkDirectory(
+        WrongDataException.assert(input.directory, 'Directory field expected!')
+      );
       inst.parent = item;
 
       await this.transaction.save(inst)

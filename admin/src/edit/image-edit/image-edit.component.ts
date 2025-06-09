@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Collection } from '../../app/model/storage/collection';
+import { CollectionEntity } from '../../app/model/storage/collection.entity';
 
 
 interface ImageAttach {
@@ -19,7 +19,7 @@ export class ImageEditComponent implements OnInit {
 
   loading = true;
 
-  collectionList: Array<Collection> = [];
+  collectionList: Array<CollectionEntity> = [];
 
   @Input()
   edit: {
@@ -45,7 +45,7 @@ export class ImageEditComponent implements OnInit {
    */
   ngOnInit() {
     Promise.all([
-      this.apiService.fetchList<Collection>(ApiEntity.COLLECTION),
+      this.apiService.fetchList<CollectionEntity>(ApiEntity.COLLECTION),
     ]).then(([collection]) => {
       this.collectionList = collection;
 

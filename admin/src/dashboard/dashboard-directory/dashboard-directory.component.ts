@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Directory } from '../../app/model/registry/directory';
+import { DirectoryEntity } from '../../app/model/registry/directory.entity';
 
 @Component({
   selector: 'app-dashboard-registry',
@@ -35,7 +35,7 @@ export class DashboardDirectoryComponent {
   }
 
   ngOnInit() {
-    this.apiService.fetchList<Directory>(ApiEntity.DIRECTORY)
+    this.apiService.fetchList<DirectoryEntity>(ApiEntity.DIRECTORY)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
           id: it.id,

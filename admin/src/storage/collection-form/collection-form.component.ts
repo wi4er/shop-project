@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Collection } from '../../app/model/storage/collection';
+import { CollectionEntity } from '../../app/model/storage/collection.entity';
 import { CollectionInput } from '../../app/model/storage/collection.input';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
@@ -34,7 +34,7 @@ export class CollectionFormComponent implements OnInit {
    */
   ngOnInit(): void {
     if (this.data?.id) {
-      this.apiService.fetchItem<Collection>(ApiEntity.COLLECTION, this.data.id)
+      this.apiService.fetchItem<CollectionEntity>(ApiEntity.COLLECTION, this.data.id)
         .then(res => this.toEdit(res));
     }
   }
@@ -42,7 +42,7 @@ export class CollectionFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Collection) {
+  toEdit(item: CollectionEntity) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 

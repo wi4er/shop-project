@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Collection } from '../../app/model/storage/collection';
+import { CollectionEntity } from '../../app/model/storage/collection.entity';
 
 @Component({
   selector: 'app-dashboard-collection',
@@ -35,7 +35,7 @@ export class DashboardCollectionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiService.fetchList<Collection>(ApiEntity.COLLECTION)
+    this.apiService.fetchList<CollectionEntity>(ApiEntity.COLLECTION)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
           id: it.id,

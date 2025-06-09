@@ -18,10 +18,10 @@ export class AttributeAsSectionInsertOperation {
    *
    */
   private async checkBlock(id: string): Promise<BlockEntity> {
-    const blockRepo = this.manager.getRepository<BlockEntity>(BlockEntity);
-
     return WrongDataException.assert(
-      await blockRepo.findOne({where: {id}}),
+      await this.manager
+        .getRepository<BlockEntity>(BlockEntity)
+        .findOne({where: {id}}),
       `Block with id >> ${id} << not found!`,
     );
   }
@@ -30,7 +30,9 @@ export class AttributeAsSectionInsertOperation {
    *
    */
   async save(created: AttributeEntity, block: string): Promise<any> {
-    this.created.block = await this.checkBlock(block);
+    this.created.block = await this.checkBlock(
+      WrongDataException.assert(block, 'BlockEntity id expected!')
+    );
     this.created.parent = created;
 
     await this.manager.save(this.created)

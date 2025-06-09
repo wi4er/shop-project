@@ -1,7 +1,10 @@
-<div *ngFor="let item of list">
-  <div mat-subheader>{{item.id}}</div>
+<div *ngIf="!loading">
+  <div
+    *ngFor="let item of list"
+  >
+    <div mat-subheader>{{ item.id }}</div>
 
-  <span>
+    <span>
     <span *ngFor="let field of edit[item.id]['']; let i = index">
       <mat-form-field appearance="fill">
         <mat-label>
@@ -38,14 +41,14 @@
     </button>
   </span>
 
-  <span *ngFor="let lang of lang">
+    <span *ngFor="let lang of lang">
     <span *ngFor="let field of edit[item.id][lang.id]; let i = index">
       <mat-form-field
         appearance="fill"
         *ngIf="edit[item.id][lang.id][i]"
       >
         <mat-label>
-          {{lang.id}}
+          {{ lang.id }}
         </mat-label>
 
         <input
@@ -75,7 +78,8 @@
     >
       <mat-icon>add</mat-icon>
 
-      {{lang.id}}
+      {{ lang.id }}
     </button>
   </span>
+  </div>
 </div>

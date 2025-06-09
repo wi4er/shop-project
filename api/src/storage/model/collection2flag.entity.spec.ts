@@ -7,7 +7,7 @@ import { FlagEntity } from '../../settings/model/flag.entity';
 import { File2flagEntity } from './file2flag.entity';
 import { Collection2flagEntity } from './collection2flag.entity';
 
-describe('Collection 2 flag entity', () => {
+describe('CollectionEntity 2 flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -51,7 +51,7 @@ describe('Collection 2 flag entity', () => {
     });
   });
 
-  describe('Collection with flag', () => {
+  describe('CollectionEntity with flag', () => {
     test('Should create collection with flag', async () => {
       const repo = source.getRepository(CollectionEntity);
 

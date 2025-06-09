@@ -49,7 +49,7 @@ export class BlockUpdateOperation {
   async save(id: string, input: BlockInput): Promise<string> {
     try {
       await this.transaction.update(BlockEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'Block id expected'),
+        id: WrongDataException.assert(input.id, 'BlockEntity id expected'),
         sort: input.sort,
       });
     } catch (err) {

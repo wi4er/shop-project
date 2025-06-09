@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
 
-describe('Block entity', () => {
+describe('BlockEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,7 +13,7 @@ describe('Block entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Block fields', () => {
+  describe('BlockEntity fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(BlockEntity);
       const list = await repo.find();

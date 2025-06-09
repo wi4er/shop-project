@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { Router } from '@angular/router';
-import { Block } from '../../app/model/content/block';
+import { BlockEntity } from '../../app/model/content/block.entity';
 import { BlockFormComponent } from '../block-form/block-form.component';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -126,7 +126,7 @@ export class BlockListComponent implements OnInit {
    */
   refreshData() {
     Promise.all([
-      this.apiService.fetchList<Block>(ApiEntity.BLOCK, {
+      this.apiService.fetchList<BlockEntity>(ApiEntity.BLOCK, {
         limit: this.pageSize,
         offset: this.currentPage * this.pageSize,
       }).then(list => this.setData(list)),
@@ -138,7 +138,7 @@ export class BlockListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Block[]) {
+  private setData(data: BlockEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];

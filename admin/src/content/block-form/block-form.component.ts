@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { BlockInput } from '../../app/model/content/block.input';
-import { Block } from '../../app/model/content/block';
+import { BlockEntity } from '../../app/model/content/block.entity';
 import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionValueService } from '../../edit/permission-value/permission-value.service';
@@ -40,7 +40,7 @@ export class BlockFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.data?.id ? this.apiService.fetchItem<Block>(ApiEntity.BLOCK, this.data.id) : null,
+      this.data?.id ? this.apiService.fetchItem<BlockEntity>(ApiEntity.BLOCK, this.data.id) : null,
     ]).then(([data]) => {
       if (data) this.toEdit(data);
 
@@ -51,7 +51,7 @@ export class BlockFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Block) {
+  toEdit(item: BlockEntity) {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;

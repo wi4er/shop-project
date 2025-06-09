@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DirectoryFormComponent } from '../directory-form/directory-form.component';
-import { Directory } from '../../app/model/registry/directory';
+import { DirectoryEntity } from '../../app/model/registry/directory.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
@@ -114,7 +114,7 @@ export class DirectoryListComponent implements OnInit {
     return Promise.all([
       this.apiService.fetchList<Flag>(ApiEntity.FLAG),
       this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.apiService.fetchList<Directory>(ApiEntity.DIRECTORY, {
+      this.apiService.fetchList<DirectoryEntity>(ApiEntity.DIRECTORY, {
         limit: this.pageSize,
         offset: this.currentPage * this.pageSize,
       }),
@@ -134,7 +134,7 @@ export class DirectoryListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Directory[]) {
+  private setData(data: DirectoryEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];

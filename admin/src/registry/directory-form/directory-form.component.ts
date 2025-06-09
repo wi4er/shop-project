@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DirectoryInput } from '../../app/model/registry/directory.input';
-import { Directory } from '../../app/model/registry/directory';
+import { DirectoryEntity } from '../../app/model/registry/directory.entity';
 import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
@@ -40,7 +40,7 @@ export class DirectoryFormComponent implements OnInit {
    */
   ngOnInit(): void {
     if (this.data?.id) {
-      this.apiService.fetchItem<Directory>(ApiEntity.DIRECTORY, this.data.id)
+      this.apiService.fetchItem<DirectoryEntity>(ApiEntity.DIRECTORY, this.data.id)
         .then(data => {
           this.toEdit(data);
           this.loading = false;
@@ -53,7 +53,7 @@ export class DirectoryFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Directory) {
+  toEdit(item: DirectoryEntity) {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;

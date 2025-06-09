@@ -1,13 +1,15 @@
 import { StringAttributeValue } from '../string-attribute-value';
+import { PermissionValue } from '../permission/permission-value';
 
-export interface Collection {
+export interface BlockEntity {
 
   id: string;
   created_at: string;
   updated_at: string;
-  version: number;
+  sort: number;
 
   flag: string[];
   attribute: StringAttributeValue[];
+  permission: PermissionValue[];
 
 }

@@ -63,7 +63,7 @@ describe('Block2point entity', () => {
     });
   });
 
-  describe('Block with point', () => {
+  describe('BlockEntity with point', () => {
     test('Should create block with points', async () => {
       const repo = source.getRepository(BlockEntity);
       const parent = await new BlockEntity().save();

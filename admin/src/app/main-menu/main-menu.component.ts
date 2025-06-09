@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../service/api.service';
-import { Block } from '../model/content/block';
+import { BlockEntity } from '../model/content/block.entity';
 import { Form } from '../model/form/form';
-import { Collection } from '../model/storage/collection';
+import { CollectionEntity } from '../model/storage/collection.entity';
 import { StringAttributeValue } from '../model/string-attribute-value';
 
 interface MenuItem {
@@ -128,14 +128,14 @@ export class MainMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiService.fetchList<Block>(ApiEntity.BLOCK)
+    this.apiService.fetchList<BlockEntity>(ApiEntity.BLOCK)
       .then(list => {
         if (list.length > 0) {
           this.content.title = 'Content blocks';
         }
 
         for (const item of list) {
-          const name = this.findName(item.attribute) ?? 'Block ' + String(item.id);
+          const name = this.findName(item.attribute) ?? 'BlockEntity ' + String(item.id);
 
           this.content.child.push({
             title: name,
@@ -160,13 +160,13 @@ export class MainMenuComponent implements OnInit {
         }
       });
 
-    this.apiService.fetchList<Collection>(ApiEntity.COLLECTION)
+    this.apiService.fetchList<CollectionEntity>(ApiEntity.COLLECTION)
       .then(list => {
         if (list.length > 0) this.form.title = 'File collections';
 
         for (const item of list) {
           this.form.child.push({
-            title: 'Collection ' + String(item.id),
+            title: 'CollectionEntity ' + String(item.id),
             link: `/collection/${item.id}`,
             icon: 'store',
           });

@@ -5,6 +5,26 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { AttributeInput } from '../../app/model/settings/attribute.input';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { FormControl } from '@angular/forms';
+
+
+export enum AttributeType {
+
+  STRING = 'STRING',
+  DESCRIPTION = 'DESCRIPTION',
+  INTERVAL = 'INTERVAL',
+
+  POINT = 'POINT',
+  COUNTER = 'COUNTER',
+
+  ELEMENT = 'ELEMENT',
+  SECTION = 'SECTION',
+
+  FILE = 'FILE',
+
+  INSTANCE = 'INSTANCE',
+
+}
 
 @Component({
   selector: 'app-attribute-form',
@@ -13,9 +33,17 @@ import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.ser
 })
 export class AttributeFormComponent implements OnInit {
 
+  loading = true;
+
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
+  block: string | null = null;
+  directory: string | null = null;
+  collection: string | null = null;
+
+  type = new FormControl(AttributeType.STRING);
+  typeList: Array<string> = Object.keys(AttributeType);
 
   editAttributes: AttributeEdit = {};
   editFlags: FlagEdit = {};
@@ -38,6 +66,8 @@ export class AttributeFormComponent implements OnInit {
       this.data?.id ? this.apiService.fetchItem<Attribute>(ApiEntity.ATTRIBUTE, this.data.id) : null,
     ]).then(([item]) => {
       if (item) this.toEdit(item);
+
+      this.loading = false;
     });
   }
 
@@ -48,6 +78,10 @@ export class AttributeFormComponent implements OnInit {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+    this.type.setValue(AttributeType[item.type]);
+    this.block = item.block;
+    this.directory = item.directory;
+    this.collection = item.collection;
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
     this.editFlags = this.flagValueService.toEdit(item.flag);
@@ -59,6 +93,10 @@ export class AttributeFormComponent implements OnInit {
   toInput(): AttributeInput {
     return {
       id: this.id,
+      type: this.type.value ? AttributeType[this.type.value] : '',
+      block: this.block,
+      directory: this.directory,
+      collection: this.collection,
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
     };
@@ -88,5 +126,7 @@ export class AttributeFormComponent implements OnInit {
   saveItem() {
     this.sendItem().then(() => this.dialogRef.close());
   }
+
+  protected readonly AttributeType = AttributeType;
 
 }

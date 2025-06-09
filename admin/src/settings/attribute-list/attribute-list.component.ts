@@ -151,6 +151,8 @@ export class AttributeListComponent implements OnInit {
         'id': String(item.id),
         created_at: item.created_at,
         updated_at: item.updated_at,
+        type: item.type,
+        link: item.directory || item.collection || item.block || '',
       };
 
       for (const it of item.attribute) {
@@ -163,7 +165,7 @@ export class AttributeListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = [ 'id', ...col ];
+    this.columns = [ 'id', 'type', 'link', ...col ];
   }
 
   /**

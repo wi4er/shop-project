@@ -6,14 +6,14 @@ import { PointEntity } from './point.entity';
 import { Directory4pointEntity } from './directory4point.entity';
 import { AttributeEntity } from '../../settings/model/attribute.entity';
 
-describe('Directory point attribute entity', () => {
+describe('DirectoryEntity point attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Directory point fields', () => {
+  describe('DirectoryEntity point fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Directory4pointEntity);
       const list = await repo.find();
@@ -65,7 +65,7 @@ describe('Directory point attribute entity', () => {
     });
   });
 
-  describe('Directory with point', () => {
+  describe('DirectoryEntity with point', () => {
     test('Should create block with points', async () => {
       const repo = source.getRepository(DirectoryEntity);
       const parent = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
