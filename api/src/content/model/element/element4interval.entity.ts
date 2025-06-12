@@ -35,7 +35,7 @@ export class Element4IntervalEntity
   @Column()
   from: Date;
 
-  @Column()
+  @Column({nullable: true})
   to: Date | null;
 
   @ManyToOne(

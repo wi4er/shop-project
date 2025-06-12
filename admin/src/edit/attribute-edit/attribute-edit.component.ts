@@ -1,36 +1,72 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Attribute } from '../../app/model/settings/attribute';
-import { Lang } from '../../app/model/settings/lang';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { LangEntity } from '../../app/model/settings/lang.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
+import { AttributeEdit } from '../attribute-value/attribute-value.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { AttributeType } from '../../settings/attribute-form/attribute-form.component';
 
 @Component({
   selector: 'app-attribute-edit',
   templateUrl: './attribute-edit.component.html',
-  styleUrls: [ './attribute-edit.component.css' ],
+  styleUrls: ['./attribute-edit.component.css'],
 })
 export class AttributeEditComponent implements OnInit {
 
   loading = true;
-  list: Attribute[] = [];
-  lang: Lang[] = [];
+  list: AttributeEntity[] = [];
+  lang: LangEntity[] = [];
 
   @Input()
-  edit: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  edit: AttributeEdit = {};
 
   constructor(
     private apiService: ApiService,
-  ) {}
+  ) {
+  }
+
+  /**
+   *
+   */
+  getRange(attr: AttributeEntity): FormGroup {
+    const edit = this.edit[attr.id];
+
+    if ('from' in edit) {
+      return new FormGroup({
+        start: edit.from as FormControl,
+        end: edit.to as FormControl,
+      });
+    } else {
+      return new FormGroup({
+        start: new FormControl(null),
+        end: new FormControl(null),
+      });
+    }
+  }
+
+  /**
+   *
+   */
+  getString(id: string): Array<FormControl> {
+    const value = this.edit[id];
+
+    if ('edit' in value) {
+      return Object.values(value.edit);
+    }
+
+    return [];
+  }
 
   /**
    *
    */
   ngOnInit() {
     Promise.all([
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.apiService.fetchList<Lang>(ApiEntity.LANG),
-    ]).then(([attribute, lang]) => {
-      this.list = attribute;
-      this.lang = lang;
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<LangEntity>(ApiEntity.LANG),
+    ]).then(([attributeList, langList]) => {
+      this.list = attributeList;
+      this.lang = langList;
 
       this.initValues();
       this.loading = false;
@@ -41,14 +77,39 @@ export class AttributeEditComponent implements OnInit {
    *
    */
   initValues(): void {
-    for (const prop of this.list) {
-      if (!this.edit[prop.id]) this.edit[prop.id] = {};
+    for (const attr of this.list) {
 
-      for (const lang of this.lang) {
-        if (!this.edit[prop.id][lang.id]) this.edit[prop.id][lang.id] = [];
+      if (
+        attr.type === AttributeType.STRING
+        || attr.type === AttributeType.DESCRIPTION
+      ) {
+        if (!this.edit[attr.id]) {
+          this.edit[attr.id] = {
+            type: attr.type,
+            edit: {},
+          };
+        }
+
+        const value = this.edit[attr.id];
+
+        if ('edit' in value) {
+          for (const lang of this.lang) {
+            if (!value.edit[lang.id]) value.edit[lang.id] = new FormControl();
+          }
+
+          if (!value.edit['']) value.edit[''] = new FormControl();
+        }
       }
 
-      if (!this.edit[prop.id]['']) this.edit[prop.id][''] = [];
+      if (attr.type === AttributeType.INTERVAL) {
+        if (!this.edit[attr.id]) {
+          this.edit[attr.id] = {
+            type: attr.type,
+            from: new FormControl(null),
+            to: new FormControl(null),
+          };
+        }
+      }
     }
   }
 
@@ -56,19 +117,18 @@ export class AttributeEditComponent implements OnInit {
    *
    */
   addEdit(id: string, lang: string) {
-    if (!this.edit[id][lang]) this.edit[id][lang] = [];
-
-    this.edit[id][lang].push({
-      value: '',
-      error: '',
-    });
+    // if (!this.edit[id][lang]) this.edit[id][lang] = [];
+    //
+    // this.edit[id][lang].push(new FormControl(''));
   }
 
   /**
    *
    */
   clearEdit(id: string, lang: string, index: number) {
-    this.edit[id][lang].splice(index, 1);
+    // this.edit[id][lang].splice(index, 1);
   }
+
+  protected readonly FormControl = FormControl;
 
 }

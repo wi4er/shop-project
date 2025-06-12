@@ -14,7 +14,7 @@ import { AccessTarget } from '../../../personal/model/access/access-target';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
-describe('Lang Controller', () => {
+describe('LangEntity Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 
@@ -55,7 +55,7 @@ describe('Lang Controller', () => {
     });
   }
 
-  describe('Lang list', () => {
+  describe('LangEntity list', () => {
     test('Should get empty list', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -102,7 +102,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang item', () => {
+  describe('LangEntity item', () => {
     test('Should get lang instance', async () => {
       await createLang('EN');
 
@@ -130,7 +130,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang count', () => {
+  describe('LangEntity count', () => {
     test('Should count empty list', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -160,7 +160,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang with strings', () => {
+  describe('LangEntity with strings', () => {
     test('Should get lang with strings', async () => {
       const parent = await createLang('EN');
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -203,7 +203,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang with flags', () => {
+  describe('LangEntity with flags', () => {
     test('Should get lang with flag', async () => {
       const parent = await createLang('EN');
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -218,7 +218,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang addition', () => {
+  describe('LangEntity addition', () => {
     test('Should add item', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -284,7 +284,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang update', () => {
+  describe('LangEntity update', () => {
     test('Should update item', async () => {
       await createLang('EN');
 
@@ -316,7 +316,7 @@ describe('Lang Controller', () => {
       expect(res.body.id).toBe('GR');
     });
 
-    describe('Lang update with strings', () => {
+    describe('LangEntity update with strings', () => {
       test('Should update id with string', async () => {
         const parent = await createLang('EN');
         const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -332,7 +332,7 @@ describe('Lang Controller', () => {
       });
     });
 
-    describe('Lang update with flags', () => {
+    describe('LangEntity update with flags', () => {
       test('Should update id with flag', async () => {
         const parent = await createLang('EN');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -349,7 +349,7 @@ describe('Lang Controller', () => {
     });
   });
 
-  describe('Lang deletion', () => {
+  describe('LangEntity deletion', () => {
     test('Should delete lang', async () => {
       await createLang('EN');
 

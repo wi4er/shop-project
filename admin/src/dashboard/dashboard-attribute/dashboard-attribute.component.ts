@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AttributeFormComponent } from '../../settings/attribute-form/attribute-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Attribute } from '../../app/model/settings/attribute';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { AttributeSettingsComponent } from '../../settings/attribute-settings/attribute-settings.component';
 
 @Component({
   selector: 'app-dashboard-attribute',
@@ -25,6 +26,9 @@ export class DashboardAttributeComponent implements OnInit {
   ) {
   }
 
+  /**
+   *
+   */
   handleEdit() {
     this.router.navigate(
       ['/property'],
@@ -32,31 +36,47 @@ export class DashboardAttributeComponent implements OnInit {
     );
   }
 
-  handleSettings() {
-    console.log('EDIT');
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      AttributeSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   handleMove(id: string) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       AttributeFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   ngOnInit() {
-    this.refreshData()
+    this.refreshData();
   }
 
+  /**
+   *
+   */
   refreshData() {
     this.list = {};
 
-    this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE)
+    this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
           id: it.id,

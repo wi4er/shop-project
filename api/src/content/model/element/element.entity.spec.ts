@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { ElementEntity } from './element.entity';
 import { BlockEntity } from '../block/block.entity';
 
-describe('Element entity', () => {
+describe('ElementEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,7 +14,7 @@ describe('Element entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element fields', () => {
+  describe('ElementEntity fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(ElementEntity);
       const list = await repo.find();

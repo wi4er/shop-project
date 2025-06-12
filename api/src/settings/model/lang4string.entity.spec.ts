@@ -5,7 +5,7 @@ import { LangEntity } from './lang.entity';
 import { Lang4stringEntity } from './lang4string.entity';
 import { AttributeEntity } from './attribute.entity';
 
-describe('Lang string attribute entity', () => {
+describe('LangEntity string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -13,7 +13,7 @@ describe('Lang string attribute entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Lang string fields', () => {
+  describe('LangEntity string fields', () => {
     test('Should create item', async () => {
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
@@ -70,7 +70,7 @@ describe('Lang string attribute entity', () => {
     });
   });
 
-  describe('Lang with strings', () => {
+  describe('LangEntity with strings', () => {
     test('Should create lang with strings', async () => {
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();

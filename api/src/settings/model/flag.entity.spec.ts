@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../createConnectionOptions';
 import { FlagEntity } from './flag.entity';
 
-describe('Flag entity', () => {
+describe('FlagEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,7 +13,7 @@ describe('Flag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Flag fields', () => {
+  describe('FlagEntity fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(FlagEntity);
       const list = await repo.find();

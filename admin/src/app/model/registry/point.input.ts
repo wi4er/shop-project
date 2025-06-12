@@ -1,4 +1,4 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface PointInput {
 
@@ -6,6 +6,6 @@ export interface PointInput {
   directory: string;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }

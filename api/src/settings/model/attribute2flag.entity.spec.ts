@@ -50,7 +50,7 @@ describe('Attribute2flag entity', () => {
     });
   });
 
-  describe('Attribute with flag', () => {
+  describe('AttributeEntity with flag', () => {
     test('Should create attribute with flag', async () => {
       const propRepo = source.getRepository(AttributeEntity);
 

@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Section } from '../../app/model/content/section';
+import { SectionEntity } from '../../app/model/content/section.entity';
 import { SectionInput } from '../../app/model/content/section.input';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
-import { FlagValueService } from '../../edit/flag-value/flag-value.service';
-import { PermissionValueService } from '../../edit/permission-value/permission-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
   selector: 'app-section-form',
@@ -29,8 +29,8 @@ export class SectionFormComponent implements OnInit {
     }>
   } = {};
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
   editImages: {
     [collection: string]: Array<{
       id?: number,
@@ -39,9 +39,7 @@ export class SectionFormComponent implements OnInit {
       hash: string,
     }>
   } = {};
-  editPermission: {
-    [groupId: string]: { [method: string]: boolean }
-  } = {};
+  editPermission: PermissionEdit = {};
 
   constructor(
     private dialogRef: MatDialogRef<SectionFormComponent>,
@@ -59,7 +57,7 @@ export class SectionFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.data?.id ? this.apiService.fetchItem<Section>(ApiEntity.SECTION, this.id) : null,
+      this.data?.id ? this.apiService.fetchItem<SectionEntity>(ApiEntity.SECTION, this.id) : null,
     ]).then(([data]) => {
       if (data) this.toEdit(data);
 
@@ -70,7 +68,7 @@ export class SectionFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Section) {
+  toEdit(item: SectionEntity) {
     this.id = item.id;
     this.sort = item.sort;
     this.created_at = item.created_at;

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Lang } from '../../app/model/settings/lang';
+import { LangEntity } from '../../app/model/settings/lang.entity';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { LangInput } from '../../app/model/settings/lang.input';
@@ -35,7 +35,7 @@ export class LangFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.data?.id ? this.apiService.fetchItem<Lang>(ApiEntity.LANG, this.data.id) : null,
+      this.data?.id ? this.apiService.fetchItem<LangEntity>(ApiEntity.LANG, this.data.id) : null,
     ]).then(([item]) => {
       if (item) this.toEdit(item);
     });
@@ -44,7 +44,7 @@ export class LangFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Lang) {
+  toEdit(item: LangEntity) {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 

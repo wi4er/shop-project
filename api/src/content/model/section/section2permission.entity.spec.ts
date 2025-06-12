@@ -7,14 +7,14 @@ import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { BlockEntity } from '../block/block.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 
-describe('Section access entity', () => {
+describe('SectionEntity access entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Section access fields', () => {
+  describe('SectionEntity access fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Section2permissionEntity);
       const list = await repo.find();

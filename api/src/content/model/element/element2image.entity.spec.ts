@@ -8,14 +8,14 @@ import { Element2imageEntity } from './element2image.entity';
 import { CollectionEntity } from '../../../storage/model/collection.entity';
 import { FileEntity } from '../../../storage/model/file.entity';
 
-describe('Element image entity', () => {
+describe('ElementEntity image entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element image fields', () => {
+  describe('ElementEntity image fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Element2imageEntity);
       const list = await repo.find();
@@ -71,7 +71,7 @@ describe('Element image entity', () => {
     });
   });
 
-  describe('Element with image', () => {
+  describe('ElementEntity with image', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();

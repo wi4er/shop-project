@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
@@ -28,7 +28,7 @@ export class FlagListComponent implements OnInit {
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
 
   constructor(
     private dialog: MatDialog,
@@ -118,7 +118,7 @@ export class FlagListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Flag>(
+      this.apiService.fetchList<FlagEntity>(
         ApiEntity.FLAG,
         {
           limit: this.pageSize,
@@ -137,7 +137,7 @@ export class FlagListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Flag[]) {
+  private setData(data: FlagEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];

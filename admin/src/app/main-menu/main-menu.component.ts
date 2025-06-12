@@ -3,7 +3,8 @@ import { ApiEntity, ApiService } from '../service/api.service';
 import { BlockEntity } from '../model/content/block.entity';
 import { Form } from '../model/form/form';
 import { CollectionEntity } from '../model/storage/collection.entity';
-import { StringAttributeValue } from '../model/string-attribute-value';
+import { StringAttributeValue } from '../model/common/string-attribute-value';
+import { CommonAttributeValue } from '../model/common/common-attribute-value';
 
 interface MenuItem {
   title: string;
@@ -123,8 +124,15 @@ export class MainMenuComponent implements OnInit {
     },
   ];
 
-  findName(list: Array<StringAttributeValue>): string | undefined {
-    return list.find(item => item.attribute === 'NAME')?.string;
+  /**
+   *
+   */
+  findName(list: Array<CommonAttributeValue>): string | undefined {
+    const attr = list.find(item => item.attribute === 'NAME');
+
+    if (attr && 'string' in attr) return attr.string;
+
+    return undefined;
   }
 
   ngOnInit() {
@@ -135,7 +143,7 @@ export class MainMenuComponent implements OnInit {
         }
 
         for (const item of list) {
-          const name = this.findName(item.attribute) ?? 'BlockEntity ' + String(item.id);
+          const name = this.findName(item.attribute) ?? String(item.id);
 
           this.content.child.push({
             title: name,
@@ -153,7 +161,7 @@ export class MainMenuComponent implements OnInit {
 
         for (const item of list) {
           this.form.child.push({
-            title: 'Form ' + String(item.id),
+            title: String(item.id),
             link: `/form/${item.id}`,
             icon: 'input',
           });
@@ -166,7 +174,7 @@ export class MainMenuComponent implements OnInit {
 
         for (const item of list) {
           this.form.child.push({
-            title: 'CollectionEntity ' + String(item.id),
+            title: String(item.id),
             link: `/collection/${item.id}`,
             icon: 'store',
           });

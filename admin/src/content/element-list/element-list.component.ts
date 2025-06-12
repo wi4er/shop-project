@@ -3,9 +3,9 @@ import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Flag } from '../../app/model/settings/flag';
-import { Attribute } from '../../app/model/settings/attribute';
-import { Element } from '../../app/model/content/element';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { ElementEntity } from '../../app/model/content/element.entity';
 import { MatDialog } from '@angular/material/dialog';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -44,7 +44,7 @@ export class ElementListComponent implements OnChanges {
 
   activeFlags: { [key: string]: string[] } = {};
   attributeList: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   permissionList: { [key: string]: Array<PermissionValue> } = {};
   imageList: {
     [id: string]: Array<{
@@ -55,7 +55,7 @@ export class ElementListComponent implements OnChanges {
   columns: string[] = [];
 
   list: { [key: string]: string }[] = [];
-  expandedElement: Element | null = null;
+  expandedElement: ElementEntity | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -144,7 +144,7 @@ export class ElementListComponent implements OnChanges {
   /**
    *
    */
-  private setData(data: Element[]) {
+  private setData(data: ElementEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.imageList = {};
@@ -166,7 +166,13 @@ export class ElementListComponent implements OnChanges {
 
       for (const it of item.attribute) {
         col.add('attribute_' + it.attribute);
-        line['attribute_' + it.attribute] = it.string;
+        if ('string' in it) {
+          line['attribute_' + it.attribute] = it.string;
+        } else  if ('description' in it) {
+          line['attribute_' + it.attribute] = it.description;
+        } else if ('from' in it) {
+          line['attribute_' + it.attribute] = it.from + (it.to ? ' - ' + it.to : '');
+        }
       }
 
       this.activeFlags[item.id] = item.flag;
@@ -182,10 +188,10 @@ export class ElementListComponent implements OnChanges {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
       this.blockId ? this.apiService.fetchItem<BlockEntity>(ApiEntity.BLOCK, String(this.blockId)) : null,
-      this.apiService.fetchList<Element>(
+      this.apiService.fetchList<ElementEntity>(
         ApiEntity.ELEMENT,
         {
           'filter[block]': this.blockId,
@@ -202,7 +208,7 @@ export class ElementListComponent implements OnChanges {
     ]).then(([flagList, attributeList, blockItem, data, count]) => {
       this.flagList = flagList;
       this.attributeList = attributeList.map((item: { id: string }) => item.id);
-      this.blockName = blockItem?.attribute.find(item => item.attribute === 'NAME')?.string;
+      // this.blockName = blockItem?.attribute.find(item => item.attribute === 'NAME')?.string;
       this.setData(data);
       this.totalCount = count;
 
@@ -236,6 +242,7 @@ export class ElementListComponent implements OnChanges {
     this.dialog.open(
       ElementFormComponent,
       {
+        width: '1000px',
         panelClass: 'wrapper',
         data: {block: this.blockId},
       },
@@ -308,7 +315,7 @@ export class ElementListComponent implements OnChanges {
     this.dialog.open(
       ElementSettingsComponent,
       {
-        width: '500px',
+        width: '1000px',
         panelClass: 'wrapper',
         data: {block: this.blockId},
       },

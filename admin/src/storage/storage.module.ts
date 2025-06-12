@@ -23,6 +23,7 @@ import { ArchiveListComponent } from './archive-list/archive-list.component';
 import { EditModule } from '../edit/edit.module';
 import { CollectionSettingsComponent } from './collection-settings/collection-settings.component';
 import { FileSettingsComponent } from './file-settings/file-settings.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { FileSettingsComponent } from './file-settings/file-settings.component';
     MatTabsModule,
     MatCardModule,
     MatDividerModule,
+    MatListModule,
   ],
 })
 export class StorageModule { }

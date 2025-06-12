@@ -12,7 +12,7 @@
 
   <button
     mat-icon-button
-    (click)="handleSettings()"
+    (click)="openSettings()"
   >
     <mat-icon>settings</mat-icon>
   </button>
@@ -24,7 +24,7 @@
     class="item"
     *ngFor="let block of Object.values(list)"
   >
-    <div matListItemTitle>BlockEntity {{ block.id }}</div>
+    <div matListItemTitle>{{ block.id }}</div>
     <div matListItemLine>Elements: {{ block.element }}</div>
     <div matListItemLine>Sections: {{ block.section }}</div>
 

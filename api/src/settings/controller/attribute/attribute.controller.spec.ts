@@ -68,8 +68,8 @@ describe('AttributeController', () => {
     });
   }
 
-  describe('Attribute fields', () => {
-    describe('Attribute list', () => {
+  describe('AttributeEntity fields', () => {
+    describe('AttributeEntity list', () => {
       test('Should get empty list', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
 
@@ -103,7 +103,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute fields with pagination', () => {
+    describe('AttributeEntity fields with pagination', () => {
       test('Should get attribute with limit', async () => {
         for (let i = 0; i < 10; i++) {
           await createAttribute(`NAME_${i}`);
@@ -133,7 +133,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute fields with type', () => {
+    describe('AttributeEntity fields with type', () => {
       test('Should get with registry type', async () => {
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const parent = await createAttribute('NAME').withType(AttributeType.POINT);
@@ -196,7 +196,7 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute item', () => {
+  describe('AttributeEntity item', () => {
     test('Should get attribute instance', async () => {
       await createAttribute('NAME');
 
@@ -226,7 +226,7 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute count', () => {
+  describe('AttributeEntity count', () => {
     test('Should get zero count', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
 
@@ -256,7 +256,7 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute with strings', () => {
+  describe('AttributeEntity with strings', () => {
     test('Should get attribute with strings', async () => {
       const parent = await createAttribute(`NAME`);
       await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
@@ -288,7 +288,7 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute with flags', () => {
+  describe('AttributeEntity with flags', () => {
     test('Should get attribute with flag', async () => {
       const parent = await createAttribute(`NAME`);
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -320,8 +320,8 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute addition', () => {
-    describe('Attribute addition with fields', () => {
+  describe('AttributeEntity addition', () => {
+    describe('AttributeEntity addition with fields', () => {
       test('Should add attribute', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
 
@@ -398,8 +398,8 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute addition with type', () => {
-      describe('Attribute addition with point type', () => {
+    describe('AttributeEntity addition with type', () => {
+      describe('AttributeEntity addition with point type', () => {
         test('Should add with point type', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
           await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
@@ -445,7 +445,7 @@ describe('AttributeController', () => {
         });
       });
 
-      describe('Attribute addition with element type', () => {
+      describe('AttributeEntity addition with element type', () => {
         test('Should add with element type', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
           await Object.assign(new BlockEntity(), {}).save();
@@ -491,7 +491,7 @@ describe('AttributeController', () => {
         });
       });
 
-      describe('Attribute addition with section type', () => {
+      describe('AttributeEntity addition with section type', () => {
         test('Should add with section type', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
           await Object.assign(new BlockEntity(), {}).save();
@@ -537,7 +537,7 @@ describe('AttributeController', () => {
         });
       });
 
-      describe('Attribute addition with file type', () => {
+      describe('AttributeEntity addition with file type', () => {
         test('Should add with file type', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
           await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
@@ -584,7 +584,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute addition with strings', () => {
+    describe('AttributeEntity addition with strings', () => {
       test('Should add with strings', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -616,7 +616,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute addition with flags', () => {
+    describe('AttributeEntity addition with flags', () => {
       test('Should add with flags', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
         await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
@@ -647,8 +647,8 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute update', () => {
-    describe('Attribute field update', () => {
+  describe('AttributeEntity update', () => {
+    describe('AttributeEntity field update', () => {
       test('Should update attribute', async () => {
         await createAttribute('NAME')
           .withAccess(AccessMethod.PUT);
@@ -688,7 +688,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute patch', () => {
+    describe('AttributeEntity patch', () => {
       test('Should patch id only', async () => {
         await createAttribute('NAME')
           .withAccess(AccessMethod.PUT);
@@ -722,8 +722,8 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute update with type', () => {
-      describe('Attribute update with point type', () => {
+    describe('AttributeEntity update with type', () => {
+      describe('AttributeEntity update with point type', () => {
         test('Should update type to point', async () => {
           await createAttribute('NAME');
           await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
@@ -771,7 +771,7 @@ describe('AttributeController', () => {
         });
       });
 
-      describe('Attribute update with element type', () => {
+      describe('AttributeEntity update with element type', () => {
         test('Should update type to element', async () => {
           await createAttribute('NAME');
           const block = await Object.assign(new BlockEntity(), {}).save();
@@ -830,7 +830,7 @@ describe('AttributeController', () => {
       });
 
 
-      describe('Attribute update with section type', () => {
+      describe('AttributeEntity update with section type', () => {
         test('Should update type to section', async () => {
           await createAttribute('NAME');
           const block = await Object.assign(new BlockEntity(), {}).save();
@@ -922,7 +922,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute update with strings', () => {
+    describe('AttributeEntity update with strings', () => {
       test('Should update id with string', async () => {
         const parent = await createAttribute('NAME');
         await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
@@ -957,7 +957,7 @@ describe('AttributeController', () => {
       });
     });
 
-    describe('Attribute update with flags', () => {
+    describe('AttributeEntity update with flags', () => {
       test('Should add flag', async () => {
         await createAttribute('NAME');
         await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -1047,7 +1047,7 @@ describe('AttributeController', () => {
     });
   });
 
-  describe('Attribute deletion', () => {
+  describe('AttributeEntity deletion', () => {
     test('Should delete attribute', async () => {
       await createAttribute('NAME');
 

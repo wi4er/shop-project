@@ -8,14 +8,14 @@ import { PointEntity } from '../../../registry/model/point.entity';
 import { Section4pointEntity } from './section4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 
-describe('Section point attribute entity', () => {
+describe('SectionEntity point attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Section point attribute fields', () => {
+  describe('SectionEntity point attribute fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(SectionEntity);
       const list = await repo.find();
@@ -67,7 +67,7 @@ describe('Section point attribute entity', () => {
     });
   });
 
-  describe('Section with points', () => {
+  describe('SectionEntity with points', () => {
     test('Shouldn`t create with duplicate points', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();

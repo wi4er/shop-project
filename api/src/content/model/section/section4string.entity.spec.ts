@@ -41,7 +41,7 @@ describe('SectionString entity', () => {
     });
   });
 
-  describe('Section with strings', () => {
+  describe('SectionEntity with strings', () => {
     test('Should create element with strings', async () => {
       const repo = source.getRepository(SectionEntity);
 

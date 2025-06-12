@@ -1,14 +1,17 @@
 <form (submit)="saveItem()">
   <h2 *ngIf="!data?.id" mat-dialog-title>
-    Create new content block
+    Create new collection
   </h2>
 
   <h2 *ngIf="data?.id" mat-dialog-title>
-    Update content element #{{ data?.id }}
+    Update collection #{{ data?.id }}
   </h2>
 
   <mat-dialog-content>
-    <div *ngIf="!!data?.id">
+    <div
+      class="line"
+      *ngIf="!!data?.id"
+    >
       <mat-form-field appearance="fill">
         <mat-label>Created at</mat-label>
 

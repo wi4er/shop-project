@@ -1,13 +1,13 @@
-import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionValue } from '../permission/permission-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
-export interface Element {
+export interface SectionEntity {
 
   id: string;
   created_at: string;
   updated_at: string;
-  version: number;
   sort: number;
+
   image: Array<{
     original: string;
     image: number;
@@ -15,7 +15,7 @@ export interface Element {
     collection: string;
   }>
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
   permission: PermissionValue[];
 
 }

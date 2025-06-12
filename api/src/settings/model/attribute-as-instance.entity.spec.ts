@@ -5,7 +5,7 @@ import { AttributeEntity } from './attribute.entity';
 import { DirectoryEntity } from '../../registry/model/directory.entity';
 import { AttributeAsPointEntity } from './attribute-as-point.entity';
 
-describe('Attribute as instance entity', () => {
+describe('AttributeEntity as instance entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));

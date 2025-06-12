@@ -74,15 +74,15 @@
     </div>
 
     <mat-tab-group dynamicHeight>
+      <mat-tab label="Attributes">
+        <app-attribute-edit [edit]="editAttributes"></app-attribute-edit>
+      </mat-tab>
+
       <mat-tab label="Images">
         <app-image-edit
           [edit]="editImages"
           [imageList]="imageList"
         ></app-image-edit>
-      </mat-tab>
-
-      <mat-tab label="Properties">
-        <app-attribute-edit [edit]="editAttributes"></app-attribute-edit>
       </mat-tab>
 
       <mat-tab label="Flags">

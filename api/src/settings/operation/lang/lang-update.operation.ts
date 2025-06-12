@@ -40,7 +40,7 @@ export class LangUpdateOperation {
   async save(id: string, input: LangInput): Promise<string> {
     try {
       await this.manager.update(LangEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'Lang id expected'),
+        id: WrongDataException.assert(input.id, 'LangEntity id expected'),
       });
     } catch (err) {
       throw new WrongDataException(err.message);

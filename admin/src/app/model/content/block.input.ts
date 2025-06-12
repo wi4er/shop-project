@@ -1,13 +1,15 @@
-import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionInput } from '../permission/permission-input';
+import { CommonAttributeValue } from '../common/common-attribute-value';
+import { WithAttributeInput } from '../settings/with-attribute.input';
 
-export interface BlockInput {
+export interface BlockInput
+  extends WithAttributeInput {
 
   id?: string;
   sort: number;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: CommonAttributeValue[];
   permission: PermissionInput[];
 
 }

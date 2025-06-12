@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { LangEntity } from './lang.entity';
 import { createConnectionOptions } from '../../createConnectionOptions';
 
-describe('Lang entity', () => {
+describe('LangEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,7 +13,7 @@ describe('Lang entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Lang fields', () => {
+  describe('LangEntity fields', () => {
     test('Should add item with id', async () => {
       const inst = new LangEntity();
       inst.id = 'EN';

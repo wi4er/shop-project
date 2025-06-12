@@ -2,16 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AttributeFormComponent } from '../attribute-form/attribute-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Attribute } from '../../app/model/settings/attribute';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateService } from '../../app/service/date.service';
-import { BlockHistoryComponent } from '../../content/block-history/block-history.component';
 import { AttributeHistoryComponent } from '../attribute-history/attribute-history.component';
-import { ElementSettingsComponent } from '../../content/element-settings/element-settings.component';
 import { AttributeSettingsComponent } from '../attribute-settings/attribute-settings.component';
 
 @Component({
@@ -29,7 +27,7 @@ export class AttributeListComponent implements OnInit {
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
 
   constructor(
     private dialog: MatDialog,
@@ -45,7 +43,7 @@ export class AttributeListComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
       this.refreshData(),
     ]).then(([flagList]) => {
       this.flagList = flagList;
@@ -123,7 +121,7 @@ export class AttributeListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Attribute>(
+      this.apiService.fetchList<AttributeEntity>(
         ApiEntity.ATTRIBUTE,
         {
           limit: this.pageSize,
@@ -141,7 +139,7 @@ export class AttributeListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Attribute[]) {
+  private setData(data: AttributeEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -157,7 +155,11 @@ export class AttributeListComponent implements OnInit {
 
       for (const it of item.attribute) {
         col.add('property_' + it.attribute);
-        line['property_' + it.attribute] = it.string;
+        if ('string' in it) {
+          line['attribute_' + it.attribute] = it.string;
+        } else if ('from' in it) {
+          line['attribute_' + it.attribute] = it.from + ' - ' + it.to;
+        }
       }
 
       this.activeFlags[item.id] = item.flag;

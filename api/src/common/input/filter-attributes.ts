@@ -6,11 +6,13 @@ import { AttributeElementInput } from './attribute-element.input';
 import { AttributeDescriptionInput } from './attribute-description.input';
 import { AttributeCounterInput } from './attribute-counter.input';
 import { AttributeSectionInput } from './attribute-section.input';
+import { AttributeIntervalInput } from './attribute-interval.input';
 
 export type AttributePack = {
 
   string: Array<AttributeStringInput>;
   description: Array<AttributeDescriptionInput>;
+  interval: Array<AttributeIntervalInput>;
 
   point: Array<AttributePointInput>;
   counter: Array<AttributeCounterInput>;
@@ -26,6 +28,7 @@ export function filterAttributes(
   const pack: AttributePack = {
     string: [],
     description: [],
+    interval: [],
     point: [],
     counter: [],
     element: [],
@@ -35,6 +38,7 @@ export function filterAttributes(
   for (const item of attribute ?? []) {
     if (item['string']) pack.string.push(<AttributeStringInput>item);
     else if (item['description']) pack.description.push(<AttributeDescriptionInput>item);
+    else if (item['from']) pack.interval.push(<AttributeIntervalInput>item);
     else if (item['count']) pack.counter.push(<AttributeCounterInput>item);
     else if (item['point']) pack.point.push(<AttributePointInput>item);
     else if (item['element']) pack.element.push(<AttributeElementInput>item);

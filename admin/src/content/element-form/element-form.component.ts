@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Element } from '../../app/model/content/element';
+import { ElementEntity } from '../../app/model/content/element.entity';
 import { ElementInput } from '../../app/model/content/element.input';
 import { CollectionEntity } from '../../app/model/storage/collection.entity';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
@@ -59,7 +59,7 @@ export class ElementFormComponent implements OnInit {
   ngOnInit(): void {
     Promise.all([
       this.apiService.fetchList<CollectionEntity>(ApiEntity.COLLECTION),
-      this.data?.id ? this.apiService.fetchItem<Element>(ApiEntity.ELEMENT, this.id) : null,
+      this.data?.id ? this.apiService.fetchItem<ElementEntity>(ApiEntity.ELEMENT, this.id) : null,
     ]).then(([collection, data]) => {
       if (data) this.toEdit(data);
 
@@ -70,7 +70,7 @@ export class ElementFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Element) {
+  toEdit(item: ElementEntity) {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;

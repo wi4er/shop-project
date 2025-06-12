@@ -1,4 +1,4 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { StringAttributeValue } from '../common/string-attribute-value';
 import { PermissionValue } from '../permission/permission-value';
 
 export interface DirectoryEntity {

@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
-import { Flag } from '../../app/model/settings/flag';
-import { Attribute } from '../../app/model/settings/attribute';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { CollectionFormComponent } from '../collection-form/collection-form.component';
 import { CollectionEntity } from '../../app/model/storage/collection.entity';
 import { CollectionSettingsComponent } from '../collection-settings/collection-settings.component';
@@ -24,7 +24,7 @@ export class CollectionListComponent implements OnInit {
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   columns: string[] = [];
   list: { [key: string]: string }[] = [];
 
@@ -79,8 +79,8 @@ export class CollectionListComponent implements OnInit {
    */
   ngOnInit() {
     Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
       this.refreshData(),
     ]).then(([flagList, propertyList]) => {
       this.flagList = flagList;

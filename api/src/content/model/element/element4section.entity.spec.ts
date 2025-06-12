@@ -7,7 +7,7 @@ import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { SectionEntity } from '../section/section.entity';
 import { Element4sectionEntity } from './element4section.entity';
 
-describe('Element section attribute entity', () => {
+describe('ElementEntity section attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));

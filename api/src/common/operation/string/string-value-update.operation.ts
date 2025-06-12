@@ -60,7 +60,7 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
 
       inst.parent = beforeItem;
       inst.attribute = await this.checkAttribute(item.attribute);
-      inst.string = WrongDataException.assert(item.string, 'Attribute string value expected!');
+      inst.string = WrongDataException.assert(item.string, 'AttributeEntity string value expected!');
       inst.lang = await this.checkLang(item.lang);
 
       await this.transaction.save(inst);

@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  Flag ({{ Object.keys(list).length }})
+  Flags ({{ Object.keys(list).length }})
 
   <span style="flex: 1"></span>
 
@@ -12,7 +12,7 @@
 
   <button
     mat-icon-button
-    (click)="handleSettings()"
+    (click)="openSettings()"
   >
     <mat-icon>settings</mat-icon>
   </button>
@@ -22,15 +22,15 @@
   <mat-list-item
     role="listitem"
     class="item"
-    *ngFor="let property of Object.values(list)"
+    *ngFor="let flag of Object.values(list)"
   >
-    <div matListItemTitle>Flag {{ property.id }}</div>
+    <div matListItemTitle>{{ flag.id }}</div>
     <!--    <div matListItemLine>Count: {{ attribute }}</div>-->
 
     <div matListItemMeta>
       <button
         mat-icon-button
-        (click)="handleMove(property.id)"
+        (click)="handleMove(flag.id)"
       >
         <mat-icon>edit</mat-icon>
       </button>

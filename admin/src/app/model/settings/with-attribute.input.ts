@@ -1,7 +1,7 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface WithAttributeInput {
 
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }

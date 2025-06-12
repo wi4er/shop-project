@@ -1,16 +1,15 @@
 import { BaseEntity, EntityManager } from 'typeorm';
-import { CommonStringEntity } from '../../model/common/common-string.entity';
-import { WithStringEntity } from '../../model/with/with-string.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { AttributeStringInput } from '../../input/attribute-string.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { CommonIntervalEntity } from '../../model/common/common-interval.entity';
+import { AttributeIntervalInput } from '../../input/attribute-interval.input';
+import { WithIntervalEntity } from '../../model/with/with-interval.entity';
 
-export class IntervalValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
+export class IntervalValueUpdateOperation<T extends WithIntervalEntity<BaseEntity>> {
 
   constructor(
     private transaction: EntityManager,
-    private entity: new() => CommonStringEntity<T>,
+    private entity: new() => CommonIntervalEntity<T>,
   ) {
   }
 
@@ -29,24 +28,23 @@ export class IntervalValueUpdateOperation<T extends WithStringEntity<BaseEntity>
   /**
    *
    */
-  private async checkLang(id?: string): Promise<LangEntity> {
-    if (!id) return null;
+  checkDate(value: string): Date {
+    const date = new Date(value);
 
-    return WrongDataException.assert(
-      await this.transaction
-        .getRepository(LangEntity)
-        .findOne({where: {id}}),
-      `Language with id >> ${id} << not found!`,
-    );
+    if (date instanceof Date && isNaN(+date)) {
+      throw new WrongDataException(`Invalid date format for ${value}`)
+    }
+
+    return date;
   }
 
   /**
    *
    */
-  async save(beforeItem: T, list: AttributeStringInput[]) {
-    const current: { [key: string]: Array<CommonStringEntity<BaseEntity>> } = {};
+  async save(beforeItem: T, list: AttributeIntervalInput[]) {
+    const current: { [key: string]: Array<CommonIntervalEntity<BaseEntity>> } = {};
 
-    for (const item of beforeItem.string) {
+    for (const item of beforeItem.interval) {
       const {id} = item.attribute;
 
       if (current[id]) current[id].push(item);
@@ -59,9 +57,11 @@ export class IntervalValueUpdateOperation<T extends WithStringEntity<BaseEntity>
         : new this.entity();
 
       inst.parent = beforeItem;
-      inst.attribute = await this.checkAttribute(item.attribute);
-      inst.string = WrongDataException.assert(item.string, 'Attribute string value expected!');
-      inst.lang = await this.checkLang(item.lang);
+      inst.attribute = await this.checkAttribute(
+        WrongDataException.assert(item.attribute, 'Attribute expected')
+      );
+      inst.from = this.checkDate(item.from);
+      inst.to = item.to ? this.checkDate(item.to) : null;
 
       await this.transaction.save(inst);
     }

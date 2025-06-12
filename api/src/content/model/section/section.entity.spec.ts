@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { SectionEntity } from './section.entity';
 import { BlockEntity } from '../block/block.entity';
 
-describe('Section entity', () => {
+describe('SectionEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -14,7 +14,7 @@ describe('Section entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Section fields', () => {
+  describe('SectionEntity fields', () => {
     test('Should create section', async () => {
       const block = await new BlockEntity().save();
       const section = await Object.assign(

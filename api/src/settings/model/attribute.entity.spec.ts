@@ -3,14 +3,14 @@ import { createConnection } from 'typeorm';
 import { AttributeEntity } from './attribute.entity';
 import { createConnectionOptions } from '../../createConnectionOptions';
 
-describe('Attribute entity', () => {
+describe('AttributeEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Attribute fields', () => {
+  describe('AttributeEntity fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(AttributeEntity);
       const list = await repo.find();

@@ -40,7 +40,7 @@ export class FlagUpdateOperation {
   async save(id: string, input: FlagInput): Promise<string> {
     try {
       await this.manager.update(FlagEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'Flag id expected'),
+        id: WrongDataException.assert(input.id, 'FlagEntity id expected'),
         color: input.color,
         icon: input.icon,
         iconSvg: input.iconSvg,

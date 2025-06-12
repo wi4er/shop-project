@@ -1,4 +1,4 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface FlagInput {
 
@@ -8,6 +8,6 @@ export interface FlagInput {
   iconSvg: string | null;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }

@@ -20,6 +20,8 @@ import {
   DescriptionValueUpdateOperation,
 } from '../../../common/operation/description/description-value-update.operation';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
+import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
+import { IntervalValueUpdateOperation } from '../../../common/operation/interval/interval-value-update.operation';
 
 export class ElementUpdateOperation {
 
@@ -32,8 +34,6 @@ export class ElementUpdateOperation {
    *
    */
   private async checkBlock(id?: string): Promise<BlockEntity> {
-    WrongDataException.assert(id, 'BlockEntity id expected!');
-
     return WrongDataException.assert(
       await this.transaction
         .getRepository<BlockEntity>(BlockEntity)
@@ -52,10 +52,11 @@ export class ElementUpdateOperation {
         .findOne({
           where: {id},
           relations: {
-            image: {image: true},
             string: {attribute: true, lang: true},
             description: {attribute: true, lang: true},
+            interval: {attribute: true},
             flag: {flag: true},
+            image: {image: true},
             point: {point: true, attribute: true},
             element: {element: true, attribute: true},
             permission: {group: true},
@@ -73,7 +74,9 @@ export class ElementUpdateOperation {
       await this.transaction.update(ElementEntity, {id}, {
         id: WrongDataException.assert(input.id, 'Element id expected'),
         sort: input.sort,
-        block: await this.checkBlock(input.block),
+        block: await this.checkBlock(
+          WrongDataException.assert(input.block, 'Block id expected!')
+        ),
       });
     } catch (err) {
       throw new WrongDataException(err.message);
@@ -87,8 +90,9 @@ export class ElementUpdateOperation {
 
     const pack = filterAttributes(input.attribute);
     await new StringValueUpdateOperation(this.transaction, Element4stringEntity).save(beforeItem, pack.string);
-    await new PointValueUpdateOperation(this.transaction, Element4pointEntity).save(beforeItem, pack.point);
     await new DescriptionValueUpdateOperation(this.transaction, Element4descriptionEntity).save(beforeItem, pack.description);
+    await new IntervalValueUpdateOperation(this.transaction, Element4IntervalEntity).save(beforeItem, pack.interval);
+    await new PointValueUpdateOperation(this.transaction, Element4pointEntity).save(beforeItem, pack.point);
     await new Element4elementUpdateOperation(this.transaction).save(beforeItem, pack.element);
 
     return input.id;

@@ -6,8 +6,8 @@ import { BlockEntity } from '../../app/model/content/block.entity';
 import { BlockFormComponent } from '../block-form/block-form.component';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Flag } from '../../app/model/settings/flag';
-import { Attribute } from '../../app/model/settings/attribute';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BlockSettingsComponent } from '../block-settings/block-settings.component';
 import { DateService } from '../../app/service/date.service';
@@ -30,7 +30,7 @@ export class BlockListComponent implements OnInit {
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   columns: string[] = [];
 
   constructor(
@@ -114,9 +114,9 @@ export class BlockListComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG)
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG)
         .then(list => this.flagList = list),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE)
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE)
         .then(list => this.propertyList = list.map((item: { id: string }) => item.id)),
     ]).then(() => this.refreshData());
   }
@@ -152,8 +152,12 @@ export class BlockListComponent implements OnInit {
       };
 
       for (const it of item.attribute) {
-        col.add('property_' + it.attribute);
-        line['property_' + it.attribute] = it.string;
+        col.add('attribute_' + it.attribute);
+        if ('string' in it) {
+          line['attribute_' + it.attribute] = it.string;
+        } else if ('from' in it) {
+          line['attribute_' + it.attribute] = it.from + ' - ' + it.to;
+        }
       }
 
       this.activeFlags[item.id] = item.flag;

@@ -21,6 +21,8 @@ import { MatListModule } from '@angular/material/list';
 import { DirectoryEditComponent } from './directory-edit/directory-edit.component';
 import { BlockEditComponent } from './block-edit/block-edit.component';
 import { CollectionEditComponent } from './collection-edit/collection-edit.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { CollectionEditComponent } from './collection-edit/collection-edit.compo
     MatTooltipModule,
     MatListModule,
     ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   exports: [
     AddButtonComponent,

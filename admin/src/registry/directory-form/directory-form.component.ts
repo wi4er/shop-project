@@ -3,8 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DirectoryInput } from '../../app/model/registry/directory.input';
 import { DirectoryEntity } from '../../app/model/registry/directory.entity';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
-import { FlagValueService } from '../../edit/flag-value/flag-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
@@ -20,8 +20,8 @@ export class DirectoryFormComponent implements OnInit {
   created_at: string = '';
   updated_at: string = '';
 
-  editAttributes: { [attribute: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
-  editFlags: { [field: string]: boolean } = {};
+  editAttributes: AttributeEdit = {};
+  editFlags: FlagEdit = {};
   editPermission: PermissionEdit = {};
 
   constructor(

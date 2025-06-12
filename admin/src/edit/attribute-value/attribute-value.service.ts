@@ -1,8 +1,24 @@
 import { Injectable } from '@angular/core';
-import { StringAttributeValue } from '../../app/model/string-attribute-value';
+import { FormControl } from '@angular/forms';
+import { CommonAttributeValue } from '../../app/model/common/common-attribute-value';
+import { AttributeType } from '../../settings/attribute-form/attribute-form.component';
 
 export interface AttributeEdit {
-  [property: string]: { [lang: string]: { value: string, error?: string }[] };
+  [attribute: string]: {
+    type: AttributeType.STRING;
+    edit: {
+      [lang: string]: FormControl
+    },
+  } | {
+    type: AttributeType.DESCRIPTION;
+    edit: {
+      [lang: string]: FormControl
+    },
+  } | {
+    type: AttributeType.INTERVAL,
+    from?: FormControl,
+    to?: FormControl,
+  };
 }
 
 @Injectable({
@@ -18,51 +34,98 @@ export class AttributeValueService {
    */
   toInput(
     editAttributes: AttributeEdit,
-  ): StringAttributeValue[] {
-    const attribute: StringAttributeValue[] = [];
+  ): Array<CommonAttributeValue> {
+    const input: Array<CommonAttributeValue> = [];
 
-    for (const prop in editAttributes) {
-      for (const lang in editAttributes[prop]) {
-        if (!editAttributes[prop][lang]) continue;
+    for (const attr in editAttributes) {
+      const item = editAttributes[attr];
 
-        for (const value of editAttributes[prop][lang]) {
-          if (!value.value) continue;
+      if (item.type === AttributeType.STRING) {
+        for (const lang in item.edit) {
+          if (!item.edit[lang]?.value) continue;
 
-          attribute.push({
-            attribute: prop,
-            string: value.value,
-            lang: lang || undefined,
+          input.push({
+            attribute: attr,
+            string: item.edit[lang].value,
+            lang: lang,
           });
         }
       }
+
+      if (item.type === AttributeType.DESCRIPTION) {
+        for (const lang in item.edit) {
+          if (!item.edit[lang]?.value) continue;
+
+          input.push({
+            attribute: attr,
+            description: item.edit[lang].value,
+            lang: lang,
+          });
+        }
+      }
+
+      if (item.type === AttributeType.INTERVAL) {
+        if (!item.from?.value) continue;
+
+        input.push({
+          attribute: attr,
+          from: item.from?.value,
+          to: item.to?.value,
+        });
+      }
     }
 
-    return attribute;
+    return input;
   }
 
   /**
    *
    */
   toEdit(
-    list: StringAttributeValue[],
+    list: Array<CommonAttributeValue>,
   ): AttributeEdit {
-    const edit: {
-      [attribute: string]: {
-        [lang: string]: { value: string, error?: string }[]
+    const edit: AttributeEdit = {};
+
+    for (const attr of list) {
+      if ('string' in attr) {
+        if (!edit[attr.attribute]) {
+          edit[attr.attribute] = {
+            type: AttributeType.STRING,
+            edit: {},
+          };
+        }
+
+        const value = edit[attr.attribute];
+        if ('edit' in value) {
+          value.edit[attr.lang ?? ''] = new FormControl(attr.string);
+        }
       }
-    } = {};
 
-    for (const prop of list) {
-      if (!edit[prop.attribute]) edit[prop.attribute] = {};
-      if (!edit[prop.attribute][prop.lang ?? '']) edit[prop.attribute][prop.lang ?? ''] = [];
+      if ('description' in attr) {
+        if (!edit[attr.attribute]) {
+          edit[attr.attribute] = {
+            type: AttributeType.DESCRIPTION,
+            edit: {},
+          };
+        }
 
-      edit[prop.attribute][prop.lang ?? ''].push({
-        value: prop.string,
-        error: '',
-      });
+        const value = edit[attr.attribute];
+        if ('edit' in value) {
+          value.edit[attr.lang ?? ''] = new FormControl(attr.description);
+        }
+      }
+
+      if ('from' in attr) {
+        edit[attr.attribute] = {
+          type: AttributeType.INTERVAL,
+          from: new FormControl(attr.from),
+          to: new FormControl(attr.to),
+        };
+      }
     }
 
     return edit;
   }
 
 }
+

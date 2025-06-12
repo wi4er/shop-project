@@ -63,7 +63,7 @@ describe('LangFlag entity', () => {
     });
   });
 
-  describe('Lang with flags', () => {
+  describe('LangEntity with flags', () => {
     test('Should add item', async () => {
       const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
 

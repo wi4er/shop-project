@@ -19,6 +19,8 @@ import {
   DescriptionValueInsertOperation,
 } from '../../../common/operation/description/description-value-insert.operation';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
+import { IntervalValueInsertOperation } from '../../../common/operation/interval/interval-value-insert.operation';
+import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
 
 export class ElementInsertOperation {
 
@@ -62,8 +64,9 @@ export class ElementInsertOperation {
 
     const pack = filterAttributes(input.attribute);
     await new StringValueInsertOperation(this.transaction, Element4stringEntity).save(this.created, pack.string);
-    await new PointValueInsertOperation(this.transaction, Element4pointEntity).save(this.created, pack.point);
     await new DescriptionValueInsertOperation(this.transaction, Element4descriptionEntity).save(this.created, pack.description);
+    await new IntervalValueInsertOperation(this.transaction, Element4IntervalEntity).save(this.created, pack.interval);
+    await new PointValueInsertOperation(this.transaction, Element4pointEntity).save(this.created, pack.point);
     await new Element4elementInsertOperation(this.transaction).save(this.created, pack.element);
 
     return this.created.id;

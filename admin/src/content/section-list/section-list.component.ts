@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Attribute } from '../../app/model/settings/attribute';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Section } from '../../app/model/content/section';
+import { SectionEntity } from '../../app/model/content/section.entity';
 import { SectionFormComponent } from '../section-form/section-form.component';
-import { Element } from '../../app/model/content/element';
+import { ElementEntity } from '../../app/model/content/element.entity';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SectionSettingsComponent } from '../section-settings/section-settings.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -42,7 +42,7 @@ export class SectionListComponent implements OnChanges {
   activeFlags: { [key: string]: string[] } = {};
 
   attributeList: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   imageList: {
     [id: string]: Array<{
       path: string,
@@ -51,7 +51,7 @@ export class SectionListComponent implements OnChanges {
   columns: string[] = [];
 
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
-  expandedElement: Element | null = null;
+  expandedElement: ElementEntity | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -134,8 +134,8 @@ export class SectionListComponent implements OnChanges {
    */
   ngOnChanges() {
     Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
       this.refreshData(),
     ]).then(([flagList, attributeList]) => {
       this.flagList = flagList;
@@ -150,7 +150,7 @@ export class SectionListComponent implements OnChanges {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Section>(
+      this.apiService.fetchList<SectionEntity>(
         ApiEntity.SECTION,
         {
           'filter[block]': this.blockId,
@@ -173,7 +173,7 @@ export class SectionListComponent implements OnChanges {
   /**
    *
    */
-  private setData(data: Section[]) {
+  private setData(data: SectionEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -193,7 +193,11 @@ export class SectionListComponent implements OnChanges {
 
       for (const it of item.attribute) {
         col.add('attribute_' + it.attribute);
-        line['attribute_' + it.attribute] = it.string;
+        if ('string' in it) {
+          line['attribute_' + it.attribute] = it.string;
+        } else if ('from' in it) {
+          line['attribute_' + it.attribute] = it.from + ' - ' + it.to;
+        }
       }
 
       this.activeFlags[item.id] = item.flag;

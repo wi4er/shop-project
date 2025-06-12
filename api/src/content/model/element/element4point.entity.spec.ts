@@ -8,7 +8,7 @@ import { DirectoryEntity } from '../../../registry/model/directory.entity';
 import { PointEntity } from '../../../registry/model/point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 
-describe('Element for point entity', () => {
+describe('ElementEntity for point entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
@@ -67,7 +67,7 @@ describe('Element for point entity', () => {
     });
   });
 
-  describe('Element with point', () => {
+  describe('ElementEntity with point', () => {
     test('Should create element with values', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();

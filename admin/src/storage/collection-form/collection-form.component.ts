@@ -43,6 +43,7 @@ export class CollectionFormComponent implements OnInit {
    *
    */
   toEdit(item: CollectionEntity) {
+    this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 

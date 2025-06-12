@@ -7,6 +7,13 @@
     mat-icon-button
     (click)="handleEdit()"
   >
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    (click)="openSettings()"
+  >
     <mat-icon>settings</mat-icon>
   </button>
 </mat-toolbar>
@@ -17,7 +24,7 @@
     class="item"
     *ngFor="let coll of Object.values(list)"
   >
-    <div matListItemTitle>CollectionEntity {{ coll.id }}</div>
+    <div matListItemTitle>{{ coll.id }}</div>
     <div matListItemLine>Files {{ coll.count }}</div>
 
     <div matListItemMeta>

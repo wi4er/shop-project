@@ -44,7 +44,7 @@ export class AttributeUpdateOperation {
   async save(id: string, input: AttributeInput): Promise<string> {
     try {
       await this.transaction.update(AttributeEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'Attribute id expected'),
+        id: WrongDataException.assert(input.id, 'AttributeEntity id expected'),
         type: WrongDataException.assert(
           AttributeType[input.type ?? AttributeType.STRING],
           `Wrong attribute type >> ${input.type} <<, expected [${Object.keys(AttributeType).join(', ')}]`,

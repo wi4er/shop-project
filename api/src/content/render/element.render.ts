@@ -46,7 +46,7 @@ export class ElementRender {
       })),
       ...item.interval.map(int => ({
         from: int.from.toISOString(),
-        to: int.to.toISOString(),
+        to: int?.to?.toISOString() ?? null,
         attribute: int.attribute.id,
       })),
       ...item.point.map(val => ({

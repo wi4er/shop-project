@@ -1,16 +1,16 @@
 import { EntityManager } from 'typeorm';
-import { CommonStringEntity } from '../../model/common/common-string.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { WithStringEntity } from '../../model/with/with-string.entity';
-import { AttributeStringInput } from '../../input/attribute-string.input';
+import { AttributeIntervalInput } from '../../input/attribute-interval.input';
+import { CommonIntervalEntity } from '../../model/common/common-interval.entity';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class IntervalValueInsertOperation<T extends WithStringEntity<T>> {
 
   constructor(
     private trans: EntityManager,
-    private entity: new() => CommonStringEntity<T>,
+    private entity: new() => CommonIntervalEntity<T>,
   ) {
   }
 
@@ -29,27 +29,29 @@ export class IntervalValueInsertOperation<T extends WithStringEntity<T>> {
   /**
    *
    */
-  private async checkLang(id?: string): Promise<LangEntity> {
-    if (!id) return null;
+  checkDate(value: string): Date {
+    const date = new Date(value);
 
-    return WrongDataException.assert(
-      await this.trans
-        .getRepository(LangEntity)
-        .findOne({where: {id}}),
-      `Language with id >> ${id} << not found`,
-    );
+    if (date instanceof Date && isNaN(+date)) {
+      throw new WrongDataException(`Invalid date format for ${value}`)
+    }
+
+    return date;
   }
 
   /**
    *
    */
-  async save(created: T, list: AttributeStringInput[]): Promise<undefined> {
+  async save(created: T, list: AttributeIntervalInput[]): Promise<undefined> {
     for (const item of list ?? []) {
       const inst = new this.entity();
       inst.parent = created;
-      inst.attribute = await this.checkAttribute(item.attribute);
-      inst.string = item.string;
-      inst.lang = await this.checkLang(item.lang);
+      inst.attribute = await this.checkAttribute(
+        WrongDataException.assert(item.attribute, 'Attribute id expected')
+      );
+
+      inst.from = this.checkDate(item.from);
+      inst.to = item.to ? this.checkDate(item.to) : null;
 
       await this.trans.save(inst);
     }

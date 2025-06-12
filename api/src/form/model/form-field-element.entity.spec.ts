@@ -5,7 +5,7 @@ import { FormEntity } from './form.entity';
 import { FormFieldEntity } from './form-field.entity';
 import { FormFieldElementEntity } from './form-field-element.entity';
 
-describe('Element field entity', () => {
+describe('ElementEntity field entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe('Element field entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element field', () => {
+  describe('ElementEntity field', () => {
     test('Should create element field', async () => {
       const form = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
       const field = await Object.assign(new FormFieldEntity(), {id: 'ELEMENT', form}).save();

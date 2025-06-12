@@ -5,14 +5,14 @@ import { FlagEntity } from './flag.entity';
 import { Flag4stringEntity } from './flag4string.entity';
 import { AttributeEntity } from './attribute.entity';
 
-describe('Flag string attribute entity', () => {
+describe('FlagEntity string attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Flag attribute fields', () => {
+  describe('FlagEntity attribute fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(FlagEntity);
       const list = await repo.find();
@@ -27,7 +27,7 @@ describe('Flag string attribute entity', () => {
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
       await Object.assign(new Flag4stringEntity(), {
-        string: 'Flag name',
+        string: 'FlagEntity name',
         attribute: 'NAME',
         parent,
       }).save();
@@ -43,7 +43,7 @@ describe('Flag string attribute entity', () => {
 
       const inst = Object.assign(
         new Flag4stringEntity(),
-        {string: 'Flag name', parent}
+        {string: 'FlagEntity name', parent}
       );
 
       await expect(inst.save()).rejects.toThrow('attributeId')
@@ -54,21 +54,21 @@ describe('Flag string attribute entity', () => {
 
       const inst = Object.assign(
         new Flag4stringEntity(),
-        {string: 'Flag name', property: attribute}
+        {string: 'FlagEntity name', property: attribute}
       );
 
       await expect(inst.save()).rejects.toThrow('parentId')
     });
   });
 
-  describe('Flag deletion', () => {
+  describe('FlagEntity deletion', () => {
     test('Should delete string after patent', async () => {
       const strRepo = source.getRepository(Flag4stringEntity);
       const propRepo = source.getRepository(AttributeEntity);
 
       const attribute =await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      await Object.assign(new Flag4stringEntity(), {string: 'Flag name', attribute, parent}).save();
+      await Object.assign(new Flag4stringEntity(), {string: 'FlagEntity name', attribute, parent}).save();
 
       await propRepo.delete({id: 'NAME'})
 
@@ -82,7 +82,7 @@ describe('Flag string attribute entity', () => {
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      await Object.assign(new Flag4stringEntity(), {string: 'Flag name', attribute: 'NAME', parent}).save();
+      await Object.assign(new Flag4stringEntity(), {string: 'FlagEntity name', attribute: 'NAME', parent}).save();
 
       await propRepo.delete({id: 'NAME'});
       const list = await flagRepo.find({relations: {string: true}});

@@ -7,8 +7,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
-import { Flag } from '../../app/model/settings/flag';
-import { Attribute } from '../../app/model/settings/attribute';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { DirectorySettingsComponent } from '../directory-settings/directory-settings.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DirectoryHistoryComponent } from '../directory-history/directory-history.component';
@@ -28,7 +28,7 @@ export class DirectoryListComponent implements OnInit {
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   activeFlags: { [key: string]: string[] } = {};
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   attributeList: string[] = [];
   columns: string[] = [];
 
@@ -112,8 +112,8 @@ export class DirectoryListComponent implements OnInit {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
       this.apiService.fetchList<DirectoryEntity>(ApiEntity.DIRECTORY, {
         limit: this.pageSize,
         offset: this.currentPage * this.pageSize,

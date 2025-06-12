@@ -8,14 +8,14 @@ import { FileEntity } from '../../../storage/model/file.entity';
 import { Element4fileEntity } from './element4file.entity';
 import { AttributeEntity } from '../../../settings/model/attribute.entity';
 
-describe('Element file attribute entity', () => {
+describe('ElementEntity file attribute entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element file fields', () => {
+  describe('ElementEntity file fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Element4fileEntity);
       const list = await repo.find();
@@ -93,7 +93,7 @@ describe('Element file attribute entity', () => {
     });
   });
 
-  describe('Element with file', () => {
+  describe('ElementEntity with file', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(ElementEntity);
       const block = await new BlockEntity().save();

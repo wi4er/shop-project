@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent } from '@angular/material/paginator';
-import { Attribute } from '../../app/model/settings/attribute';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { DirectoryEntity } from '../../app/model/registry/directory.entity';
 import { PointSettingsComponent } from '../point-settings/point-settings.component';
 import { PointFormComponent } from '../point-form/point-form.component';
@@ -33,7 +33,7 @@ export class PointListComponent implements OnChanges {
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   activeFlags: { [key: string]: string[] } = {};
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   attributeList: string[] = [];
   columns: string[] = [];
 
@@ -126,8 +126,8 @@ export class PointListComponent implements OnChanges {
    */
   async refreshData() {
     return Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
       this.apiService.fetchItem<DirectoryEntity>(ApiEntity.DIRECTORY, this.directoryId),
       this.apiService.fetchList<Point>(ApiEntity.POINT, {
         directory: this.directoryId,

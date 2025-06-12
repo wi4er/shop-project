@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FlagInput } from '../../app/model/settings/flag.input';
@@ -42,7 +42,7 @@ export class FlagFormComponent implements OnInit {
    */
   ngOnInit(): void {
     if (this.data?.id) {
-      this.apiService.fetchItem<Flag>(
+      this.apiService.fetchItem<FlagEntity>(
         ApiEntity.FLAG,
         this.data.id,
       ).then(data => {
@@ -57,7 +57,7 @@ export class FlagFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Flag) {
+  toEdit(item: FlagEntity) {
     this.color = item.color;
     this.icon = item.icon;
     this.iconSvg = item.iconSvg;

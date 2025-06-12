@@ -46,7 +46,7 @@ describe('ElementSection entity', () => {
     });
   });
 
-  describe('Element in section', () => {
+  describe('ElementEntity in section', () => {
     test('Should create element in section', async () => {
       const repo = source.getRepository(ElementEntity);
 

@@ -39,7 +39,7 @@ describe('ElementString entity', () => {
     });
   });
 
-  describe('Element with strings', () => {
+  describe('ElementEntity with strings', () => {
     test('Should create element with strings', async () => {
       const repo = source.getRepository(ElementEntity);
 

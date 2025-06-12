@@ -16,7 +16,7 @@ describe('Section2Flag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Section flag fields', () => {
+  describe('SectionEntity flag fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Section2flagEntity);
       const list = await repo.find();
@@ -62,7 +62,7 @@ describe('Section2Flag entity', () => {
     });
   });
 
-  describe('Section with flags', () => {
+  describe('SectionEntity with flags', () => {
     test('Shouldn`t have duplicate flag', async () => {
       const block = await new BlockEntity().save();
       const parent = await Object.assign(new SectionEntity(), {block}).save();

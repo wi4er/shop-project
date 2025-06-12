@@ -37,20 +37,14 @@ export class FileFormComponent implements OnInit {
   ) {
   }
 
+  /**
+   *
+   */
   ngOnInit(): void {
     if (this.data?.id) {
       this.apiService.fetchItem<FileEntity>(ApiEntity.FILE, this.data.id)
         .then(res => this.toEdit(res));
     }
-  }
-
-  /**
-   *
-   */
-  getAttributeCount() {
-    return Object.values(this.editAttributes)
-      .flatMap(item => Object.values(item).filter(item => item))
-      .length;
   }
 
   /**

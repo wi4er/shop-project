@@ -1,5 +1,5 @@
-import { StringAttributeValue } from '../string-attribute-value';
 import { PermissionValue } from '../permission/permission-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface BlockEntity {
 
@@ -9,7 +9,7 @@ export interface BlockEntity {
   sort: number;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
   permission: PermissionValue[];
 
 }

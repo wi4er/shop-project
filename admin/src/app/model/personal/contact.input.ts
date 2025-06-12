@@ -1,10 +1,10 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface ContactInput {
 
   id?: string;
   type: string;
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }

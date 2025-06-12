@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 
 @Component({
   selector: 'app-item-menu',
@@ -27,7 +27,7 @@ export class ItemMenuComponent implements OnInit {
   onFlag?: (id: string) => void;
 
   @Input()
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
 
   @Input()
   active: string[] = [];
@@ -35,7 +35,7 @@ export class ItemMenuComponent implements OnInit {
   /**
    *
    */
-  getFlagName(flag: Flag): string {
+  getFlagName(flag: FlagEntity): string {
     const name = flag.attribute.find(it => it.attribute === 'NAME');
 
     if (name) {

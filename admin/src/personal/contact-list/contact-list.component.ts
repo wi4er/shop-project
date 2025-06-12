@@ -7,7 +7,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { ContactSettingsComponent } from '../contact-settings/contact-settings.component';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 
 @Component({
   selector: 'app-contact-list',
@@ -17,7 +17,7 @@ import { Flag } from '../../app/model/settings/flag';
 export class ContactListComponent implements OnInit {
 
   contactList: { [key: string]: string }[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
 

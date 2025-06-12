@@ -15,7 +15,7 @@
     </button>
   </a>
 
-  <span>{{ blockName ?? "Element " + blockId }} </span>
+  <span>{{ blockName ?? "Elements of block " + blockId }} </span>
 
   <span class="spacer"></span>
 
@@ -121,10 +121,11 @@
       mat-cell
       *matCellDef="let element"
       class="collapse"
-      [title]="'Publish element ' + element.id"
     >
       <button
         mat-icon-button
+        [matTooltip]="'Publish element ' + element.id"
+        matTooltipPosition="above"
         [disabled]="canPublishItem(element.id)"
         (click)="publishItem(element.id)"
       >
@@ -221,7 +222,7 @@
         matTooltipPosition="above"
         (click)="openHistory(element.id)"
       >
-        <span> {{ element.created_at | date:'dd MMM y, HH:mm:ss' }}</span>
+        <span>{{ element.created_at | date:'dd MMM y, HH:mm:ss' }}</span>
       </button>
     </td>
   </ng-container>
@@ -246,7 +247,7 @@
         matTooltipPosition="above"
         (click)="openHistory(element.id)"
       >
-        <span> {{ element.updated_at | date:'dd MMM y, HH:mm:ss' }}</span>
+        <span>{{ element.updated_at | date:'dd MMM y, HH:mm:ss' }}</span>
       </button>
     </td>
   </ng-container>
@@ -302,5 +303,5 @@
 <app-add-button
   [onClick]="addItem.bind(this)"
   *ngIf="!list.length && !loading"
-  [name]="(blockName ?? '') + ' Element'"
+  [name]="(blockName ?? '') + ' ElementEntity'"
 ></app-add-button>

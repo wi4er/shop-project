@@ -63,7 +63,7 @@ describe('FlagController', () => {
     });
   }
 
-  describe('Flag list', () => {
+  describe('FlagEntity list', () => {
     test('Should get empty list', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
 
@@ -109,7 +109,7 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag item', () => {
+  describe('FlagEntity item', () => {
     test('Should get flag instance', async () => {
       await createFlag('ACTIVE')
         .withColor('FFF')
@@ -142,7 +142,7 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag count', () => {
+  describe('FlagEntity count', () => {
     test('Should get empty count', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
 
@@ -172,7 +172,7 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag with strings', () => {
+  describe('FlagEntity with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await createFlag('ACTIVE');
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -206,7 +206,7 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag with flags', () => {
+  describe('FlagEntity with flags', () => {
     test('Should get flag with flag', async () => {
       const parent = await createFlag('ACTIVE');
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -235,8 +235,8 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag addition', () => {
-    describe('Flag addition with fields', () => {
+  describe('FlagEntity addition', () => {
+    describe('FlagEntity addition with fields', () => {
       test('Should add item', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
 
@@ -318,7 +318,7 @@ describe('FlagController', () => {
       });
     });
 
-    describe('Flag addition with strings', () => {
+    describe('FlagEntity addition with strings', () => {
       test('Should add with string', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -355,7 +355,7 @@ describe('FlagController', () => {
       });
     });
 
-    describe('Flag addition with flag', () => {
+    describe('FlagEntity addition with flag', () => {
       test('Should add with flag', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
@@ -387,8 +387,8 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag updating', () => {
-    describe('Flag updating with fields', () => {
+  describe('FlagEntity updating', () => {
+    describe('FlagEntity updating with fields', () => {
       test('Should update flag', async () => {
         await createFlag('NEW');
 
@@ -468,7 +468,7 @@ describe('FlagController', () => {
       });
     });
 
-    describe('Flag updating with strings', () => {
+    describe('FlagEntity updating with strings', () => {
       test('Should change id with string', async () => {
         const parent = await createFlag('OLD');
         const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -508,7 +508,7 @@ describe('FlagController', () => {
       });
     });
 
-    describe('Flag update with flag', () => {
+    describe('FlagEntity update with flag', () => {
       test('Should change id with flag', async () => {
         const parent = await createFlag('OLD');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -545,7 +545,7 @@ describe('FlagController', () => {
     });
   });
 
-  describe('Flag deletion', () => {
+  describe('FlagEntity deletion', () => {
     test('Should delete', async () => {
       await createFlag('ACTIVE');
 

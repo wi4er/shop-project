@@ -1,4 +1,4 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface AttributeInput {
 
@@ -10,6 +10,6 @@ export interface AttributeInput {
   collection: string | null;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }

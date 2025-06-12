@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class FlagEditComponent implements OnInit {
   loading = true;
 
   @Input()
-  list: Flag[] = []
+  list: FlagEntity[] = []
 
   @Input()
   edit: { [flag: string]: boolean } = {};
@@ -26,7 +26,7 @@ export class FlagEditComponent implements OnInit {
    *
    */
   ngOnInit(): void {
-    this.apiService.fetchList<Flag>(ApiEntity.FLAG)
+    this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG)
       .then(flag => {
         this.list = flag;
         this.loading = false;

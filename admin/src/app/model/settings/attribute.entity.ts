@@ -1,7 +1,7 @@
-import { StringAttributeValue } from '../string-attribute-value';
 import { AttributeType } from '../../../settings/attribute-form/attribute-form.component';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
-export interface Attribute {
+export interface AttributeEntity {
 
   id: string;
   created_at: string;
@@ -13,6 +13,6 @@ export interface Attribute {
   collection: string | null;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }

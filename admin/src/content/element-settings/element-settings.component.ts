@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Attribute } from '../../app/model/settings/attribute';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FormControl } from '@angular/forms';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
 
 @Component({
   selector: 'app-element-settings',
@@ -12,14 +12,13 @@ import { Flag } from '../../app/model/settings/flag';
 })
 export class ElementSettingsComponent implements OnInit {
 
-  attributeList: Attribute[] = [];
-  flagList: Flag[] = [];
+  attributeList: AttributeEntity[] = [];
+  flagList: FlagEntity[] = [];
 
   pages: { [key: number]: string } = {
     0: 'attributes',
     1: 'orders',
   };
-
   selected = new FormControl(0);
 
   constructor(
@@ -34,17 +33,17 @@ export class ElementSettingsComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
     ]).then(([property, flag]) => {
       this.attributeList = property;
       this.flagList = flag;
     });
   }
 
-  handleChange(index: number) {
-  }
-
+  /**
+   *
+   */
   saveData() {
 
   }

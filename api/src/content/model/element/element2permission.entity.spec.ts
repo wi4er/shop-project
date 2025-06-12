@@ -7,14 +7,14 @@ import { BlockEntity } from '../block/block.entity';
 import { ElementEntity } from './element.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 
-describe('Element access entity', () => {
+describe('ElementEntity access entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element access fields', () => {
+  describe('ElementEntity access fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Element2permissionEntity);
       const list = await repo.find();

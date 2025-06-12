@@ -16,7 +16,7 @@ describe('Element2Flag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Element flag fields', () => {
+  describe('ElementEntity flag fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Element2flagEntity);
       const list = await repo.find();
@@ -49,7 +49,7 @@ describe('Element2Flag entity', () => {
     });
   });
 
-  describe('Element with flags', () => {
+  describe('ElementEntity with flags', () => {
     test('Should create element with flag', async () => {
       const repo = source.getRepository(ElementEntity);
 

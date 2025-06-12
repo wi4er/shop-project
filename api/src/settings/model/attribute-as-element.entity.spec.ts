@@ -5,7 +5,7 @@ import { AttributeEntity } from './attribute.entity';
 import { AttributeAsElementEntity } from './attribute-as-element.entity';
 import { BlockEntity } from '../../content/model/block/block.entity';
 
-describe('Attribute as element entity', () => {
+describe('AttributeEntity as element entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));

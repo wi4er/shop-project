@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Attribute } from '../../app/model/settings/attribute';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { AttributeInput } from '../../app/model/settings/attribute.input';
@@ -63,7 +63,7 @@ export class AttributeFormComponent implements OnInit {
    */
   ngOnInit(): void {
     Promise.all([
-      this.data?.id ? this.apiService.fetchItem<Attribute>(ApiEntity.ATTRIBUTE, this.data.id) : null,
+      this.data?.id ? this.apiService.fetchItem<AttributeEntity>(ApiEntity.ATTRIBUTE, this.data.id) : null,
     ]).then(([item]) => {
       if (item) this.toEdit(item);
 
@@ -74,7 +74,7 @@ export class AttributeFormComponent implements OnInit {
   /**
    *
    */
-  toEdit(item: Attribute) {
+  toEdit(item: AttributeEntity) {
     this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;

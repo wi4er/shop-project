@@ -5,7 +5,7 @@ import { FlagEntity } from './flag.entity';
 import { Flag2flagEntity } from './flag2flag.entity';
 import { Flag4stringEntity } from './flag4string.entity';
 
-describe('Flag entity', () => {
+describe('FlagEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe('Flag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Flag with flag', () => {
+  describe('FlagEntity with flag', () => {
     test('Should add item with flag', async () => {
       const repo = source.getRepository(FlagEntity);
       const parent = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
@@ -44,7 +44,7 @@ describe('Flag entity', () => {
     });
   });
 
-  describe('Flag deletion', () => {
+  describe('FlagEntity deletion', () => {
     test('Should delete flag after parent', async () => {
       const strRepo = source.getRepository(Flag4stringEntity);
       const flagRepo = source.getRepository(FlagEntity);

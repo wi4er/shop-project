@@ -26,6 +26,7 @@ import { FileEntity } from '../../../storage/model/file.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
+import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
 
 describe('ElementController', () => {
   let source: DataSource;
@@ -879,6 +880,76 @@ describe('ElementController', () => {
       });
     });
 
+    describe('Element addition with interval', () => {
+      test('Should add with interval', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'DATE', type: AttributeType.INTERVAL}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [
+              {attribute: 'DATE', from: '2001-01-01T00:00:00.000Z'},
+            ],
+          })
+          .expect(201);
+
+        expect(inst.body.attribute).toEqual([{from: '2001-01-01T00:00:00.000Z', to: null, attribute: 'DATE'}]);
+      });
+
+      test('Should add with from and to', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'DATE', type: AttributeType.INTERVAL}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [
+              {
+                attribute: 'DATE',
+                from: '2001-01-01T00:00:00.000Z',
+                to: '2001-01-02T00:00:00.000Z',
+              },
+            ],
+          })
+          .expect(201);
+
+        expect(inst.body.attribute).toEqual([{
+          from: '2001-01-01T00:00:00.000Z', to: '2001-01-02T00:00:00.000Z', attribute: 'DATE',
+        }]);
+      });
+
+      test('Shouldn`t add with wrong date', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'DATE', type: AttributeType.INTERVAL}).save();
+
+        await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [
+              {attribute: 'DATE', from: 'WRONG'},
+            ],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add without attribute', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'DATE', type: AttributeType.INTERVAL}).save();
+
+        await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [{from: '2001-01-01T00:00:00.000Z'}],
+          })
+          .expect(400);
+      });
+    });
+
     describe('Element addition with point', () => {
       test('Should add with point', async () => {
         await new BlockEntity('BLOCK').save();
@@ -1419,6 +1490,111 @@ describe('ElementController', () => {
             attribute: [{
               attribute: 'WRONG',
               description: 'TEXT',
+            }],
+          })
+          .expect(400);
+      });
+    });
+
+    describe('Content element interval update', () => {
+      test('Should add interval', async () => {
+        const block = await new BlockEntity('BLOCK').save();
+        await createElement('ELEMENT').withBlock(block);
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.INTERVAL}).save();
+
+        const item = await request(app.getHttpServer())
+          .put(`/content/element/ELEMENT`)
+          .send({
+            id: 'ELEMENT',
+            block: 'BLOCK',
+            attribute: [{
+              attribute: 'NAME',
+              from: '2001-01-01T00:00:00.000Z',
+            }],
+          })
+          .expect(200);
+
+        expect(item.body.attribute).toEqual([{
+          attribute: 'NAME', from: '2001-01-01T00:00:00.000Z', to: null,
+        }]);
+      });
+
+      test('Should update interval', async () => {
+        const block = await new BlockEntity('BLOCK').save();
+        const parent = await createElement('ELEMENT').withBlock(block);
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.INTERVAL}).save();
+        await Object.assign(new Element4IntervalEntity(), {attribute, parent, from: new Date('2001-01-01T00:00:00.000Z')}).save();
+
+        const item = await request(app.getHttpServer())
+          .put(`/content/element/ELEMENT`)
+          .send({
+            id: 'ELEMENT',
+            block: 'BLOCK',
+            attribute: [{
+              attribute: 'NAME',
+              from: '2001-01-02T00:00:00.000Z',
+            }],
+          })
+          .expect(200);
+
+        expect(item.body.attribute).toEqual([{
+          attribute: 'NAME', from: '2001-01-02T00:00:00.000Z', to: null,
+        }]);
+      });
+
+      test('Should add with from and to', async () => {
+        const block = await new BlockEntity('BLOCK').save();
+        await createElement('ELEMENT').withBlock(block);
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.INTERVAL}).save();
+
+        const item = await request(app.getHttpServer())
+          .put(`/content/element/ELEMENT`)
+          .send({
+            id: 'ELEMENT',
+            block: 'BLOCK',
+            attribute: [{
+              attribute: 'NAME',
+              from: '2001-01-01T00:00:00.000Z',
+              to: '2002-01-01T00:00:00.000Z',
+            }],
+          })
+          .expect(200);
+
+        expect(item.body.attribute).toEqual([{
+          attribute: 'NAME', from: '2001-01-01T00:00:00.000Z', to: '2002-01-01T00:00:00.000Z',
+        }]);
+      });
+
+      test('Shouldn`t update without attribute', async () => {
+        const block = await new BlockEntity('BLOCK').save();
+        await createElement('ELEMENT').withBlock(block);
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.INTERVAL}).save();
+
+        await request(app.getHttpServer())
+          .put(`/content/element/ELEMENT`)
+          .send({
+            id: 'ELEMENT',
+            block: 'BLOCK',
+            attribute: [{
+              from: '2001-01-01T00:00:00.000Z',
+            }],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t with wrong date format', async () => {
+        const block = await new BlockEntity('BLOCK').save();
+        await createElement('ELEMENT').withBlock(block);
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.INTERVAL}).save();
+
+        await request(app.getHttpServer())
+          .put(`/content/element/ELEMENT`)
+          .send({
+            id: 'ELEMENT',
+            block: 'BLOCK',
+            attribute: [{
+              attribute: 'NAME',
+              from: 'WRONG',
             }],
           })
           .expect(400);

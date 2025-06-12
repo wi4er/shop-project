@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { CollectionEntity } from '../../app/model/storage/collection.entity';
+import { MatDialog } from '@angular/material/dialog';
+import { CollectionSettingsComponent } from '../../storage/collection-settings/collection-settings.component';
 
 @Component({
   selector: 'app-dashboard-collection',
@@ -20,13 +22,13 @@ export class DashboardCollectionComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
+    private dialog: MatDialog,
   ) {
   }
 
-  handleEdit() {
-    console.log('EDIT');
-  }
-
+  /**
+   *
+   */
   handleMove(id: string) {
     this.router.navigate(
       ['collection', id],
@@ -34,7 +36,27 @@ export class DashboardCollectionComponent implements OnInit {
     );
   }
 
+  /**
+   *
+   */
+  handleEdit() {
+    this.router.navigate(
+      ['storage'],
+      {},
+    );
+  }
+
+  /**
+   *
+   */
   ngOnInit() {
+    this.refreshData()
+  }
+
+  /**
+   *
+   */
+  refreshData() {
     this.apiService.fetchList<CollectionEntity>(ApiEntity.COLLECTION)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
@@ -47,6 +69,19 @@ export class DashboardCollectionComponent implements OnInit {
             this.list[it.id].count = count;
           });
       }));
+  }
+
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      CollectionSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
   protected readonly Object = Object;

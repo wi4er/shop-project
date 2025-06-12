@@ -14,7 +14,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SettingsModule } from '../settings/settings.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -35,6 +35,7 @@ import { BlockHistoryComponent } from './block-history/block-history.component';
 import { ElementHistoryComponent } from './element-history/element-history.component';
 import { SectionHistoryComponent } from './section-history/section-history.component';
 import { RouterLink } from '@angular/router';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,9 @@ import { RouterLink } from '@angular/router';
     FormsModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatDatepickerModule,
     MatInputModule,
+    ReactiveFormsModule,
     MatTabsModule,
     MatCardModule,
     MatSnackBarModule,

@@ -60,7 +60,7 @@ export class DescriptionValueUpdateOperation <T extends WithDescriptionEntity<Ba
 
       inst.parent = beforeItem;
       inst.attribute = await this.checkAttribute(item.attribute);
-      inst.description = WrongDataException.assert(item.description, 'Attribute description value expected!');
+      inst.description = WrongDataException.assert(item.description, 'AttributeEntity description value expected!');
       inst.lang = await this.checkLang(item.lang);
 
       await this.transaction.save(inst);

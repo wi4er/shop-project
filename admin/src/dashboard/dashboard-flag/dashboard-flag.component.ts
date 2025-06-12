@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../../settings/flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Flag } from '../../app/model/settings/flag';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagSettingsComponent } from '../../settings/flag-settings/flag-settings.component';
 
 @Component({
   selector: 'app-dashboard-flag',
   templateUrl: './dashboard-flag.component.html',
-  styleUrls: ['./dashboard-flag.component.css']
+  styleUrls: ['./dashboard-flag.component.css'],
 })
 export class DashboardFlagComponent implements OnInit {
 
@@ -25,38 +26,57 @@ export class DashboardFlagComponent implements OnInit {
   ) {
   }
 
+  /**
+   *
+   */
   handleEdit() {
     this.router.navigate(
-      ['/flag'],
+      ['flag'],
       {},
     );
   }
 
-  handleSettings() {
-    console.log('EDIT');
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      FlagSettingsComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   handleMove(id: string) {
-    const dialog = this.dialog.open(
+    this.dialog.open(
       FlagFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    dialog.afterClosed().subscribe(() => this.refreshData());
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   ngOnInit() {
-    this.refreshData()
+    this.refreshData();
   }
 
+  /**
+   *
+   */
   refreshData() {
     this.list = {};
 
-    this.apiService.fetchList<Flag>(ApiEntity.FLAG)
+    this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG)
       .then(list => list.forEach(it => {
         this.list[it.id] = {
           id: it.id,

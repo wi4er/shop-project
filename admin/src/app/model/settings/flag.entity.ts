@@ -1,6 +1,6 @@
-import { StringAttributeValue } from '../string-attribute-value';
+import { StringAttributeValue } from '../common/string-attribute-value';
 
-export interface Flag {
+export interface FlagEntity {
 
   id: string;
   created_at: string;

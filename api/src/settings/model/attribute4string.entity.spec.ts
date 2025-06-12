@@ -63,7 +63,7 @@ describe('Attribute2string entity', () => {
     });
   });
 
-  describe('Attribute with string', () => {
+  describe('AttributeEntity with string', () => {
     test('Should add attribute with string', async () => {
       const repo = source.getRepository(AttributeEntity);
 

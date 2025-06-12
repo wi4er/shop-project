@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
-import { Flag } from '../../app/model/settings/flag';
-import { Attribute } from '../../app/model/settings/attribute';
+import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { FileFormComponent } from '../file-form/file-form.component';
 import { File } from '../../app/model/storage/file';
 import { FileSettingsComponent } from '../file-settings/file-settings.component';
@@ -27,7 +27,7 @@ export class FileListComponent implements OnChanges {
 
   activeFlags: { [key: string]: string[] } = {};
   propertyList: string[] = [];
-  flagList: Array<Flag> = [];
+  flagList: Array<FlagEntity> = [];
   columns: string[] = [];
   list: { [key: string]: string }[] = [];
 
@@ -83,8 +83,8 @@ export class FileListComponent implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     Promise.all([
-      this.apiService.fetchList<Flag>(ApiEntity.FLAG),
-      this.apiService.fetchList<Attribute>(ApiEntity.ATTRIBUTE),
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.apiService.fetchList<AttributeEntity>(ApiEntity.ATTRIBUTE),
       this.refreshData(),
     ]).then(([flagList, propertyList]) => {
       this.flagList = flagList;

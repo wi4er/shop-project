@@ -13,7 +13,6 @@ import { ElementUpdateOperation } from '../../operation/element/element-update.o
 import { ElementDeleteOperation } from '../../operation/element/element-delete.operation';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { PermissionException } from '../../../exception/permission/permission.exception';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { ElementRender } from '../../render/element.render';
 import { ElementPatchOperation } from '../../operation/element/element-patch.operation';
@@ -45,15 +44,19 @@ export class ElementController {
     private entityManager: EntityManager,
     @InjectRepository(ElementEntity)
     private elementRepo: Repository<ElementEntity>,
-    @InjectRepository(Element2permissionEntity)
-    private permRepo: Repository<Element2permissionEntity>,
   ) {
   }
 
+  /**
+   *
+   */
   toView(item: ElementEntity) {
     return new ElementRender(item);
   }
 
+  /**
+   *
+   */
   toWhere(filter: ElementFilterInput): FindOptionsWhere<ElementEntity> {
     const where = {};
 
@@ -78,6 +81,9 @@ export class ElementController {
     return where;
   }
 
+  /**
+   *
+   */
   toOrder(sort: ElementOrder[]): FindOptionsOrder<ElementEntity> {
     const order = {};
 

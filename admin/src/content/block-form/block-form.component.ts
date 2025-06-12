@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { BlockInput } from '../../app/model/content/block.input';
 import { BlockEntity } from '../../app/model/content/block.entity';
-import { AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
+import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
@@ -21,7 +21,7 @@ export class BlockFormComponent implements OnInit {
   updated_at: string = '';
   sort: number = 100;
 
-  editAttributes: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+  editAttributes: AttributeEdit = {};
   editFlags: { [field: string]: boolean } = {};
   editPermission: { [groupId: string]: { [method: string]: boolean } } = {};
 

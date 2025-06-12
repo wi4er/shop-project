@@ -5,7 +5,7 @@ import { AttributeEntity } from './attribute.entity';
 import { AttributeAsFileEntity } from './attribute-as-file.entity';
 import { CollectionEntity } from '../../storage/model/collection.entity';
 
-describe('Attribute as file entity', () => {
+describe('AttributeEntity as file entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));

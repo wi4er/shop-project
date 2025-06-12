@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Lang } from '../../app/model/settings/lang';
+import { LangEntity } from '../../app/model/settings/lang.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { LangFormComponent } from '../lang-form/lang-form.component';
 import { Observable } from 'rxjs';
@@ -28,7 +28,7 @@ export class LangListComponent implements OnInit {
   }
 
   fetchList(args: StringifiableRecord) {
-    this.apiService.fetchList<Lang>(ApiEntity.LANG, args)
+    this.apiService.fetchList<LangEntity>(ApiEntity.LANG, args)
       .then(list => this.setData(list));
 
     this.apiService.countData(ApiEntity.LANG)
@@ -38,7 +38,7 @@ export class LangListComponent implements OnInit {
   /**
    *
    */
-  private setData(data: Lang[]) {
+  private setData(data: LangEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
