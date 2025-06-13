@@ -1,11 +1,11 @@
 import { BaseEntity, EntityManager } from 'typeorm';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { CommonIntervalEntity } from '../../model/common/common-interval.entity';
-import { AttributeIntervalInput } from '../../input/attribute-interval.input';
-import { WithIntervalEntity } from '../../model/with/with-interval.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { CommonIntervalEntity } from '../model/common/common-interval.entity';
+import { AttributeIntervalInput } from '../input/attribute-interval.input';
+import { WithIntervalEntity } from '../model/with/with-interval.entity';
 
-export class IntervalValueUpdateOperation<T extends WithIntervalEntity<BaseEntity>> {
+export class IntervalValueOperation<T extends WithIntervalEntity<BaseEntity>> {
 
   constructor(
     private transaction: EntityManager,
@@ -44,7 +44,7 @@ export class IntervalValueUpdateOperation<T extends WithIntervalEntity<BaseEntit
   async save(beforeItem: T, list: AttributeIntervalInput[]) {
     const current: { [key: string]: Array<CommonIntervalEntity<BaseEntity>> } = {};
 
-    for (const item of beforeItem.interval) {
+    for (const item of beforeItem.interval ?? []) {
       const {id} = item.attribute;
 
       if (current[id]) current[id].push(item);

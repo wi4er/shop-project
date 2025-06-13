@@ -170,42 +170,6 @@ describe('PointController', () => {
     });
   });
 
-  describe('Point with strings', () => {
-    test('Should get with strings', async () => {
-      const directory = await createDirectory('CITY');
-      const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(new Point4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
-
-      const res = await request(app.getHttpServer())
-        .get('/registry/point')
-        .expect(200);
-
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('LONDON');
-      expect(res.body[0].attribute).toHaveLength(1);
-      expect(res.body[0].attribute[0].attribute).toBe('NAME');
-      expect(res.body[0].attribute[0].lang).toBeUndefined();
-      expect(res.body[0].attribute[0].string).toBe('VALUE');
-    });
-
-    test('Should get point with lang strings', async () => {
-      const directory = await createDirectory('CITY');
-      const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-      const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
-      await Object.assign(new Point4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
-
-      const res = await request(app.getHttpServer())
-        .get('/registry/point')
-        .expect(200);
-
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].attribute[0].lang).toBe('EN');
-      expect(res.body[0].attribute[0].string).toBe('VALUE');
-    });
-  });
-
   describe('Point with flags', () => {
     test('Should get point with flag', async () => {
       const directory = await createDirectory('CITY');
@@ -222,24 +186,62 @@ describe('PointController', () => {
     });
   });
 
-  describe('Point with point', () => {
-    test('Should get point with point', async () => {
-      const directory = await createDirectory('CITY');
-      const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-      const point = await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
-      const attribute = await Object.assign(new AttributeEntity(), {id: 'RULES'}).save();
+  describe('Point with attributes', () => {
+    describe('Point with strings', () => {
+      test('Should get with strings', async () => {
+        const directory = await createDirectory('CITY');
+        const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new Point4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
 
-      await Object.assign(new Point4pointEntity(), {parent, attribute, point}).save();
+        const res = await request(app.getHttpServer())
+          .get('/registry/point')
+          .expect(200);
 
-      const list = await request(app.getHttpServer())
-        .get('/registry/point')
-        .expect(200);
+        expect(res.body).toHaveLength(1);
+        expect(res.body[0].id).toBe('LONDON');
+        expect(res.body[0].attribute).toHaveLength(1);
+        expect(res.body[0].attribute[0].attribute).toBe('NAME');
+        expect(res.body[0].attribute[0].lang).toBeUndefined();
+        expect(res.body[0].attribute[0].string).toBe('VALUE');
+      });
 
-      expect(list.body).toHaveLength(2);
-      expect(list.body[0].id).toBe('LONDON');
-      expect(list.body[0].attribute).toHaveLength(1);
-      expect(list.body[0].attribute[0].point).toBe('PARIS');
-      expect(list.body[0].attribute[0].directory).toBe('CITY');
+      test('Should get point with lang strings', async () => {
+        const directory = await createDirectory('CITY');
+        const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const lang = await Object.assign(new LangEntity(), {id: 'EN'}).save();
+        await Object.assign(new Point4stringEntity(), {parent, attribute, lang, string: 'VALUE'}).save();
+
+        const res = await request(app.getHttpServer())
+          .get('/registry/point')
+          .expect(200);
+
+        expect(res.body).toHaveLength(1);
+        expect(res.body[0].attribute[0].lang).toBe('EN');
+        expect(res.body[0].attribute[0].string).toBe('VALUE');
+      });
+    });
+
+    describe('Point with point', () => {
+      test('Should get point with point', async () => {
+        const directory = await createDirectory('CITY');
+        const parent = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+        const point = await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'RULES'}).save();
+
+        await Object.assign(new Point4pointEntity(), {parent, attribute, point}).save();
+
+        const list = await request(app.getHttpServer())
+          .get('/registry/point')
+          .expect(200);
+
+        expect(list.body).toHaveLength(2);
+        expect(list.body[0].id).toBe('LONDON');
+        expect(list.body[0].attribute).toHaveLength(1);
+        expect(list.body[0].attribute[0].point).toBe('PARIS');
+        expect(list.body[0].attribute[0].directory).toBe('CITY');
+      });
     });
   });
 
@@ -313,6 +315,52 @@ describe('PointController', () => {
           .send({
             id: 'London',
             directory: 'WRONG',
+          })
+          .expect(400);
+      });
+    });
+
+    describe('Point addition with flags', () => {
+      test('Should add flag to point', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        const res = await request(app.getHttpServer())
+          .post('/registry/point')
+          .send({
+            id: 'London',
+            directory: 'CITY',
+            flag: ['ACTIVE'],
+          })
+          .expect(201);
+
+        expect(res.body.flag).toBe(['ACTIVE']);
+      });
+
+      test('Shouldn`t add with wrong flag', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        await request(app.getHttpServer())
+          .post('/registry/point')
+          .send({
+            id: 'London',
+            directory: 'CITY',
+            flag: ['WRONG'],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add with duplicate flag', async () => {
+        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        await request(app.getHttpServer())
+          .post('/registry/point')
+          .send({
+            id: 'London',
+            directory: 'CITY',
+            flag: ['ACTIVE', 'ACTIVE'],
           })
           .expect(400);
       });
@@ -426,20 +474,6 @@ describe('PointController', () => {
         expect(res.body.directory).toBe('LOCATION');
       });
 
-      test('Should update flags only', async () => {
-        const directory = await createDirectory('CITY');
-        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
-
-        const res = await request(app.getHttpServer())
-          .patch('/registry/point/LONDON')
-          .send({
-            flag: ['ACTIVE'],
-          })
-          .expect(200);
-
-        expect(res.body.flag).toEqual(['ACTIVE']);
-      });
 
       test('Should update strings only', async () => {
         const directory = await createDirectory('CITY');
@@ -456,6 +490,55 @@ describe('PointController', () => {
         expect(res.body.directory).toBe('CITY');
         expect(res.body.attribute).toHaveLength(1);
         expect(res.body.attribute).toContainEqual({attribute: 'NAME', string: 'VALUE'});
+      });
+    });
+
+    describe('Point update with flags', () => {
+      test('Should update point flag', async () => {
+        const directory = await createDirectory('CITY');
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        const res = await request(app.getHttpServer())
+          .put('/registry/point/LONDON')
+          .send({
+            id: 'LONDON',
+            directory: 'CITY',
+            flag: ['ACTIVE'],
+          })
+          .expect(200);
+
+        expect(res.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Should update flags only', async () => {
+        const directory = await createDirectory('CITY');
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        const res = await request(app.getHttpServer())
+          .patch('/registry/point/LONDON')
+          .send({
+            flag: ['ACTIVE'],
+          })
+          .expect(200);
+
+        expect(res.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Shouldn`t update with wrong flag', async () => {
+        const directory = await createDirectory('CITY');
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        await request(app.getHttpServer())
+          .put('/registry/point/LONDON')
+          .send({
+            id: 'LONDON',
+            directory: 'CITY',
+            flag: ['WRONG'],
+          })
+          .expect(400);
       });
     });
   });

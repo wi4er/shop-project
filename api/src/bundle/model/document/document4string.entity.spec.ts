@@ -82,7 +82,7 @@ describe('Document string attribute entity', () => {
 
       const repo = source.getRepository(DocumentEntity);
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: parent.id},
         relations: {string: true},
       });
 
@@ -103,7 +103,7 @@ describe('Document string attribute entity', () => {
       }
 
       const langRepo = source.getRepository(DocumentEntity);
-      await langRepo.delete({id: 1});
+      await langRepo.delete({id: parent.id});
 
       const strRepo = source.getRepository(Document4stringEntity);
       const list = await strRepo.find();
@@ -124,7 +124,7 @@ describe('Document string attribute entity', () => {
       }
 
       const propRepo = source.getRepository(DocumentEntity);
-      await propRepo.delete({id: 1});
+      await propRepo.delete({id: parent.id});
 
       const strRepo = source.getRepository(Document4stringEntity);
       const list = await strRepo.find();

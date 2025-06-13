@@ -1,8 +1,6 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { AttributeInput } from '../../input/attribute.input';
 import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
 import { Attribute4stringEntity } from '../../model/attribute4string.entity';
@@ -12,6 +10,8 @@ import { AttributeAsPointUpdateOperation } from './attribute-as-point-update.ope
 import { AttributeAsElementUpdateOperation } from './attribute-as-element-update.operation';
 import { AttributeAsSectionUpdateOperation } from './attribute-as-section-update.operation';
 import { AttributeAsFileUpadteOperation } from './attribute-as-file-upadte.operation';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class AttributeUpdateOperation {
 
@@ -61,10 +61,10 @@ export class AttributeUpdateOperation {
     await new AttributeAsSectionUpdateOperation(this.transaction).save(beforeItem, input);
     await new AttributeAsFileUpadteOperation(this.transaction).save(beforeItem, input);
 
-    await new FlagValueUpdateOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.transaction, Attribute4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, Attribute4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

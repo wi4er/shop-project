@@ -1,6 +1,4 @@
 import { EntityManager } from 'typeorm';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { ElementEntity } from '../../model/element/element.entity';
 import { ElementInput } from '../../input/element.input';
 import { Element4stringEntity } from '../../model/element/element4string.entity';
@@ -9,19 +7,19 @@ import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { BlockEntity } from '../../model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueUpdateOperation } from '../../../common/operation/point/point-value-update.operation';
 import { Element4pointEntity } from '../../model/element/element4point.entity';
 import { Element4elementUpdateOperation } from './element4element-update.operation';
 import { Element2imageEntity } from '../../model/element/element2image.entity';
-import { ImageUpdateOperation } from '../../../common/operation/image/image-update.operation';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
-import {
-  DescriptionValueUpdateOperation,
-} from '../../../common/operation/description/description-value-update.operation';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
 import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
-import { IntervalValueUpdateOperation } from '../../../common/operation/interval/interval-value-update.operation';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { PointValueOperation } from '../../../common/operation/point-value.operation';
+import { DescriptionValueOperation } from '../../../common/operation/description-value.operation';
+import { IntervalValueOperation } from '../../../common/operation/interval-value.operation';
+import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
+import { ImageValueOperation } from '../../../common/operation/image-value.operation';
 
 export class ElementUpdateOperation {
 
@@ -84,15 +82,15 @@ export class ElementUpdateOperation {
 
     const beforeItem = await this.checkElement(input.id);
 
-    await new ImageUpdateOperation(this.transaction, Element2imageEntity).save(beforeItem, input.image);
-    await new FlagValueUpdateOperation(this.transaction, Element2flagEntity).save(beforeItem, input);
-    await new PermissionValueUpdateOperation(this.transaction, Element2permissionEntity).save(beforeItem, input);
+    await new ImageValueOperation(this.transaction, Element2imageEntity).save(beforeItem, input.image);
+    await new FlagValueOperation(this.transaction, Element2flagEntity).save(beforeItem, input.flag);
+    await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(beforeItem, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.transaction, Element4stringEntity).save(beforeItem, pack.string);
-    await new DescriptionValueUpdateOperation(this.transaction, Element4descriptionEntity).save(beforeItem, pack.description);
-    await new IntervalValueUpdateOperation(this.transaction, Element4IntervalEntity).save(beforeItem, pack.interval);
-    await new PointValueUpdateOperation(this.transaction, Element4pointEntity).save(beforeItem, pack.point);
+    await new StringValueOperation(this.transaction, Element4stringEntity).save(beforeItem, pack.string);
+    await new DescriptionValueOperation(this.transaction, Element4descriptionEntity).save(beforeItem, pack.description);
+    await new IntervalValueOperation(this.transaction, Element4IntervalEntity).save(beforeItem, pack.interval);
+    await new PointValueOperation(this.transaction, Element4pointEntity).save(beforeItem, pack.point);
     await new Element4elementUpdateOperation(this.transaction).save(beforeItem, pack.element);
 
     return input.id;

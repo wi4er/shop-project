@@ -1078,6 +1078,23 @@ describe('ElementController', () => {
         expect(inst.body.flag).toEqual(['ACTIVE']);
       });
 
+      test('Should add with many flags', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new FlagEntity(), {id: 'FLAG_1'}).save();
+        await Object.assign(new FlagEntity(), {id: 'FLAG_2'}).save();
+        await Object.assign(new FlagEntity(), {id: 'FLAG_3'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            flag: ['FLAG_1', 'FLAG_2', 'FLAG_3'],
+          })
+          .expect(201);
+
+        expect(inst.body.flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
+      });
+
       test('Shouldn`t add with wrong flag', async () => {
         await new BlockEntity('BLOCK').save();
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();

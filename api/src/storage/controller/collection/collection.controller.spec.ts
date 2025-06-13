@@ -25,7 +25,7 @@ describe('CollectionController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('CollectionEntity fields', () => {
+  describe('Collection fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/collection')
@@ -64,7 +64,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('CollectionEntity item', () => {
+  describe('Collection item', () => {
     test('Should get collection instance', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 
@@ -82,7 +82,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('CollectionEntity count', () => {
+  describe('Collection count', () => {
     test('Should get empty count', async () => {
       const res = await request(app.getHttpServer())
         .get('/collection/count')
@@ -104,7 +104,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('CollectionEntity with strings', () => {
+  describe('Collection with strings', () => {
     test('Should get flag with strings', async () => {
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -137,7 +137,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('CollectionEntity with flags', () => {
+  describe('Collection with flags', () => {
     test('Should get collection with flag', async () => {
       const parent = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -167,72 +167,102 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('CollectionEntity addition', () => {
-    test('Should add item', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/collection')
-        .send({id: 'SHORT'})
-        .expect(201);
+  describe('Collection addition', () => {
+    describe('Collection addition with fields', () => {
+      test('Should add item', async () => {
+        const inst = await request(app.getHttpServer())
+          .post('/collection')
+          .send({id: 'SHORT'})
+          .expect(201);
 
-      expect(inst.body.id).toBe('SHORT');
-      expect(inst.body.created_at).toBeDefined();
-      expect(inst.body.updated_at).toBeDefined();
-      expect(inst.body.version).toBe(1);
+        expect(inst.body.id).toBe('SHORT');
+        expect(inst.body.created_at).toBeDefined();
+        expect(inst.body.updated_at).toBeDefined();
+        expect(inst.body.version).toBe(1);
+      });
+
+      test('Shouldn`t add with blank id', async () => {
+        const inst = await request(app.getHttpServer())
+          .post('/collection')
+          .send({id: ''})
+          .expect(400);
+      });
+
+      test('Shouldn`t add duplicate', async () => {
+        await request(app.getHttpServer())
+          .post('/collection')
+          .send({id: 'SHORT'})
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .post('/collection')
+          .send({id: 'SHORT'})
+          .expect(400);
+      });
     });
 
-    test('Shouldn`t add with blank id', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/collection')
-        .send({id: ''})
-        .expect(400);
+    describe('Collection addition with strings', () => {
+      test('Should add with string', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/collection')
+          .send({
+            id: 'DETAIL',
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE'},
+            ],
+          })
+          .expect(201);
+
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
+      });
     });
 
-    test('Shouldn`t add duplicate', async () => {
-      await request(app.getHttpServer())
-        .post('/collection')
-        .send({id: 'SHORT'})
-        .expect(201);
+    describe('Collection with flags', () => {
+      test('Should add with flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      await request(app.getHttpServer())
-        .post('/collection')
-        .send({id: 'SHORT'})
-        .expect(400);
-    });
+        const inst = await request(app.getHttpServer())
+          .post('/collection')
+          .send({
+            id: 'DETAIL',
+            flag: ['ACTIVE'],
+          })
+          .expect(201);
 
-    test('Should add with string', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        expect(inst.body.flag).toEqual(['ACTIVE']);
+      });
 
-      const inst = await request(app.getHttpServer())
-        .post('/collection')
-        .send({
-          id: 'DETAIL',
-          attribute: [
-            {attribute: 'NAME', string: 'VALUE'},
-          ],
-        })
-        .expect(201);
+      test('Shouldn`t add with duplicate flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      expect(inst.body.attribute).toHaveLength(1);
-      expect(inst.body.attribute[0].attribute).toBe('NAME');
-      expect(inst.body.attribute[0].string).toBe('VALUE');
-    });
+        await request(app.getHttpServer())
+          .post('/collection')
+          .send({
+            id: 'DETAIL',
+            flag: ['ACTIVE', 'ACTIVE'],
+          })
+          .expect(400);
+      });
 
-    test('Should add with flag', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+      test('Shouldn`t add with wrong flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      const inst = await request(app.getHttpServer())
-        .post('/collection')
-        .send({
-          id: 'DETAIL',
-          flag: ['ACTIVE'],
-        })
-        .expect(201);
-
-      expect(inst.body.flag).toEqual(['ACTIVE']);
+        await request(app.getHttpServer())
+          .post('/collection')
+          .send({
+            id: 'DETAIL',
+            flag: ['WRONG'],
+          })
+          .expect(400);
+      });
     });
   });
 
-  describe('CollectionEntity updating', () => {
+  describe('Collection updating', () => {
     test('Should update collection', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const res = await request(app.getHttpServer())
@@ -296,7 +326,7 @@ describe('CollectionController', () => {
     });
   });
 
-  describe('CollectionEntity deletion', () => {
+  describe('Collection deletion', () => {
     test('Should delete', async () => {
       await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
 

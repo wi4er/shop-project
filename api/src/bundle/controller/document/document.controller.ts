@@ -12,7 +12,7 @@ import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
 import { DocumentRender } from '../../render/document.render';
 
-@Controller('bundle/bundle')
+@Controller('bundle/document')
 export class DocumentController {
 
   relations = {

@@ -1,13 +1,13 @@
 import { UserEntity } from '../../model/user/user.entity';
 import { EntityManager } from 'typeorm';
 import { User4stringEntity } from '../../model/user/user4string.entity';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { User2flagEntity } from '../../model/user/user2flag.entity';
 import { User2userContactUpdateOperation } from './user2user-contact-update.operation';
 import { UserInput } from '../../input/user.input';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class UserUpdateOperation {
 
@@ -26,6 +26,7 @@ export class UserUpdateOperation {
         .findOne({
           where: {id},
           relations: {
+            group: {group: true},
             contact: {contact: true},
             string: {attribute: true},
             flag: {flag: true},
@@ -44,11 +45,11 @@ export class UserUpdateOperation {
     beforeItem.login = WrongDataException.assert(input.login, 'UserEntity login expected');
     await this.trans.save(beforeItem);
 
-    await new FlagValueUpdateOperation(this.trans, User2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.trans, User2flagEntity).save(beforeItem, input.flag);
     await new User2userContactUpdateOperation(this.trans).save(beforeItem, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.trans, User4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.trans, User4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

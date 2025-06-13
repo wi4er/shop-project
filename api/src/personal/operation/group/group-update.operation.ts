@@ -2,13 +2,13 @@ import { EntityManager } from 'typeorm';
 import { GroupEntity } from '../../model/group/group.entity';
 import { Group4stringEntity } from '../../model/group/group4string.entity';
 import { Group2flagEntity } from '../../model/group/group2flag.entity';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { GroupInput } from '../../input/group.input';
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
-export class UserGroupUpdateOperation {
+export class GroupUpdateOperation {
 
   constructor(
     private trans: EntityManager,
@@ -42,10 +42,10 @@ export class UserGroupUpdateOperation {
 
     await this.trans.save(beforeItem);
 
-    await new FlagValueUpdateOperation(this.trans, Group2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.trans, Group2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.trans, Group4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.trans, Group4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

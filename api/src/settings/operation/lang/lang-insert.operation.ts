@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { LangEntity } from '../../model/lang.entity';
 import { LangInput } from '../../input/lang.input';
 import { Lang4stringEntity } from '../../model/lang4string.entity';
 import { Lang2flagEntity } from '../../model/lang2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class LangInsertOperation {
 
@@ -27,10 +27,10 @@ export class LangInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const pack = filterAttributes(input.attribute);
+    await new FlagValueOperation(this.manager, Lang2flagEntity).save(this.created, input.flag);
 
-    await new StringValueInsertOperation(this.manager, Lang4stringEntity).save(this.created, pack.string);
-    await new FlagValueInsertOperation(this.manager, Lang2flagEntity).save(this.created, input);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueOperation(this.manager, Lang4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

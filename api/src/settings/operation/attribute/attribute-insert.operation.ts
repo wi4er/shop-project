@@ -1,7 +1,5 @@
 import { EntityManager } from 'typeorm';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
 import { Attribute4stringEntity } from '../../model/attribute4string.entity';
 import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
@@ -11,6 +9,8 @@ import { AttributeAsPointInsertOperation } from './attribute-as-point-insert.ope
 import { AttributeAsElementInsertOperation } from './attribute-as-element-insert.operation';
 import { AttributeAsSectionInsertOperation } from './attribute-as-section-insert.operation';
 import { AttributeAsFileInsertOperation } from './attribute-as-file-insert.operation';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class AttributeInsertOperation {
 
@@ -55,11 +55,10 @@ export class AttributeInsertOperation {
         await new AttributeAsFileInsertOperation(this.manager).save(this.created, input.collection);
         break;
     }
-
-    await new FlagValueInsertOperation(this.manager, Attribute2flagEntity).save(this.created, input);
+    await new FlagValueOperation(this.manager, Attribute2flagEntity).save(this.created, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, Attribute4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, Attribute4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

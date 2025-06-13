@@ -71,7 +71,7 @@ describe('BlockEntity file attribute entity', () => {
     });
 
     test('Shouldn`t create without attribute', async () => {
-      const parent = await Object.assign(new BlockEntity(), {}).save();
+      const parent = await Object.assign(new BlockEntity('BLOCK'), {}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
       const file = await Object.assign(
         new FileEntity(),
@@ -92,7 +92,7 @@ describe('BlockEntity file attribute entity', () => {
   describe('BlockEntity with file', () => {
     test('Should create element with file', async () => {
       const repo = source.getRepository(BlockEntity);
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
       const file = await Object.assign(
@@ -108,7 +108,7 @@ describe('BlockEntity file attribute entity', () => {
       await Object.assign(new Block4fileEntity(), {parent, property, file}).save();
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'BLOCK'},
         relations: {file: {file: {collection: true}}},
       });
 
@@ -118,7 +118,7 @@ describe('BlockEntity file attribute entity', () => {
 
     test('Should create with multi file', async () => {
       const repo = source.getRepository(BlockEntity);
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const property = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
 
@@ -136,7 +136,7 @@ describe('BlockEntity file attribute entity', () => {
       }
 
       const inst = await repo.findOne({
-        where: {id: 1},
+        where: {id: 'BLOCK'},
         relations: {file: {file: {collection: true}}},
       });
 

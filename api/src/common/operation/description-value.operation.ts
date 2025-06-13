@@ -1,12 +1,12 @@
 import { BaseEntity, EntityManager } from 'typeorm';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { CommonDescriptionEntity } from '../../model/common/common-description.entity';
-import { AttributeDescriptionInput } from '../../input/attribute-description.input';
-import { WithDescriptionEntity } from '../../model/with/with-description.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { CommonDescriptionEntity } from '../model/common/common-description.entity';
+import { AttributeDescriptionInput } from '../input/attribute-description.input';
+import { WithDescriptionEntity } from '../model/with/with-description.entity';
 
-export class DescriptionValueUpdateOperation <T extends WithDescriptionEntity<BaseEntity>>{
+export class DescriptionValueOperation <T extends WithDescriptionEntity<BaseEntity>>{
 
   constructor(
     private transaction: EntityManager,
@@ -46,7 +46,7 @@ export class DescriptionValueUpdateOperation <T extends WithDescriptionEntity<Ba
   async save(beforeItem: T, list: AttributeDescriptionInput[]) {
     const current: { [key: string]: Array<CommonDescriptionEntity<BaseEntity>> } = {};
 
-    for (const item of beforeItem.description) {
+    for (const item of beforeItem.description ?? []) {
       const {id} = item.attribute;
 
       if (current[id]) current[id].push(item);

@@ -1,16 +1,16 @@
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { PointInput } from '../../input/point.input';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { PointEntity } from '../../model/point.entity';
 import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueUpdateOperation } from '../../../common/operation/point/point-value-update.operation';
 import { Point4pointEntity } from '../../model/point4point.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { PointValueOperation } from '../../../common/operation/point-value.operation';
 
 export class PointUpdateOperation {
 
@@ -64,11 +64,11 @@ export class PointUpdateOperation {
 
     const beforeItem = await this.checkPoint(input.id);
 
-    await new FlagValueUpdateOperation(this.transaction, Point2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.transaction, Point2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.transaction, Point4stringEntity).save(beforeItem, pack.string);
-    await new PointValueUpdateOperation(this.transaction, Point4pointEntity).save(beforeItem, pack.point);
+    await new StringValueOperation(this.transaction, Point4stringEntity).save(beforeItem, pack.string);
+    await new PointValueOperation(this.transaction, Point4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;
   }

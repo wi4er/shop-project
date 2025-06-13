@@ -1,19 +1,19 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { SectionEntity } from '../../model/section/section.entity';
 import { SectionInput } from '../../input/section.input';
 import { Section4stringEntity } from '../../model/section/section4string.entity';
 import { Section2flagEntity } from '../../model/section/section2flag.entity';
-import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Section4pointEntity } from '../../model/section/section4point.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { ImageInsertOperation } from '../../../common/operation/image/image-insert.operation';
 import { Section2imageEntity } from '../../model/section/section2image.entity';
-import { PermissionValueInsertOperation } from '../../../common/operation/permission/permission-value-insert.operation';
 import { Section2permissionEntity } from '../../model/section/section2permission.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { PointValueOperation } from '../../../common/operation/point-value.operation';
+import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
+import { ImageValueOperation } from '../../../common/operation/image-value.operation';
 
 export class SectionInsertOperation {
 
@@ -64,13 +64,13 @@ export class SectionInsertOperation {
       throw new WrongDataException(err.message);
     }
 
-    await new FlagValueInsertOperation(this.manager, Section2flagEntity).save(this.created, input);
-    await new ImageInsertOperation(this.manager, Section2imageEntity).save(this.created, input.image);
-    await new PermissionValueInsertOperation(this.manager, Section2permissionEntity).save(this.created, input);
+    await new FlagValueOperation(this.manager, Section2flagEntity).save(this.created, input.flag);
+    await new ImageValueOperation(this.manager, Section2imageEntity).save(this.created, input.image);
+    await new PermissionValueOperation(this.manager, Section2permissionEntity).save(this.created, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, Section4stringEntity).save(this.created, pack.string);
-    await new PointValueInsertOperation(this.manager, Section4pointEntity).save(this.created, pack.point);
+    await new StringValueOperation(this.manager, Section4stringEntity).save(this.created, pack.string);
+    await new PointValueOperation(this.manager, Section4pointEntity).save(this.created, pack.point);
 
     return this.created.id;
   }

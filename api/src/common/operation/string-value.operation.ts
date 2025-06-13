@@ -1,12 +1,12 @@
 import { BaseEntity, EntityManager } from 'typeorm';
-import { CommonStringEntity } from '../../model/common/common-string.entity';
-import { WithStringEntity } from '../../model/with/with-string.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { AttributeStringInput } from '../../input/attribute-string.input';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { CommonStringEntity } from '../model/common/common-string.entity';
+import { WithStringEntity } from '../model/with/with-string.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
+import { AttributeStringInput } from '../input/attribute-string.input';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 
-export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> {
+export class StringValueOperation<T extends WithStringEntity<BaseEntity>> {
 
   constructor(
     private transaction: EntityManager,
@@ -46,7 +46,7 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
   async save(beforeItem: T, list: AttributeStringInput[]) {
     const current: { [key: string]: Array<CommonStringEntity<BaseEntity>> } = {};
 
-    for (const item of beforeItem.string) {
+    for (const item of beforeItem.string ?? []) {
       const {id} = item.attribute;
 
       if (current[id]) current[id].push(item);
@@ -59,8 +59,10 @@ export class StringValueUpdateOperation<T extends WithStringEntity<BaseEntity>> 
         : new this.entity();
 
       inst.parent = beforeItem;
-      inst.attribute = await this.checkAttribute(item.attribute);
-      inst.string = WrongDataException.assert(item.string, 'AttributeEntity string value expected!');
+      inst.attribute = await this.checkAttribute(
+        WrongDataException.assert(item.attribute, 'Attribute id expected'),
+      );
+      inst.string = WrongDataException.assert(item.string, 'Attribute string value expected!');
       inst.lang = await this.checkLang(item.lang);
 
       await this.transaction.save(inst);

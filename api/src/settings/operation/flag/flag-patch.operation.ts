@@ -2,11 +2,11 @@ import { EntityManager } from 'typeorm';
 import { FlagEntity } from '../../model/flag.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { FlagInput } from '../../input/flag.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
 import { Flag4stringEntity } from '../../model/flag4string.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class FlagPatchOperation {
 
@@ -40,11 +40,11 @@ export class FlagPatchOperation {
     if (input.id) await this.transaction.update(FlagEntity, {id}, {id: input.id});
 
     const beforeItem = await this.checkFlag(input.id ? input.id : id);
-    if (input.flag) await new FlagValueUpdateOperation(this.transaction, Flag2flagEntity).save(beforeItem, input);
 
+    if (input.flag) await new FlagValueOperation(this.transaction, Flag2flagEntity).save(beforeItem, input.flag);
     if (input.attribute) {
       const pack = filterAttributes(input.attribute);
-      await new StringValueUpdateOperation(this.transaction, Flag4stringEntity).save(beforeItem, pack.string);
+      await new StringValueOperation(this.transaction, Flag4stringEntity).save(beforeItem, pack.string);
     }
 
     return input.id ? input.id : id;

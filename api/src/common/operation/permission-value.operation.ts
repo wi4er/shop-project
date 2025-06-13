@@ -1,12 +1,12 @@
 import { BaseEntity, EntityManager, IsNull } from 'typeorm';
-import { CommonPermissionEntity } from '../../model/common/common-permission.entity';
-import { GroupEntity } from '../../../personal/model/group/group.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { WithPermissionInput } from '../../input/with-permission.input';
-import { WithPermissionEntity } from '../../model/with/with-permission.entity';
-import { PermissionMethod } from '../../../permission/model/permission-method';
+import { CommonPermissionEntity } from '../model/common/common-permission.entity';
+import { GroupEntity } from '../../personal/model/group/group.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { WithPermissionInput } from '../input/with-permission.input';
+import { WithPermissionEntity } from '../model/with/with-permission.entity';
+import { PermissionMethod } from '../../permission/model/permission-method';
 
-export class PermissionValueUpdateOperation<T extends WithPermissionEntity<BaseEntity>> {
+export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>> {
 
   constructor(
     private trans: EntityManager,

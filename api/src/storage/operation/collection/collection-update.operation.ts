@@ -1,14 +1,15 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { CollectionInput } from '../../input/Collection.input';
 import { CollectionEntity } from '../../model/collection.entity';
 import { Collection4stringEntity } from '../../model/collection4string.entity';
 import { Collection2flagEntity } from '../../model/collection2flag.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class CollectionUpdateOperation {
+
   constructor(
     private manager: EntityManager,
   ) {
@@ -41,10 +42,10 @@ export class CollectionUpdateOperation {
 
     await beforeItem.save();
 
-    await new FlagValueUpdateOperation(this.manager, Collection2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.manager, Collection2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Collection4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, Collection4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

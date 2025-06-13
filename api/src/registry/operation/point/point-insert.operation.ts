@@ -2,14 +2,14 @@ import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { PointEntity } from '../../model/point.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { PointInput } from '../../input/point.input';
 import { Point4stringEntity } from '../../model/point4string.entity';
 import { Point2flagEntity } from '../../model/point2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Point4pointEntity } from '../../model/point4point.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { PointValueOperation } from '../../../common/operation/point-value.operation';
 
 export class PointInsertOperation {
 
@@ -39,7 +39,7 @@ export class PointInsertOperation {
   async save(input: PointInput): Promise<string> {
     this.created.id = WrongDataException.assert(input.id, 'Point id expected');
     this.created.directory = await this.checkDirectory(
-      WrongDataException.assert(input.directory, 'DirectoryEntity id expected!'),
+      WrongDataException.assert(input.directory, 'Directory id expected!'),
     );
 
     try {
@@ -49,11 +49,11 @@ export class PointInsertOperation {
     }
     await this.transaction.save(this.created);
 
-    await new FlagValueInsertOperation(this.transaction, Point2flagEntity).save(this.created, input);
+    await new FlagValueOperation(this.transaction, Point2flagEntity).save(this.created, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.transaction, Point4stringEntity).save(this.created, pack.string);
-    await new PointValueInsertOperation(this.transaction, Point4pointEntity).save(this.created, pack.point);
+    await new StringValueOperation(this.transaction, Point4stringEntity).save(this.created, pack.string);
+    await new PointValueOperation(this.transaction, Point4pointEntity).save(this.created, pack.point);
 
     return this.created.id;
   }

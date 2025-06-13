@@ -1,12 +1,12 @@
 import { BaseEntity, EntityManager } from 'typeorm';
-import { WithPointEntity } from '../../model/with/with-point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { PointEntity } from '../../../registry/model/point.entity';
-import { AttributePointInput } from '../../input/attribute-point.input';
-import { CommonPointEntity } from '../../model/common/common-point.entity';
+import { WithPointEntity } from '../model/with/with-point.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { PointEntity } from '../../registry/model/point.entity';
+import { AttributePointInput } from '../input/attribute-point.input';
+import { CommonPointEntity } from '../model/common/common-point.entity';
 
-export class PointValueUpdateOperation<T extends WithPointEntity<BaseEntity>> {
+export class PointValueOperation<T extends WithPointEntity<BaseEntity>> {
 
   constructor(
     private trans: EntityManager,

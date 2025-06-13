@@ -11,7 +11,7 @@ import { Contact2flagEntity } from '../../model/contact/contact2flag.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
-describe('ContactController', () => {
+describe('Contact Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 
@@ -26,7 +26,7 @@ describe('ContactController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('ContactEntity fields', () => {
+  describe('Contact fields', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/personal/contact')
@@ -82,7 +82,7 @@ describe('ContactController', () => {
     });
   });
 
-  describe('ContactEntity count', () => {
+  describe('Contact count', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/personal/contact/count')
@@ -107,7 +107,7 @@ describe('ContactController', () => {
     });
   });
 
-  describe('ContactEntity with strings', () => {
+  describe('Contact with strings', () => {
     test('Should get contact with strings', async () => {
       const parent = await Object.assign(
         new ContactEntity(),
@@ -129,7 +129,7 @@ describe('ContactController', () => {
     });
   });
 
-  describe('ContactEntity with flags', () => {
+  describe('Contact with flags', () => {
     test('Should get contact with flag', async () => {
       const parent = await Object.assign(
         new ContactEntity(),
@@ -147,36 +147,48 @@ describe('ContactController', () => {
     });
   });
 
-  describe('ContactEntity addition', () => {
-    test('Should add', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/personal/contact')
-        .send({
-          id: 'mail',
-          type: 'EMAIL',
-        })
-        .expect(201);
-    });
+  describe('Contact addition', () => {
+    describe('Contact addition with fields', () => {
+      test('Should add contact', async () => {
+        const inst = await request(app.getHttpServer())
+          .post('/personal/contact')
+          .send({
+            id: 'mail',
+            type: 'EMAIL',
+          })
+          .expect(201);
 
-    test('Shouldn`t add without type', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/personal/contact')
-        .send({id: 'mail'})
-        .expect(400);
-    });
+        expect(inst.body.id).toBe('mail');
+        expect(inst.body.type).toBe('EMAIL');
+      });
 
-    test('Shouldn`t add without id', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/personal/contact')
-        .send({type: 'EMAIL'})
-        .expect(400);
-    });
+      test('Shouldn`t add without type', async () => {
+        await request(app.getHttpServer())
+          .post('/personal/contact')
+          .send({id: 'mail'})
+          .expect(400);
+      });
 
-    test('Shouldn`t add with blank id', async () => {
-      const inst = await request(app.getHttpServer())
-        .post('/personal/contact')
-        .send({id: '', type: 'EMAIL'})
-        .expect(400);
+      test('Shouldn`t add with wrong type', async () => {
+        await request(app.getHttpServer())
+          .post('/personal/contact')
+          .send({id: 'mail', type: 'WRONG'})
+          .expect(400);
+      });
+
+      test('Shouldn`t add without id', async () => {
+        await request(app.getHttpServer())
+          .post('/personal/contact')
+          .send({type: 'EMAIL'})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with blank id', async () => {
+        await request(app.getHttpServer())
+          .post('/personal/contact')
+          .send({id: '', type: 'EMAIL'})
+          .expect(400);
+      });
     });
   });
 

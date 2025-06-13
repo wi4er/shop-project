@@ -4,10 +4,10 @@ import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { FlagInput } from '../../input/flag.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class FlagUpdateOperation {
 
@@ -51,10 +51,10 @@ export class FlagUpdateOperation {
 
     const beforeItem = await this.checkFlag(input.id);
 
-    await new FlagValueUpdateOperation(this.manager, Flag2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.manager, Flag2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Flag4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, Flag4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

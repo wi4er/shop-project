@@ -1,14 +1,14 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { FileEntity } from '../../model/file.entity';
 import { FileInput } from '../../input/File.input';
 import { File4stringEntity } from '../../model/file4string.entity';
 import { File2flagEntity } from '../../model/file2flag.entity';
 import { CollectionEntity } from '../../model/collection.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class FileUpdateOperation {
 
@@ -56,10 +56,10 @@ export class FileUpdateOperation {
 
     await beforeItem.save();
 
-    await new FlagValueUpdateOperation(this.manager, File2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.manager, File2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, File4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, File4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

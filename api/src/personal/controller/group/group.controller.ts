@@ -3,9 +3,9 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { GroupEntity } from '../../model/group/group.entity';
 import { GroupInput } from '../../input/group.input';
-import { UserGroupInsertOperation } from '../../operation/group/user-group-insert.operation';
-import { UserGroupUpdateOperation } from '../../operation/group/user-group-update.operation';
-import { UserGroupDeleteOperation } from '../../operation/group/user-group-delete.operation';
+import { GroupInsertOperation } from '../../operation/group/group-insert.operation';
+import { GroupUpdateOperation } from '../../operation/group/group-update.operation';
+import { GroupDeleteOperation } from '../../operation/group/group-delete.operation';
 import { GroupRender } from '../../render/group.render';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { CheckId } from '../../../common/guard/check-id.guard';
@@ -64,7 +64,7 @@ export class GroupController {
       input: GroupInput,
   ) {
     return this.entityManager.transaction(
-      trans => new UserGroupInsertOperation(this.entityManager).save(input)
+      trans => new GroupInsertOperation(this.entityManager).save(input)
         .then(id => trans.getRepository(GroupEntity).findOne({
           where: {id},
           relations: this.relations,
@@ -81,7 +81,7 @@ export class GroupController {
       input: GroupInput,
   ) {
     return this.entityManager.transaction(
-      trans => new UserGroupUpdateOperation(trans).save(id, input)
+      trans => new GroupUpdateOperation(trans).save(id, input)
         .then(groupId => trans.getRepository(GroupEntity).findOne({
           where: {id: groupId},
           relations: this.relations,
@@ -96,7 +96,7 @@ export class GroupController {
       id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
-      async trans => new UserGroupDeleteOperation(trans).save([id]),
+      async trans => new GroupDeleteOperation(trans).save([id]),
     );
   }
 

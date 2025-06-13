@@ -1,16 +1,16 @@
 import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
-import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { DirectoryInput } from '../../input/directory.input';
 import { Directory4stringEntity } from '../../model/directory4string.entity';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { PointValueInsertOperation } from '../../../common/operation/point/point-value-insert.operation';
 import { Directory4pointEntity } from '../../model/directory4point.entity';
-import { PermissionValueInsertOperation } from '../../../common/operation/permission/permission-value-insert.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { PointValueOperation } from '../../../common/operation/point-value.operation';
+import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 
 export class DirectoryInsertOperation {
 
@@ -36,12 +36,12 @@ export class DirectoryInsertOperation {
 
     await this.transaction.save(this.created);
 
-    await new FlagValueInsertOperation(this.transaction, Directory2flagEntity).save(this.created, input);
-    await new PermissionValueInsertOperation(this.transaction, Directory2permissionEntity).save(this.created, input);
+    await new FlagValueOperation(this.transaction, Directory2flagEntity).save(this.created, input.flag);
+    await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(this.created, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.transaction, Directory4stringEntity).save(this.created, pack.string);
-    await new PointValueInsertOperation(this.transaction, Directory4pointEntity).save(this.created, pack.point);
+    await new StringValueOperation(this.transaction, Directory4stringEntity).save(this.created, pack.string);
+    await new PointValueOperation(this.transaction, Directory4pointEntity).save(this.created, pack.point);
 
     return this.created.id;
   }

@@ -2,9 +2,8 @@ import { EntityManager } from 'typeorm';
 import { AttributeEntity } from '../../model/attribute.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { AttributeInput } from '../../input/attribute.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 
 export class AttributePatchOperation {
 
@@ -38,7 +37,7 @@ export class AttributePatchOperation {
     const beforeItem = await this.checkAttribute(id);
 
     if (input.id) await this.transaction.update(AttributeEntity, {id}, {id: input.id});
-    if (input.flag) await new FlagValueUpdateOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input);
+    if (input.flag) await new FlagValueOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input.flag);
 
     return input.id ? input.id : beforeItem.id;
   }

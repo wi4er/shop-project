@@ -1,15 +1,6 @@
 import { UserEntity } from '../model/user/user.entity';
 import { EntityManager } from 'typeorm';
-import { UserInput } from '../input/user.input';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { filterAttributes } from '../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../common/operation/string/string-value-insert.operation';
-import { User4stringEntity } from '../model/user/user4string.entity';
-import { FlagValueInsertOperation } from '../../common/operation/flag/flag-value-insert.operation';
-import { User2flagEntity } from '../model/user/user2flag.entity';
-import { User2userContactInsertOperation } from './user/user2user-contact-insert.operation';
-import { User2userGroupInsertOperation } from './user/user2user-group-insert.operation';
-import { ContactEntity } from '../model/contact/contact.entity';
 import { AuthInput } from '../input/auth.input';
 import { EncodeService } from '../service/encode/encode.service';
 import { User2groupEntity } from '../model/user/user2group.entity';

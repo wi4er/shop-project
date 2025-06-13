@@ -55,7 +55,7 @@ describe('LangEntity Controller', () => {
     });
   }
 
-  describe('LangEntity list', () => {
+  describe('Lang list', () => {
     test('Should get empty list', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -102,7 +102,7 @@ describe('LangEntity Controller', () => {
     });
   });
 
-  describe('LangEntity item', () => {
+  describe('Lang item', () => {
     test('Should get lang instance', async () => {
       await createLang('EN');
 
@@ -130,7 +130,7 @@ describe('LangEntity Controller', () => {
     });
   });
 
-  describe('LangEntity count', () => {
+  describe('Lang count', () => {
     test('Should count empty list', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -160,7 +160,7 @@ describe('LangEntity Controller', () => {
     });
   });
 
-  describe('LangEntity with strings', () => {
+  describe('Lang with strings', () => {
     test('Should get lang with strings', async () => {
       const parent = await createLang('EN');
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -203,7 +203,7 @@ describe('LangEntity Controller', () => {
     });
   });
 
-  describe('LangEntity with flags', () => {
+  describe('Lang with flags', () => {
     test('Should get lang with flag', async () => {
       const parent = await createLang('EN');
       const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -218,7 +218,7 @@ describe('LangEntity Controller', () => {
     });
   });
 
-  describe('LangEntity addition', () => {
+  describe('Lang addition', () => {
     test('Should add item', async () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
@@ -268,23 +268,38 @@ describe('LangEntity Controller', () => {
       expect(res.body.attribute[0].string).toBe('VALUE');
     });
 
-    test('Should add with flag', async () => {
-      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+    describe('Lang addition with flag', () => {
+      test('Should add with flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
-      const res = await request(app.getHttpServer())
-        .post('/lang')
-        .send({
-          id: 'EN',
-          flag: ['NEW'],
-        })
-        .expect(201);
+        const res = await request(app.getHttpServer())
+          .post('/lang')
+          .send({
+            id: 'EN',
+            flag: ['NEW'],
+          })
+          .expect(201);
 
-      expect(res.body.flag).toEqual(['NEW']);
+        expect(res.body.flag).toEqual(['NEW']);
+      });
+
+      test('Shouldn`t add with wrong flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/lang')
+          .send({
+            id: 'EN',
+            flag: ['WRONG'],
+          })
+          .expect(400);
+      });
     });
   });
 
-  describe('LangEntity update', () => {
+  describe('Lang update', () => {
     test('Should update item', async () => {
       await createLang('EN');
 
@@ -316,7 +331,7 @@ describe('LangEntity Controller', () => {
       expect(res.body.id).toBe('GR');
     });
 
-    describe('LangEntity update with strings', () => {
+    describe('Lang update with strings', () => {
       test('Should update id with string', async () => {
         const parent = await createLang('EN');
         const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -332,7 +347,7 @@ describe('LangEntity Controller', () => {
       });
     });
 
-    describe('LangEntity update with flags', () => {
+    describe('Lang update with flags', () => {
       test('Should update id with flag', async () => {
         const parent = await createLang('EN');
         const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
@@ -346,10 +361,22 @@ describe('LangEntity Controller', () => {
         expect(res.body.id).toBe('GR');
         expect(res.body.flag).toEqual(['FLAG']);
       });
+
+      test('Should add flag', async () => {
+        await createLang('EN');
+        await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+
+        const res = await request(app.getHttpServer())
+          .put('/lang/EN')
+          .send({id: 'EN', flag: ['FLAG']})
+          .expect(200);
+
+        expect(res.body.flag).toEqual(['FLAG']);
+      });
     });
   });
 
-  describe('LangEntity deletion', () => {
+  describe('Lang deletion', () => {
     test('Should delete lang', async () => {
       await createLang('EN');
 

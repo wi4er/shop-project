@@ -33,7 +33,7 @@ export class Point2flagEntity
 
   @ManyToOne(
     type => PointEntity,
-    lang => lang.flag,
+    point => point.flag,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

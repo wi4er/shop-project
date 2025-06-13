@@ -211,44 +211,93 @@ describe('DocumentController', () => {
   });
 
   describe('Document addition', () => {
-    test('Should add item', async () => {
-      await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
+    describe('Document addition with fields', () => {
+      test('Should add item', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
 
-      const inst = await request(app.getHttpServer())
-        .post('/bundle/document')
-        .send({})
-        .expect(201);
+        const inst = await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({})
+          .expect(201);
 
-      expect(inst.body.id).toHaveLength(36);
+        expect(inst.body.id).toHaveLength(36);
+      });
+
+      test('Shouldn`t add without access', async () => {
+        await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({})
+          .expect(403);
+      });
     });
 
-    test('Should add with string', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
+    describe('Document addition with strings', () => {
+      test('Should add with string', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
 
-      const inst = await request(app.getHttpServer())
-        .post('/bundle/document')
-        .send({
-          attribute: [{attribute: 'NAME', string: 'VALUE'}],
-        })
-        .expect(201);
+        const inst = await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({
+            attribute: [{attribute: 'NAME', string: 'VALUE'}],
+          })
+          .expect(201);
 
-      expect(inst.body.attribute[0].attribute).toBe('NAME');
-      expect(inst.body.attribute[0].string).toBe('VALUE');
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
+      });
+
+      test('Shouldn`t add with wrong attribute', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({
+            attribute: [{attribute: 'WRONG', string: 'VALUE'}],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add without attribute', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({
+            attribute: [{string: 'VALUE'}],
+          })
+          .expect(400);
+      });
     });
 
-    test('Should add with flag', async () => {
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-      await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
+    describe('Document addition with flags', () => {
+      test('Should add with flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
 
-      const inst = await request(app.getHttpServer())
-        .post('/bundle/document')
-        .send({
-          flag: ['ACTIVE'],
-        })
-        .expect(201);
+        const inst = await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({
+            flag: ['ACTIVE'],
+          })
+          .expect(201);
 
-      expect(inst.body.flag).toEqual(['ACTIVE']);
+        expect(inst.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Shouldn`t add with wrong flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.DOCUMENT, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/bundle/document')
+          .send({
+            flag: ['WRONG'],
+          })
+          .expect(400);
+      });
     });
   });
 
@@ -282,33 +331,37 @@ describe('DocumentController', () => {
         .expect(403);
     });
 
-    test('Should update with string', async () => {
-      await createDocument('DOCUMENT');
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+    describe('Document update with strings', () => {
+      test('Should update with string', async () => {
+        await createDocument('DOCUMENT');
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
-      const inst = await request(app.getHttpServer())
-        .put('/bundle/document/DOCUMENT')
-        .send({
-          attribute: [{attribute: 'NAME', string: 'VALUE'}],
-        })
-        .expect(200);
+        const inst = await request(app.getHttpServer())
+          .put('/bundle/document/DOCUMENT')
+          .send({
+            attribute: [{attribute: 'NAME', string: 'VALUE'}],
+          })
+          .expect(200);
 
-      expect(inst.body.id).toBe('DOCUMENT');
-      expect(inst.body.attribute[0].attribute).toBe('NAME');
-      expect(inst.body.attribute[0].string).toBe('VALUE');
+        expect(inst.body.id).toBe('DOCUMENT');
+        expect(inst.body.attribute[0].attribute).toBe('NAME');
+        expect(inst.body.attribute[0].string).toBe('VALUE');
+      });
     });
 
-    test('Should update with flag', async () => {
-      await createDocument('DOCUMENT');
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+    describe('Document update with flags', () => {
+      test('Should update with flag', async () => {
+        await createDocument('DOCUMENT');
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
 
-      const inst = await request(app.getHttpServer())
-        .put('/bundle/document/DOCUMENT')
-        .send({flag: ['ACTIVE']})
-        .expect(200);
+        const inst = await request(app.getHttpServer())
+          .put('/bundle/document/DOCUMENT')
+          .send({flag: ['ACTIVE']})
+          .expect(200);
 
-      expect(inst.body.id).toBe('DOCUMENT');
-      expect(inst.body.flag).toEqual(['ACTIVE']);
+        expect(inst.body.id).toBe('DOCUMENT');
+        expect(inst.body.flag).toEqual(['ACTIVE']);
+      });
     });
   });
 });

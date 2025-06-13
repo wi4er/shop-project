@@ -2,9 +2,8 @@ import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { BlockInput } from '../../input/block.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Block2flagEntity } from '../../model/block/block2flag.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 
 export class BlockPatchOperation {
 
@@ -41,7 +40,7 @@ export class BlockPatchOperation {
     if (input.id) await this.transaction.update(BlockEntity, {id}, {id: input.id});
 
     const beforeItem = await this.checkBlock(input.id ? input.id : id);
-    if (input.flag) await new FlagValueUpdateOperation(this.transaction, Block2flagEntity).save(beforeItem, input);
+    if (input.flag) await new FlagValueOperation(this.transaction, Block2flagEntity).save(beforeItem, input.flag);
 
     return  input.id ? input.id : beforeItem.id;
   }

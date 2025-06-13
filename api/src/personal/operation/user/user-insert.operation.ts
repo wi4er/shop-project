@@ -2,13 +2,13 @@ import { EntityManager } from "typeorm";
 import { UserEntity } from "../../model/user/user.entity";
 import { User4stringEntity } from "../../model/user/user4string.entity";
 import { User2flagEntity } from "../../model/user/user2flag.entity";
-import { StringValueInsertOperation } from "../../../common/operation/string/string-value-insert.operation";
-import { FlagValueInsertOperation } from "../../../common/operation/flag/flag-value-insert.operation";
 import { User2userContactInsertOperation } from "./user2user-contact-insert.operation";
 import { User2userGroupInsertOperation } from "./user2user-group-insert.operation";
 import { UserInput } from "../../input/user.input";
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class UserInsertOperation {
 
@@ -25,12 +25,12 @@ export class UserInsertOperation {
 
     await this.manager.save(this.created);
 
-    await new FlagValueInsertOperation(this.manager, User2flagEntity).save(this.created, input);
+    await new FlagValueOperation(this.manager, User2flagEntity).save(this.created, input.flag);
     await new User2userContactInsertOperation(this.manager).save(this.created, input);
     await new User2userGroupInsertOperation(this.manager).save(this.created, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.manager, User4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, User4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

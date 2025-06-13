@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../exception/no-data/no-data.exception';
-import { StringValueUpdateOperation } from '../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../common/operation/flag/flag-value-update.operation';
 import { FormEntity } from '../model/form.entity';
 import { Form4stringEntity } from '../model/form4string.entity';
 import { Form2flagEntity } from '../model/form2flag.entity';
 import { FormInput } from '../input/form.input';
 import { filterAttributes } from '../../common/input/filter-attributes';
+import { FlagValueOperation } from '../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../common/operation/string-value.operation';
 
 export class FormUpdateOperation {
 
@@ -42,10 +42,10 @@ export class FormUpdateOperation {
 
     await beforeItem.save();
 
-    await new FlagValueUpdateOperation(this.manager, Form2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.manager, Form2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Form4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, Form4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

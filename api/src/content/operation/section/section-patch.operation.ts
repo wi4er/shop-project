@@ -3,8 +3,8 @@ import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exc
 import { SectionEntity } from '../../model/section/section.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { SectionInput } from '../../input/section.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Section2flagEntity } from '../../model/section/section2flag.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 
 export class SectionPatchOperation {
 
@@ -28,7 +28,7 @@ export class SectionPatchOperation {
             flag: {flag: true},
           },
         }),
-      `Section id >> ${id} << not found!`,
+      `Section with id >> ${id} << not found!`,
     );
   }
 
@@ -44,7 +44,7 @@ export class SectionPatchOperation {
 
     const beforeItem = await this.checkSection(id);
 
-    if (input.flag) await new FlagValueUpdateOperation(this.manager, Section2flagEntity).save(beforeItem, input);
+    if (input.flag) await new FlagValueOperation(this.manager, Section2flagEntity).save(beforeItem, input.flag);
 
     return beforeItem.id;
   }

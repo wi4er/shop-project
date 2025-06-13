@@ -3,10 +3,10 @@ import { Flag4stringEntity } from '../../model/flag4string.entity';
 import { Flag2flagEntity } from '../../model/flag2flag.entity';
 import { FlagEntity } from '../../model/flag.entity';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueInsertOperation } from '../../../common/operation/string/string-value-insert.operation';
-import { FlagValueInsertOperation } from '../../../common/operation/flag/flag-value-insert.operation';
 import { FlagInput } from '../../input/flag.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class FlagInsertOperation {
 
@@ -33,10 +33,10 @@ export class FlagInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    const pack = filterAttributes(input.attribute);
+    await new FlagValueOperation(this.manager, Flag2flagEntity).save(this.created, input.flag);
 
-    await new StringValueInsertOperation(this.manager, Flag4stringEntity).save(this.created, pack.string);
-    await new FlagValueInsertOperation(this.manager, Flag2flagEntity).save(this.created, input);
+    const pack = filterAttributes(input.attribute);
+    await new StringValueOperation(this.manager, Flag4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

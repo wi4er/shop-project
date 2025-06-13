@@ -1,10 +1,10 @@
-import { WithImageEntity } from '../../model/with/with-image.entity';
+import { WithImageEntity } from '../model/with/with-image.entity';
 import { EntityManager } from 'typeorm';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { CommonImageEntity } from '../../model/common/common-image.entity';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { CommonImageEntity } from '../model/common/common-image.entity';
+import { FileEntity } from '../../storage/model/file.entity';
 
-export class ImageUpdateOperation<T extends WithImageEntity<T>> {
+export class ImageValueOperation<T extends WithImageEntity<T>> {
 
   constructor(
     private trans: EntityManager,
@@ -14,26 +14,21 @@ export class ImageUpdateOperation<T extends WithImageEntity<T>> {
 
   /**
    *
-   * @param id
-   * @private
    */
   private async checkFile(id?: number): Promise<FileEntity> {
-    WrongDataException.assert(id, 'File id expected');
-    const fileRepo = this.trans.getRepository(FileEntity);
-
     return WrongDataException.assert(
-      await fileRepo.findOne({where: {id}}),
-      `File  with id ${id} not found!`
+      await this.trans
+        .getRepository(FileEntity)
+        .findOne({where: {id}}),
+      `File with id >> ${id} << not found!`
     );
   }
 
   /**
    *
-   * @param beforeItem
-   * @param list
    */
   async save(beforeItem: T, list: Array<number>) {
-    const current: Array<number> = beforeItem.image.map(it => it.image.id);
+    const current: Array<number> = beforeItem.image?.map(it => it.image.id) ?? [];
 
     for (const item of list ?? []) {
       if (current.includes(item)) {
@@ -41,7 +36,9 @@ export class ImageUpdateOperation<T extends WithImageEntity<T>> {
       } else {
         const inst = new this.entity();
         inst.parent = beforeItem;
-        inst.image = await this.checkFile(item);
+        inst.image = await this.checkFile(
+          WrongDataException.assert(item, 'File id expected'),
+        );
 
         await this.trans.save(inst);
       }

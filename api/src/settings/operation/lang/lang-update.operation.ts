@@ -1,13 +1,13 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { filterAttributes } from '../../../common/input/filter-attributes';
-import { StringValueUpdateOperation } from '../../../common/operation/string/string-value-update.operation';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { LangEntity } from '../../model/lang.entity';
 import { LangInput } from '../../input/lang.input';
 import { Lang4stringEntity } from '../../model/lang4string.entity';
 import { Lang2flagEntity } from '../../model/lang2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class LangUpdateOperation {
 
@@ -48,10 +48,10 @@ export class LangUpdateOperation {
 
     const beforeItem = await this.checkFlag(input.id);
 
-    await new FlagValueUpdateOperation(this.manager, Lang2flagEntity).save(beforeItem, input);
+    await new FlagValueOperation(this.manager, Lang2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueUpdateOperation(this.manager, Lang4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, Lang4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

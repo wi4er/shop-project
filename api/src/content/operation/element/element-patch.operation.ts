@@ -2,10 +2,10 @@ import { EntityManager } from 'typeorm';
 import { ElementEntity } from '../../model/element/element.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { ElementInput } from '../../input/element.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Element2flagEntity } from '../../model/element/element2flag.entity';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 
 export class ElementPatchOperation {
 
@@ -42,8 +42,8 @@ export class ElementPatchOperation {
   async save(id: string, input: ElementInput): Promise<string> {
     const beforeItem = await this.checkElement(id);
 
-    if (input.flag) await new FlagValueUpdateOperation(this.manager, Element2flagEntity).save(beforeItem, input);
-    if (input.permission) await new PermissionValueUpdateOperation(this.manager, Element2permissionEntity).save(beforeItem, input);
+    if (input.flag) await new FlagValueOperation(this.manager, Element2flagEntity).save(beforeItem, input.flag);
+    if (input.permission) await new PermissionValueOperation(this.manager, Element2permissionEntity).save(beforeItem, input);
 
     return id;
   }

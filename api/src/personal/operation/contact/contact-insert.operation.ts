@@ -2,11 +2,11 @@ import { EntityManager } from "typeorm";
 import { ContactEntity } from "../../model/contact/contact.entity";
 import { Contact4stringEntity } from "../../model/contact/contact4string.entity";
 import { Contact2flagEntity } from "../../model/contact/contact2flag.entity";
-import { StringValueInsertOperation } from "../../../common/operation/string/string-value-insert.operation";
-import { FlagValueInsertOperation } from "../../../common/operation/flag/flag-value-insert.operation";
 import { ContactInput } from "../../input/contact.input";
 import { filterAttributes } from '../../../common/input/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { StringValueOperation } from '../../../common/operation/string-value.operation';
 
 export class ContactInsertOperation {
 
@@ -27,12 +27,15 @@ export class ContactInsertOperation {
     this.created.id = WrongDataException.assert(input.id, 'ContactEntity id expected');
     this.created.type = WrongDataException.assert(input.type, 'ContactEntity type expected!');
 
-    await this.trans.save(this.created);
+    await this.trans.save(this.created)
+      .catch(err => {
+        throw new WrongDataException(err.detail);
+      });
 
-    await new FlagValueInsertOperation(this.trans, Contact2flagEntity).save(this.created, input);
+    await new FlagValueOperation(this.trans, Contact2flagEntity).save(this.created, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueInsertOperation(this.trans, Contact4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.trans, Contact4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

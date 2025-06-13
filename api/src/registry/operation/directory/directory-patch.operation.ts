@@ -2,10 +2,10 @@ import { EntityManager } from 'typeorm';
 import { DirectoryEntity } from '../../model/directory.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 import { DirectoryInput } from '../../input/directory.input';
-import { FlagValueUpdateOperation } from '../../../common/operation/flag/flag-value-update.operation';
 import { Directory2flagEntity } from '../../model/directory2flag.entity';
-import { PermissionValueUpdateOperation } from '../../../common/operation/permission/permission-value-update.operation';
 import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
+import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 
 export class DirectoryPatchOperation {
 
@@ -40,8 +40,8 @@ export class DirectoryPatchOperation {
     if (input.id) await this.transaction.update(DirectoryEntity, {id}, {id: input.id});
 
     const beforeItem = await this.checkDirectory(input.id ? input.id : id);
-    if (input.flag) await new FlagValueUpdateOperation(this.transaction, Directory2flagEntity).save(beforeItem, input);
-    if (input.permission) await new PermissionValueUpdateOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
+    if (input.flag) await new FlagValueOperation(this.transaction, Directory2flagEntity).save(beforeItem, input.flag);
+    if (input.permission) await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
 
     return input.id ? input.id : id;
   }

@@ -7,9 +7,7 @@ import { BlockEntity } from '../block/block.entity';
 describe('ElementEntity entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
 
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
@@ -23,10 +21,10 @@ describe('ElementEntity entity', () => {
     });
 
     test('Should add item', async () => {
-      await new BlockEntity().save();
+      await new BlockEntity('BLOCK').save();
       const item = await Object.assign(
         new ElementEntity(),
-        {id: 'NAME', block: 1},
+        {id: 'NAME', block: 'BLOCK'},
       ).save();
 
       expect(item.id).toBe('NAME');
@@ -38,18 +36,18 @@ describe('ElementEntity entity', () => {
     });
 
     test('Should add without id', async () => {
-      await new BlockEntity().save();
+      await new BlockEntity('BLOCK').save();
       const item = await Object.assign(
         new ElementEntity(),
-        {block: 1},
+        {block: 'BLOCK'},
       ).save();
 
       expect(item.id).toHaveLength(36);
     });
 
     test('Should get item', async () => {
-      await new BlockEntity().save();
-      await Object.assign(new ElementEntity(), {id: 'NAME', block: 1}).save();
+      await new BlockEntity('BLOCK').save();
+      await Object.assign(new ElementEntity(), {id: 'NAME', block: 'BLOCK'}).save();
 
       const repo = source.getRepository(ElementEntity);
       const item = await repo.findOne({
@@ -62,14 +60,14 @@ describe('ElementEntity entity', () => {
       expect(item.updated_at).toBeDefined();
       expect(item.deleted_at).toBeNull();
       expect(item.version).toBe(1);
-      expect(item.block.id).toBe(1);
+      expect(item.block.id).toBe('BLOCK');
     });
 
     test('Shouldn`t add with blank id', async () => {
-      await new BlockEntity().save();
+      await new BlockEntity('BLOCK').save();
       const item = Object.assign(
         new ElementEntity(),
-        {id: '', block: 1},
+        {id: '', block: 'BLOCK'},
       );
 
       await expect(item.save()).rejects.toThrow('not_empty_id');
@@ -82,10 +80,10 @@ describe('ElementEntity entity', () => {
     });
 
     test('Shouldn`t create with wrong block', async () => {
-      await new BlockEntity().save();
+      await new BlockEntity('BLOCK').save();
       const inst = Object.assign(
         new ElementEntity(),
-        {id: 'NAME', block: 777},
+        {id: 'NAME', block: 'WRONG'},
       );
 
       await expect(inst.save()).rejects.toThrow('foreign key constraint');

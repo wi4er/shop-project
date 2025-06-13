@@ -1,11 +1,11 @@
 import { BaseEntity, EntityManager } from 'typeorm';
-import { CommonFlagEntity } from '../../model/common/common-flag.entity';
-import { WithFlagEntity } from '../../model/with/with-flag.entity';
-import { WithFlagInput } from '../../input/with-flag.input';
-import { FlagEntity } from '../../../settings/model/flag.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { WithFlagEntity } from '../model/with/with-flag.entity';
+import { CommonFlagEntity } from '../model/common/common-flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
+import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
+import { WithFlagInput } from '../input/with-flag.input';
 
-export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
+export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
 
   constructor(
     private transaction: EntityManager,
@@ -17,21 +17,22 @@ export class FlagValueUpdateOperation<T extends WithFlagEntity<BaseEntity>> {
    *
    */
   private async checkFlag(id: string): Promise<FlagEntity> {
-    const flagRepo = this.transaction.getRepository(FlagEntity);
-
     return WrongDataException.assert(
-      await flagRepo.findOne({where: {id}}),
-      `Flag with id >> ${id} << not found!`,
+      await this.transaction
+        .getRepository(FlagEntity)
+        .findOne({where: {id}}),
+      `Flag with id >> ${id} << not found!`
     );
   }
 
   /**
    *
    */
-  async save(beforeItem: T, input: WithFlagInput) {
-    const current: Array<string> = beforeItem.flag.map(it => it.flag.id);
+  async save(beforeItem: T, input: string[]){
 
-    for (const item of input.flag ?? []) {
+    const current: Array<string> = beforeItem.flag?.map(it => it.flag.id) ?? [];
+
+    for (const item of input ?? []) {
       if (current.includes(item)) {
         current.splice(current.indexOf(item), 1);
       } else {

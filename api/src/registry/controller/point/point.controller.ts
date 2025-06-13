@@ -98,20 +98,6 @@ export class PointController {
     }).then(count => ({count}));
   }
 
-  @Post()
-  addItem(
-    @Body()
-      input: PointInput,
-  ) {
-    return this.entityManager.transaction(
-      trans => new PointInsertOperation(trans).save(input)
-        .then(id => trans.getRepository(PointEntity).findOne({
-          where: {id},
-          relations: this.relations,
-        })),
-    ).then(this.toView);
-  }
-
   @Get(':id')
   @CheckId(PointEntity)
   async getItem(
@@ -135,6 +121,22 @@ export class PointController {
       }),
       `Permission denied for element ${id}`,
     );
+
+    return this.toView(item);
+  }
+
+
+  @Post()
+  async addItem(
+    @Body()
+      input: PointInput,
+  ) {
+    const item = await this.entityManager.transaction(
+      trans => new PointInsertOperation(trans).save(input)
+        .then(id => trans.getRepository(PointEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })));
 
     return this.toView(item);
   }

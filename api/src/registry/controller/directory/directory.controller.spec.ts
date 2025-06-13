@@ -42,7 +42,12 @@ describe('DirectoryController', () => {
   ) {
     const parent = await Object.assign(new DirectoryEntity(), {id}).save();
     if (permission) await Object.assign(new Directory2permissionEntity(), {parent, method}).save();
-    await source.getRepository(AccessEntity).findOne({where: {method: AccessMethod.ALL, target: AccessTarget.DIRECTORY}})
+    await source.getRepository(AccessEntity).findOne({
+      where: {
+        method: AccessMethod.ALL,
+        target: AccessTarget.DIRECTORY,
+      },
+    })
       .then(inst => {
         if (!inst) return Object.assign(new AccessEntity(), {
           method: AccessMethod.ALL,
@@ -53,7 +58,7 @@ describe('DirectoryController', () => {
     return parent;
   }
 
-  describe('DirectoryEntity list', () => {
+  describe('Directory list', () => {
     test('Should get empty list', async () => {
       await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
 
@@ -113,7 +118,7 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity item', () => {
+  describe('Directory item', () => {
     test('Should get single instance', async () => {
       await createDirectory('NAME');
 
@@ -151,7 +156,7 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity with access', () => {
+  describe('Directory with access', () => {
     test('Should get with item access', async () => {
       for (let i = 0; i <= 9; i++) {
         await createDirectory(`NAME_${i}`, PermissionMethod.ALL, i % 2 === 1);
@@ -198,7 +203,7 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity count', () => {
+  describe('Directory count', () => {
     test('Should get empty count', async () => {
       await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.DIRECTORY}).save();
 
@@ -240,7 +245,7 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity with flags', () => {
+  describe('Directory with flags', () => {
     test('Should get directory with flag', async () => {
       const parent = await createDirectory('CITY');
       const flag = await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
@@ -272,7 +277,7 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity with attributes', () => {
+  describe('Directory with attributes', () => {
     describe('DirectoryEntity with strings', () => {
       test('Should get with strings', async () => {
         await createDirectory('CITY');
@@ -335,8 +340,8 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity addition', () => {
-    describe('DirectoryEntity addition with fields', () => {
+  describe('Directory addition', () => {
+    describe('Directory addition with fields', () => {
       test('Should add item', async () => {
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
 
@@ -388,7 +393,7 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('DirectoryEntity addition with access', () => {
+    describe('Directory addition with access', () => {
       test('Should add item with access', async () => {
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
 
@@ -445,7 +450,7 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('DirectoryEntity addition with strings', () => {
+    describe('Directory addition with strings', () => {
       test('Should add with string', async () => {
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -481,7 +486,7 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('DirectoryEntity additions with flags', () => {
+    describe('Directory additions with flags', () => {
       test('Should add with flag', async () => {
         await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
         await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
@@ -495,6 +500,19 @@ describe('DirectoryController', () => {
           .expect(201);
 
         expect(res.body.flag).toEqual(['NEW']);
+      });
+
+      test('Shouldn`t add with duplicate flag', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.POST, target: AccessTarget.DIRECTORY}).save();
+        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+        await request(app.getHttpServer())
+          .post('/registry/directory')
+          .send({
+            id: 'LIST',
+            flag: ['NEW', 'NEW'],
+          })
+          .expect(400);
       });
 
       test('Shouldn`t add with wrong flag', async () => {
@@ -512,8 +530,8 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity update', () => {
-    describe('DirectoryEntity update with fields', () => {
+  describe('Directory update', () => {
+    describe('Directory update with fields', () => {
       test('Should update item', async () => {
         await createDirectory('CITY');
 
@@ -600,7 +618,7 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('DirectoryEntity update with access', () => {
+    describe('Directory update with access', () => {
       test('Should update with access', async () => {
         await createDirectory('CITY');
 
@@ -640,7 +658,7 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('DirectoryEntity update with strings', () => {
+    describe('Directory update with strings', () => {
       test('Should add strings', async () => {
         await createDirectory('CITY');
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -678,7 +696,7 @@ describe('DirectoryController', () => {
       });
     });
 
-    describe('DirectoryEntity update with flags', () => {
+    describe('Directory update with flags', () => {
       test('Should add flags', async () => {
         await createDirectory('CITY');
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
@@ -751,7 +769,7 @@ describe('DirectoryController', () => {
     });
   });
 
-  describe('DirectoryEntity deletion', () => {
+  describe('Directory deletion', () => {
     test('Should delete item', async () => {
       await createDirectory('CITY');
 

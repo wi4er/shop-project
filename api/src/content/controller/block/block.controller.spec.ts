@@ -632,11 +632,25 @@ describe('BlockController', () => {
         const inst = await request(app.getHttpServer())
           .post('/content/block')
           .send({
+            id: 'BLOCK',
             flag: ['ACTIVE'],
           })
           .expect(201);
 
         expect(inst.body.flag).toEqual(['ACTIVE']);
+      });
+
+      test('Shouldn`t add with duplicate flag', async () => {
+        await Object.assign(new AccessEntity(), {method: AccessMethod.ALL, target: AccessTarget.BLOCK}).save();
+        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
+
+        await request(app.getHttpServer())
+          .post('/content/block')
+          .send({
+            id: 'BLOCK',
+            flag: ['ACTIVE', 'ACTIVE'],
+          })
+          .expect(400);
       });
 
       test('Shouldn`t add with wrong flag', async () => {
@@ -836,6 +850,16 @@ describe('BlockController', () => {
         await request(app.getHttpServer())
           .put(`/content/block/BLOCK`)
           .send({id: 'BLOCK', flag: ['WRONG']})
+          .expect(400);
+      });
+
+      test('Shouldn`t add duplicate flags', async () => {
+        await createBlock('BLOCK');
+        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+
+        await request(app.getHttpServer())
+          .put(`/content/block/BLOCK`)
+          .send({id: 'BLOCK', flag: ['NEW', 'NEW']})
           .expect(400);
       });
 
