@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { InstanceEntity } from '../../../bundle/model/instance/instance.entity';
 
 @Entity('content-element4instance')

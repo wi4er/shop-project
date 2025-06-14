@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { DirectoryEntity } from '../../model/directory.entity';
+import { DirectoryEntity } from '../../model/directory/directory.entity';
 
 export class DirectoryDeleteOperation {
 

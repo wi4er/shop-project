@@ -4,9 +4,9 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from '../block/block.entity';
 import { Element4pointEntity } from './element4point.entity';
 import { ElementEntity } from './element.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('ElementEntity for point entity', () => {
   let source: DataSource;

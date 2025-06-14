@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../../content/model/block/block.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeEntity } from '../../model/attribute.entity';
-import { AttributeAsSectionEntity } from '../../model/attribute-as-section.entity';
+import { AttributeEntity } from '../../model/attribute/attribute.entity';
+import { AttributeAsSectionEntity } from '../../model/attribute/attribute-as-section.entity';
 
 export class AttributeAsSectionInsertOperation {
 

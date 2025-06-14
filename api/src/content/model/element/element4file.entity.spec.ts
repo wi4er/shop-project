@@ -3,10 +3,10 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from '../block/block.entity';
 import { ElementEntity } from './element.entity';
-import { CollectionEntity } from '../../../storage/model/collection.entity';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { CollectionEntity } from '../../../storage/model/collection/collection.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 import { Element4fileEntity } from './element4file.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('ElementEntity file attribute entity', () => {
   let source: DataSource;

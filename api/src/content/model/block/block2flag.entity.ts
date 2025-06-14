@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BlockEntity } from './block.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 @Entity('content-block2flag')
 @Index([ 'parent', 'flag' ], { unique: true })

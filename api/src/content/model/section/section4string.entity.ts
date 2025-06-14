@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { SectionEntity } from './section.entity';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('content-section4string')
 export class Section4stringEntity

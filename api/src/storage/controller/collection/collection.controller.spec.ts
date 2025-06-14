@@ -3,12 +3,12 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { CollectionEntity } from '../../model/collection.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { Collection4stringEntity } from '../../model/collection4string.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
-import { Collection2flagEntity } from '../../model/collection2flag.entity';
+import { CollectionEntity } from '../../model/collection/collection.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { Collection4stringEntity } from '../../model/collection/collection4string.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
+import { Collection2flagEntity } from '../../model/collection/collection2flag.entity';
 
 describe('CollectionController', () => {
   let source;

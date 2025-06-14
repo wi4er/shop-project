@@ -1,14 +1,14 @@
 import { EntityManager } from 'typeorm';
-import { DirectoryEntity } from '../../model/directory.entity';
+import { DirectoryEntity } from '../../model/directory/directory.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { PointEntity } from '../../model/point.entity';
+import { PointEntity } from '../../model/point/point.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { PointInput } from '../../input/point.input';
-import { Point2flagEntity } from '../../model/point2flag.entity';
-import { filterAttributes } from '../../../common/input/filter-attributes';
-import { Point4stringEntity } from '../../model/point4string.entity';
+import { PointInput } from '../../input/point/point.input';
+import { Point2flagEntity } from '../../model/point/point2flag.entity';
+import { filterAttributes } from '../../../common/service/filter-attributes';
+import { Point4stringEntity } from '../../model/point/point4string.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class PointPatchOperation {
 

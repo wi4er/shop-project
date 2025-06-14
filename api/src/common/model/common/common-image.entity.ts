@@ -1,5 +1,5 @@
 import { BaseEntity } from 'typeorm';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 
 export abstract class CommonImageEntity<T extends BaseEntity>
   extends BaseEntity {

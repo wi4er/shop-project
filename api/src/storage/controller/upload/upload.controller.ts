@@ -3,8 +3,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import * as process from 'process';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FileEntity } from '../../model/file.entity';
-import { CollectionEntity } from '../../model/collection.entity';
+import { FileEntity } from '../../model/file/file.entity';
+import { CollectionEntity } from '../../model/collection/collection.entity';
 import { FileCreateOperation } from '../../service/file-name/file-name.service';
 
 @Controller('upload')

@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
-import { AttributeInput } from '../../input/attribute.input';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
+import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
+import { AttributeInput } from '../../input/attribute/attribute.input';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeAsPointEntity } from '../../model/attribute-as-point.entity';
+import { AttributeAsPointEntity } from '../../model/attribute/attribute-as-point.entity';
 
 export class AttributeAsPointUpdateOperation {
 

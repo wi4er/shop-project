@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { FileEntity } from '../../model/file.entity';
+import { FileEntity } from '../../model/file/file.entity';
 
 export class FileDeleteOperation {
 

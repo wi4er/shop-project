@@ -9,7 +9,7 @@ import {
 import { CommonImageEntity } from '../../../common/model/common/common-image.entity';
 import { UserEntity } from './user.entity';
 import { ElementEntity } from '../../../content/model/element/element.entity';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 
 @Entity('personal-user2image')
 @Index(['parent', 'image'], {unique: true})

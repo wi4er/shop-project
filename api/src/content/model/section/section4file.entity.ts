@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { FileEntity } from '../../../storage/model/file.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { SectionEntity } from './section.entity';
 
 @Entity('content-section4file')

@@ -2,12 +2,12 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { ContactEntity } from '../../model/contact/contact.entity';
-import { ContactInput } from '../../input/contact.input';
+import { ContactInput } from '../../input/contact/contact.input';
 import { ContactInsertOperation } from '../../operation/contact/contact-insert.operation';
 import { ContactUpdateOperation } from '../../operation/contact/contact-update.operation';
 import { ContactDeleteOperation } from '../../operation/contact/contact-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { ContactRender } from '../../render/contact.render';
+import { ContactView } from '../../view/contact.view';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 @Controller('personal/contact')
@@ -30,7 +30,7 @@ export class ContactController {
    *
    */
   toView(item: ContactEntity) {
-    return new ContactRender(item);
+    return new ContactView(item);
   }
 
   @Get()

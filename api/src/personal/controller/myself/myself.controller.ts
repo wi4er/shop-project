@@ -2,16 +2,15 @@ import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user/user.entity';
 import { EntityManager, Repository } from 'typeorm';
-import { ApiCreatedResponse, ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserUpdateOperation } from '../../operation/user/user-update.operation';
-import { UserSchema } from '../../schema/user.schema';
-import { UserInput } from '../../input/user.input';
+import { UserInput } from '../../input/user/user.input';
 import { CurrentUser } from '../../decorator/current-user/current-user.decorator';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { MyselfRender } from '../../render/myself.render';
+import { MyselfView } from '../../view/myself.view';
 import { EncodeService } from '../../service/encode/encode.service';
-import { MyselfInsertOperation } from '../../operation/myself-insert.operation';
-import { AuthInput } from '../../input/auth.input';
+import { MyselfInsertOperation } from '../../operation/myself/myself-insert.operation';
+import { AuthInput } from '../../input/auth/auth.input';
 
 @Controller('personal/myself')
 export class MyselfController {
@@ -41,14 +40,14 @@ export class MyselfController {
       relations: this.relations,
     });
 
-    return new MyselfRender(inst);
+    return new MyselfView(inst);
   }
 
   @Post()
   async registerUser(
     @Body()
       input: AuthInput,
-  ): Promise<MyselfRender> {
+  ): Promise<MyselfView> {
     return this.entityManager.transaction(
       trans => new MyselfInsertOperation(this.entityManager, this.encodeService).save(input)
         .then(id => trans.getRepository(UserEntity).findOne({
@@ -56,20 +55,19 @@ export class MyselfController {
           relations: this.relations,
         })),
     ).then(user => {
-      return new MyselfRender(user);
+      return new MyselfView(user);
     });
   }
 
   @Put()
   @ApiOperation({description: 'Update personal by current session'})
-  @ApiCreatedResponse({description: 'Current personal updated successfully', type: UserSchema})
   @ApiUnauthorizedResponse({description: 'There is no current session'})
   async updateMyself(
     @CurrentUser()
       id: string | null,
     @Body()
       user: UserInput,
-  ): Promise<MyselfRender> {
+  ): Promise<MyselfView> {
     PermissionException.assert(id, 'Authorization required!');
 
     return this.entityManager.transaction(
@@ -79,7 +77,7 @@ export class MyselfController {
           relations: this.relations,
         })),
     ).then(user => {
-      return new MyselfRender(user);
+      return new MyselfView(user);
     });
   }
 

@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { ContactEntity } from './contact.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 @Entity('personal-contact2flag')
 @Index(['parent', 'flag'], {unique: true})

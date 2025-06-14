@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { SectionEntity } from './section.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 @Entity('content-section2flag')
 @Index(['parent', 'flag'], {unique: true})

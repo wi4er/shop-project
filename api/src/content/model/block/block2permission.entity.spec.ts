@@ -38,7 +38,7 @@ describe('BlockEntity access entity', () => {
 
     test('Shouldn`t create duplicate', async () => {
       const group = await new GroupEntity().save();
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
 
       await Object.assign(
         new Block2permissionEntity(),
@@ -57,7 +57,7 @@ describe('BlockEntity access entity', () => {
         new Block2permissionEntity(),
         {
           group: await Object.assign(new GroupEntity(), {id: 'GROUP'}).save(),
-          parent: await new BlockEntity().save(),
+          parent: await new BlockEntity('BLOCK').save(),
           method: PermissionMethod.ALL,
         },
       ).save();
@@ -70,7 +70,7 @@ describe('BlockEntity access entity', () => {
         },
       });
 
-      expect(item.parent.id).toBe(1);
+      expect(item.parent.id).toBe('BLOCK');
       expect(item.group.id).toBe('GROUP');
     });
 

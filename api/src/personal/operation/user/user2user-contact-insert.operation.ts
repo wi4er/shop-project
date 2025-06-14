@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { UserEntity } from '../../model/user/user.entity';
 import { ContactEntity } from '../../model/contact/contact.entity';
 import { User2contactEntity } from '../../model/user/user2contact.entity';
-import { UserInput } from '../../input/user.input';
+import { UserInput } from '../../input/user/user.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class User2userContactInsertOperation {

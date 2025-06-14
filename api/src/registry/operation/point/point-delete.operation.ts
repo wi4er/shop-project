@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { PointEntity } from '../../model/point.entity';
+import { PointEntity } from '../../model/point/point.entity';
 
 export class PointDeleteOperation {
 

@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity } from '../../model/attribute.entity';
+import { AttributeEntity } from '../../model/attribute/attribute.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
 
 export class AttributeDeleteOperation {

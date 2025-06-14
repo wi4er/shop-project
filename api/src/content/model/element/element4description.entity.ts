@@ -7,8 +7,8 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { CommonDescriptionEntity } from '../../../common/model/common/common-description.entity';
 
 @Entity('content-element4description')

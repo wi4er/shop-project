@@ -9,7 +9,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { CommonIntervalEntity } from '../../../common/model/common/common-interval.entity';
 
 @Entity('content-element4interval')

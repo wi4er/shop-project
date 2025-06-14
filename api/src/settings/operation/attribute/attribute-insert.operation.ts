@@ -1,16 +1,16 @@
 import { EntityManager } from 'typeorm';
-import { filterAttributes } from '../../../common/input/filter-attributes';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
-import { Attribute4stringEntity } from '../../model/attribute4string.entity';
-import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
+import { filterAttributes } from '../../../common/service/filter-attributes';
+import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
+import { Attribute4stringEntity } from '../../model/attribute/attribute4string.entity';
+import { Attribute2flagEntity } from '../../model/attribute/attribute2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeInput } from '../../input/attribute.input';
+import { AttributeInput } from '../../input/attribute/attribute.input';
 import { AttributeAsPointInsertOperation } from './attribute-as-point-insert.operation';
 import { AttributeAsElementInsertOperation } from './attribute-as-element-insert.operation';
 import { AttributeAsSectionInsertOperation } from './attribute-as-section-insert.operation';
 import { AttributeAsFileInsertOperation } from './attribute-as-file-insert.operation';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class AttributeInsertOperation {
 

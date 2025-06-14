@@ -6,9 +6,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 import { ElementEntity } from '../element/element.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { BlockEntity } from './block.entity';
 
 @Entity('content-block4file')

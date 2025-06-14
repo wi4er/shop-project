@@ -3,14 +3,13 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../model/user/user.entity';
 import { EntityManager, Repository } from 'typeorm';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { UserInput } from '../../input/user.input';
+import { UserInput } from '../../input/user/user.input';
 import { UserInsertOperation } from '../../operation/user/user-insert.operation';
 import { UserUpdateOperation } from '../../operation/user/user-update.operation';
 import { UserDeleteOperation } from '../../operation/user/user-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { UserRender } from '../../render/user.render';
+import { UserView } from '../../view/user.view';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { ElementEntity } from '../../../content/model/element/element.entity';
 
 @ApiTags('UserEntity object')
 @Controller('personal/user')
@@ -34,7 +33,7 @@ export class UserController {
   }
 
   toView(item: UserEntity) {
-    return new UserRender(item);
+    return new UserView(item);
   }
 
   @Get()

@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeEntity } from '../../model/attribute.entity';
-import { CollectionEntity } from '../../../storage/model/collection.entity';
-import { AttributeAsFileEntity } from '../../model/attribute-as-file.entity';
+import { AttributeEntity } from '../../model/attribute/attribute.entity';
+import { CollectionEntity } from '../../../storage/model/collection/collection.entity';
+import { AttributeAsFileEntity } from '../../model/attribute/attribute-as-file.entity';
 
 export class AttributeAsFileInsertOperation {
 

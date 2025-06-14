@@ -7,7 +7,7 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('personal-user4user')
 @Index(['user', 'parent', 'attribute'], {unique: true})

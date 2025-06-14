@@ -5,8 +5,8 @@ import { Element2sectionEntity } from './element2section.entity';
 import { BlockEntity } from '../block/block.entity';
 import { ElementEntity } from './element.entity';
 import { Element2imageEntity } from './element2image.entity';
-import { CollectionEntity } from '../../../storage/model/collection.entity';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { CollectionEntity } from '../../../storage/model/collection/collection.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 
 describe('ElementEntity image entity', () => {
   let source: DataSource;

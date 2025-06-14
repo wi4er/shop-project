@@ -12,9 +12,9 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { AccessEntity } from '../../model/access/access.entity';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
-import { AccessRender } from '../../render/access.render';
+import { AccessView } from '../../view/access.view';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { AccessInput } from '../../input/access.input';
+import { AccessInput } from '../../input/access/access.input';
 import { AccessInsertOperation } from '../../operation/access/access-insert.operation';
 import { AccessUpdateOperation } from '../../operation/access/access-update.operation';
 import { AccessDeleteOperation } from '../../operation/access/access-delete.operation';
@@ -48,11 +48,11 @@ export class AccessController {
   /**
    *
    */
-  toView(item: AccessGroup): AccessRender {
+  toView(item: AccessGroup): AccessView {
     const result = {};
 
 
-    return new AccessRender(item);
+    return new AccessView(item);
   }
 
   /**

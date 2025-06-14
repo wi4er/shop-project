@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 @Entity('personal-user2flag')
 @Index(['parent', 'flag'], {unique: true})

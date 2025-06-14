@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { Repository } from 'typeorm';
-import { Directory2logEntity } from '../../model/directory2log.entity';
+import { Directory2logEntity } from '../../model/directory/directory2log.entity';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { InjectRepository } from '@nestjs/typeorm';
 

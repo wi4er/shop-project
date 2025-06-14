@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { ConfigurationEntity } from '../../model/configuration.entity';
-import { ConfigurationInput } from '../../input/configuration.input';
+import { ConfigurationEntity } from '../../model/configuration/configuration.entity';
+import { ConfigurationInput } from '../../input/configuration/configuration.input';
 
 export class ConfigurationInsertOperation {
 

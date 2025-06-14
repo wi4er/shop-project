@@ -3,10 +3,10 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { SectionEntity } from './section.entity';
 import { BlockEntity } from '../block/block.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
 import { Section4pointEntity } from './section4point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('SectionEntity point attribute entity', () => {
   let source: DataSource;

@@ -2,10 +2,10 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { UserEntity } from './user.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
 import { User4pointEntity } from './user4point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('UserEntity point attribute entity', () => {
   let source: DataSource;

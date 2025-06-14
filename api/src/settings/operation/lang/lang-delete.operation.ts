@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { LangEntity } from '../../model/lang.entity';
+import { LangEntity } from '../../model/lang/lang.entity';
 
 export class LangDeleteOperation {
 

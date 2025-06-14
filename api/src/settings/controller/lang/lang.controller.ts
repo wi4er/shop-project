@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { LangEntity } from '../../model/lang.entity';
-import { FlagInput } from '../../input/flag.input';
-import { LangInput } from '../../input/lang.input';
+import { LangEntity } from '../../model/lang/lang.entity';
+import { FlagInput } from '../../input/flag/flag.input';
+import { LangInput } from '../../input/lang/lang.input';
 import { LangInsertOperation } from '../../operation/lang/lang-insert.operation';
 import { LangUpdateOperation } from '../../operation/lang/lang-update.operation';
 import { LangDeleteOperation } from '../../operation/lang/lang-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { LangRender } from '../../render/lang.render';
+import { LangRender } from '../../view/lang.render';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';

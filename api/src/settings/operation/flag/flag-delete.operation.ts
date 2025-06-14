@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { FlagEntity } from '../../model/flag.entity';
+import { FlagEntity } from '../../model/flag/flag.entity';
 
 export class FlagDeleteOperation {
 

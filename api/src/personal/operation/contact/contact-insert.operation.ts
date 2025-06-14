@@ -2,11 +2,11 @@ import { EntityManager } from "typeorm";
 import { ContactEntity } from "../../model/contact/contact.entity";
 import { Contact4stringEntity } from "../../model/contact/contact4string.entity";
 import { Contact2flagEntity } from "../../model/contact/contact2flag.entity";
-import { ContactInput } from "../../input/contact.input";
-import { filterAttributes } from '../../../common/input/filter-attributes';
+import { ContactInput } from "../../input/contact/contact.input";
+import { filterAttributes } from '../../../common/service/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class ContactInsertOperation {
 

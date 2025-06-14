@@ -2,11 +2,11 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { CollectionEntity } from '../../model/collection.entity';
+import { CollectionEntity } from '../../model/collection/collection.entity';
 import { CollectionInsertOperation } from '../../operation/collection/collection-insert.operation';
 import { CollectionUpdateOperation } from '../../operation/collection/collection-update.operation';
 import { CollectionDeleteOperation } from '../../operation/collection/collection-delete.operation';
-import { CollectionInput } from '../../input/Collection.input';
+import { CollectionInput } from '../../input/collection/collection.input';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('collection')

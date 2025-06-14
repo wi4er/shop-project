@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { FormEntity } from '../../model/form.entity';
-import { FormInput } from '../../input/form.input';
-import { FormInsertOperation } from '../../operation/form-insert.operation';
-import { FormUpdateOperation } from '../../operation/form-update.operation';
-import { FormDeleteOperation } from '../../operation/form-delete.operation';
+import { FormEntity } from '../../model/form/form.entity';
+import { FormInput } from '../../input/form/form.input';
+import { FormInsertOperation } from '../../operation/form/form-insert.operation';
+import { FormUpdateOperation } from '../../operation/form/form-update.operation';
+import { FormDeleteOperation } from '../../operation/form/form-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('form')

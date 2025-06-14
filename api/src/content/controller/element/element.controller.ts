@@ -5,16 +5,16 @@ import { ElementEntity } from '../../model/element/element.entity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
-import { ElementInput } from '../../input/element.input';
-import { ElementFilterInput } from '../../input/element-filter.input';
-import { ElementOrder } from '../../input/element.order';
+import { ElementInput } from '../../input/element/element.input';
+import { ElementFilterInput } from '../../input/element/element-filter.input';
+import { ElementOrder } from '../../input/element/element.order';
 import { ElementInsertOperation } from '../../operation/element/element-insert.operation';
 import { ElementUpdateOperation } from '../../operation/element/element-update.operation';
 import { ElementDeleteOperation } from '../../operation/element/element-delete.operation';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
-import { ElementRender } from '../../render/element.render';
+import { ElementView } from '../../view/element.view';
 import { ElementPatchOperation } from '../../operation/element/element-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { CheckId } from '../../../common/guard/check-id.guard';
@@ -51,7 +51,7 @@ export class ElementController {
    *
    */
   toView(item: ElementEntity) {
-    return new ElementRender(item);
+    return new ElementView(item);
   }
 
   /**
@@ -121,7 +121,7 @@ export class ElementController {
   @ApiResponse({
     status: 200,
     description: 'Content element',
-    type: [ElementRender],
+    type: [ElementView],
   })
   @Get()
   async getList(
@@ -135,7 +135,7 @@ export class ElementController {
       offset?: number,
     @Query('limit')
       limit?: number,
-  ): Promise<ElementRender[]> {
+  ): Promise<ElementView[]> {
     return this.elementRepo.find({
       where: {
         ...(filter ? this.toWhere(filter) : {}),
@@ -175,12 +175,12 @@ export class ElementController {
   @ApiResponse({
     status: 200,
     description: 'Content element',
-    type: ElementRender,
+    type: ElementView,
   })
   async getItem(
     @Param('id')
       id: string,
-  ): Promise<ElementRender> {
+  ): Promise<ElementView> {
     return this.elementRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -191,12 +191,12 @@ export class ElementController {
   @ApiResponse({
     status: 201,
     description: 'Content element created successfully',
-    type: ElementRender,
+    type: ElementView,
   })
   async addItem(
     @Body()
       input: ElementInput,
-  ): Promise<ElementRender> {
+  ): Promise<ElementView> {
     return this.entityManager.transaction(
       trans => new ElementInsertOperation(trans).save(input)
         .then(id => trans.getRepository(ElementEntity).findOne({
@@ -212,14 +212,14 @@ export class ElementController {
   @ApiResponse({
     status: 200,
     description: 'Content element updated successfully',
-    type: ElementRender,
+    type: ElementView,
   })
   async updateItem(
     @Param('id')
       id: string,
     @Body()
       input: ElementInput,
-  ): Promise<ElementRender> {
+  ): Promise<ElementView> {
     return this.entityManager.transaction(
       trans => new ElementUpdateOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(ElementEntity).findOne({
@@ -235,14 +235,14 @@ export class ElementController {
   @ApiResponse({
     status: 200,
     description: 'Content element updated successfully',
-    type: ElementRender,
+    type: ElementView,
   })
   async updateField(
     @Param('id')
       id: string,
     @Body()
       input: ElementInput,
-  ): Promise<ElementRender> {
+  ): Promise<ElementView> {
     return this.entityManager.transaction(
       trans => new ElementPatchOperation(trans).save(id, input)
         .then(updatedId => trans.getRepository(ElementEntity).findOne({

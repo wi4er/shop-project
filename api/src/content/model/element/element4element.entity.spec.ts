@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from '../block/block.entity';
 import { ElementEntity } from './element.entity';
 import { Element4elementEntity } from './element4element.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('Element4element entity', () => {
   let source: DataSource;

@@ -2,11 +2,11 @@ import { EntityManager } from 'typeorm';
 import { GroupEntity } from '../../model/group/group.entity';
 import { Group4stringEntity } from '../../model/group/group4string.entity';
 import { Group2flagEntity } from '../../model/group/group2flag.entity';
-import { GroupInput } from '../../input/group.input';
-import { filterAttributes } from '../../../common/input/filter-attributes';
+import { GroupInput } from '../../input/group/group.input';
+import { filterAttributes } from '../../../common/service/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class GroupUpdateOperation {
 

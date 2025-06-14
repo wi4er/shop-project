@@ -2,10 +2,10 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from './block.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
 import { Block4pointEntity } from './block4point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('Block2point entity', () => {
   let source: DataSource;
@@ -23,7 +23,7 @@ describe('Block2point entity', () => {
     });
 
     test('Should create block point', async () => {
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
@@ -44,7 +44,7 @@ describe('Block2point entity', () => {
     });
 
     test('Shouldn`t create without attribute', async () => {
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -54,7 +54,7 @@ describe('Block2point entity', () => {
     });
 
     test('Shouldn`t create without point', async () => {
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
 
       const inst = Object.assign(new Block4pointEntity(), {parent, attribute});
@@ -66,21 +66,21 @@ describe('Block2point entity', () => {
   describe('BlockEntity with point', () => {
     test('Should create block with points', async () => {
       const repo = source.getRepository(BlockEntity);
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
 
       await Object.assign(new Block4pointEntity(), {parent, attribute, point}).save();
 
-      const inst = await repo.findOne({where: {id: 1}, relations: {point: {point: true}}});
+      const inst = await repo.findOne({where: {id: 'BLOCK'}, relations: {point: {point: true}}});
 
       expect(inst.point).toHaveLength(1);
       expect(inst.point[0].point.id).toBe('PARIS');
     });
 
     test('Shouldn`t create with duplicate points', async () => {
-      const parent = await new BlockEntity().save();
+      const parent = await new BlockEntity('BLOCK').save();
       const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();

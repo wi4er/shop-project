@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResultEntity } from '../../model/result.entity';
-import { ResultFilterInput } from '../../input/result-filter.input';
+import { ResultEntity } from '../../model/result/result.entity';
+import { ResultFilterInput } from '../../input/result/result-filter.input';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 

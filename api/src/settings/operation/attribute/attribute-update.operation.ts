@@ -1,17 +1,17 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { filterAttributes } from '../../../common/input/filter-attributes';
-import { AttributeInput } from '../../input/attribute.input';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
-import { Attribute4stringEntity } from '../../model/attribute4string.entity';
-import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
+import { filterAttributes } from '../../../common/service/filter-attributes';
+import { AttributeInput } from '../../input/attribute/attribute.input';
+import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
+import { Attribute4stringEntity } from '../../model/attribute/attribute4string.entity';
+import { Attribute2flagEntity } from '../../model/attribute/attribute2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeAsPointUpdateOperation } from './attribute-as-point-update.operation';
 import { AttributeAsElementUpdateOperation } from './attribute-as-element-update.operation';
 import { AttributeAsSectionUpdateOperation } from './attribute-as-section-update.operation';
 import { AttributeAsFileUpadteOperation } from './attribute-as-file-upadte.operation';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class AttributeUpdateOperation {
 

@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { ElementEntity } from '../../model/element/element.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { ElementInput } from '../../input/element.input';
+import { ElementInput } from '../../input/element/element.input';
 import { Element2flagEntity } from '../../model/element/element2flag.entity';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';

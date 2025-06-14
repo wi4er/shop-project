@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
-import { AttributeInput } from '../../input/attribute.input';
+import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
+import { AttributeInput } from '../../input/attribute/attribute.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
+import { AttributeAsElementEntity } from '../../model/attribute/attribute-as-element.entity';
 import { BlockEntity } from '../../../content/model/block/block.entity';
 
 export class AttributeAsElementUpdateOperation {

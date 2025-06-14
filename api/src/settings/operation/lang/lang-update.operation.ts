@@ -1,13 +1,13 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { filterAttributes } from '../../../common/input/filter-attributes';
-import { LangEntity } from '../../model/lang.entity';
-import { LangInput } from '../../input/lang.input';
-import { Lang4stringEntity } from '../../model/lang4string.entity';
-import { Lang2flagEntity } from '../../model/lang2flag.entity';
+import { filterAttributes } from '../../../common/service/filter-attributes';
+import { LangEntity } from '../../model/lang/lang.entity';
+import { LangInput } from '../../input/lang/lang.input';
+import { Lang4stringEntity } from '../../model/lang/lang4string.entity';
+import { Lang2flagEntity } from '../../model/lang/lang2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class LangUpdateOperation {
 

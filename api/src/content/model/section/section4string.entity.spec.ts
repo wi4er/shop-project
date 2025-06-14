@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from '../block/block.entity';
 import { Section4stringEntity } from './section4string.entity';
 import { SectionEntity } from './section.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('SectionString entity', () => {
   let source: DataSource;

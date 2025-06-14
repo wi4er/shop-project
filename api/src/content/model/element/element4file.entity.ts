@@ -7,8 +7,8 @@ import {
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
-import { FileEntity } from '../../../storage/model/file.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('content-element4file')
 @Index(['file', 'parent', 'attribute'], {unique: true})

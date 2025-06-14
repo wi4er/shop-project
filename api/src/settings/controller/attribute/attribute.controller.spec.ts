@@ -3,18 +3,18 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
-import { Attribute4stringEntity } from '../../model/attribute4string.entity';
-import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
-import { FlagEntity } from '../../model/flag.entity';
-import { LangEntity } from '../../model/lang.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { AttributeAsPointEntity } from '../../model/attribute-as-point.entity';
+import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
+import { Attribute4stringEntity } from '../../model/attribute/attribute4string.entity';
+import { Attribute2flagEntity } from '../../model/attribute/attribute2flag.entity';
+import { FlagEntity } from '../../model/flag/flag.entity';
+import { LangEntity } from '../../model/lang/lang.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
+import { AttributeAsPointEntity } from '../../model/attribute/attribute-as-point.entity';
 import { BlockEntity } from '../../../content/model/block/block.entity';
-import { AttributeAsElementEntity } from '../../model/attribute-as-element.entity';
-import { AttributeAsSectionEntity } from '../../model/attribute-as-section.entity';
-import { CollectionEntity } from '../../../storage/model/collection.entity';
-import { AttributeAsFileEntity } from '../../model/attribute-as-file.entity';
+import { AttributeAsElementEntity } from '../../model/attribute/attribute-as-element.entity';
+import { AttributeAsSectionEntity } from '../../model/attribute/attribute-as-section.entity';
+import { CollectionEntity } from '../../../storage/model/collection/collection.entity';
+import { AttributeAsFileEntity } from '../../model/attribute/attribute-as-file.entity';
 import { AccessEntity } from '../../../personal/model/access/access.entity';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
@@ -150,7 +150,7 @@ describe('Attribute Controller', () => {
       });
 
       test('Should get with element type', async () => {
-        const block = await Object.assign(new BlockEntity(), {}).save();
+        const block = await new BlockEntity('BLOCK').save();
         const parent = await createAttribute('NAME').withType(AttributeType.ELEMENT);
         await Object.assign(new AttributeAsElementEntity(), {block, parent}).save();
 
@@ -161,11 +161,11 @@ describe('Attribute Controller', () => {
         expect(res.body).toHaveLength(1);
         expect(res.body[0].id).toBe('NAME');
         expect(res.body[0].type).toBe('ELEMENT');
-        expect(res.body[0].block).toBe(1);
+        expect(res.body[0].block).toBe('BLOCK');
       });
 
       test('Should get with section type', async () => {
-        const block = await Object.assign(new BlockEntity(), {}).save();
+        const block = await new BlockEntity('BLOCK').save();
         const parent = await createAttribute('NAME').withType(AttributeType.SECTION);
         await Object.assign(new AttributeAsSectionEntity(), {block, parent}).save();
 
@@ -176,7 +176,7 @@ describe('Attribute Controller', () => {
         expect(res.body).toHaveLength(1);
         expect(res.body[0].id).toBe('NAME');
         expect(res.body[0].type).toBe('SECTION');
-        expect(res.body[0].block).toBe(1);
+        expect(res.body[0].block).toBe('BLOCK');
       });
 
       test('Should get with file type', async () => {
@@ -448,38 +448,38 @@ describe('Attribute Controller', () => {
       describe('AttributeEntity addition with element type', () => {
         test('Should add with element type', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new BlockEntity(), {}).save();
+          await new BlockEntity('BLOCK').save();
 
           const item = await request(app.getHttpServer())
             .post('/attribute')
             .send({
               id: 'SOME',
               type: 'ELEMENT',
-              block: 1,
+              block: 'BLOCK',
             })
             .expect(201);
 
-          expect(item.body.block).toBe(1);
+          expect(item.body.block).toBe('BLOCK');
           expect(item.body.type).toBe('ELEMENT');
         });
 
         test('Shouldn`t add with wrong element block', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new BlockEntity(), {}).save();
+          await new BlockEntity('BLOCK').save();
 
           await request(app.getHttpServer())
             .post('/attribute')
             .send({
               id: 'SOME',
               type: 'ELEMENT',
-              block: 777,
+              block: 'WRONG',
             })
             .expect(400);
         });
 
         test('Shouldn`t add without element block', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new BlockEntity(), {}).save();
+          await new BlockEntity('BLOCK').save();
 
           await request(app.getHttpServer())
             .post('/attribute')
@@ -494,38 +494,38 @@ describe('Attribute Controller', () => {
       describe('AttributeEntity addition with section type', () => {
         test('Should add with section type', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new BlockEntity(), {}).save();
+          await new BlockEntity('BLOCK').save();
 
           const item = await request(app.getHttpServer())
             .post('/attribute')
             .send({
               id: 'SOME',
               type: 'SECTION',
-              block: 1,
+              block: 'BLOCK',
             })
             .expect(201);
 
-          expect(item.body.block).toBe(1);
+          expect(item.body.block).toBe('BLOCK');
           expect(item.body.type).toBe('SECTION');
         });
 
         test('Shouldn`t add with wrong section block', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new BlockEntity(), {}).save();
+          await new BlockEntity('BLOCK').save();
 
           await request(app.getHttpServer())
             .post('/attribute')
             .send({
               id: 'SOME',
               type: 'SECTION',
-              block: 777,
+              block: 'WRONG',
             })
             .expect(400);
         });
 
         test('Shouldn`t add without section block', async () => {
           await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new BlockEntity(), {}).save();
+          await new BlockEntity('BLOCK').save();
 
           await request(app.getHttpServer())
             .post('/attribute')

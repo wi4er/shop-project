@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { FileEntity } from '../../model/file.entity';
-import { FileInput } from '../../input/File.input';
+import { FileEntity } from '../../model/file/file.entity';
+import { FileInput } from '../../input/file/file.input';
 import { FileInsertOperation } from '../../operation/file/file-insert.operation';
 import { FileUpdateOperation } from '../../operation/file/file-update.operation';
 import { FileDeleteOperation } from '../../operation/file/file-delete.operation';

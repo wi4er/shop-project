@@ -3,9 +3,9 @@ import { DocumentEntity } from '../../model/document/document.entity';
 import { DocumentInput } from '../../input/document.input';
 import { Document4stringEntity } from '../../model/document/document4string.entity';
 import { Document2flagEntity } from '../../model/document/document2flag.entity';
-import { filterAttributes } from '../../../common/input/filter-attributes';
+import { filterAttributes } from '../../../common/service/filter-attributes';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class DocumentInsertOperation {
 

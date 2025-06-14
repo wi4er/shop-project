@@ -1,5 +1,5 @@
 import { BaseEntity, Column } from 'typeorm';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 export interface CommonIntervalEntity<P extends BaseEntity>
   extends BaseEntity {

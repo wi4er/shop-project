@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { DocumentEntity } from './document.entity';
 import { Document4stringEntity } from './document4string.entity';
 

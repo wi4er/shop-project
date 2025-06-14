@@ -3,11 +3,11 @@ import { EntityManager } from 'typeorm';
 import { User4stringEntity } from '../../model/user/user4string.entity';
 import { User2flagEntity } from '../../model/user/user2flag.entity';
 import { User2userContactUpdateOperation } from './user2user-contact-update.operation';
-import { UserInput } from '../../input/user.input';
-import { filterAttributes } from '../../../common/input/filter-attributes';
+import { UserInput } from '../../input/user/user.input';
+import { filterAttributes } from '../../../common/service/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class UserUpdateOperation {
 

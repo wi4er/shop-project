@@ -1,18 +1,18 @@
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { DirectoryEntity } from '../../model/directory.entity';
+import { DirectoryEntity } from '../../model/directory/directory.entity';
 import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { PointEntity } from '../../model/point.entity';
-import { Point4stringEntity } from '../../model/point4string.entity';
-import { Point2flagEntity } from '../../model/point2flag.entity';
-import { Point4pointEntity } from '../../model/point4point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { PointEntity } from '../../model/point/point.entity';
+import { Point4stringEntity } from '../../model/point/point4string.entity';
+import { Point2flagEntity } from '../../model/point/point2flag.entity';
+import { Point4pointEntity } from '../../model/point/point4point.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { Directory2permissionEntity } from '../../model/directory/directory2permission.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
@@ -334,7 +334,7 @@ describe('PointController', () => {
           })
           .expect(201);
 
-        expect(res.body.flag).toBe(['ACTIVE']);
+        expect(res.body.flag).toEqual(['ACTIVE']);
       });
 
       test('Shouldn`t add with wrong flag', async () => {

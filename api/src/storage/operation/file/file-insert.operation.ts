@@ -1,13 +1,13 @@
 import { EntityManager } from 'typeorm';
-import { filterAttributes } from '../../../common/input/filter-attributes';
-import { FileEntity } from '../../model/file.entity';
-import { FileInput } from '../../input/File.input';
-import { File4stringEntity } from '../../model/file4string.entity';
-import { File2flagEntity } from '../../model/file2flag.entity';
-import { CollectionEntity } from '../../model/collection.entity';
+import { filterAttributes } from '../../../common/service/filter-attributes';
+import { FileEntity } from '../../model/file/file.entity';
+import { FileInput } from '../../input/file/file.input';
+import { File4stringEntity } from '../../model/file/file4string.entity';
+import { File2flagEntity } from '../../model/file/file2flag.entity';
+import { CollectionEntity } from '../../model/collection/collection.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class FileInsertOperation {
 

@@ -1,6 +1,6 @@
 import { EntityManager, In } from 'typeorm';
-import { FileEntity } from '../../model/file.entity';
-import { CollectionEntity } from '../../model/collection.entity';
+import { FileEntity } from '../../model/file/file.entity';
+import { CollectionEntity } from '../../model/collection/collection.entity';
 
 export class CollectionDeleteOperation {
 

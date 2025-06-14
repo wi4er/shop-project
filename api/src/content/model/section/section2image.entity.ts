@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 import { SectionEntity } from './section.entity';
 
 @Entity('content-section2image')

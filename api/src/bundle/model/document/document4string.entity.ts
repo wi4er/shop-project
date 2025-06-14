@@ -7,8 +7,8 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { DocumentEntity } from './document.entity';
 
 @Entity('bundle-document4string')

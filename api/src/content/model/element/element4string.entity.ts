@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('content-element4string')
 export class Element4stringEntity

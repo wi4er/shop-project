@@ -1,18 +1,18 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { DirectoryEntity } from '../../model/directory.entity';
+import { DirectoryEntity } from '../../model/directory/directory.entity';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
-import { DirectoryInput } from '../../input/directory.input';
+import { DirectoryInput } from '../../input/directory/directory.input';
 import { DirectoryInsertOperation } from '../../operation/directory/directory-insert.operation';
 import { DirectoryUpdateOperation } from '../../operation/directory/directory-update.operation';
 import { DirectoryDeleteOperation } from '../../operation/directory/directory-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { DirectoryRender } from '../../render/directory.render';
+import { DirectoryView } from '../../view/directory.view';
 import { DirectoryPatchOperation } from '../../operation/directory/directory-patch.operation';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
-import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { Directory2permissionEntity } from '../../model/directory/directory2permission.entity';
 import { CheckId } from '../../../common/guard/check-id.guard';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
@@ -37,8 +37,8 @@ export class DirectoryController {
   ) {
   }
 
-  toView(item: DirectoryEntity): DirectoryRender {
-    return new DirectoryRender(item);
+  toView(item: DirectoryEntity): DirectoryView {
+    return new DirectoryView(item);
   }
 
   /**

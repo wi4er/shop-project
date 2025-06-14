@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { BlockInput } from '../../input/block.input';
+import { BlockInput } from '../../input/block/block.input';
 import { Block2flagEntity } from '../../model/block/block2flag.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 

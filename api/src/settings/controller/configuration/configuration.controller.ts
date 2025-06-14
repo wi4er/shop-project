@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { ConfigurationEntity } from '../../model/configuration.entity';
+import { ConfigurationEntity } from '../../model/configuration/configuration.entity';
 import { ConfigurationInsertOperation } from '../../operation/configuration/configuration-insert.operation';
-import { ConfigurationInput } from '../../input/configuration.input';
+import { ConfigurationInput } from '../../input/configuration/configuration.input';
 import { ConfigurationUpdateOperation } from '../../operation/configuration/configuration-update.operation';
 import { ConfigurationDeleteOperation } from '../../operation/configuration/configuration-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';

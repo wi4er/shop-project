@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from '../../../content/model/block/block.entity';
 import { Group4stringEntity } from './group4string.entity';
 import { GroupEntity } from './group.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('UserGroup string attribute entity', () => {
   let source: DataSource;

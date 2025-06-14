@@ -1,17 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
-import { PointEntity } from '../../model/point.entity';
+import { PointEntity } from '../../model/point/point.entity';
 import { PointInsertOperation } from '../../operation/point/point-insert.operation';
-import { PointInput } from '../../input/point.input';
+import { PointInput } from '../../input/point/point.input';
 import { PointUpdateOperation } from '../../operation/point/point-update.operation';
 import { PointDeleteOperation } from '../../operation/point/point-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { PointRender } from '../../render/point.render';
+import { PointView } from '../../view/point.view';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { Directory2permissionEntity } from '../../model/directory/directory2permission.entity';
 import { PermissionException } from '../../../exception/permission/permission.exception';
 import { PointPatchOperation } from '../../operation/point/point-patch.operation';
 import { CheckId } from '../../../common/guard/check-id.guard';
@@ -40,7 +40,7 @@ export class PointController {
    *
    */
   toView(item: PointEntity) {
-    return new PointRender(item);
+    return new PointView(item);
   }
 
   /**

@@ -2,11 +2,11 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { GroupEntity } from '../../model/group/group.entity';
-import { GroupInput } from '../../input/group.input';
+import { GroupInput } from '../../input/group/group.input';
 import { GroupInsertOperation } from '../../operation/group/group-insert.operation';
 import { GroupUpdateOperation } from '../../operation/group/group-update.operation';
 import { GroupDeleteOperation } from '../../operation/group/group-delete.operation';
-import { GroupRender } from '../../render/group.render';
+import { GroupView } from '../../view/group.view';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { CheckId } from '../../../common/guard/check-id.guard';
 
@@ -38,7 +38,7 @@ export class GroupController {
       relations: this.relations,
       take: limit,
       skip: offset,
-    }).then(list => list.map(item => new GroupRender(item)));
+    }).then(list => list.map(item => new GroupView(item)));
   }
 
   @Get('count')
@@ -55,7 +55,7 @@ export class GroupController {
     return this.groupRepo.findOne({
       where: {id},
       relations: this.relations,
-    }).then(item => new GroupRender(item));
+    }).then(item => new GroupView(item));
   }
 
   @Post()
@@ -69,7 +69,7 @@ export class GroupController {
           where: {id},
           relations: this.relations,
         })),
-    ).then(item => new GroupRender(item));
+    ).then(item => new GroupView(item));
   }
 
   @Put(':id')
@@ -86,7 +86,7 @@ export class GroupController {
           where: {id: groupId},
           relations: this.relations,
         })),
-    ).then(item => new GroupRender(item));
+    ).then(item => new GroupView(item));
   }
 
   @Delete(':id')

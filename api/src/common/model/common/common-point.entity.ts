@@ -1,6 +1,6 @@
 import { BaseEntity } from 'typeorm';
-import { PointEntity } from '../../../registry/model/point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 export interface CommonPointEntity<T extends BaseEntity>
   extends BaseEntity{

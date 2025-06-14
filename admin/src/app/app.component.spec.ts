@@ -20,7 +20,7 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('admin');
   });
 
-  it('should render title', () => {
+  it('should view title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;

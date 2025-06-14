@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { Contact4stringEntity } from './contact4string.entity';
 import { ContactEntity, UserContactType } from './contact.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('ContactEntity string attribute entity', () => {
   let source: DataSource;

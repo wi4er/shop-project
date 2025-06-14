@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ElementEntity } from './element.entity';
 import { SectionEntity } from '../section/section.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('content-element4section')
 @Index(['parent', 'section', 'attribute'], {unique: true})

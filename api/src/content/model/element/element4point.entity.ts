@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn, VersionColumn,
 } from 'typeorm';
-import { PointEntity } from '../../../registry/model/point.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
 import { ElementEntity } from './element.entity';
 import { CommonPointEntity } from '../../../common/model/common/common-point.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('content-element4point')
 @Index(['point', 'attribute', 'parent'], {unique: true})

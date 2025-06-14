@@ -6,12 +6,12 @@ import * as request from 'supertest';
 import { BlockEntity } from '../../model/block/block.entity';
 import { Block4stringEntity } from '../../model/block/block4string.entity';
 import { Block2flagEntity } from '../../model/block/block2flag.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
 import { Block4pointEntity } from '../../model/block/block4point.entity';
-import { AttributeEntity, AttributeType } from '../../../settings/model/attribute.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
+import { AttributeEntity, AttributeType } from '../../../settings/model/attribute/attribute.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { Block2permissionEntity } from '../../model/block/block2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
@@ -22,7 +22,7 @@ import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { Block4descriptionEntity } from '../../model/block/block4description.entity';
 
-describe('BlockController', () => {
+describe('Block Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 

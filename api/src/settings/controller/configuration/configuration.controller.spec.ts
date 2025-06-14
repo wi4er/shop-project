@@ -3,7 +3,7 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { ConfigurationEntity } from '../../model/configuration.entity';
+import { ConfigurationEntity } from '../../model/configuration/configuration.entity';
 
 describe('ConfigurationController', () => {
   let source;

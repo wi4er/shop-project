@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity } from '../../model/attribute.entity';
+import { AttributeEntity } from '../../model/attribute/attribute.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { AttributeInput } from '../../input/attribute.input';
-import { Attribute2flagEntity } from '../../model/attribute2flag.entity';
+import { AttributeInput } from '../../input/attribute/attribute.input';
+import { Attribute2flagEntity } from '../../model/attribute/attribute2flag.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 
 export class AttributePatchOperation {

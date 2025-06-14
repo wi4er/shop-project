@@ -3,18 +3,18 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FlagEntity } from '../../model/flag.entity';
-import { Flag4stringEntity } from '../../model/flag4string.entity';
-import { Flag2flagEntity } from '../../model/flag2flag.entity';
-import { AttributeEntity } from '../../model/attribute.entity';
-import { LangEntity } from '../../model/lang.entity';
+import { FlagEntity } from '../../model/flag/flag.entity';
+import { Flag4stringEntity } from '../../model/flag/flag4string.entity';
+import { Flag2flagEntity } from '../../model/flag/flag2flag.entity';
+import { AttributeEntity } from '../../model/attribute/attribute.entity';
+import { LangEntity } from '../../model/lang/lang.entity';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { AccessEntity } from '../../../personal/model/access/access.entity';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
-describe('FlagController', () => {
+describe('Flag Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 

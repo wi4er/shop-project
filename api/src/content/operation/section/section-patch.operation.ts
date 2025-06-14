@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { SectionEntity } from '../../model/section/section.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { SectionInput } from '../../input/section.input';
+import { SectionInput } from '../../input/section/section.input';
 import { Section2flagEntity } from '../../model/section/section2flag.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 

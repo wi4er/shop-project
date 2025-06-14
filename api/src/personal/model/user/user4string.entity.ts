@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
 
 @Entity('personal-user4string')
 export class User4stringEntity

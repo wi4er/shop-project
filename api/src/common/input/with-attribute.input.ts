@@ -1,4 +1,4 @@
-import { AttributeValueInput } from './attribute-value.input';
+import { AttributeValueInput } from './attribute/attribute-value.input';
 
 export abstract class WithAttributeInput {
 

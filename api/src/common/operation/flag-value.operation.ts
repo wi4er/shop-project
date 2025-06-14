@@ -1,7 +1,7 @@
 import { BaseEntity, EntityManager } from 'typeorm';
 import { WithFlagEntity } from '../model/with/with-flag.entity';
 import { CommonFlagEntity } from '../model/common/common-flag.entity';
-import { FlagEntity } from '../../settings/model/flag.entity';
+import { FlagEntity } from '../../settings/model/flag/flag.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { WithFlagInput } from '../input/with-flag.input';
 

@@ -3,13 +3,13 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FileEntity } from '../../model/file.entity';
-import { CollectionEntity } from '../../model/collection.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { File4stringEntity } from '../../model/file4string.entity';
-import { File2flagEntity } from '../../model/file2flag.entity';
+import { FileEntity } from '../../model/file/file.entity';
+import { CollectionEntity } from '../../model/collection/collection.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { File4stringEntity } from '../../model/file/file4string.entity';
+import { File2flagEntity } from '../../model/file/file2flag.entity';
 
 describe('FileController', () => {
   let source;

@@ -3,8 +3,8 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FormEntity } from '../../model/form.entity';
-import { ResultEntity } from '../../model/result.entity';
+import { FormEntity } from '../../model/form/form.entity';
+import { ResultEntity } from '../../model/result/result.entity';
 
 describe('ResultController', () => {
   let source;

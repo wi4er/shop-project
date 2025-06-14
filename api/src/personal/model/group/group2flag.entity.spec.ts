@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { GroupEntity } from './group.entity';
 import { Group2flagEntity } from './group2flag.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 describe('UserGroup 2 flag entity', () => {
   let source: DataSource;

@@ -2,7 +2,7 @@ import { EntityManager } from "typeorm";
 import { UserEntity } from "../../model/user/user.entity";
 import { User2groupEntity } from "../../model/user/user2group.entity";
 import { GroupEntity } from "../../model/group/group.entity";
-import { UserInput } from "../../input/user.input";
+import { UserInput } from "../../input/user/user.input";
 
 export class User2userGroupInsertOperation {
 

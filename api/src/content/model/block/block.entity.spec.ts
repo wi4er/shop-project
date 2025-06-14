@@ -25,7 +25,7 @@ describe('BlockEntity entity', () => {
       const inst = new BlockEntity();
       await inst.save();
 
-      expect(inst.id).toBe(1);
+      expect(inst.id).toHaveLength(32);
       expect(inst.sort).toBe(100);
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();

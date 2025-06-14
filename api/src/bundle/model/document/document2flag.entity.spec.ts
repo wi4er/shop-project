@@ -1,18 +1,16 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 import { DocumentEntity } from './document.entity';
 import { Document2flagEntity } from './document2flag.entity';
 
 describe('Document2Flag entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
 
   describe('Document2Flag fields', () => {
     test('Should add item', async () => {
@@ -78,7 +76,7 @@ describe('Document2Flag entity', () => {
       const repo = source.getRepository(DocumentEntity);
 
       const item = await repo.findOne({
-        where: {id: 1},
+        where: {id: parent.id},
         relations: {flag: true},
       });
 

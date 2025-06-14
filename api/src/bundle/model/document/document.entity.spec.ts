@@ -6,18 +6,17 @@ import { DocumentEntity } from './document.entity';
 describe('Document entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
   describe('Document fields', () => {
     test('Should create with id', async () => {
-      const inst = await new DocumentEntity().save();
+      const inst = new DocumentEntity();
+      inst.id = 'DOCUMENT_ID';
+      await inst.save();
 
-      expect(inst.id).toBe(1);
+      expect(inst.id).toBe('DOCUMENT_ID');
       expect(inst.created_at).toBeDefined();
       expect(inst.updated_at).toBeDefined();
       expect(inst.deleted_at).toBeNull();
@@ -32,12 +31,14 @@ describe('Document entity', () => {
     });
 
     test('Should get single element', async () => {
-      await new DocumentEntity().save();
+      const inst = new DocumentEntity();
+      inst.id = 'DOCUMENT_ID';
+      await inst.save();
 
       const repo = source.getRepository(DocumentEntity);
-      const item = await repo.findOne({where: {id: 1}});
+      const item = await repo.findOne({where: {id: 'DOCUMENT_ID'}});
 
-      expect(item.id).toBe(1);
+      expect(item.id).toBe('DOCUMENT_ID');
     });
   });
 });

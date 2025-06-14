@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import { BlockEntity } from '../block/block.entity';
 import { ElementEntity } from './element.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { SectionEntity } from '../section/section.entity';
 import { Element4sectionEntity } from './element4section.entity';
 

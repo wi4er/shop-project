@@ -7,7 +7,7 @@ import { UserEntity } from '../../model/user/user.entity';
 import { Repository } from 'typeorm';
 import { EncodeService } from '../../service/encode/encode.service';
 import { PermissionException } from '../../../exception/permission/permission.exception';
-import { MyselfRender } from '../../render/myself.render';
+import { MyselfView } from '../../view/myself.view';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 @ApiTags('UserEntity authorization')
@@ -36,7 +36,7 @@ export class AuthController {
     },
     @Req()
       req: Request,
-  ): Promise<MyselfRender> {
+  ): Promise<MyselfView> {
     const user = await this.userRepo.findOne({
       where: {login: WrongDataException.assert(body.login, 'UserEntity login expected')},
       relations: this.relations,
@@ -49,7 +49,7 @@ export class AuthController {
     );
     this.sessionService.open(req, user);
 
-    return new MyselfRender(user);
+    return new MyselfView(user);
   }
 
   @Delete()

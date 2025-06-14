@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AttributeEntity } from '../settings/model/attribute.entity';
-import { LangEntity } from '../settings/model/lang.entity';
-import { FlagEntity } from '../settings/model/flag.entity';
+import { AttributeEntity } from '../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../settings/model/lang/lang.entity';
+import { FlagEntity } from '../settings/model/flag/flag.entity';
 import { DocumentEntity } from './model/document/document.entity';
 import { Document2flagEntity } from './model/document/document2flag.entity';
 import { Document4stringEntity } from './model/document/document4string.entity';

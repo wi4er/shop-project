@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity, AttributeType } from '../../model/attribute.entity';
-import { AttributeInput } from '../../input/attribute.input';
+import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
+import { AttributeInput } from '../../input/attribute/attribute.input';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeAsFileEntity } from '../../model/attribute-as-file.entity';
-import { CollectionEntity } from '../../../storage/model/collection.entity';
+import { AttributeAsFileEntity } from '../../model/attribute/attribute-as-file.entity';
+import { CollectionEntity } from '../../../storage/model/collection/collection.entity';
 
 export class AttributeAsFileUpadteOperation {
 

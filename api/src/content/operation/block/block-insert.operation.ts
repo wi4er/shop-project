@@ -2,16 +2,16 @@ import { EntityManager } from 'typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { Block4stringEntity } from '../../model/block/block4string.entity';
 import { Block2flagEntity } from '../../model/block/block2flag.entity';
-import { BlockInput } from '../../input/block.input';
+import { BlockInput } from '../../input/block/block.input';
 import { Block4pointEntity } from '../../model/block/block4point.entity';
-import { filterAttributes } from '../../../common/input/filter-attributes';
+import { filterAttributes } from '../../../common/service/filter-attributes';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { Block2permissionEntity } from '../../model/block/block2permission.entity';
 import { Block4descriptionEntity } from '../../model/block/block4description.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
-import { PointValueOperation } from '../../../common/operation/point-value.operation';
-import { DescriptionValueOperation } from '../../../common/operation/description-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
+import { PointValueOperation } from '../../../common/operation/attribute/point-value.operation';
+import { DescriptionValueOperation } from '../../../common/operation/attribute/description-value.operation';
 import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 
 export class BlockInsertOperation {

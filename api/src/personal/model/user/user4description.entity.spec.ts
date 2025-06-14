@@ -3,7 +3,7 @@ import { createConnection } from "typeorm";
 import { createConnectionOptions } from "../../../createConnectionOptions";
 import { UserEntity } from "./user.entity";
 import { User4descriptionEntity } from "./user4description.entity";
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 describe('User2description entity', () => {
   let source: DataSource;

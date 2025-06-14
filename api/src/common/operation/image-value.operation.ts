@@ -2,7 +2,7 @@ import { WithImageEntity } from '../model/with/with-image.entity';
 import { EntityManager } from 'typeorm';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
 import { CommonImageEntity } from '../model/common/common-image.entity';
-import { FileEntity } from '../../storage/model/file.entity';
+import { FileEntity } from '../../storage/model/file/file.entity';
 
 export class ImageValueOperation<T extends WithImageEntity<T>> {
 

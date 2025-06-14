@@ -10,7 +10,7 @@ import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
-import { DocumentRender } from '../../render/document.render';
+import { DocumentView } from '../../view/document.view';
 
 @Controller('bundle/document')
 export class DocumentController {
@@ -29,7 +29,7 @@ export class DocumentController {
   }
 
   toView(item: DocumentEntity) {
-    return new DocumentRender(item)
+    return new DocumentView(item)
   }
 
   @Get()

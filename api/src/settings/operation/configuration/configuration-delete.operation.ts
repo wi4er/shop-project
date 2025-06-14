@@ -1,5 +1,5 @@
 import { EntityManager, In } from 'typeorm';
-import { ConfigurationEntity } from '../../model/configuration.entity';
+import { ConfigurationEntity } from '../../model/configuration/configuration.entity';
 
 export class ConfigurationDeleteOperation {
 

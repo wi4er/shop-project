@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { DirectoryEntity } from '../../model/directory.entity';
+import { DirectoryEntity } from '../../model/directory/directory.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { DirectoryInput } from '../../input/directory.input';
-import { Directory2flagEntity } from '../../model/directory2flag.entity';
-import { Directory2permissionEntity } from '../../model/directory2permission.entity';
+import { DirectoryInput } from '../../input/directory/directory.input';
+import { Directory2flagEntity } from '../../model/directory/directory2flag.entity';
+import { Directory2permissionEntity } from '../../model/directory/directory2permission.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 

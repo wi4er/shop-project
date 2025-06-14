@@ -2,15 +2,15 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { SectionEntity } from '../../model/section/section.entity';
-import { SectionFilterInput } from '../../input/section-filter.input';
-import { SectionInput } from '../../input/section.input';
+import { SectionFilterInput } from '../../input/section/section-filter.input';
+import { SectionInput } from '../../input/section/section.input';
 import { SectionInsertOperation } from '../../operation/section/section-insert.operation';
 import { SectionUpdateOperation } from '../../operation/section/section-update.operation';
 import { SectionDeleteOperation } from '../../operation/section/section-delete.operation';
 import { ApiCookieAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SectionRender } from '../../render/section.render';
+import { SectionView } from '../../view/section.view';
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder';
-import { SectionOrderInput } from '../../input/section-order.input';
+import { SectionOrderInput } from '../../input/section/section-order.input';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Section2permissionEntity } from '../../model/section/section2permission.entity';
 import { SectionPatchOperation } from '../../operation/section/section-patch.operation';
@@ -45,7 +45,7 @@ export class SectionController {
    *
    */
   toView(item: SectionEntity) {
-    return new SectionRender(item);
+    return new SectionView(item);
   }
 
   /**
@@ -86,7 +86,7 @@ export class SectionController {
   @ApiResponse({
     status: 200,
     description: 'Content section',
-    type: [SectionRender],
+    type: [SectionView],
   })
   @Get()
   async getList(
@@ -98,7 +98,7 @@ export class SectionController {
       offset?: number,
     @Query('limit')
       limit?: number,
-  ): Promise<SectionRender[]> {
+  ): Promise<SectionView[]> {
     const where = {};
 
     if (filter?.block) {
@@ -140,7 +140,7 @@ export class SectionController {
   @ApiResponse({
     status: 200,
     description: 'Content section',
-    type: SectionRender,
+    type: SectionView,
   })
   @Get(':id')
   @CheckId(SectionEntity)
@@ -148,7 +148,7 @@ export class SectionController {
   async getItem(
     @Param('id')
       id: string,
-  ): Promise<SectionRender> {
+  ): Promise<SectionView> {
     return this.sectionRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -158,13 +158,13 @@ export class SectionController {
   @ApiResponse({
     status: 201,
     description: 'Content section',
-    type: SectionRender,
+    type: SectionView,
   })
   @Post()
   async addItem(
     @Body()
       input: SectionInput,
-  ): Promise<SectionRender> {
+  ): Promise<SectionView> {
     return this.entityManager.transaction(
       trans => new SectionInsertOperation(trans).save(input)
         .then(id => trans.getRepository(SectionEntity).findOne({
@@ -177,7 +177,7 @@ export class SectionController {
   @ApiResponse({
     status: 200,
     description: 'Content section',
-    type: SectionRender,
+    type: SectionView,
   })
   @Put(':id')
   @CheckId(SectionEntity)
@@ -187,7 +187,7 @@ export class SectionController {
       id: string,
     @Body()
       input: SectionInput,
-  ): Promise<SectionRender> {
+  ): Promise<SectionView> {
     return this.entityManager.transaction(
       trans => new SectionUpdateOperation(trans).save(id, input)
         .then(id => trans.getRepository(SectionEntity).findOne({
@@ -200,7 +200,7 @@ export class SectionController {
   @ApiResponse({
     status: 200,
     description: 'Content section',
-    type: SectionRender,
+    type: SectionView,
   })
   @Patch(':id')
   @CheckId(SectionEntity)
@@ -210,7 +210,7 @@ export class SectionController {
       id: string,
     @Body()
       input: SectionInput,
-  ): Promise<SectionRender> {
+  ): Promise<SectionView> {
     return this.entityManager.transaction(
       trans => new SectionPatchOperation(trans).save(id, input)
         .then(id => trans.getRepository(SectionEntity).findOne({

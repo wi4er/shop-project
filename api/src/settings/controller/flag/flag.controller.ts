@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { FlagEntity } from '../../model/flag.entity';
-import { FlagInput } from '../../input/flag.input';
+import { FlagEntity } from '../../model/flag/flag.entity';
+import { FlagInput } from '../../input/flag/flag.input';
 import { FlagInsertOperation } from '../../operation/flag/flag-insert.operation';
 import { FlagUpdateOperation } from '../../operation/flag/flag-update.operation';
 import { FlagDeleteOperation } from '../../operation/flag/flag-delete.operation';
 import { FlagPatchOperation } from '../../operation/flag/flag-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { FlagRender } from '../../render/flag.render';
+import { FlagRender } from '../../view/flag.render';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';

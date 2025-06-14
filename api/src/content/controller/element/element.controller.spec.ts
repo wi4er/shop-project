@@ -7,28 +7,28 @@ import { BlockEntity } from '../../model/block/block.entity';
 import { ElementEntity } from '../../model/element/element.entity';
 import { Element4stringEntity } from '../../model/element/element4string.entity';
 import { Element2flagEntity } from '../../model/element/element2flag.entity';
-import { DirectoryEntity } from '../../../registry/model/directory.entity';
-import { PointEntity } from '../../../registry/model/point.entity';
+import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
 import { Element4pointEntity } from '../../model/element/element4point.entity';
 import { SectionEntity } from '../../model/section/section.entity';
 import { Element2sectionEntity } from '../../model/element/element2section.entity';
-import { AttributeEntity, AttributeType } from '../../../settings/model/attribute.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { AttributeEntity, AttributeType } from '../../../settings/model/attribute/attribute.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 import { UserEntity } from '../../../personal/model/user/user.entity';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { User2groupEntity } from '../../../personal/model/user/user2group.entity';
 import { Element2permissionEntity } from '../../model/element/element2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { Element4elementEntity } from '../../model/element/element4element.entity';
-import { CollectionEntity } from '../../../storage/model/collection.entity';
+import { CollectionEntity } from '../../../storage/model/collection/collection.entity';
 import { Element2imageEntity } from '../../model/element/element2image.entity';
-import { FileEntity } from '../../../storage/model/file.entity';
+import { FileEntity } from '../../../storage/model/file/file.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
 import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
 
-describe('ElementController', () => {
+describe('Element Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 

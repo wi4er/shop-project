@@ -3,11 +3,11 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { BlockEntity } from '../../model/block/block.entity';
 import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BlockInput } from '../../input/block.input';
+import { BlockInput } from '../../input/block/block.input';
 import { BlockInsertOperation } from '../../operation/block/block-insert.operation';
 import { BlockUpdateOperation } from '../../operation/block/block-update.operation';
 import { BlockDeleteOperation } from '../../operation/block/block-delete.operation';
-import { BlockRender } from '../../render/block.render';
+import { BlockView } from '../../view/block.view';
 import { Block2permissionEntity } from '../../model/block/block2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
 import { CurrentGroups } from '../../../personal/decorator/current-groups/current-groups.decorator';
@@ -40,7 +40,7 @@ export class BlockController {
   }
 
   toView(item: BlockEntity) {
-    return new BlockRender(item);
+    return new BlockView(item);
   }
 
   @Get()
@@ -48,7 +48,7 @@ export class BlockController {
   @ApiResponse({
     status: 200,
     description: 'Content block',
-    type: [BlockRender],
+    type: [BlockView],
   })
   async getList(
     @CurrentGroups()
@@ -57,7 +57,7 @@ export class BlockController {
       offset?: number,
     @Query('limit')
       limit?: number,
-  ): Promise<BlockRender[]> {
+  ): Promise<BlockView[]> {
     return this.blockRepo.find({
       where: {
         permission: {
@@ -94,12 +94,12 @@ export class BlockController {
   @ApiResponse({
     status: 200,
     description: 'Content block',
-    type: BlockRender,
+    type: BlockView,
   })
   async getItem(
     @Param('id')
       id: string,
-  ): Promise<BlockRender> {
+  ): Promise<BlockView> {
     return this.blockRepo.findOne({
       where: {id},
       relations: this.relations,
@@ -111,12 +111,12 @@ export class BlockController {
   @ApiResponse({
     status: 201,
     description: 'Content block created successfully',
-    type: BlockRender,
+    type: BlockView,
   })
   async addItem(
     @Body()
       input: BlockInput,
-  ): Promise<BlockRender> {
+  ): Promise<BlockView> {
     const item = await this.entityManager.transaction(
       trans => new BlockInsertOperation(trans).save(input)
         .then(id => trans.getRepository(BlockEntity).findOne({
@@ -135,14 +135,14 @@ export class BlockController {
   @ApiResponse({
     status: 200,
     description: 'Content block',
-    type: BlockRender,
+    type: BlockView,
   })
   async updateItem(
     @Param('id')
       id: string,
     @Body()
       input: BlockInput,
-  ): Promise<BlockRender> {
+  ): Promise<BlockView> {
     return this.entityManager.transaction(
       trans => new BlockUpdateOperation(trans).save(id, input)
         .then(id => trans.getRepository(BlockEntity).findOne({

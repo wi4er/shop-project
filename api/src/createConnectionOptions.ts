@@ -1,15 +1,15 @@
 import { UserEntity } from './personal/model/user/user.entity';
 import { User4stringEntity } from './personal/model/user/user4string.entity';
 import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
-import { DirectoryEntity } from './registry/model/directory.entity';
-import { Directory4stringEntity } from './registry/model/directory4string.entity';
+import { DirectoryEntity } from './registry/model/directory/directory.entity';
+import { Directory4stringEntity } from './registry/model/directory/directory4string.entity';
 import { GroupEntity } from './personal/model/group/group.entity';
-import { PointEntity } from './registry/model/point.entity';
+import { PointEntity } from './registry/model/point/point.entity';
 import { User2flagEntity } from './personal/model/user/user2flag.entity';
 import { User4pointEntity } from './personal/model/user/user4point.entity';
 import { User4userEntity } from './personal/model/user/user4user.entity';
 import { User4descriptionEntity } from './personal/model/user/user4description.entity';
-import { Point4stringEntity } from './registry/model/point4string.entity';
+import { Point4stringEntity } from './registry/model/point/point4string.entity';
 import { ElementEntity } from './content/model/element/element.entity';
 import { Element2sectionEntity } from './content/model/element/element2section.entity';
 import { SectionEntity } from './content/model/section/section.entity';
@@ -20,8 +20,8 @@ import { Element4pointEntity } from './content/model/element/element4point.entit
 import { Section4pointEntity } from './content/model/section/section4point.entity';
 import { Section4stringEntity } from './content/model/section/section4string.entity';
 import { Element4elementEntity } from './content/model/element/element4element.entity';
-import { Directory2flagEntity } from './registry/model/directory2flag.entity';
-import { Point2flagEntity } from './registry/model/point2flag.entity';
+import { Directory2flagEntity } from './registry/model/directory/directory2flag.entity';
+import { Point2flagEntity } from './registry/model/point/point2flag.entity';
 import { ContactEntity } from './personal/model/contact/contact.entity';
 import { User2contactEntity } from './personal/model/user/user2contact.entity';
 import { Contact2flagEntity } from './personal/model/contact/contact2flag.entity';
@@ -34,28 +34,28 @@ import { Section2flagEntity } from './content/model/section/section2flag.entity'
 import { Block2flagEntity } from './content/model/block/block2flag.entity';
 import { Block2permissionEntity } from './content/model/block/block2permission.entity';
 import { Block4pointEntity } from './content/model/block/block4point.entity';
-import { Directory4pointEntity } from './registry/model/directory4point.entity';
-import { Point4pointEntity } from './registry/model/point4point.entity';
-import { FormEntity } from './form/model/form.entity';
-import { Form2flagEntity } from './form/model/form2flag.entity';
-import { Form4stringEntity } from './form/model/form4string.entity';
-import { FormFieldStringEntity } from './form/model/form-field-string.entity';
-import { FormFieldEntity } from './form/model/form-field.entity';
-import { FormField2flagEntity } from './form/model/form-field2flag.entity';
-import { FormField4stringEntity } from './form/model/form-field4string.entity';
-import { FormFieldElementEntity } from './form/model/form-field-element.entity';
-import { FormFieldSectionEntity } from './form/model/form-field-section.entity';
-import { FormFieldDirectoryEntity } from './form/model/form-field-directory.entity';
-import { ResultEntity } from './form/model/result.entity';
-import { AttributeEntity } from './settings/model/attribute.entity';
-import { Attribute4stringEntity } from './settings/model/attribute4string.entity';
-import { Attribute2flagEntity } from './settings/model/attribute2flag.entity';
-import { FlagEntity } from './settings/model/flag.entity';
-import { Flag4stringEntity } from './settings/model/flag4string.entity';
-import { Flag2flagEntity } from './settings/model/flag2flag.entity';
-import { LangEntity } from './settings/model/lang.entity';
-import { Lang4stringEntity } from './settings/model/lang4string.entity';
-import { Lang2flagEntity } from './settings/model/lang2flag.entity';
+import { Directory4pointEntity } from './registry/model/directory/directory4point.entity';
+import { Point4pointEntity } from './registry/model/point/point4point.entity';
+import { FormEntity } from './form/model/form/form.entity';
+import { Form2flagEntity } from './form/model/form/form2flag.entity';
+import { Form4stringEntity } from './form/model/form/form4string.entity';
+import { FormFieldStringEntity } from './form/model/form/form-field-string.entity';
+import { FormFieldEntity } from './form/model/form/form-field.entity';
+import { FormField2flagEntity } from './form/model/form/form-field2flag.entity';
+import { FormField4stringEntity } from './form/model/form/form-field4string.entity';
+import { FormFieldElementEntity } from './form/model/form/form-field-element.entity';
+import { FormFieldSectionEntity } from './form/model/form/form-field-section.entity';
+import { FormFieldDirectoryEntity } from './form/model/form/form-field-directory.entity';
+import { ResultEntity } from './form/model/result/result.entity';
+import { AttributeEntity } from './settings/model/attribute/attribute.entity';
+import { Attribute4stringEntity } from './settings/model/attribute/attribute4string.entity';
+import { Attribute2flagEntity } from './settings/model/attribute/attribute2flag.entity';
+import { FlagEntity } from './settings/model/flag/flag.entity';
+import { Flag4stringEntity } from './settings/model/flag/flag4string.entity';
+import { Flag2flagEntity } from './settings/model/flag/flag2flag.entity';
+import { LangEntity } from './settings/model/lang/lang.entity';
+import { Lang4stringEntity } from './settings/model/lang/lang4string.entity';
+import { Lang2flagEntity } from './settings/model/lang/lang2flag.entity';
 import { DocumentEntity } from './bundle/model/document/document.entity';
 import { Document4stringEntity } from './bundle/model/document/document4string.entity';
 import { Document2flagEntity } from './bundle/model/document/document2flag.entity';
@@ -63,35 +63,34 @@ import { Element2permissionEntity } from './content/model/element/element2permis
 import { Section2permissionEntity } from './content/model/section/section2permission.entity';
 import { Element4sectionEntity } from './content/model/element/element4section.entity';
 import { User4groupEntity } from './personal/model/user/user4group.entity';
-import { FileEntity } from './storage/model/file.entity';
-import { CollectionEntity } from './storage/model/collection.entity';
-import { File2flagEntity } from './storage/model/file2flag.entity';
-import { File4stringEntity } from './storage/model/file4string.entity';
-import { Collection2flagEntity } from './storage/model/collection2flag.entity';
-import { Collection4stringEntity } from './storage/model/collection4string.entity';
+import { FileEntity } from './storage/model/file/file.entity';
+import { CollectionEntity } from './storage/model/collection/collection.entity';
+import { File2flagEntity } from './storage/model/file/file2flag.entity';
+import { File4stringEntity } from './storage/model/file/file4string.entity';
+import { Collection2flagEntity } from './storage/model/collection/collection2flag.entity';
+import { Collection4stringEntity } from './storage/model/collection/collection4string.entity';
 import { Element2imageEntity } from './content/model/element/element2image.entity';
 import { Element4fileEntity } from './content/model/element/element4file.entity';
 import { Section4fileEntity } from './content/model/section/section4file.entity';
 import { Section2imageEntity } from './content/model/section/section2image.entity';
 import { Block4fileEntity } from './content/model/block/block4file.entity';
 import { User2imageEntity } from './personal/model/user/user2image.entity';
-import { ConfigurationEntity } from './settings/model/configuration.entity';
-import { SettingsPermissionEntity } from './settings/model/settings-permission.entity';
-import { AttributeAsPointEntity } from './settings/model/attribute-as-point.entity';
-import { AttributeAsSectionEntity } from './settings/model/attribute-as-section.entity';
-import { AttributeAsElementEntity } from './settings/model/attribute-as-element.entity';
-import { AttributeAsFileEntity } from './settings/model/attribute-as-file.entity';
-import { Directory2permissionEntity } from './registry/model/directory2permission.entity';
+import { ConfigurationEntity } from './settings/model/configuration/configuration.entity';
+import { AttributeAsPointEntity } from './settings/model/attribute/attribute-as-point.entity';
+import { AttributeAsSectionEntity } from './settings/model/attribute/attribute-as-section.entity';
+import { AttributeAsElementEntity } from './settings/model/attribute/attribute-as-element.entity';
+import { AttributeAsFileEntity } from './settings/model/attribute/attribute-as-file.entity';
+import { Directory2permissionEntity } from './registry/model/directory/directory2permission.entity';
 import { AccessEntity } from './personal/model/access/access.entity';
-import { Point2logEntity } from './registry/model/point2log.entity';
-import { Directory2logEntity } from './registry/model/directory2log.entity';
+import { Point2logEntity } from './registry/model/point/point2log.entity';
+import { Directory2logEntity } from './registry/model/directory/directory2log.entity';
 import { InstanceEntity } from './bundle/model/instance/instance.entity';
 import { Element4IntervalEntity } from './content/model/element/element4interval.entity';
 import { Element4CounterEntity } from './content/model/element/element4counter.entity';
 import { Element4InstanceEntity } from './content/model/element/element4instance.entity';
 import { Block4descriptionEntity } from './content/model/block/block4description.entity';
 import { Element4descriptionEntity } from './content/model/element/element4description.entity';
-import { AttributeAsInstanceEntity } from './settings/model/attribute-as-instance.entity';
+import { AttributeAsInstanceEntity } from './settings/model/attribute/attribute-as-instance.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -122,7 +121,6 @@ export function createConnectionOptions(): DataSourceOptions {
       Point4stringEntity, Point4pointEntity,
       FlagEntity, Flag4stringEntity, Flag2flagEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
-      SettingsPermissionEntity,
       ElementEntity, Element2flagEntity, Element2sectionEntity, Element2imageEntity,
       Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity, Element4fileEntity,
       Element4IntervalEntity, Element4CounterEntity, Element4InstanceEntity, Element4descriptionEntity,

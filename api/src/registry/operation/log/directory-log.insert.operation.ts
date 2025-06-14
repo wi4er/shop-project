@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
-import { Directory2logEntity } from '../../model/directory2log.entity';
-import { DirectoryEntity } from '../../model/directory.entity';
+import { Directory2logEntity } from '../../model/directory/directory2log.entity';
+import { DirectoryEntity } from '../../model/directory/directory.entity';
 
 export interface DirectoryLogData {
 

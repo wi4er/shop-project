@@ -3,12 +3,12 @@ import { AppModule } from '../../../app.module';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 import * as request from 'supertest';
-import { FormEntity } from '../../model/form.entity';
-import { Form4stringEntity } from '../../model/form4string.entity';
-import { Form2flagEntity } from '../../model/form2flag.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { FlagEntity } from '../../../settings/model/flag.entity';
+import { FormEntity } from '../../model/form/form.entity';
+import { Form4stringEntity } from '../../model/form/form4string.entity';
+import { Form2flagEntity } from '../../model/form/form2flag.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 describe('FormController', () => {
   let source;

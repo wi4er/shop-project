@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { ElementEntity } from '../../model/element/element.entity';
 import { Element4elementEntity } from '../../model/element/element4element.entity';
-import { AttributeElementInput } from '../../../common/input/attribute-element.input';
+import { AttributeElementInput } from '../../../common/input/attribute/attribute-element.input';
 
 export class Element4elementUpdateOperation {
 

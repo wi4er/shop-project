@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { FlagEntity } from '../../model/flag.entity';
+import { FlagEntity } from '../../model/flag/flag.entity';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { FlagInput } from '../../input/flag.input';
-import { Flag2flagEntity } from '../../model/flag2flag.entity';
-import { filterAttributes } from '../../../common/input/filter-attributes';
-import { Flag4stringEntity } from '../../model/flag4string.entity';
+import { FlagInput } from '../../input/flag/flag.input';
+import { Flag2flagEntity } from '../../model/flag/flag2flag.entity';
+import { filterAttributes } from '../../../common/service/filter-attributes';
+import { Flag4stringEntity } from '../../model/flag/flag4string.entity';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/string-value.operation';
+import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
 export class FlagPatchOperation {
 

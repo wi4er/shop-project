@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
 import { GroupEntity } from './group.entity';
-import { LangEntity } from '../../../settings/model/lang.entity';
-import { AttributeEntity } from '../../../settings/model/attribute.entity';
+import { LangEntity } from '../../../settings/model/lang/lang.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('personal-group4string')
 export class Group4stringEntity
