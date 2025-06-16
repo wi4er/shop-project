@@ -8,9 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateService } from '../../app/service/date.service';
-import { AttributeHistoryComponent } from '../attribute-history/attribute-history.component';
 import { FlagHistoryComponent } from '../flag-history/flag-history.component';
-import { AttributeSettingsComponent } from '../attribute-settings/attribute-settings.component';
 import { FlagSettingsComponent } from '../flag-settings/flag-settings.component';
 
 @Component({

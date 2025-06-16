@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Edit point</h2>
+
+<mat-dialog-content>
+  <form
+    [formGroup]="form"
+    *ngIf="!loading"
+  >
+    <mat-selection-list
+      [formControl]="pointControl"
+      name="point"
+      [multiple]="false"
+    >
+      <mat-list-option
+        *ngFor="let item of list"
+        [value]="item.id"
+      >
+        {{ item.id }}
+      </mat-list-option>
+    </mat-selection-list>
+
+    <p>
+      Option selected: {{ pointControl.value ? pointControl.value[0] : 'None' }}
+    </p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button>No Thanks</button>
+  <button mat-button mat-dialog-close>Ok</button>
+</mat-dialog-actions>

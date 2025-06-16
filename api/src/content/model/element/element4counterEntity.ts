@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -13,7 +14,8 @@ import { AttributeEntity } from '../../../settings/model/attribute/attribute.ent
 
 @Entity('content-element4counter')
 @Index(['point', 'attribute', 'parent'], {unique: true})
-export class Element4CounterEntity {
+export class Element4counterEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -30,7 +32,9 @@ export class Element4CounterEntity {
   @VersionColumn()
   version: number;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   count: number;
 
   @ManyToOne(
@@ -45,7 +49,7 @@ export class Element4CounterEntity {
 
   @ManyToOne(
     type => ElementEntity,
-    element => element.point,
+    element => element.counter,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

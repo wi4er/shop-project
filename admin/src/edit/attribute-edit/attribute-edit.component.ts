@@ -5,6 +5,8 @@ import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { AttributeEdit } from '../attribute-value/attribute-value.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AttributeType } from '../../settings/attribute-form/attribute-form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PointEditComponent } from '../point-edit/point-edit.component';
 
 @Component({
   selector: 'app-attribute-edit',
@@ -22,6 +24,7 @@ export class AttributeEditComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -57,6 +60,46 @@ export class AttributeEditComponent implements OnInit {
     return [];
   }
 
+
+  /**
+   *
+   */
+  getPoint(id: string): FormControl {
+    const value = this.edit[id];
+
+    if ('point' in value) {
+      return value.point;
+    }
+
+    return new FormControl(null);
+  }
+
+  /**
+   *
+   */
+  getCount(id: string): FormControl {
+    const value = this.edit[id];
+
+    if ('count' in value) {
+      return value.count;
+    }
+
+    return new FormControl(null);
+  }
+
+  /**
+   *
+   */
+  getCounter(id: string): FormControl {
+    const value = this.edit[id];
+
+    if ('count' in value) {
+      return value.counter;
+    }
+
+    return new FormControl(null);
+  }
+
   /**
    *
    */
@@ -79,36 +122,52 @@ export class AttributeEditComponent implements OnInit {
   initValues(): void {
     for (const attr of this.list) {
 
-      if (
-        attr.type === AttributeType.STRING
-        || attr.type === AttributeType.DESCRIPTION
-      ) {
-        if (!this.edit[attr.id]) {
-          this.edit[attr.id] = {
-            type: attr.type,
-            edit: {},
-          };
-        }
-
-        const value = this.edit[attr.id];
-
-        if ('edit' in value) {
-          for (const lang of this.lang) {
-            if (!value.edit[lang.id]) value.edit[lang.id] = new FormControl();
+      switch (attr.type) {
+        case AttributeType.STRING:
+        case AttributeType.DESCRIPTION:
+          if (!this.edit[attr.id]) {
+            this.edit[attr.id] = {
+              type: attr.type,
+              edit: {},
+            };
           }
 
-          if (!value.edit['']) value.edit[''] = new FormControl();
-        }
-      }
+          const value = this.edit[attr.id];
 
-      if (attr.type === AttributeType.INTERVAL) {
-        if (!this.edit[attr.id]) {
-          this.edit[attr.id] = {
-            type: attr.type,
-            from: new FormControl(null),
-            to: new FormControl(null),
-          };
-        }
+          if ('edit' in value) {
+            for (const lang of this.lang) {
+              if (!value.edit[lang.id]) value.edit[lang.id] = new FormControl();
+            }
+
+            if (!value.edit['']) value.edit[''] = new FormControl();
+          }
+          break;
+        case AttributeType.INTERVAL:
+          if (!this.edit[attr.id]) {
+            this.edit[attr.id] = {
+              type: attr.type,
+              from: new FormControl(null),
+              to: new FormControl(null),
+            };
+          }
+          break;
+        case AttributeType.POINT:
+          if (!this.edit[attr.id]) {
+            this.edit[attr.id] = {
+              type: AttributeType.POINT,
+              point: new FormControl(null),
+            };
+          }
+          break;
+        case AttributeType.COUNTER:
+          if (!this.edit[attr.id]) {
+            this.edit[attr.id] = {
+              type: AttributeType.COUNTER,
+              counter: new FormControl(null),
+              count: new FormControl(null),
+            };
+          }
+          break;
       }
     }
   }
@@ -127,6 +186,44 @@ export class AttributeEditComponent implements OnInit {
    */
   clearEdit(id: string, lang: string, index: number) {
     // this.edit[id][lang].splice(index, 1);
+  }
+
+  openPoint(attr: string) {
+    const value = this.edit[attr];
+
+    if ('point' in value) {
+      this.dialog.open(
+        PointEditComponent,
+        {
+          width: '1000px',
+          panelClass: 'wrapper',
+          data: {
+            point: value.point,
+          },
+        },
+      ).afterClosed().subscribe(result => {
+
+      });
+    }
+  }
+
+  openCounter(attr: string) {
+    const value = this.edit[attr];
+
+    if ('counter' in value) {
+      this.dialog.open(
+        PointEditComponent,
+        {
+          width: '1000px',
+          panelClass: 'wrapper',
+          data: {
+            point: value.counter,
+          },
+        },
+      ).afterClosed().subscribe(result => {
+
+      });
+    }
   }
 
   protected readonly FormControl = FormControl;

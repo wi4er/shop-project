@@ -20,6 +20,8 @@ import { DescriptionValueOperation } from '../../../common/operation/attribute/d
 import { IntervalValueOperation } from '../../../common/operation/attribute/interval-value.operation';
 import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 import { ImageValueOperation } from '../../../common/operation/image-value.operation';
+import { CounterValueOperation } from '../../../common/operation/attribute/counter-value.operation';
+import { Element4counterEntity } from '../../model/element/element4counterEntity';
 
 export class ElementUpdateOperation {
 
@@ -56,6 +58,7 @@ export class ElementUpdateOperation {
             flag: {flag: true},
             image: {image: true},
             point: {point: true, attribute: true},
+            counter: {point: true, attribute: true},
             element: {element: true, attribute: true},
             permission: {group: true},
           },
@@ -91,6 +94,7 @@ export class ElementUpdateOperation {
     await new DescriptionValueOperation(this.transaction, Element4descriptionEntity).save(beforeItem, pack.description);
     await new IntervalValueOperation(this.transaction, Element4IntervalEntity).save(beforeItem, pack.interval);
     await new PointValueOperation(this.transaction, Element4pointEntity).save(beforeItem, pack.point);
+    await new CounterValueOperation(this.transaction, Element4counterEntity).save(beforeItem, pack.counter);
     await new Element4elementUpdateOperation(this.transaction).save(beforeItem, pack.element);
 
     return input.id;

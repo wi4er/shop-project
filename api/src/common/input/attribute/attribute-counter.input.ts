@@ -4,7 +4,7 @@ export class AttributeCounterInput
   implements AttributeValueInput {
 
   attribute: string;
-  point: string;
+  counter: string;
   count: number;
   
 }

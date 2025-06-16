@@ -25,6 +25,7 @@ import { WithDescriptionEntity } from '../../../common/model/with/with-descripti
 import { Element4descriptionEntity } from './element4description.entity';
 import { WithIntervalEntity } from '../../../common/model/with/with-interval.entity';
 import { Element4IntervalEntity } from './element4interval.entity';
+import { Element4counterEntity } from './element4counterEntity';
 
 @Entity('content-element')
 @Check('not_empty_id', '"id" > \'\'')
@@ -113,6 +114,12 @@ export class ElementEntity
     point => point.parent,
   )
   point: Element4pointEntity[];
+
+  @OneToMany(
+    type => Element4counterEntity,
+    point => point.parent,
+  )
+  counter: Element4counterEntity[];
 
   @OneToMany(
     type => Element4elementEntity,

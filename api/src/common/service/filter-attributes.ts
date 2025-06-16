@@ -19,6 +19,7 @@ export type AttributePack = {
 
   element: Array<AttributeElementInput>;
   section: Array<AttributeSectionInput>;
+
 }
 
 export function filterAttributes(
@@ -39,7 +40,7 @@ export function filterAttributes(
     if (item['string']) pack.string.push(<AttributeStringInput>item);
     else if (item['description']) pack.description.push(<AttributeDescriptionInput>item);
     else if (item['from']) pack.interval.push(<AttributeIntervalInput>item);
-    else if (item['count']) pack.counter.push(<AttributeCounterInput>item);
+    else if (item['counter']) pack.counter.push(<AttributeCounterInput>item);
     else if (item['point']) pack.point.push(<AttributePointInput>item);
     else if (item['element']) pack.element.push(<AttributeElementInput>item);
     else throw new WrongDataException('Wrong attribute type!');

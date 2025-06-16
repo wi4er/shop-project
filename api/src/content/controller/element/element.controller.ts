@@ -34,6 +34,7 @@ export class ElementController {
     description: {attribute: true, lang: true},
     interval: {attribute: true},
     point: {point: {directory: true}, attribute: true},
+    counter: {point: {directory: true}, attribute: true},
     element: {element: true, attribute: true},
     section: {section: true, attribute: true},
     file: {file: true, attribute: true},

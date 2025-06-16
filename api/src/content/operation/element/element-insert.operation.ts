@@ -19,6 +19,8 @@ import { DescriptionValueOperation } from '../../../common/operation/attribute/d
 import { IntervalValueOperation } from '../../../common/operation/attribute/interval-value.operation';
 import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 import { ImageValueOperation } from '../../../common/operation/image-value.operation';
+import { CounterValueOperation } from '../../../common/operation/attribute/counter-value.operation';
+import { Element4counterEntity } from '../../model/element/element4counterEntity';
 
 export class ElementInsertOperation {
 
@@ -48,7 +50,9 @@ export class ElementInsertOperation {
   async save(input: ElementInput): Promise<string> {
     this.created.id = input.id;
     if (input.sort) this.created.sort = input.sort;
-    this.created.block = await this.checkBlock(input.block);
+    this.created.block = await this.checkBlock(
+      WrongDataException.assert(input.block, 'Block id expected!'),
+    );
 
     try {
       await this.transaction.insert(ElementEntity, this.created);
@@ -65,6 +69,7 @@ export class ElementInsertOperation {
     await new DescriptionValueOperation(this.transaction, Element4descriptionEntity).save(this.created, pack.description);
     await new IntervalValueOperation(this.transaction, Element4IntervalEntity).save(this.created, pack.interval);
     await new PointValueOperation(this.transaction, Element4pointEntity).save(this.created, pack.point);
+    await new CounterValueOperation(this.transaction, Element4counterEntity).save(this.created, pack.counter);
     await new Element4elementInsertOperation(this.transaction).save(this.created, pack.element);
 
     return this.created.id;

@@ -16,3 +16,12 @@
 .date {
   width: 160px;
 }
+
+.flags {
+  display: flex;
+  gap: 4px;
+}
+
+.collapse {
+  width: 1px;
+}

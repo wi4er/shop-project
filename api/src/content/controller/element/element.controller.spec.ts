@@ -27,6 +27,7 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
 import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
+import { Element4counterEntity } from '../../model/element/element4counterEntity';
 
 describe('Element Controller', () => {
   let source: DataSource;
@@ -224,151 +225,153 @@ describe('Element Controller', () => {
     });
   });
 
-  describe('Content element sorting', () => {
-    test('Should get with sort order', async () => {
-      const cookie = await createSession();
-      const block = await new BlockEntity().save();
+  describe('Content element with fields', () => {
+    describe('Content element sorting', () => {
+      test('Should get with sort order', async () => {
+        const cookie = await createSession();
+        const block = await new BlockEntity().save();
 
-      for (let i = 1; i <= 10; i++) {
-        await createElement()
-          .withBlock(block)
-          .withSort(1000 - i * 100)
-          .withVersion(i % 2 ? 1 : 10);
-      }
+        for (let i = 1; i <= 10; i++) {
+          await createElement()
+            .withBlock(block)
+            .withSort(1000 - i * 100)
+            .withVersion(i % 2 ? 1 : 10);
+        }
 
-      const list = await request(app.getHttpServer())
-        .get('/content/element?sort[version]=asc&sort[sort]=desc')
-        .set('cookie', cookie)
-        .expect(200);
+        const list = await request(app.getHttpServer())
+          .get('/content/element?sort[version]=asc&sort[sort]=desc')
+          .set('cookie', cookie)
+          .expect(200);
 
-      expect(list.body).toHaveLength(10);
-      expect(list.body[0].sort).toBe(900);
-      expect(list.body[1].sort).toBe(700);
-      expect(list.body[2].sort).toBe(500);
-      expect(list.body[3].sort).toBe(300);
-      expect(list.body[4].sort).toBe(100);
-    });
-  });
-
-  describe('Content element item', () => {
-    test('Should get element item', async () => {
-
-      await createElement('ELEMENT')
-        .withBlock(await new BlockEntity().save());
-
-      const item = await request(app.getHttpServer())
-        .get(`/content/element/ELEMENT`)
-        .expect(200);
-
-      expect(item.body.id).toBe('ELEMENT');
-      expect(item.body.created_at).toBeDefined();
-      expect(item.body.updated_at).toBeDefined();
-      expect(item.body.version).toBe(1);
-      expect(item.body.sort).toBe(100);
-      expect(item.body.block).toHaveLength(36);
+        expect(list.body).toHaveLength(10);
+        expect(list.body[0].sort).toBe(900);
+        expect(list.body[1].sort).toBe(700);
+        expect(list.body[2].sort).toBe(500);
+        expect(list.body[3].sort).toBe(300);
+        expect(list.body[4].sort).toBe(100);
+      });
     });
 
-    test('Shouldn`t get with wrong id', async () => {
-      await createElement('ELEMENT').withBlock(await new BlockEntity().save());
+    describe('Content element item', () => {
+      test('Should get element item', async () => {
 
-      await request(app.getHttpServer())
-        .get('/content/element/999')
-        .expect(404);
+        await createElement('ELEMENT')
+          .withBlock(await new BlockEntity().save());
+
+        const item = await request(app.getHttpServer())
+          .get(`/content/element/ELEMENT`)
+          .expect(200);
+
+        expect(item.body.id).toBe('ELEMENT');
+        expect(item.body.created_at).toBeDefined();
+        expect(item.body.updated_at).toBeDefined();
+        expect(item.body.version).toBe(1);
+        expect(item.body.sort).toBe(100);
+        expect(item.body.block).toHaveLength(36);
+      });
+
+      test('Shouldn`t get with wrong id', async () => {
+        await createElement('ELEMENT').withBlock(await new BlockEntity().save());
+
+        await request(app.getHttpServer())
+          .get('/content/element/999')
+          .expect(404);
+      });
+
+      test('Shouldn`t get element without item permission', async () => {
+        await createElement('NAME')
+          .withBlock(await new BlockEntity().save())
+          .withPermission(null, null);
+
+        await request(app.getHttpServer())
+          .get('/content/element/NAME')
+          .expect(403);
+      });
     });
 
-    test('Shouldn`t get element without item permission', async () => {
-      await createElement('NAME')
-        .withBlock(await new BlockEntity().save())
-        .withPermission(null, null);
+    describe('Content element count', () => {
+      test('Should get empty element count', async () => {
+        const list = await request(app.getHttpServer())
+          .get('/content/element/count')
+          .expect(200);
 
-      await request(app.getHttpServer())
-        .get('/content/element/NAME')
-        .expect(403);
+        expect(list.body).toEqual({count: 0});
+      });
+
+      test('Should get element count', async () => {
+        const block = await new BlockEntity().save();
+
+        for (let i = 0; i < 10; i++) await createElement().withBlock(block);
+
+        const list = await request(app.getHttpServer())
+          .get('/content/element/count')
+          .expect(200);
+
+        expect(list.body).toEqual({count: 10});
+      });
+
+      test('Should get element count with permission ', async () => {
+        const block = await new BlockEntity().save();
+
+        for (let i = 0; i < 10; i++) {
+          await createElement(`ELEMENT_${i}`)
+            .withBlock(block)
+            .withPermission(null, i % 2 ? PermissionMethod.READ : null);
+        }
+
+        const list = await request(app.getHttpServer())
+          .get('/content/element/count')
+          .expect(200);
+
+        expect(list.body).toEqual({count: 5});
+      });
+
+      test('Should get element count with group permission', async () => {
+        const cookie = await createSession();
+        const block = await new BlockEntity().save();
+
+        for (let i = 0; i < 10; i++) {
+          await createElement()
+            .withBlock(block)
+            .withPermission('1', i % 2 ? PermissionMethod.READ : null);
+        }
+
+        const list = await request(app.getHttpServer())
+          .get('/content/element/count')
+          .set('cookie', cookie)
+          .expect(200);
+
+        expect(list.body).toEqual({count: 5});
+      });
     });
-  });
 
-  describe('Content element count', () => {
-    test('Should get empty element count', async () => {
-      const list = await request(app.getHttpServer())
-        .get('/content/element/count')
-        .expect(200);
+    describe('Content element with images', () => {
+      test('Should get element with images', async () => {
+        const cookie = await createSession();
+        const block = await new BlockEntity().save();
+        const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
+        const image = await Object.assign(
+          new FileEntity(),
+          {
+            collection,
+            original: 'name.txt',
+            mimetype: 'image/jpeg',
+            path: `txt/txt.txt`,
+          },
+        ).save();
+        const parent = await createElement().withBlock(block);
+        await Object.assign(new Element2imageEntity(), {parent, image, collection}).save();
 
-      expect(list.body).toEqual({count: 0});
-    });
+        const item = await request(app.getHttpServer())
+          .get(`/content/element/${parent.id}`)
+          .set('cookie', cookie)
+          .expect(200);
 
-    test('Should get element count', async () => {
-      const block = await new BlockEntity().save();
-
-      for (let i = 0; i < 10; i++) await createElement().withBlock(block);
-
-      const list = await request(app.getHttpServer())
-        .get('/content/element/count')
-        .expect(200);
-
-      expect(list.body).toEqual({count: 10});
-    });
-
-    test('Should get element count with permission ', async () => {
-      const block = await new BlockEntity().save();
-
-      for (let i = 0; i < 10; i++) {
-        await createElement(`ELEMENT_${i}`)
-          .withBlock(block)
-          .withPermission(null, i % 2 ? PermissionMethod.READ : null);
-      }
-
-      const list = await request(app.getHttpServer())
-        .get('/content/element/count')
-        .expect(200);
-
-      expect(list.body).toEqual({count: 5});
-    });
-
-    test('Should get element count with group permission', async () => {
-      const cookie = await createSession();
-      const block = await new BlockEntity().save();
-
-      for (let i = 0; i < 10; i++) {
-        await createElement()
-          .withBlock(block)
-          .withPermission('1', i % 2 ? PermissionMethod.READ : null);
-      }
-
-      const list = await request(app.getHttpServer())
-        .get('/content/element/count')
-        .set('cookie', cookie)
-        .expect(200);
-
-      expect(list.body).toEqual({count: 5});
-    });
-  });
-
-  describe('Content element with images', () => {
-    test('Should get element with images', async () => {
-      const cookie = await createSession();
-      const block = await new BlockEntity().save();
-      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const image = await Object.assign(
-        new FileEntity(),
-        {
-          collection,
-          original: 'name.txt',
-          mimetype: 'image/jpeg',
-          path: `txt/txt.txt`,
-        },
-      ).save();
-      const parent = await createElement().withBlock(block);
-      await Object.assign(new Element2imageEntity(), {parent, image, collection}).save();
-
-      const item = await request(app.getHttpServer())
-        .get(`/content/element/${parent.id}`)
-        .set('cookie', cookie)
-        .expect(200);
-
-      expect(item.body.image).toHaveLength(1);
-      expect(item.body.image[0].image).toBe(1);
-      expect(item.body.image[0].collection).toBe('SHORT');
-      expect(item.body.image[0].path).toBe('txt/txt.txt');
+        expect(item.body.image).toHaveLength(1);
+        expect(item.body.image[0].image).toBe(1);
+        expect(item.body.image[0].collection).toBe('SHORT');
+        expect(item.body.image[0].path).toBe('txt/txt.txt');
+      });
     });
   });
 
@@ -588,7 +591,6 @@ describe('Element Controller', () => {
 
     describe('Content element with point', () => {
       test('Should get element with point', async () => {
-        const cookie = await createSession();
         const block = await new BlockEntity().save();
         const parent = await createElement().withBlock(block);
         const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
@@ -599,7 +601,6 @@ describe('Element Controller', () => {
 
         const list = await request(app.getHttpServer())
           .get('/content/element')
-          .set('cookie', cookie)
           .expect(200);
 
         expect(list.body).toHaveLength(1);
@@ -609,7 +610,6 @@ describe('Element Controller', () => {
       });
 
       test('Should get element with point filter', async () => {
-        const cookie = await createSession();
         const block = await new BlockEntity().save();
         const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
@@ -625,7 +625,6 @@ describe('Element Controller', () => {
 
         const list = await request(app.getHttpServer())
           .get('/content/element?filter[point][CITY][eq]=LONDON')
-          .set('cookie', cookie)
           .expect(200);
 
         expect(list.body).toHaveLength(5);
@@ -635,7 +634,6 @@ describe('Element Controller', () => {
       });
 
       test('Should get element with point order', async () => {
-        const cookie = await createSession();
         const block = await new BlockEntity().save();
         const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
@@ -651,13 +649,34 @@ describe('Element Controller', () => {
 
         const list = await request(app.getHttpServer())
           .get('/content/element?sort[point][CITY]=asc')
-          .set('cookie', cookie)
           .expect(200);
 
         // expect(list.body).toHaveLength(5);
         // expect(list.body[0].attribute).toHaveLength(1);
         // expect(list.body[0].attribute[0].value).toBe('LONDON');
         // expect(list.body[0].attribute[0].registry).toBe('CITY');
+      });
+    });
+
+    describe('Content element with counter', () => {
+      test('Should get item with counter', async () => {
+        const block = await new BlockEntity().save();
+        const parent = await createElement().withBlock(block);
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'CURRENT'}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        await Object.assign(new Element4counterEntity(), {parent, attribute, point, count: 100}).save();
+
+        const list = await request(app.getHttpServer())
+          .get('/content/element')
+          .expect(200);
+
+        expect(list.body).toHaveLength(1);
+        expect(list.body[0].attribute).toHaveLength(1);
+        expect(list.body[0].attribute[0].counter).toBe('LONDON');
+        expect(list.body[0].attribute[0].directory).toBe('CITY');
+        expect(list.body[0].attribute[0].count).toBe(100);
       });
     });
 
@@ -685,7 +704,7 @@ describe('Element Controller', () => {
   });
 
   describe('Content element addition', () => {
-    describe('Element addition with fields', () => {
+    describe('Content element addition with fields', () => {
       test('Should add element', async () => {
         await new BlockEntity('BLOCK').save();
 
@@ -740,6 +759,8 @@ describe('Element Controller', () => {
       });
 
       test('Shouldn`t add without block', async () => {
+        await Object.assign(new BlockEntity(), {}).save();
+
         await request(app.getHttpServer())
           .post('/content/element')
           .send({})
@@ -755,7 +776,7 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with permission', () => {
+    describe('Content element addition with permission', () => {
       test('Should add with permission', async () => {
         await Object.assign(new GroupEntity(), {id: 'NEW'}).save();
         await new BlockEntity('BLOCK').save();
@@ -810,7 +831,7 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with string', () => {
+    describe('Content element addition with string', () => {
       test('Should add with strings', async () => {
         await new BlockEntity('BLOCK').save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -846,7 +867,7 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with description', () => {
+    describe('Content element addition with description', () => {
       test('Should add with description', async () => {
         await new BlockEntity('BLOCK').save();
         await Object.assign(new AttributeEntity(), {id: 'TEXT'}).save();
@@ -880,7 +901,7 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with interval', () => {
+    describe('Content element addition with interval', () => {
       test('Should add with interval', async () => {
         await new BlockEntity('BLOCK').save();
         await Object.assign(new AttributeEntity(), {id: 'DATE', type: AttributeType.INTERVAL}).save();
@@ -950,10 +971,10 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with point', () => {
+    describe('Content element addition with point', () => {
       test('Should add with point', async () => {
         await new BlockEntity('BLOCK').save();
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.POINT}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -975,7 +996,7 @@ describe('Element Controller', () => {
 
       test('Shouldn`t add with wrong point', async () => {
         await new BlockEntity('BLOCK').save();
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.POINT}).save();
 
         await request(app.getHttpServer())
           .post('/content/element')
@@ -990,7 +1011,7 @@ describe('Element Controller', () => {
 
       test('Shouldn`t add with duplicate point', async () => {
         await new BlockEntity('BLOCK').save();
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.POINT}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -1007,7 +1028,66 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with element', () => {
+    describe('Content element addition with counter', () => {
+      test('Should add with counter', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'REST', type: AttributeType.COUNTER}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        const inst = await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [
+              {attribute: 'REST', counter: 'LONDON', count: 333},
+            ],
+          })
+          .expect(201);
+
+        expect(inst.body.attribute).toHaveLength(1);
+        expect(inst.body.attribute[0].attribute).toBe('LONDON');
+        expect(inst.body.attribute[0].point).toBe('LONDON');
+        expect(inst.body.attribute[0].directory).toBe('CITY');
+        expect(inst.body.attribute[0].count).toBe(333);
+      });
+
+      test('Shouldn`t add with wrong attribute', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'REST', type: AttributeType.COUNTER}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [
+              {attribute: 'WRONG', counter: 'LONDON', count: 333},
+            ],
+          })
+          .expect(400);
+      });
+
+      test('Shouldn`t add with wrong counter', async () => {
+        await new BlockEntity('BLOCK').save();
+        await Object.assign(new AttributeEntity(), {id: 'REST', type: AttributeType.COUNTER}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        await request(app.getHttpServer())
+          .post('/content/element')
+          .send({
+            block: 'BLOCK',
+            attribute: [
+              {attribute: 'REST', counter: 'WRONG', count: 333},
+            ],
+          })
+          .expect(400);
+      });
+    });
+
+    describe('Content element addition with element', () => {
       test('Should add with element', async () => {
         const block = await new BlockEntity('BLOCK').save();
         await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
@@ -1062,7 +1142,7 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with flag', () => {
+    describe('Content element addition with flag', () => {
       test('Should add with flag', async () => {
         await new BlockEntity('BLOCK').save();
         await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
@@ -1122,7 +1202,7 @@ describe('Element Controller', () => {
       });
     });
 
-    describe('Element addition with image', () => {
+    describe('Content element addition with image', () => {
       test('Should add with image', async () => {
         const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
         await Object.assign(
@@ -1540,7 +1620,11 @@ describe('Element Controller', () => {
         const block = await new BlockEntity('BLOCK').save();
         const parent = await createElement('ELEMENT').withBlock(block);
         const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.INTERVAL}).save();
-        await Object.assign(new Element4IntervalEntity(), {attribute, parent, from: new Date('2001-01-01T00:00:00.000Z')}).save();
+        await Object.assign(new Element4IntervalEntity(), {
+          attribute,
+          parent,
+          from: new Date('2001-01-01T00:00:00.000Z'),
+        }).save();
 
         const item = await request(app.getHttpServer())
           .put(`/content/element/ELEMENT`)
@@ -1622,7 +1706,7 @@ describe('Element Controller', () => {
       test('Should add point', async () => {
         const block = await new BlockEntity('BLOCK').save();
         await createElement('ELEMENT').withBlock(block);
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.POINT}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
 
@@ -1641,7 +1725,7 @@ describe('Element Controller', () => {
       test('Should remove point', async () => {
         const block = await new BlockEntity('BLOCK').save();
         const parent = await createElement('ELEMENT').withBlock(block);
-        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.POINT}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
         await Object.assign(new Element4pointEntity(), {point, parent, attribute}).save();
@@ -1661,7 +1745,7 @@ describe('Element Controller', () => {
       test('Should change point', async () => {
         const block = await new BlockEntity('BLOCK').save();
         const parent = await createElement('ELEMENT').withBlock(block);
-        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME', type: AttributeType.POINT}).save();
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const point = await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
         await Object.assign(new PointEntity(), {id: 'PARIS', directory}).save();
@@ -1680,6 +1764,29 @@ describe('Element Controller', () => {
         expect(item.body.attribute[0].attribute).toBe('NAME');
         expect(item.body.attribute[0].point).toBe('PARIS');
         expect(item.body.attribute[0].directory).toBe('CITY');
+      });
+    });
+
+    describe('Content element counter update', () => {
+      test('Should add counter', async () => {
+        const block = await new BlockEntity('BLOCK').save();
+        await createElement('ELEMENT').withBlock(block);
+        await Object.assign(new AttributeEntity(), {id: 'REST', type: AttributeType.COUNTER}).save();
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        await Object.assign(new PointEntity(), {id: 'LONDON', directory}).save();
+
+        const item = await request(app.getHttpServer())
+          .put(`/content/element/ELEMENT`)
+          .send({
+            id: 'ELEMENT',
+            block: 'BLOCK',
+            attribute: [{attribute: 'REST', counter: 'LONDON', count: 222}],
+          })
+          .expect(200);
+
+        expect(item.body.attribute).toEqual([
+          {attribute: 'REST', counter: 'LONDON', directory: 'CITY', count: 222},
+        ]);
       });
     });
 

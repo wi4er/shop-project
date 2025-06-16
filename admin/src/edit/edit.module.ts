@@ -23,6 +23,8 @@ import { BlockEditComponent } from './block-edit/block-edit.component';
 import { CollectionEditComponent } from './collection-edit/collection-edit.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { PointEditComponent } from './point-edit/point-edit.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     DirectoryEditComponent,
     BlockEditComponent,
     CollectionEditComponent,
+    PointEditComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +56,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatDialogModule,
   ],
   exports: [
     AddButtonComponent,

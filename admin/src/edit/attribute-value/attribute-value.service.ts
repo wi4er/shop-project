@@ -12,12 +12,19 @@ export interface AttributeEdit {
   } | {
     type: AttributeType.DESCRIPTION;
     edit: {
-      [lang: string]: FormControl
+      [lang: string]: FormControl,
     },
   } | {
     type: AttributeType.INTERVAL,
     from?: FormControl,
     to?: FormControl,
+  } | {
+    type: AttributeType.POINT;
+    point: FormControl;
+  }  | {
+    type: AttributeType.COUNTER;
+    counter: FormControl;
+    count: FormControl;
   };
 }
 
@@ -73,6 +80,29 @@ export class AttributeValueService {
           to: item.to?.value,
         });
       }
+
+      if (item.type === AttributeType.POINT) {
+        if (!item.point?.value) continue;
+
+        if (item.point.value) {
+          input.push({
+            attribute: attr,
+            point: item.point.value,
+          });
+        }
+      }
+
+      if (item.type === AttributeType.COUNTER) {
+        if (!item.count?.value) continue;
+
+        if (item.counter.value) {
+          input.push({
+            attribute: attr,
+            counter: item.counter.value,
+            count: Number(item.count.value),
+          });
+        }
+      }
     }
 
     return input;
@@ -86,7 +116,7 @@ export class AttributeValueService {
   ): AttributeEdit {
     const edit: AttributeEdit = {};
 
-    for (const attr of list) {
+    for (const attr of list ?? []) {
       if ('string' in attr) {
         if (!edit[attr.attribute]) {
           edit[attr.attribute] = {
@@ -120,6 +150,21 @@ export class AttributeValueService {
           type: AttributeType.INTERVAL,
           from: new FormControl(attr.from),
           to: new FormControl(attr.to),
+        };
+      }
+
+      if ('point' in attr) {
+        edit[attr.attribute] = {
+          type: AttributeType.POINT,
+          point: new FormControl(attr.point),
+        };
+      }
+
+      if ('counter' in attr) {
+        edit[attr.attribute] = {
+          type: AttributeType.COUNTER,
+          counter: new FormControl(attr.counter),
+          count: new FormControl(attr.count)
         };
       }
     }

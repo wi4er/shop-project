@@ -9,6 +9,7 @@ import { FileAttributeView } from '../../common/view/attribute/file-attribute.vi
 import { ImageView } from '../../common/view/image.view';
 import { DescriptionAttributeView } from '../../common/view/attribute/description-attribute.view';
 import { IntervalAttributeView } from '../../common/view/attribute/interval-attribute.view';
+import { CounterAttributeView } from '../../common/view/attribute/counter-attribute.view';
 
 @ApiExtraModels(
   StringAttributeView,
@@ -53,6 +54,12 @@ export class ElementView {
         attribute: val.attribute.id,
         point: val.point.id,
         directory: val.point.directory.id,
+      })),
+      ...item.counter.map(val => ({
+        attribute: val.attribute.id,
+        counter: val.point.id,
+        directory: val.point.directory.id,
+        count: val.count,
       })),
       ...item.element.map(val => ({
         attribute: val.attribute.id,
@@ -116,6 +123,7 @@ export class ElementView {
     | DescriptionAttributeView
     | IntervalAttributeView
     | PointAttributeView
+    | CounterAttributeView
     | ElementAttributeView
     | SectionAttributeView
     | FileAttributeView

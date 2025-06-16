@@ -31,7 +31,7 @@ import { Section4fileEntity } from './model/section/section4file.entity';
 import { Section2imageEntity } from './model/section/section2image.entity';
 import { Block4fileEntity } from './model/block/block4file.entity';
 import { Element4IntervalEntity } from './model/element/element4interval.entity';
-import { Element4CounterEntity } from './model/element/element4counter.entity';
+import { Element4counterEntity } from './model/element/element4counterEntity';
 import { Element4InstanceEntity } from './model/element/element4instance.entity';
 import { Block4descriptionEntity } from './model/block/block4description.entity';
 
@@ -41,7 +41,7 @@ import { Block4descriptionEntity } from './model/block/block4description.entity'
       ElementEntity, Element2sectionEntity, Element2flagEntity, Element2imageEntity,
       Element2permissionEntity,
       Element4stringEntity, Element4pointEntity, Element4elementEntity, Element4sectionEntity, Element4fileEntity,
-      Element4IntervalEntity, Element4CounterEntity, Element4InstanceEntity,
+      Element4IntervalEntity, Element4counterEntity, Element4InstanceEntity,
       SectionEntity,
       Section2flagEntity, Section2permissionEntity, Section2imageEntity,
       Section4pointEntity, Section4stringEntity, Section4fileEntity,

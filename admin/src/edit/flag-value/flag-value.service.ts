@@ -34,7 +34,7 @@ export class FlagValueService {
   toEdit(flagList: Array<string>): FlagEdit {
     const edit: FlagEdit = {};
 
-    for (const flag of flagList) {
+    for (const flag of flagList ?? []) {
       edit[flag] = true;
     }
 

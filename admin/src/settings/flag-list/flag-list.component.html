@@ -1,5 +1,5 @@
 <mat-toolbar *ngIf="list.length">
-  <span>FlagEntity </span>
+  <span>Flags</span>
 
   <span class="spacer"></span>
 
@@ -98,7 +98,8 @@
       mat-header-cell
       *matHeaderCellDef
       class="action"
-    >Icon</th>
+    >Icon
+    </th>
 
     <td
       mat-cell
@@ -107,7 +108,8 @@
     >
       <mat-icon
         [style]="'color:' + element.color"
-      >{{ element['icon'] }}</mat-icon>
+      >{{ element['icon'] }}
+      </mat-icon>
 
     </td>
   </ng-container>
@@ -125,7 +127,6 @@
     >
       <div class="flags">
         <mat-icon
-          [title]="flag.title"
           [style]="'color:' + flag.color"
           *ngFor="let flag of getFlagsIcon(element.id)"
         >

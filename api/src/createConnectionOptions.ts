@@ -86,7 +86,7 @@ import { Point2logEntity } from './registry/model/point/point2log.entity';
 import { Directory2logEntity } from './registry/model/directory/directory2log.entity';
 import { InstanceEntity } from './bundle/model/instance/instance.entity';
 import { Element4IntervalEntity } from './content/model/element/element4interval.entity';
-import { Element4CounterEntity } from './content/model/element/element4counter.entity';
+import { Element4counterEntity } from './content/model/element/element4counterEntity';
 import { Element4InstanceEntity } from './content/model/element/element4instance.entity';
 import { Block4descriptionEntity } from './content/model/block/block4description.entity';
 import { Element4descriptionEntity } from './content/model/element/element4description.entity';
@@ -123,7 +123,7 @@ export function createConnectionOptions(): DataSourceOptions {
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       ElementEntity, Element2flagEntity, Element2sectionEntity, Element2imageEntity,
       Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity, Element4fileEntity,
-      Element4IntervalEntity, Element4CounterEntity, Element4InstanceEntity, Element4descriptionEntity,
+      Element4IntervalEntity, Element4counterEntity, Element4InstanceEntity, Element4descriptionEntity,
       Element2permissionEntity,
       SectionEntity, Section2flagEntity, Section2permissionEntity, Section2imageEntity,
       Section4fileEntity, Section4pointEntity, Section4stringEntity,
