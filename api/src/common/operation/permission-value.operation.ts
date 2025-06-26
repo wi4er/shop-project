@@ -5,6 +5,8 @@ import { WrongDataException } from '../../exception/wrong-data/wrong-data.except
 import { WithPermissionInput } from '../input/with-permission.input';
 import { WithPermissionEntity } from '../model/with/with-permission.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
+import * as process from 'node:process';
+import { PermissionValueInput } from '../input/permission-value.input';
 
 export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>> {
 
@@ -31,7 +33,19 @@ export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>
   /**
    *
    */
-  async save(beforeItem: T, input: WithPermissionInput) {
+  private async checkAdminGroup(input:  PermissionValueInput[]) {
+    if (!process.env['ADMIN_GROUP']) return;
+
+   for (const item of input) {
+
+   }
+
+  }
+
+  /**
+   *
+   */
+  async save(beforeItem: T, input:  PermissionValueInput[]) {
     const current: { [key: string]: Array<PermissionMethod> } = {};
 
     for (const item of beforeItem.permission ?? []) {
@@ -41,7 +55,7 @@ export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>
       else current[id] = [item.method];
     }
 
-    for (const item of input?.permission ?? []) {
+    for (const item of input ?? []) {
       const group = item.group ?? '';
 
       if (current[group]?.includes(item.method)) {

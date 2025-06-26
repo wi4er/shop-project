@@ -8,13 +8,13 @@ import { FlagUpdateOperation } from '../../operation/flag/flag-update.operation'
 import { FlagDeleteOperation } from '../../operation/flag/flag-delete.operation';
 import { FlagPatchOperation } from '../../operation/flag/flag-patch.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { FlagRender } from '../../view/flag.render';
+import { FlagView } from '../../view/flag.view';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
 
-@Controller('flag')
+@Controller('settings/flag')
 export class FlagController {
 
   relations = {
@@ -31,7 +31,7 @@ export class FlagController {
   }
 
   toView(item: FlagEntity) {
-    return new FlagRender(item);
+    return new FlagView(item);
   }
 
   @Get()

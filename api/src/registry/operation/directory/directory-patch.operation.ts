@@ -41,7 +41,12 @@ export class DirectoryPatchOperation {
 
     const beforeItem = await this.checkDirectory(input.id ? input.id : id);
     if (input.flag) await new FlagValueOperation(this.transaction, Directory2flagEntity).save(beforeItem, input.flag);
-    if (input.permission) await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
+    if (input.permission) {
+      await new PermissionValueOperation(
+        this.transaction,
+        Directory2permissionEntity,
+      ).save(beforeItem, input.permission);
+    }
 
     return input.id ? input.id : id;
   }

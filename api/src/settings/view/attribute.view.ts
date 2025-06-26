@@ -1,19 +1,26 @@
+import { AttributeEntity, AttributeType } from '../model/attribute/attribute.entity';
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringAttributeView } from '../../common/view/attribute/string-attribute.view';
 import { PointAttributeView } from '../../common/view/attribute/point-attribute.view';
-import { FlagEntity } from '../model/flag/flag.entity';
 
-export class FlagRender {
+export class AttributeView {
 
-  constructor(item: FlagEntity) {
+  constructor(item: AttributeEntity) {
     this.id = item.id;
     this.created_at = item.created_at.toISOString();
     this.updated_at = item.updated_at.toISOString();
+    this.type = item.type;
     this.version = item.version;
 
-    this.color = item.color;
-    this.icon = item.icon;
-    this.iconSvg = item.iconSvg;
+    this.directory = item.asDirectory?.directory?.id ?? null;
+    if (item.type === AttributeType.ELEMENT) {
+      this.block = item.asElement.block.id;
+    } else if (item.type === AttributeType.SECTION) {
+      this.block = item.asSection.block.id;
+    } else {
+      this.block = null;
+    }
+    this.collection = item.asFile?.collection?.id ?? null;
 
     this.attribute = [
       ...item.string.map(str => ({
@@ -38,13 +45,7 @@ export class FlagRender {
   version: number;
 
   @ApiProperty()
-  color: string;
-
-  @ApiProperty()
-  icon: string;
-
-  @ApiProperty()
-  iconSvg: string;
+  type: string;
 
   @ApiProperty({
     type: 'array',
@@ -62,5 +63,14 @@ export class FlagRender {
 
   @ApiProperty()
   flag: Array<string>;
+
+  @ApiProperty()
+  directory: string | null;
+
+  @ApiProperty()
+  block: string | null;
+
+  @ApiProperty()
+  collection: string | null;
 
 }

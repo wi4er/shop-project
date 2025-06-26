@@ -64,7 +64,7 @@ export class DirectoryUpdateOperation {
       });
     }
     await new FlagValueOperation(this.transaction, Directory2flagEntity).save(beforeItem, input.flag);
-    await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input);
+    await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.transaction, Directory4stringEntity).save(beforeItem, pack.string);

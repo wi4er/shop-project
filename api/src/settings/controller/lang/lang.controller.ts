@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { LangEntity } from '../../model/lang/lang.entity';
@@ -8,13 +8,14 @@ import { LangInsertOperation } from '../../operation/lang/lang-insert.operation'
 import { LangUpdateOperation } from '../../operation/lang/lang-update.operation';
 import { LangDeleteOperation } from '../../operation/lang/lang-delete.operation';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { LangRender } from '../../view/lang.render';
+import { LangView } from '../../view/lang.view';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
+import { LangPatchOperation } from '../../operation/lang/lang-patch.operation';
 
-@Controller('lang')
+@Controller('settings/lang')
 export class LangController {
 
   relations = {
@@ -30,10 +31,6 @@ export class LangController {
   ) {
   }
 
-  toView(item: LangEntity) {
-    return new LangRender(item);
-  }
-
   @Get()
   @CheckAccess(AccessTarget.LANG, AccessMethod.GET)
   async getList(
@@ -46,7 +43,7 @@ export class LangController {
       relations: this.relations,
       take: limit,
       skip: offset,
-    }).then(list => list.map(this.toView));
+    }).then(list => list.map(item => new LangView(item)));
   }
 
   @Get('count')
@@ -67,7 +64,7 @@ export class LangController {
       relations: this.relations,
     });
 
-    return this.toView(item);
+    return new LangView(item);
   }
 
   @Post()
@@ -83,7 +80,7 @@ export class LangController {
           relations: this.relations,
         })));
 
-    return this.toView(item);
+    return new LangView(item);
   }
 
   @Put(':id')
@@ -102,7 +99,26 @@ export class LangController {
           relations: this.relations,
         })));
 
-    return this.toView(item);
+    return new LangView(item);
+  }
+
+  @Patch(':id')
+  @CheckId(LangEntity)
+  @CheckAccess(AccessTarget.LANG, AccessMethod.PUT)
+  async updateField(
+    @Param('id')
+      id: string,
+    @Body()
+      input: FlagInput,
+  ) {
+    const item = await this.entityManager.transaction(
+      trans => new LangPatchOperation(trans).save(id, input)
+        .then(langId => trans.getRepository(LangEntity).findOne({
+          where: {id: langId},
+          relations: this.relations,
+        })));
+
+    return new LangView(item);
   }
 
   @Delete('/:id')

@@ -1,15 +1,11 @@
 import { EntityManager } from 'typeorm';
 import { NoDataException } from '../../../exception/no-data/no-data.exception';
-import { filterAttributes } from '../../../common/service/filter-attributes';
 import { LangEntity } from '../../model/lang/lang.entity';
 import { LangInput } from '../../input/lang/lang.input';
-import { Lang4stringEntity } from '../../model/lang/lang4string.entity';
 import { Lang2flagEntity } from '../../model/lang/lang2flag.entity';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
-import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
-export class LangUpdateOperation {
+export class LangPatchOperation {
 
   constructor(
     private transaction: EntityManager,
@@ -38,22 +34,12 @@ export class LangUpdateOperation {
    *
    */
   async save(id: string, input: LangInput): Promise<string> {
-    try {
-      await this.transaction.update(LangEntity, {id}, {
-        id: WrongDataException.assert(input.id, 'LangEntity id expected'),
-      });
-    } catch (err) {
-      throw new WrongDataException(err.message);
-    }
+    const beforeItem = await this.checkLang(id);
 
-    const beforeItem = await this.checkLang(input.id);
+    if (input.id) await this.transaction.update(LangEntity, {id}, {id: input.id});
+    if (input.flag) await new FlagValueOperation(this.transaction, Lang2flagEntity).save(beforeItem, input.flag);
 
-    await new FlagValueOperation(this.transaction, Lang2flagEntity).save(beforeItem, input.flag);
-
-    const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Lang4stringEntity).save(beforeItem, pack.string);
-
-    return beforeItem.id;
+    return input.id ? input.id : beforeItem.id;
   }
 
 }

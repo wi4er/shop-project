@@ -86,7 +86,7 @@ import { Point2logEntity } from './registry/model/point/point2log.entity';
 import { Directory2logEntity } from './registry/model/directory/directory2log.entity';
 import { InstanceEntity } from './bundle/model/instance/instance.entity';
 import { Element4IntervalEntity } from './content/model/element/element4interval.entity';
-import { Element4counterEntity } from './content/model/element/element4counterEntity';
+import { Element4counterEntity } from './content/model/element/element4counter.entity';
 import { Element4InstanceEntity } from './content/model/element/element4instance.entity';
 import { Block4descriptionEntity } from './content/model/block/block4description.entity';
 import { Element4descriptionEntity } from './content/model/element/element4description.entity';

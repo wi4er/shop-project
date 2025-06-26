@@ -1,20 +1,20 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, IsNull, Or, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { AttributeEntity } from '../../model/attribute/attribute.entity';
 import { AttributeInput } from '../../input/attribute/attribute.input';
 import { AttributeInsertOperation } from '../../operation/attribute/attribute-insert.operation';
 import { AttributeUpdateOperation } from '../../operation/attribute/attribute-update.operation';
 import { AttributeDeleteOperation } from '../../operation/attribute/attribute-delete.operation';
 import { AttributePatchOperation } from '../../operation/attribute/attribute-patch.operation';
-import { AttributeRender } from '../../view/attribute.render';
+import { AttributeView } from '../../view/attribute.view';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
 
-@Controller('attribute')
+@Controller('settings/attribute')
 export class AttributeController {
 
   relations = {
@@ -35,7 +35,7 @@ export class AttributeController {
   }
 
   toView(item: AttributeEntity) {
-    return new AttributeRender(item);
+    return new AttributeView(item);
   }
 
   @Get()

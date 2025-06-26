@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
 import { createConnectionOptions } from '../../../createConnectionOptions';
-import { Element4counterEntity } from './element4counterEntity';
+import { Element4counterEntity } from './element4counter.entity';
 import { BlockEntity } from '../block/block.entity';
 import { ElementEntity } from './element.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';

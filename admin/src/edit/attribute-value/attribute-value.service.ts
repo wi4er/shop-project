@@ -3,25 +3,32 @@ import { FormControl } from '@angular/forms';
 import { CommonAttributeValue } from '../../app/model/common/common-attribute-value';
 import { AttributeType } from '../../settings/attribute-form/attribute-form.component';
 
+
+export interface AttributeStringEdit {
+  type: AttributeType.STRING;
+  edit: {
+    [lang: string]: Array<FormControl>,
+  };
+}
+
+export interface AttributeDescriptionEdit {
+  type: AttributeType.DESCRIPTION;
+  edit: {
+    [lang: string]: Array<FormControl>,
+  };
+}
+
 export interface AttributeEdit {
-  [attribute: string]: {
-    type: AttributeType.STRING;
-    edit: {
-      [lang: string]: FormControl
-    },
-  } | {
-    type: AttributeType.DESCRIPTION;
-    edit: {
-      [lang: string]: FormControl,
-    },
-  } | {
+  [attribute: string]: AttributeStringEdit
+    | AttributeDescriptionEdit
+    | {
     type: AttributeType.INTERVAL,
     from?: FormControl,
     to?: FormControl,
   } | {
     type: AttributeType.POINT;
     point: FormControl;
-  }  | {
+  } | {
     type: AttributeType.COUNTER;
     counter: FormControl;
     count: FormControl;
@@ -48,26 +55,31 @@ export class AttributeValueService {
       const item = editAttributes[attr];
 
       if (item.type === AttributeType.STRING) {
-        for (const lang in item.edit) {
-          if (!item.edit[lang]?.value) continue;
 
-          input.push({
-            attribute: attr,
-            string: item.edit[lang].value,
-            lang: lang,
-          });
+        for (const lang in item.edit) {
+          for (const inst of item.edit[lang]) {
+            if (!inst.value) continue;
+
+            input.push({
+              attribute: attr,
+              string: inst.value,
+              lang: lang,
+            });
+          }
         }
       }
 
       if (item.type === AttributeType.DESCRIPTION) {
         for (const lang in item.edit) {
-          if (!item.edit[lang]?.value) continue;
+          for (const inst of item.edit[lang]) {
+            if (!inst.value) continue;
 
-          input.push({
-            attribute: attr,
-            description: item.edit[lang].value,
-            lang: lang,
-          });
+            input.push({
+              attribute: attr,
+              string: inst.value,
+              lang: lang,
+            });
+          }
         }
       }
 
@@ -127,7 +139,11 @@ export class AttributeValueService {
 
         const value = edit[attr.attribute];
         if ('edit' in value) {
-          value.edit[attr.lang ?? ''] = new FormControl(attr.string);
+          if (!value.edit[attr.lang ?? '']) {
+            value.edit[attr.lang ?? ''] = [new FormControl(attr.string)];
+          } else {
+            value.edit[attr.lang ?? ''].push(new FormControl(attr.string));
+          }
         }
       }
 
@@ -141,7 +157,7 @@ export class AttributeValueService {
 
         const value = edit[attr.attribute];
         if ('edit' in value) {
-          value.edit[attr.lang ?? ''] = new FormControl(attr.description);
+          value.edit[attr.lang ?? ''] = [new FormControl(attr.description)];
         }
       }
 
@@ -164,7 +180,7 @@ export class AttributeValueService {
         edit[attr.attribute] = {
           type: AttributeType.COUNTER,
           counter: new FormControl(attr.counter),
-          count: new FormControl(attr.count)
+          count: new FormControl(attr.count),
         };
       }
     }

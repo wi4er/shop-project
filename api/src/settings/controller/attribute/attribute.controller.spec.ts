@@ -69,12 +69,12 @@ describe('Attribute Controller', () => {
   }
 
   describe('Attribute fields', () => {
-    describe('AttributeEntity list', () => {
+    describe('Attribute list', () => {
       test('Should get empty list', async () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
 
         const res = await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(200);
 
         expect(res.body).toHaveLength(0);
@@ -82,7 +82,7 @@ describe('Attribute Controller', () => {
 
       test('Shouldn`t get list without access', async () => {
         await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(403);
       });
 
@@ -92,7 +92,7 @@ describe('Attribute Controller', () => {
         }
 
         const res = await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(200);
 
         expect(res.body).toHaveLength(10);
@@ -110,7 +110,7 @@ describe('Attribute Controller', () => {
         }
 
         const res = await request(app.getHttpServer())
-          .get('/attribute?limit=5')
+          .get('/settings/attribute?limit=5')
           .expect(200);
 
         expect(res.body).toHaveLength(5);
@@ -124,7 +124,7 @@ describe('Attribute Controller', () => {
         }
 
         const res = await request(app.getHttpServer())
-          .get('/attribute?offset=5')
+          .get('/settings/attribute?offset=5')
           .expect(200);
 
         expect(res.body).toHaveLength(5);
@@ -140,7 +140,7 @@ describe('Attribute Controller', () => {
         await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
 
         const res = await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(200);
 
         expect(res.body).toHaveLength(1);
@@ -155,7 +155,7 @@ describe('Attribute Controller', () => {
         await Object.assign(new AttributeAsElementEntity(), {block, parent}).save();
 
         const res = await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(200);
 
         expect(res.body).toHaveLength(1);
@@ -170,7 +170,7 @@ describe('Attribute Controller', () => {
         await Object.assign(new AttributeAsSectionEntity(), {block, parent}).save();
 
         const res = await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(200);
 
         expect(res.body).toHaveLength(1);
@@ -185,7 +185,7 @@ describe('Attribute Controller', () => {
         await Object.assign(new AttributeAsFileEntity(), {collection, parent}).save();
 
         const res = await request(app.getHttpServer())
-          .get('/attribute')
+          .get('/settings/attribute')
           .expect(200);
 
         expect(res.body).toHaveLength(1);
@@ -201,7 +201,7 @@ describe('Attribute Controller', () => {
       await createAttribute('NAME');
 
       const res = await request(app.getHttpServer())
-        .get('/attribute/NAME')
+        .get('/settings/attribute/NAME')
         .expect(200);
 
       expect(res.body.id).toBe('NAME');
@@ -213,7 +213,7 @@ describe('Attribute Controller', () => {
         .withAccess(null);
 
       await request(app.getHttpServer())
-        .get('/attribute/NAME')
+        .get('/settings/attribute/NAME')
         .expect(403);
     });
 
@@ -221,7 +221,7 @@ describe('Attribute Controller', () => {
       await createAttribute('NAME');
 
       await request(app.getHttpServer())
-        .get('/attribute/WRONG')
+        .get('/settings/attribute/WRONG')
         .expect(404);
     });
   });
@@ -231,7 +231,7 @@ describe('Attribute Controller', () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/attribute/count')
+        .get('/settings/attribute/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 0});
@@ -239,7 +239,7 @@ describe('Attribute Controller', () => {
 
     test('Shouldn`t get count without access', async () => {
       await request(app.getHttpServer())
-        .get('/attribute/count')
+        .get('/settings/attribute/count')
         .expect(403);
     });
 
@@ -249,7 +249,7 @@ describe('Attribute Controller', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/attribute/count')
+        .get('/settings/attribute/count')
         .expect(200);
 
       expect(res.body).toEqual({count: 10});
@@ -262,7 +262,7 @@ describe('Attribute Controller', () => {
       await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/attribute')
+        .get('/settings/attribute')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -279,7 +279,7 @@ describe('Attribute Controller', () => {
       await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, lang, string: 'VALUE'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/attribute')
+        .get('/settings/attribute')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -295,7 +295,7 @@ describe('Attribute Controller', () => {
       await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/attribute')
+        .get('/settings/attribute')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -312,7 +312,7 @@ describe('Attribute Controller', () => {
       await Object.assign(new Attribute2flagEntity(), {parent, flag: flag3}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/attribute')
+        .get('/settings/attribute')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -320,787 +320,4 @@ describe('Attribute Controller', () => {
     });
   });
 
-  describe('Attribute addition', () => {
-    describe('Attribute addition with fields', () => {
-      test('Should add attribute', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-
-        const item = await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME'})
-          .expect(201);
-
-        expect(item.body.id).toBe('NAME');
-        expect(item.body.type).toBe('STRING');
-      });
-
-      test('Shouldn`t add without access', async () => {
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME'})
-          .expect(403);
-      });
-
-      test('Shouldn`t add without POST access', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.PUT}).save();
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.DELETE}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME'})
-          .expect(403);
-      });
-
-      test('Should add with type', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-        await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-
-        const item = await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME', type: 'POINT', directory: 'CITY'})
-          .expect(201);
-
-        expect(item.body.id).toBe('NAME');
-        expect(item.body.type).toBe('POINT');
-      });
-
-      test('Shouldn`t add with wrong type', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME', type: 'WRONG'})
-          .expect(400);
-      });
-
-      test('Shouldn`t add with duplicate id', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME'})
-          .expect(201);
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: 'NAME'})
-          .expect(400);
-      });
-
-      test('Shouldn`t add with blank id', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({id: ''})
-          .expect(400);
-      });
-    });
-
-    describe('Attribute addition with type', () => {
-      describe('AttributeEntity addition with point type', () => {
-        test('Should add with point type', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-
-          const item = await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'POINT',
-              directory: 'CITY',
-            })
-            .expect(201);
-
-          expect(item.body.directory).toBe('CITY');
-          expect(item.body.type).toBe('POINT');
-        });
-
-        test('Shouldn`t add with wrong directory', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'POINT',
-              directory: 'WRONG',
-            })
-            .expect(400);
-        });
-
-        test('Shouldn`t add without directory', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'POINT',
-            })
-            .expect(400);
-        });
-      });
-
-      describe('AttributeEntity addition with element type', () => {
-        test('Should add with element type', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await new BlockEntity('BLOCK').save();
-
-          const item = await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'ELEMENT',
-              block: 'BLOCK',
-            })
-            .expect(201);
-
-          expect(item.body.block).toBe('BLOCK');
-          expect(item.body.type).toBe('ELEMENT');
-        });
-
-        test('Shouldn`t add with wrong element block', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await new BlockEntity('BLOCK').save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'ELEMENT',
-              block: 'WRONG',
-            })
-            .expect(400);
-        });
-
-        test('Shouldn`t add without element block', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await new BlockEntity('BLOCK').save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'ELEMENT',
-            })
-            .expect(400);
-        });
-      });
-
-      describe('AttributeEntity addition with section type', () => {
-        test('Should add with section type', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await new BlockEntity('BLOCK').save();
-
-          const item = await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'SECTION',
-              block: 'BLOCK',
-            })
-            .expect(201);
-
-          expect(item.body.block).toBe('BLOCK');
-          expect(item.body.type).toBe('SECTION');
-        });
-
-        test('Shouldn`t add with wrong section block', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await new BlockEntity('BLOCK').save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'SECTION',
-              block: 'WRONG',
-            })
-            .expect(400);
-        });
-
-        test('Shouldn`t add without section block', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await new BlockEntity('BLOCK').save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'SECTION',
-            })
-            .expect(400);
-        });
-      });
-
-      describe('AttributeEntity addition with file type', () => {
-        test('Should add with file type', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-
-          const item = await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'FILE',
-              collection: 'DETAIL',
-            })
-            .expect(201);
-
-          expect(item.body.collection).toBe('DETAIL');
-          expect(item.body.type).toBe('FILE');
-        });
-
-        test('Shouldn`t add with wrong collection', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'FILE',
-              collection: 'WRONG',
-            })
-            .expect(400);
-        });
-
-        test('Shouldn`t add without collection', async () => {
-          await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-          await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-
-          await request(app.getHttpServer())
-            .post('/attribute')
-            .send({
-              id: 'SOME',
-              type: 'FILE',
-            })
-            .expect(400);
-        });
-      });
-    });
-
-    describe('Attribute addition with strings', () => {
-      test('Should add with strings', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-
-        const item = await request(app.getHttpServer())
-          .post('/attribute')
-          .send({
-            id: 'SOME',
-            attribute: [{attribute: 'NAME', string: 'VALUE'}],
-          })
-          .expect(201);
-
-        expect(item.body.id).toBe('SOME');
-        expect(item.body.attribute[0].attribute).toBe('NAME');
-        expect(item.body.attribute[0].string).toBe('VALUE');
-      });
-
-      test('Shouldn`t add with wrong attribute', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({
-            id: 'SOME',
-            attribute: [{attribute: 'WRONG', string: 'VALUE'}],
-          })
-          .expect(400);
-      });
-    });
-
-    describe('Attribute addition with flags', () => {
-      test('Should add with flags', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-        await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
-
-        const item = await request(app.getHttpServer())
-          .post('/attribute')
-          .send({
-            id: 'SOME',
-            flag: ['PASSIVE'],
-          })
-          .expect(201);
-
-        expect(item.body.flag).toEqual(['PASSIVE']);
-      });
-
-      test('Shouldn`t add duplicate flags', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-        await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({
-            id: 'SOME',
-            flag: ['PASSIVE', 'PASSIVE'],
-          })
-          .expect(400);
-      });
-
-      test('Shouldn`t add with wrong flags', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-        await Object.assign(new FlagEntity(), {id: 'PASSIVE'}).save();
-
-        await request(app.getHttpServer())
-          .post('/attribute')
-          .send({
-            id: 'SOME',
-            flag: ['WRONG'],
-          })
-          .expect(400);
-      });
-    });
-  });
-
-  describe('Attribute update', () => {
-    describe('Attribute field update', () => {
-      test('Should update attribute', async () => {
-        await createAttribute('NAME')
-          .withAccess(AccessMethod.PUT);
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'NAME'})
-          .expect(200);
-
-        expect(item.body.id).toBe('NAME');
-      });
-
-      test('Shouldn`t update without access', async () => {
-        await createAttribute('NAME')
-          .withAccess(null);
-
-        await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'NAME'})
-          .expect(403);
-      });
-
-      test('Should update id', async () => {
-        await createAttribute('NAME');
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'UPDATE'})
-          .expect(200);
-
-        const count = await request(app.getHttpServer())
-          .get('/attribute/count')
-          .expect(200);
-
-        expect(item.body.id).toBe('UPDATE');
-        expect(count.body.count).toBe(1);
-      });
-    });
-
-    describe('Attribute patch', () => {
-      test('Should patch id only', async () => {
-        await createAttribute('NAME')
-          .withAccess(AccessMethod.PUT);
-
-        const item = await request(app.getHttpServer())
-          .patch('/attribute/NAME')
-          .send({id: 'UPDATE'})
-          .expect(200);
-
-        expect(item.body.id).toBe('UPDATE');
-      });
-
-      test('Shouldn`t patch without access', async () => {
-        await createAttribute('NAME')
-          .withAccess(null);
-
-        await request(app.getHttpServer())
-          .patch('/attribute/NAME')
-          .send({id: 'UPDATE'})
-          .expect(403);
-      });
-
-      test('Shouldn`t patch with wrong id', async () => {
-        await createAttribute('NAME')
-          .withAccess(AccessMethod.PUT);
-
-        await request(app.getHttpServer())
-          .patch('/attribute/WRONG')
-          .send({id: 'UPDATE'})
-          .expect(404);
-      });
-    });
-
-    describe('Attribute update with type', () => {
-      describe('AttributeEntity update with point type', () => {
-        test('Should update type to point', async () => {
-          await createAttribute('NAME');
-          await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'POINT', directory: 'CITY'})
-            .expect(200);
-
-          expect(item.body.type).toBe('POINT');
-          expect(item.body.directory).toBe('CITY');
-          expect(item.body.block).toBe(null);
-          expect(item.body.collection).toBe(null);
-        });
-
-        test('Should update attribute point', async () => {
-          const parent = await createAttribute('NAME').withType(AttributeType.POINT);
-          const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-          await Object.assign(new DirectoryEntity(), {id: 'UPDATE', type: AttributeType.POINT}).save();
-          await Object.assign(new AttributeAsPointEntity(), {parent, directory}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'NAME', type: 'POINT', directory: 'UPDATE'})
-            .expect(200);
-
-          expect(item.body.directory).toBe('UPDATE');
-        });
-
-        test('Should update type from point to string', async () => {
-          const parent = await createAttribute('NAME')
-            .withType(AttributeType.POINT);
-          const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-          await Object.assign(new AttributeAsPointEntity(), {parent, directory}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'STRING'})
-            .expect(200);
-
-          expect(item.body.type).toBe('STRING');
-          expect(item.body.directory).toBe(null);
-          expect(item.body.block).toBe(null);
-          expect(item.body.collection).toBe(null);
-        });
-      });
-
-      describe('AttributeEntity update with element type', () => {
-        test('Should update type to element', async () => {
-          await createAttribute('NAME');
-          const block = await Object.assign(new BlockEntity(), {}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'ELEMENT', block: block.id})
-            .expect(200);
-
-          expect(item.body.type).toBe('ELEMENT');
-          expect(item.body.directory).toBe(null);
-          expect(item.body.block).toBe(block.id);
-          expect(item.body.collection).toBe(null);
-        });
-
-        test('Should update attribute block', async () => {
-          const parent = await createAttribute('NAME');
-          const block = await Object.assign(new BlockEntity(), {id: '111'}).save();
-          await Object.assign(new AttributeAsElementEntity(), {parent, block}).save();
-          await Object.assign(new BlockEntity(), {id: '222'}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'ELEMENT', block: '222'})
-            .expect(200);
-
-          expect(item.body.block).toBe('222');
-        });
-
-        test('Should update type from element to string', async () => {
-          const parent = await createAttribute('NAME')
-            .withType(AttributeType.ELEMENT);
-          const block = await Object.assign(new BlockEntity(), {}).save();
-          await Object.assign(new AttributeAsElementEntity(), {parent, block}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'STRING'})
-            .expect(200);
-
-          expect(item.body.type).toBe('STRING');
-          expect(item.body.directory).toBe(null);
-          expect(item.body.block).toBe(null);
-          expect(item.body.collection).toBe(null);
-        });
-
-        test('Shouldn`t update to element without block', async () => {
-          await createAttribute('NAME');
-          await Object.assign(new BlockEntity(), {}).save();
-
-          await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'ELEMENT'})
-            .expect(400);
-        });
-      });
-
-
-      describe('AttributeEntity update with section type', () => {
-        test('Should update type to section', async () => {
-          await createAttribute('NAME');
-          const block = await Object.assign(new BlockEntity(), {}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'NAME', type: 'SECTION', block: block.id})
-            .expect(200);
-
-          expect(item.body.type).toBe('SECTION');
-          expect(item.body.directory).toBe(null);
-          expect(item.body.block).toBe(block.id);
-          expect(item.body.collection).toBe(null);
-        });
-
-        test('Should update attribute block', async () => {
-          const parent = await createAttribute('NAME');
-          const block = await Object.assign(new BlockEntity(), {id: 'OLD'}).save();
-          await Object.assign(new BlockEntity(), {id: 'NEW'}).save();
-          await Object.assign(new AttributeAsSectionEntity(), {parent, block}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'NAME', type: 'SECTION', block: 'NEW'})
-            .expect(200);
-
-          expect(item.body.block).toBe('NEW');
-        });
-
-        test('Shouldn`t update to section without block', async () => {
-          await createAttribute('NAME');
-          const block = await Object.assign(new BlockEntity(), {}).save();
-
-          await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'UPDATE', type: 'SECTION'})
-            .expect(400);
-        });
-
-        test('Should update type from section to string', async () => {
-          const parent = await createAttribute('NAME')
-            .withType(AttributeType.SECTION);
-          const block = await Object.assign(new BlockEntity(), {}).save();
-          await Object.assign(new AttributeAsSectionEntity(), {parent, block}).save();
-
-          const item = await request(app.getHttpServer())
-            .put('/attribute/NAME')
-            .send({id: 'NAME', type: 'STRING'})
-            .expect(200);
-
-          expect(item.body.type).toBe('STRING');
-          expect(item.body.directory).toBe(null);
-          expect(item.body.block).toBe(null);
-          expect(item.body.collection).toBe(null);
-        });
-      });
-
-
-      test('Should update type to file', async () => {
-        await createAttribute('NAME');
-        await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'UPDATE', type: 'FILE', collection: 'DETAIL'})
-          .expect(200);
-
-        expect(item.body.type).toBe('FILE');
-        expect(item.body.directory).toBe(null);
-        expect(item.body.block).toBe(null);
-        expect(item.body.collection).toBe('DETAIL');
-      });
-
-      test('Should update type from file to string', async () => {
-        const parent = await createAttribute('NAME')
-          .withType(AttributeType.FILE);
-        const collection = await Object.assign(new CollectionEntity(), {id: 'DETAIL'}).save();
-        await Object.assign(new AttributeAsFileEntity(), {parent, collection}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'UPDATE', type: 'STRING'})
-          .expect(200);
-
-        expect(item.body.type).toBe('STRING');
-        expect(item.body.directory).toBe(null);
-        expect(item.body.block).toBe(null);
-        expect(item.body.collection).toBe(null);
-      });
-    });
-
-    describe('Attribute update with strings', () => {
-      test('Should update id with string', async () => {
-        const parent = await createAttribute('NAME');
-        await Object.assign(new Attribute4stringEntity(), {parent, attribute: parent, string: 'VALUE'}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'UPDATE', attribute: [{string: 'VALUE', attribute: 'UPDATE'}]})
-          .expect(200);
-        const count = await request(app.getHttpServer())
-          .get('/attribute/count')
-          .expect(200);
-
-        expect(item.body.id).toBe('UPDATE');
-        expect(item.body.attribute).toEqual([{attribute: 'UPDATE', string: 'VALUE'}]);
-        expect(count.body.count).toBe(1);
-      });
-
-      test('Should add strings', async () => {
-        await createAttribute('TARGET');
-        await createAttribute('NAME');
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/TARGET')
-          .send({
-            id: 'TARGET',
-            attribute: [{attribute: 'NAME', string: 'VALUE'}],
-          })
-          .expect(200);
-
-        expect(item.body.attribute[0].attribute).toBe('NAME');
-        expect(item.body.attribute[0].string).toBe('VALUE');
-      });
-    });
-
-    describe('Attribute update with flags', () => {
-      test('Should add flag', async () => {
-        await createAttribute('NAME');
-        await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'NAME', flag: ['FLAG']})
-          .expect(200);
-
-        expect(item.body.flag).toEqual(['FLAG']);
-      });
-
-      test('Should remove flag', async () => {
-        const parent = await createAttribute('NAME');
-        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'NAME', flag: []})
-          .expect(200);
-
-        expect(item.body.flag).toEqual([]);
-      });
-
-      test('Should update flag', async () => {
-        const parent = await createAttribute('NAME');
-        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-        await Object.assign(new FlagEntity(), {id: 'UPDATE'}).save();
-        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'NAME', flag: ['UPDATE']})
-          .expect(200);
-
-        expect(item.body.flag).toEqual(['UPDATE']);
-      });
-
-      test('Should update only flag', async () => {
-        const parent = await createAttribute('NAME');
-        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-        await Object.assign(new FlagEntity(), {id: 'UPDATE'}).save();
-        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
-
-        const item = await request(app.getHttpServer())
-          .patch('/attribute/NAME')
-          .send({flag: ['UPDATE']})
-          .expect(200);
-
-        expect(item.body.flag).toEqual(['UPDATE']);
-      });
-
-      test('Should update id with flag', async () => {
-        const parent = await createAttribute('NAME');
-        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
-        await Object.assign(new Attribute2flagEntity(), {parent, flag}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/NAME')
-          .send({id: 'UPDATE', flag: ['FLAG']})
-          .expect(200);
-
-        const count = await request(app.getHttpServer())
-          .get('/attribute/count')
-          .expect(200);
-
-        expect(item.body.id).toBe('UPDATE');
-        expect(item.body.flag).toEqual(['FLAG']);
-        expect(count.body.count).toBe(1);
-      });
-
-      test('Should add flags', async () => {
-        await createAttribute('TARGET');
-        await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-
-        const item = await request(app.getHttpServer())
-          .put('/attribute/TARGET')
-          .send({
-            id: 'TARGET',
-            flag: ['ACTIVE'],
-          })
-          .expect(200);
-
-        expect(item.body.flag).toEqual(['ACTIVE']);
-      });
-    });
-  });
-
-  describe('Attribute deletion', () => {
-    test('Should delete attribute', async () => {
-      await createAttribute('NAME');
-
-      const item = await request(app.getHttpServer())
-        .delete('/attribute/NAME')
-        .expect(200);
-
-      expect(item.body).toEqual(['NAME']);
-    });
-
-    test('Shouldn`t delete without access', async () => {
-      await createAttribute('NAME')
-        .withAccess(null);
-
-      await request(app.getHttpServer())
-        .delete('/attribute/NAME')
-        .expect(403);
-    });
-
-    test('Shouldn`t delete without DELETE access', async () => {
-      // await createAttribute('NAME')
-      //   .withAccess(AccessMethod.GET)
-      //   .withAccess(AccessMethod.POST)
-      //   .withAccess(AccessMethod.PUT);
-      // // await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      // // await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
-      // // await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.POST}).save();
-      // // await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.PUT}).save();
-      //
-      // await request(app.getHttpServer())
-      //   .delete('/attribute/NAME')
-      //   .expect(403);
-    });
-
-    test('Shouldn`t delete with wrong id', async () => {
-      await createAttribute('NAME');
-
-      await request(app.getHttpServer())
-        .delete('/attribute/WRONG')
-        .expect(404);
-    });
-  });
 });

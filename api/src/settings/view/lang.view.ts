@@ -3,7 +3,7 @@ import { StringAttributeView } from '../../common/view/attribute/string-attribut
 import { PointAttributeView } from '../../common/view/attribute/point-attribute.view';
 import { LangEntity } from '../model/lang/lang.entity';
 
-export class LangRender {
+export class LangView {
 
   constructor(item: LangEntity) {
     this.id = item.id;

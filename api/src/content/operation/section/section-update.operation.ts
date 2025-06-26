@@ -89,7 +89,7 @@ export class SectionUpdateOperation {
 
     await new FlagValueOperation(this.manager, Section2flagEntity).save(beforeItem, input.flag);
     await new ImageValueOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);
-    await new PermissionValueOperation(this.manager, Section2permissionEntity).save(beforeItem, input);
+    await new PermissionValueOperation(this.manager, Section2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Section4stringEntity).save(beforeItem, pack.string);

@@ -37,7 +37,7 @@ export class DirectoryInsertOperation {
     await this.transaction.save(this.created);
 
     await new FlagValueOperation(this.transaction, Directory2flagEntity).save(this.created, input.flag);
-    await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(this.created, input);
+    await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(this.created, input.permission);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.transaction, Directory4stringEntity).save(this.created, pack.string);

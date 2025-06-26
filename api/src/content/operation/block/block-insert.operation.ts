@@ -37,7 +37,7 @@ export class BlockInsertOperation {
       throw new WrongDataException(err.message);
     }
 
-    await new PermissionValueOperation(this.manager, Block2permissionEntity).save(this.created, input);
+    await new PermissionValueOperation(this.manager, Block2permissionEntity).save(this.created, input.permission);
     await new FlagValueOperation(this.manager, Block2flagEntity).save(this.created, input.flag);
 
     const pack = filterAttributes(input.attribute);

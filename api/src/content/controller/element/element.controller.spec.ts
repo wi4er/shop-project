@@ -27,7 +27,7 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
 import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
-import { Element4counterEntity } from '../../model/element/element4counterEntity';
+import { Element4counterEntity } from '../../model/element/element4counter.entity';
 
 describe('Element Controller', () => {
   let source: DataSource;
@@ -1046,8 +1046,8 @@ describe('Element Controller', () => {
           .expect(201);
 
         expect(inst.body.attribute).toHaveLength(1);
-        expect(inst.body.attribute[0].attribute).toBe('LONDON');
-        expect(inst.body.attribute[0].point).toBe('LONDON');
+        expect(inst.body.attribute[0].attribute).toBe('REST');
+        expect(inst.body.attribute[0].counter).toBe('LONDON');
         expect(inst.body.attribute[0].directory).toBe('CITY');
         expect(inst.body.attribute[0].count).toBe(333);
       });

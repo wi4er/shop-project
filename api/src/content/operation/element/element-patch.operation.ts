@@ -43,7 +43,9 @@ export class ElementPatchOperation {
     const beforeItem = await this.checkElement(id);
 
     if (input.flag) await new FlagValueOperation(this.manager, Element2flagEntity).save(beforeItem, input.flag);
-    if (input.permission) await new PermissionValueOperation(this.manager, Element2permissionEntity).save(beforeItem, input);
+    if (input.permission) {
+      await new PermissionValueOperation(this.manager, Element2permissionEntity).save(beforeItem, input.permission);
+    }
 
     return id;
   }

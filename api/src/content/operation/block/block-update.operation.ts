@@ -58,7 +58,7 @@ export class BlockUpdateOperation {
 
     const beforeItem = await this.checkBlock(input.id);
 
-    await new PermissionValueOperation(this.transaction, Block2permissionEntity).save(beforeItem, input);
+    await new PermissionValueOperation(this.transaction, Block2permissionEntity).save(beforeItem, input.permission);
     await new FlagValueOperation(this.transaction, Block2flagEntity).save(beforeItem, input.flag);
 
     const pack = filterAttributes(input.attribute);

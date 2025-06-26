@@ -31,7 +31,7 @@ import { Section4fileEntity } from './model/section/section4file.entity';
 import { Section2imageEntity } from './model/section/section2image.entity';
 import { Block4fileEntity } from './model/block/block4file.entity';
 import { Element4IntervalEntity } from './model/element/element4interval.entity';
-import { Element4counterEntity } from './model/element/element4counterEntity';
+import { Element4counterEntity } from './model/element/element4counter.entity';
 import { Element4InstanceEntity } from './model/element/element4instance.entity';
 import { Block4descriptionEntity } from './model/block/block4description.entity';
 

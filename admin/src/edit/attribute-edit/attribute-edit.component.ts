@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AttributeEntity } from '../../app/model/settings/attribute.entity';
 import { LangEntity } from '../../app/model/settings/lang.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { AttributeEdit } from '../attribute-value/attribute-value.service';
+import { AttributeEdit, AttributeStringEdit } from '../attribute-value/attribute-value.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AttributeType } from '../../settings/attribute-form/attribute-form.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ export class AttributeEditComponent implements OnInit {
 
   loading = true;
   list: AttributeEntity[] = [];
-  lang: LangEntity[] = [];
+  langList: LangEntity[] = [];
 
   @Input()
   edit: AttributeEdit = {};
@@ -50,16 +50,9 @@ export class AttributeEditComponent implements OnInit {
   /**
    *
    */
-  getString(id: string): Array<FormControl> {
-    const value = this.edit[id];
-
-    if ('edit' in value) {
-      return Object.values(value.edit);
-    }
-
-    return [];
+  getString(id: string): AttributeStringEdit {
+    return this.edit[id] as AttributeStringEdit;
   }
-
 
   /**
    *
@@ -109,7 +102,7 @@ export class AttributeEditComponent implements OnInit {
       this.apiService.fetchList<LangEntity>(ApiEntity.LANG),
     ]).then(([attributeList, langList]) => {
       this.list = attributeList;
-      this.lang = langList;
+      this.langList = langList;
 
       this.initValues();
       this.loading = false;
@@ -135,11 +128,11 @@ export class AttributeEditComponent implements OnInit {
           const value = this.edit[attr.id];
 
           if ('edit' in value) {
-            for (const lang of this.lang) {
-              if (!value.edit[lang.id]) value.edit[lang.id] = new FormControl();
+            for (const lang of this.langList) {
+              if (!value.edit[lang.id]) value.edit[lang.id] = [];
             }
 
-            if (!value.edit['']) value.edit[''] = new FormControl();
+            if (!value.edit['']) value.edit[''] = [];
           }
           break;
         case AttributeType.INTERVAL:
@@ -170,22 +163,6 @@ export class AttributeEditComponent implements OnInit {
           break;
       }
     }
-  }
-
-  /**
-   *
-   */
-  addEdit(id: string, lang: string) {
-    // if (!this.edit[id][lang]) this.edit[id][lang] = [];
-    //
-    // this.edit[id][lang].push(new FormControl(''));
-  }
-
-  /**
-   *
-   */
-  clearEdit(id: string, lang: string, index: number) {
-    // this.edit[id][lang].splice(index, 1);
   }
 
   openPoint(attr: string) {

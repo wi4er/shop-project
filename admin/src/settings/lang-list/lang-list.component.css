@@ -4,3 +4,25 @@
   flex-direction: column;
   flex: 1;
 }
+
+.select {
+  width: 36px;
+}
+
+.action {
+  width: 48px;
+}
+
+
+.flags {
+  display: flex;
+  gap: 4px;
+}
+
+.date {
+  width: 160px;
+}
+
+.collapse {
+  width: 1px;
+}

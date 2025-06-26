@@ -1,126 +1,55 @@
 <div *ngIf="!loading">
   <div *ngFor="let item of list">
     <div *ngIf="item.type === 'STRING'">
-      <div mat-subheader>{{ item.id }}</div>
-
-      <span>
-        <span *ngFor="let field of getString(item.id); let i = index">
-          <mat-form-field appearance="fill">
-            <mat-label>
-              No lang
-            </mat-label>
-
-            <input
-              matInput
-              [formControl]="field"
-            />
-
-            <button
-              matSuffix
-              type="button"
-              mat-icon-button
-              aria-label="add"
-              (click)="clearEdit(item.id, '', i)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </span>
-
-        <button
-          matSuffix
-          type="button"
-          mat-button
-          aria-label="add"
-          (click)="addEdit(item.id, '')"
-        >
-          <mat-icon>add</mat-icon>
-
-          no lang
-        </button>
-      </span>
-
-      <!--      <span *ngFor="let lang of lang">-->
-      <!--        <span *ngFor="let field of getString(item.id); let i = index">-->
-      <!--          <mat-form-field-->
-      <!--            appearance="fill"-->
-      <!--            *ngIf="edit[item.id][lang.id][i]"-->
-      <!--          >-->
-      <!--            <mat-label>-->
-      <!--              {{ lang.id }}-->
-      <!--            </mat-label>-->
-
-      <!--            <input-->
-      <!--              matInput-->
-      <!--              [name]="item.id + '_' + lang.id"-->
-      <!--              [(ngModel)]="edit[item.id][lang.id][i]"-->
-      <!--            />-->
-
-      <!--            <button-->
-      <!--              matSuffix-->
-      <!--              type="button"-->
-      <!--              mat-icon-button-->
-      <!--              aria-label="add"-->
-      <!--              (click)="clearEdit(item.id, lang.id, i)"-->
-      <!--            >-->
-      <!--              <mat-icon>close</mat-icon>-->
-      <!--            </button>-->
-      <!--          </mat-form-field>-->
-      <!--        </span>-->
-
-      <!--        <button-->
-      <!--          matSuffix-->
-      <!--          type="button"-->
-      <!--          mat-button-->
-      <!--          aria-label="add"-->
-      <!--          (click)="addEdit(item.id, lang.id)"-->
-      <!--        >-->
-      <!--          <mat-icon>add</mat-icon>-->
-
-      <!--          {{ lang.id }}-->
-      <!--        </button>-->
-      <!--      </span>-->
+      <app-string-edit
+        [attribute]="item"
+        [edit]="getString(item.id)"
+        [langList]="langList"
+      ></app-string-edit>
     </div>
 
     <div *ngIf="item.type === 'DESCRIPTION'">
       <div mat-subheader>{{ item.id }}</div>
 
-      <span>
-        <span *ngFor="let field of getString(item.id); let i = index">
-          <mat-form-field appearance="fill">
-            <mat-label>
-              No lang
-            </mat-label>
+<!--      <span>-->
+<!--        <span *ngFor="let field of getString(item.id) | keyvalue">-->
+<!--          <mat-form-field-->
+<!--            appearance="fill"-->
+<!--            *ngIf="field.value"-->
+<!--          >-->
+<!--            <mat-label>-->
+<!--              No lang-->
+<!--            </mat-label>-->
 
-            <textarea
-              matInput
-              [formControl]="field"
-            ></textarea>
+<!--            <textarea-->
+<!--              matInput-->
+<!--              [formControl]="field.value"-->
+<!--            ></textarea>-->
 
-            <button
-              matSuffix
-              type="button"
-              mat-icon-button
-              aria-label="add"
-              (click)="clearEdit(item.id, '', i)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </span>
+<!--            <button-->
+<!--              matSuffix-->
+<!--              type="button"-->
+<!--              mat-icon-button-->
+<!--              aria-label="add"-->
+<!--              (click)="clearEdit(item.id, field.key)"-->
+<!--            >-->
+<!--              <mat-icon>close</mat-icon>-->
+<!--            </button>-->
+<!--          </mat-form-field>-->
+<!--        </span>-->
 
-        <button
-          matSuffix
-          type="button"
-          mat-button
-          aria-label="add"
-          (click)="addEdit(item.id, '')"
-        >
-          <mat-icon>add</mat-icon>
+<!--        <button-->
+<!--          matSuffix-->
+<!--          type="button"-->
+<!--          mat-button-->
+<!--          aria-label="add"-->
+<!--          (click)="addEdit(item.id, '')"-->
+<!--        >-->
+<!--          <mat-icon>add</mat-icon>-->
 
-          no lang
-        </button>
-      </span>
+<!--          no lang-->
+<!--        </button>-->
+<!--      </span>-->
 
       <!--      <span *ngFor="let lang of lang">-->
       <!--        <span *ngFor="let field of edit[item.id][lang.id]; let i = index">-->

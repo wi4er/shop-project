@@ -5,7 +5,7 @@ import { LangEntity } from './lang.entity';
 import { Lang2flagEntity } from './lang2flag.entity';
 import { FlagEntity } from '../flag/flag.entity';
 
-describe('LangFlag entity', () => {
+describe('Lang to flag entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe('LangFlag entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('LangFlag fields', () => {
+  describe('Lang to flag fields', () => {
     test('Should add item', async () => {
       const flag = await Object.assign(new FlagEntity(), {id: 'NAME'}).save();
       const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
@@ -63,7 +63,7 @@ describe('LangFlag entity', () => {
     });
   });
 
-  describe('LangEntity with flags', () => {
+  describe('Lang with flags', () => {
     test('Should add item', async () => {
       const parent = await Object.assign(new LangEntity(), {id: 'UA'}).save();
 

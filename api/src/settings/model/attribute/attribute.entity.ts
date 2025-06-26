@@ -67,6 +67,7 @@ export class AttributeEntity extends BaseEntity
     enum: AttributeType,
     nullable: false,
     default: AttributeType.STRING,
+    update: false,
   })
   type: AttributeType;
 

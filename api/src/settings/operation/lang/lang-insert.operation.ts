@@ -18,6 +18,9 @@ export class LangInsertOperation {
     this.created = new LangEntity();
   }
 
+  /**
+   *
+   */
   async save(input: LangInput): Promise<string> {
     this.created.id = input.id;
 

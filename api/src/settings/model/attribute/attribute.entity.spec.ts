@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { createConnection } from 'typeorm';
-import { AttributeEntity } from './attribute.entity';
+import { AttributeEntity, AttributeType } from './attribute.entity';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 
 describe('AttributeEntity entity', () => {
@@ -10,7 +10,7 @@ describe('AttributeEntity entity', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('AttributeEntity fields', () => {
+  describe('Attribute fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(AttributeEntity);
       const list = await repo.find();
@@ -47,6 +47,20 @@ describe('AttributeEntity entity', () => {
 
       expect(list).toHaveLength(1);
       expect(list[0].id).toBe('NAME');
+    });
+  });
+
+  describe('Attribute fields', () => {
+    test('Shouldn`t update type', async () => {
+      const inst = new AttributeEntity();
+      inst.id = 'NAME';
+      await inst.save();
+
+      inst.type = AttributeType.POINT;
+      await inst.save();
+
+      const updated = await source.getRepository(AttributeEntity).findOne({where: {id: 'NAME'}});
+      expect(updated.type).toBe('STRING');
     });
   });
 });

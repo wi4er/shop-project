@@ -3,17 +3,14 @@ import { createConnection } from 'typeorm';
 import { LangEntity } from './lang.entity';
 import { createConnectionOptions } from '../../../createConnectionOptions';
 
-describe('LangEntity entity', () => {
+describe('Lang entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('LangEntity fields', () => {
+  describe('Lang fields', () => {
     test('Should add item with id', async () => {
       const inst = new LangEntity();
       inst.id = 'EN';
@@ -55,15 +52,13 @@ describe('LangEntity entity', () => {
     test('Shouldn`t add with same id', async () => {
       const inst = new LangEntity();
       inst.id = 'EN';
-      await inst.save();
+      await source.getRepository(LangEntity).insert(inst);
 
       const same = new LangEntity();
       same.id = 'EN';
-      await same.save();
-
-      const repo = source.getRepository(LangEntity);
-      const list = await repo.find();
-      expect(list).toHaveLength(1);
+      await expect(
+        source.getRepository(LangEntity).insert(inst),
+      ).rejects.toThrow('duplicate');
     });
 
     test('Should update update_at', async () => {

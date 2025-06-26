@@ -1,0 +1,53 @@
+<div>
+  <div mat-subheader>{{ attribute.id }}</div>
+
+  <span *ngFor="let field of edit.edit | keyvalue">
+    <span *ngFor="let inst of field.value; let i = index">
+      <mat-form-field appearance="fill">
+        <mat-label>
+          {{ field.key || 'no lang' }}
+        </mat-label>
+
+        <input
+          matInput
+          [formControl]="inst"
+        />
+
+        <button
+          matSuffix
+          type="button"
+          mat-icon-button
+          aria-label="add"
+          (click)="clearEdit(field.key, i)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </span>
+  </span>
+
+  <button
+    matSuffix
+    type="button"
+    mat-button
+    aria-label="add"
+    (click)="addEdit('')"
+  >
+    <mat-icon>add</mat-icon>
+
+    no lang
+  </button>
+
+  <button
+    matSuffix
+    type="button"
+    mat-button
+    aria-label="add"
+    *ngFor="let lang of langList"
+    (click)="addEdit(lang.id)"
+  >
+    <mat-icon>add</mat-icon>
+
+    {{ lang.id }}
+  </button>
+</div>

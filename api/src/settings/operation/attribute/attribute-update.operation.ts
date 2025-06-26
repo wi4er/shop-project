@@ -6,10 +6,10 @@ import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.
 import { Attribute4stringEntity } from '../../model/attribute/attribute4string.entity';
 import { Attribute2flagEntity } from '../../model/attribute/attribute2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
-import { AttributeAsPointUpdateOperation } from './attribute-as-point-update.operation';
-import { AttributeAsElementUpdateOperation } from './attribute-as-element-update.operation';
-import { AttributeAsSectionUpdateOperation } from './attribute-as-section-update.operation';
-import { AttributeAsFileUpadteOperation } from './attribute-as-file-upadte.operation';
+import { AttributeAsPointOperation } from './attribute-as-point.operation';
+import { AttributeAsElementOperation } from './attribute-as-element.operation';
+import { AttributeAsSectionOperation } from './attribute-as-section.operation';
+import { AttributeAsFileOperation } from './attribute-as-file.operation';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
 
@@ -45,10 +45,6 @@ export class AttributeUpdateOperation {
     try {
       await this.transaction.update(AttributeEntity, {id}, {
         id: WrongDataException.assert(input.id, 'AttributeEntity id expected'),
-        type: WrongDataException.assert(
-          AttributeType[input.type ?? AttributeType.STRING],
-          `Wrong attribute type >> ${input.type} <<, expected [${Object.keys(AttributeType).join(', ')}]`,
-        ),
       });
     } catch (err) {
       throw new WrongDataException(err.message);
@@ -56,10 +52,22 @@ export class AttributeUpdateOperation {
 
     const beforeItem = await this.checkAttribute(input.id);
 
-    await new AttributeAsPointUpdateOperation(this.transaction).save(beforeItem, input);
-    await new AttributeAsElementUpdateOperation(this.transaction).save(beforeItem, input);
-    await new AttributeAsSectionUpdateOperation(this.transaction).save(beforeItem, input);
-    await new AttributeAsFileUpadteOperation(this.transaction).save(beforeItem, input);
+    WrongDataException.assert(input.type === beforeItem.type, 'Attribute type is immutable!');
+
+    switch (AttributeType[input.type]) {
+      case AttributeType.POINT:
+        await new AttributeAsPointOperation(this.transaction).save(beforeItem, input);
+        break;
+      case AttributeType.ELEMENT:
+        await new AttributeAsElementOperation(this.transaction).save(beforeItem, input);
+        break;
+      case AttributeType.SECTION:
+        await new AttributeAsSectionOperation(this.transaction).save(beforeItem, input);
+        break;
+      case AttributeType.FILE:
+        await new AttributeAsFileOperation(this.transaction).save(beforeItem, input);
+        break;
+    }
 
     await new FlagValueOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input.flag);
 

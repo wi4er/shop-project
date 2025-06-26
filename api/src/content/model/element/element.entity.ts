@@ -25,7 +25,7 @@ import { WithDescriptionEntity } from '../../../common/model/with/with-descripti
 import { Element4descriptionEntity } from './element4description.entity';
 import { WithIntervalEntity } from '../../../common/model/with/with-interval.entity';
 import { Element4IntervalEntity } from './element4interval.entity';
-import { Element4counterEntity } from './element4counterEntity';
+import { Element4counterEntity } from './element4counter.entity';
 
 @Entity('content-element')
 @Check('not_empty_id', '"id" > \'\'')

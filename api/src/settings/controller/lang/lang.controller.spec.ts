@@ -14,7 +14,7 @@ import { AccessTarget } from '../../../personal/model/access/access-target';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
-describe('LangEntity Controller', () => {
+describe('Lang Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 
@@ -60,7 +60,7 @@ describe('LangEntity Controller', () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/lang')
+        .get('/settings/lang')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
@@ -68,7 +68,7 @@ describe('LangEntity Controller', () => {
 
     test('Shouldn`t get list without access', async () => {
       await request(app.getHttpServer())
-        .get('/lang')
+        .get('/settings/lang')
         .expect(403);
     });
 
@@ -78,7 +78,7 @@ describe('LangEntity Controller', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/lang?limit=3')
+        .get('/settings/lang?limit=3')
         .expect(200);
 
       expect(res.body).toHaveLength(3);
@@ -93,7 +93,7 @@ describe('LangEntity Controller', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/lang?offset=3')
+        .get('/settings/lang?offset=3')
         .expect(200);
 
       expect(res.body).toHaveLength(7);
@@ -107,7 +107,7 @@ describe('LangEntity Controller', () => {
       await createLang('EN');
 
       const res = await request(app.getHttpServer())
-        .get('/lang/EN')
+        .get('/settings/lang/EN')
         .expect(200);
 
       expect(res.body.id).toBe('EN');
@@ -117,7 +117,7 @@ describe('LangEntity Controller', () => {
       await createLang('EN').withAccess(null);
 
       await request(app.getHttpServer())
-        .get('/lang/EN')
+        .get('/settings/lang/EN')
         .expect(403);
     });
 
@@ -125,7 +125,7 @@ describe('LangEntity Controller', () => {
       await createLang('EN');
 
       await request(app.getHttpServer())
-        .get('/lang/WONG')
+        .get('/settings/lang/WONG')
         .expect(404);
     });
   });
@@ -135,7 +135,7 @@ describe('LangEntity Controller', () => {
       await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/lang/count')
+        .get('/settings/lang/count')
         .expect(200);
 
       expect(res.body.count).toBe(0);
@@ -143,7 +143,7 @@ describe('LangEntity Controller', () => {
 
     test('Shouldn`t count without access', async () => {
       await request(app.getHttpServer())
-        .get('/lang/count')
+        .get('/settings/lang/count')
         .expect(403);
     });
 
@@ -153,7 +153,7 @@ describe('LangEntity Controller', () => {
       }
 
       const res = await request(app.getHttpServer())
-        .get('/lang/count')
+        .get('/settings/lang/count')
         .expect(200);
 
       expect(res.body.count).toBe(10);
@@ -167,7 +167,7 @@ describe('LangEntity Controller', () => {
       await Object.assign(new Lang4stringEntity(), {parent, attribute, string: 'English'}).save();
 
       const res = await request(app.getHttpServer())
-        .get('/lang')
+        .get('/settings/lang')
         .expect(200);
 
       expect(res.body).toHaveLength(1);
@@ -192,7 +192,7 @@ describe('LangEntity Controller', () => {
       ).save();
 
       const res = await request(app.getHttpServer())
-        .get('/lang')
+        .get('/settings/lang')
         .expect(200);
 
       expect(res.body).toHaveLength(2);
@@ -210,7 +210,7 @@ describe('LangEntity Controller', () => {
       await Object.assign(new Lang2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/lang')
+        .get('/settings/lang')
         .expect(200);
 
       expect(list.body).toHaveLength(1);
@@ -219,53 +219,101 @@ describe('LangEntity Controller', () => {
   });
 
   describe('Lang addition', () => {
-    test('Should add item', async () => {
-      await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+    describe('Lang addition with fields', () => {
+      test('Should add item', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
-      const res = await request(app.getHttpServer())
-        .post('/lang')
-        .send({id: 'EN'})
-        .expect(201);
+        const res = await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({id: 'EN'})
+          .expect(201);
 
-      expect(res.body.id).toBe('EN');
+        expect(res.body.id).toBe('EN');
+      });
+
+      test('Shouldn`t add without access', async () => {
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({id: 'EN'})
+          .expect(403);
+      });
+
+      test('Shouldn`t add without id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with blank id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({id: ''})
+          .expect(400);
+      });
+
+      test('Shouldn`t add with duplicate id', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({id: 'EN'})
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({id: 'EN'})
+          .expect(400);
+      });
     });
 
-    test('Shouldn`t add without access', async () => {
-      await request(app.getHttpServer())
-        .post('/lang')
-        .send({id: 'EN'})
-        .expect(403);
-    });
+    describe('Lang addition with strings', () => {
+      test('Should add with strings', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
-    test('Shouldn`t add with duplicate id', async () => {
-      await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+        const res = await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({
+            id: 'EN',
+            attribute: [{attribute: 'NAME', string: 'VALUE'}],
+          })
+          .expect(201);
 
-      await request(app.getHttpServer())
-        .post('/lang')
-        .send({id: 'EN'})
-        .expect(201);
+        expect(res.body.id).toBe('EN');
+        expect(res.body.attribute[0].attribute).toBe('NAME');
+        expect(res.body.attribute[0].string).toBe('VALUE');
+      });
 
-      await request(app.getHttpServer())
-        .post('/lang')
-        .send({id: 'EN'})
-        .expect(400);
-    });
+      test('Shouldn`t add without attribute', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
-    test('Should add with strings', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({
+            id: 'EN',
+            attribute: [{string: 'VALUE'}],
+          })
+          .expect(400);
+      });
 
-      const res = await request(app.getHttpServer())
-        .post('/lang')
-        .send({
-          id: 'EN',
-          attribute: [{attribute: 'NAME', string: 'VALUE'}],
-        })
-        .expect(201);
+      test('Shouldn`t add without strings', async () => {
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
-      expect(res.body.id).toBe('EN');
-      expect(res.body.attribute[0].attribute).toBe('NAME');
-      expect(res.body.attribute[0].string).toBe('VALUE');
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({
+            id: 'EN',
+            attribute: [{attribute: 'NAME', string: null}],
+          })
+          .expect(400);
+      });
     });
 
     describe('Lang addition with flag', () => {
@@ -274,7 +322,7 @@ describe('LangEntity Controller', () => {
         await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
         const res = await request(app.getHttpServer())
-          .post('/lang')
+          .post('/settings/lang')
           .send({
             id: 'EN',
             flag: ['NEW'],
@@ -284,12 +332,25 @@ describe('LangEntity Controller', () => {
         expect(res.body.flag).toEqual(['NEW']);
       });
 
+      test('Shouldn`t add with duplicate flag', async () => {
+        await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
+        await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
+
+        await request(app.getHttpServer())
+          .post('/settings/lang')
+          .send({
+            id: 'EN',
+            flag: ['NEW', 'NEW'],
+          })
+          .expect(400);
+      });
+
       test('Shouldn`t add with wrong flag', async () => {
         await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
         await Object.assign(new AccessEntity(), {target: AccessTarget.LANG, method: AccessMethod.ALL}).save();
 
         await request(app.getHttpServer())
-          .post('/lang')
+          .post('/settings/lang')
           .send({
             id: 'EN',
             flag: ['WRONG'],
@@ -300,35 +361,48 @@ describe('LangEntity Controller', () => {
   });
 
   describe('Lang update', () => {
-    test('Should update item', async () => {
-      await createLang('EN');
+    describe('Lang update with fields', () => {
+      test('Should update item', async () => {
+        await createLang('EN');
 
-      const res = await request(app.getHttpServer())
-        .put('/lang/EN')
-        .send({id: 'EN'})
-        .expect(200);
+        const res = await request(app.getHttpServer())
+          .put('/settings/lang/EN')
+          .send({id: 'EN'})
+          .expect(200);
 
-      expect(res.body.id).toBe('EN');
-    });
+        expect(res.body.id).toBe('EN');
+      });
 
-    test('Shouldn`t update without access', async () => {
-      await createLang('EN').withAccess(null);
+      test('Shouldn`t update without access', async () => {
+        await createLang('EN').withAccess(null);
 
-      await request(app.getHttpServer())
-        .put('/lang/EN')
-        .send({id: 'EN'})
-        .expect(403);
-    });
+        await request(app.getHttpServer())
+          .put('/settings/lang/EN')
+          .send({id: 'EN'})
+          .expect(403);
+      });
 
-    test('Should update id', async () => {
-      await createLang('EN');
+      test('Should update id', async () => {
+        await createLang('EN');
 
-      const res = await request(app.getHttpServer())
-        .put('/lang/EN')
-        .send({id: 'GR'})
-        .expect(200);
+        const res = await request(app.getHttpServer())
+          .put('/settings/lang/EN')
+          .send({id: 'GR'})
+          .expect(200);
 
-      expect(res.body.id).toBe('GR');
+        expect(res.body.id).toBe('GR');
+      });
+
+      test('Should update only id', async () => {
+        await createLang('EN');
+
+        const res = await request(app.getHttpServer())
+          .patch('/settings/lang/EN')
+          .send({id: 'GR'})
+          .expect(200);
+
+        expect(res.body.id).toBe('GR');
+      });
     });
 
     describe('Lang update with strings', () => {
@@ -338,7 +412,7 @@ describe('LangEntity Controller', () => {
         await Object.assign(new Lang4stringEntity(), {parent, attribute, string: 'English'}).save();
 
         const res = await request(app.getHttpServer())
-          .put('/lang/EN')
+          .put('/settings/lang/EN')
           .send({id: 'GR', attribute: [{attribute: 'NAME', string: 'English'}]})
           .expect(200);
 
@@ -354,7 +428,7 @@ describe('LangEntity Controller', () => {
         await Object.assign(new Lang2flagEntity(), {parent, flag}).save();
 
         const res = await request(app.getHttpServer())
-          .put('/lang/EN')
+          .put('/settings/lang/EN')
           .send({id: 'GR', flag: ['FLAG']})
           .expect(200);
 
@@ -367,10 +441,45 @@ describe('LangEntity Controller', () => {
         await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
 
         const res = await request(app.getHttpServer())
-          .put('/lang/EN')
+          .put('/settings/lang/EN')
           .send({id: 'EN', flag: ['FLAG']})
           .expect(200);
 
+        expect(res.body.flag).toEqual(['FLAG']);
+      });
+
+      test('Shouldn`t add duplicate flag', async () => {
+        await createLang('EN');
+        await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+
+        await request(app.getHttpServer())
+          .put('/settings/lang/EN')
+          .send({id: 'EN', flag: ['FLAG', 'FLAG']})
+          .expect(400);
+      });
+
+      test('Shouldn`t update wrong flag', async () => {
+        const parent = await createLang('EN');
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new Lang2flagEntity(), {parent, flag}).save();
+
+        await request(app.getHttpServer())
+          .put('/settings/lang/EN')
+          .send({id: 'GR', flag: ['WRONG']})
+          .expect(400);
+      });
+
+      test('Should update only flag', async () => {
+        const parent = await createLang('EN');
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new Lang2flagEntity(), {parent, flag}).save();
+
+        const res = await request(app.getHttpServer())
+          .patch('/settings/lang/EN')
+          .send({flag: ['FLAG']})
+          .expect(200);
+
+        expect(res.body.id).toBe('EN');
         expect(res.body.flag).toEqual(['FLAG']);
       });
     });
@@ -381,7 +490,7 @@ describe('LangEntity Controller', () => {
       await createLang('EN');
 
       const res = await request(app.getHttpServer())
-        .delete('/lang/EN')
+        .delete('/settings/lang/EN')
         .expect(200);
 
       expect(res.body).toEqual(['EN']);
@@ -391,7 +500,7 @@ describe('LangEntity Controller', () => {
       await createLang('EN').withAccess(null);
 
       await request(app.getHttpServer())
-        .delete('/lang/EN')
+        .delete('/settings/lang/EN')
         .expect(403);
     });
 
@@ -399,7 +508,7 @@ describe('LangEntity Controller', () => {
       await createLang('EN');
 
       await request(app.getHttpServer())
-        .delete('/lang/WRONG')
+        .delete('/settings/lang/WRONG')
         .expect(404);
     });
   });

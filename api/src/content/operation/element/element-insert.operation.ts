@@ -20,7 +20,7 @@ import { IntervalValueOperation } from '../../../common/operation/attribute/inte
 import { PermissionValueOperation } from '../../../common/operation/permission-value.operation';
 import { ImageValueOperation } from '../../../common/operation/image-value.operation';
 import { CounterValueOperation } from '../../../common/operation/attribute/counter-value.operation';
-import { Element4counterEntity } from '../../model/element/element4counterEntity';
+import { Element4counterEntity } from '../../model/element/element4counter.entity';
 
 export class ElementInsertOperation {
 
@@ -62,7 +62,7 @@ export class ElementInsertOperation {
 
     await new ImageValueOperation(this.transaction, Element2imageEntity).save(this.created, input.image);
     await new FlagValueOperation(this.transaction, Element2flagEntity).save(this.created, input.flag);
-    await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(this.created, input);
+    await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(this.created, input.permission);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.transaction, Element4stringEntity).save(this.created, pack.string);

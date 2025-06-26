@@ -5,12 +5,12 @@ import { Attribute4stringEntity } from '../../model/attribute/attribute4string.e
 import { Attribute2flagEntity } from '../../model/attribute/attribute2flag.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeInput } from '../../input/attribute/attribute.input';
-import { AttributeAsPointInsertOperation } from './attribute-as-point-insert.operation';
-import { AttributeAsElementInsertOperation } from './attribute-as-element-insert.operation';
-import { AttributeAsSectionInsertOperation } from './attribute-as-section-insert.operation';
-import { AttributeAsFileInsertOperation } from './attribute-as-file-insert.operation';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
+import { AttributeAsPointOperation } from './attribute-as-point.operation';
+import { AttributeAsElementOperation } from './attribute-as-element.operation';
+import { AttributeAsSectionOperation } from './attribute-as-section.operation';
+import { AttributeAsFileOperation } from './attribute-as-file.operation';
 
 export class AttributeInsertOperation {
 
@@ -40,19 +40,19 @@ export class AttributeInsertOperation {
 
     switch (AttributeType[input.type]) {
       case AttributeType.POINT:
-        await new AttributeAsPointInsertOperation(this.manager).save(this.created, input.directory);
+        await new AttributeAsPointOperation(this.manager).save(this.created, input);
         break;
 
       case AttributeType.ELEMENT:
-        await new AttributeAsElementInsertOperation(this.manager).save(this.created, input.block);
+        await new AttributeAsElementOperation(this.manager).save(this.created, input);
         break;
 
       case AttributeType.SECTION:
-        await new AttributeAsSectionInsertOperation(this.manager).save(this.created, input.block);
+        await new AttributeAsSectionOperation(this.manager).save(this.created, input);
         break;
 
       case AttributeType.FILE:
-        await new AttributeAsFileInsertOperation(this.manager).save(this.created, input.collection);
+        await new AttributeAsFileOperation(this.manager).save(this.created, input);
         break;
     }
     await new FlagValueOperation(this.manager, Attribute2flagEntity).save(this.created, input.flag);

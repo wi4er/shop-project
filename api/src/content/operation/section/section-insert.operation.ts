@@ -66,7 +66,7 @@ export class SectionInsertOperation {
 
     await new FlagValueOperation(this.manager, Section2flagEntity).save(this.created, input.flag);
     await new ImageValueOperation(this.manager, Section2imageEntity).save(this.created, input.image);
-    await new PermissionValueOperation(this.manager, Section2permissionEntity).save(this.created, input);
+    await new PermissionValueOperation(this.manager, Section2permissionEntity).save(this.created, input.permission);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Section4stringEntity).save(this.created, pack.string);

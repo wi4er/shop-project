@@ -25,6 +25,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PointEditComponent } from './point-edit/point-edit.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StringEditComponent } from './string-edit/string-edit.component';
+import { DescriptionEditComponent } from './description-edit/description-edit.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     BlockEditComponent,
     CollectionEditComponent,
     PointEditComponent,
+    StringEditComponent,
+    DescriptionEditComponent,
   ],
   imports: [
     CommonModule,

@@ -1,11 +1,11 @@
 import { EntityManager } from 'typeorm';
-import { AttributeEntity, AttributeType } from '../../model/attribute/attribute.entity';
-import { AttributeInput } from '../../input/attribute/attribute.input';
+import { AttributeEntity } from '../../model/attribute/attribute.entity';
 import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeAsPointEntity } from '../../model/attribute/attribute-as-point.entity';
+import { AttributeInput } from '../../input/attribute/attribute.input';
 
-export class AttributeAsPointUpdateOperation {
+export class AttributeAsPointOperation {
 
   constructor(
     private transaction: EntityManager,
@@ -33,26 +33,19 @@ export class AttributeAsPointUpdateOperation {
   ): Promise<void> {
     const repo = this.transaction.getRepository<AttributeAsPointEntity>(AttributeAsPointEntity);
 
-    if (input.type !== AttributeType.POINT) {
-      await this.transaction.delete(AttributeAsPointEntity, {parent: item})
-        .catch(err => {
-          throw new WrongDataException(err.message);
-        });
-    } else {
-      const inst = await repo.findOne({
-        where: {parent: {id: item.id}},
-      }) ?? new AttributeAsPointEntity();
+    const inst = await repo.findOne({
+      where: {parent: {id: item.id}},
+    }) ?? new AttributeAsPointEntity();
 
-      inst.directory = await this.checkDirectory(
-        WrongDataException.assert(input.directory, 'Directory field expected!')
-      );
-      inst.parent = item;
+    inst.directory = await this.checkDirectory(
+      WrongDataException.assert(input.directory, 'Directory field expected!'),
+    );
+    inst.parent = item;
 
-      await this.transaction.save(inst)
-        .catch(err => {
-          throw new WrongDataException(err.message);
-        });
-    }
+    await this.transaction.save(inst)
+      .catch(err => {
+        throw new WrongDataException(err.message);
+      });
   }
 
 }

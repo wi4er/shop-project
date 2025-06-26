@@ -1,17 +1,15 @@
 import { EntityManager } from 'typeorm';
-import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeEntity } from '../../model/attribute/attribute.entity';
+import { AttributeInput } from '../../input/attribute/attribute.input';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 import { AttributeAsElementEntity } from '../../model/attribute/attribute-as-element.entity';
 import { BlockEntity } from '../../../content/model/block/block.entity';
 
-export class AttributeAsElementInsertOperation {
-
-  created: AttributeAsElementEntity;
+export class AttributeAsElementOperation {
 
   constructor(
     private transaction: EntityManager,
   ) {
-    this.created = new AttributeAsElementEntity();
   }
 
   /**
@@ -30,15 +28,21 @@ export class AttributeAsElementInsertOperation {
    *
    */
   async save(
-    created: AttributeEntity,
-    block: string,
-  ): Promise<any> {
-    this.created.block = await this.checkBlock(
-      WrongDataException.assert(block, 'BlockEntity id expected!')
-    );
-    this.created.parent = created;
+    item: AttributeEntity,
+    input: AttributeInput,
+  ) {
+    const repo = this.transaction.getRepository<AttributeAsElementEntity>(AttributeAsElementEntity);
 
-    await this.transaction.save(this.created)
+    const inst = await repo.findOne({
+      where: {parent: {id: item.id}},
+    }) ?? new AttributeAsElementEntity();
+
+    inst.block = await this.checkBlock(
+      WrongDataException.assert(input.block, 'Block id expected!'),
+    );
+    inst.parent = item;
+
+    await this.transaction.save(inst)
       .catch(err => {
         throw new WrongDataException(err.message);
       });

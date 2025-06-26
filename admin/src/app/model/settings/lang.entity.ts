@@ -1,4 +1,5 @@
 import { StringAttributeValue } from '../common/string-attribute-value';
+import { CommonAttributeValue } from '../common/common-attribute-value';
 
 export interface LangEntity {
 
@@ -7,6 +8,6 @@ export interface LangEntity {
   updated_at: string;
 
   flag: string[];
-  attribute: StringAttributeValue[];
+  attribute: Array<CommonAttributeValue>;
 
 }
