@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { CommonAttributeValue } from '../../app/model/common/common-attribute-value';
 import { AttributeType } from '../../settings/attribute-form/attribute-form.component';
 
-
 export interface AttributeStringEdit {
   type: AttributeType.STRING;
   edit: {
@@ -157,7 +156,11 @@ export class AttributeValueService {
 
         const value = edit[attr.attribute];
         if ('edit' in value) {
-          value.edit[attr.lang ?? ''] = [new FormControl(attr.description)];
+          if (!value.edit[attr.lang ?? '']) {
+            value.edit[attr.lang ?? ''] = [new FormControl(attr.description)];
+          } else {
+            value.edit[attr.lang ?? ''].push(new FormControl(attr.description));
+          }
         }
       }
 

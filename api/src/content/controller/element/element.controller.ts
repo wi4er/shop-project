@@ -61,21 +61,21 @@ export class ElementController {
   toWhere(filter: ElementFilterInput): FindOptionsWhere<ElementEntity> {
     const where = {};
 
-    if (filter?.block) {
+    if (filter.block) {
       where['block'] = {id: filter.block};
     }
 
-    if (filter?.flag) {
+    if (filter.flag) {
       where['flag'] = {flag: {id: filter.flag.eq}};
     }
 
-    for (const key in filter?.point) {
+    for (const key in filter.point) {
       where['point'] = {
         point: {directory: {id: key}, id: filter.point[key].eq},
       };
     }
 
-    if (filter?.string) {
+    if (filter.string) {
       where['string'] = {string: filter.string.eq};
     }
 

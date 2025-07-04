@@ -1,7 +1,21 @@
 <div>
-  <div mat-subheader>{{ attribute.id }}</div>
+  <div mat-subheader>
+    {{ attribute.id }}
 
-  <span *ngFor="let field of edit.edit | keyvalue">
+    <button
+      matSuffix
+      type="button"
+      mat-button
+      *ngFor="let lang of langList"
+      (click)="addEdit(lang.id)"
+    >
+      <mat-icon>add</mat-icon>
+
+      {{ lang.id }}
+    </button>
+  </div>
+
+  <div *ngFor="let field of edit.edit | keyvalue">
     <span *ngFor="let inst of field.value; let i = index">
       <mat-form-field appearance="fill">
         <mat-label>
@@ -24,30 +38,17 @@
         </button>
       </mat-form-field>
     </span>
-  </span>
 
-  <button
-    matSuffix
-    type="button"
-    mat-button
-    aria-label="add"
-    (click)="addEdit('')"
-  >
-    <mat-icon>add</mat-icon>
-
-    no lang
-  </button>
-
-  <button
-    matSuffix
-    type="button"
-    mat-button
-    aria-label="add"
-    *ngFor="let lang of langList"
-    (click)="addEdit(lang.id)"
-  >
-    <mat-icon>add</mat-icon>
-
-    {{ lang.id }}
-  </button>
+    <button
+      matSuffix
+      type="button"
+      mat-button
+      aria-label="add"
+      (click)="addEdit(field.key)"
+      *ngIf="field.value.length"
+    >
+      <mat-icon>add</mat-icon>
+      {{ field.key || 'no lang' }}
+    </button>
+  </div>
 </div>

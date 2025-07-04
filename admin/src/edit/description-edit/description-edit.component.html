@@ -1,1 +1,54 @@
-<p>description-edit works!</p>
+<div>
+  <div mat-subheader>
+    {{ attribute.id }}
+
+    <button
+      matSuffix
+      type="button"
+      mat-button
+      *ngFor="let lang of langList"
+      (click)="addEdit(lang.id)"
+    >
+      <mat-icon>add</mat-icon>
+
+      {{ lang.id }}
+    </button>
+  </div>
+
+  <div *ngFor="let field of edit.edit | keyvalue">
+    <span *ngFor="let inst of field.value; let i = index">
+      <mat-form-field appearance="fill">
+        <mat-label>
+          {{ field.key || 'no lang' }}
+        </mat-label>
+
+        <textarea
+          matInput
+          [formControl]="inst"
+        ></textarea>
+
+        <button
+          matSuffix
+          type="button"
+          mat-icon-button
+          aria-label="add"
+          (click)="clearEdit(field.key, i)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </span>
+
+    <button
+      matSuffix
+      type="button"
+      mat-button
+      aria-label="add"
+      (click)="addEdit(field.key)"
+      *ngIf="field.value.length"
+    >
+      <mat-icon>add</mat-icon>
+      {{ field.key || 'no lang' }}
+    </button>
+  </div>
+</div>

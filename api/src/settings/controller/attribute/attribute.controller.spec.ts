@@ -103,7 +103,7 @@ describe('Attribute Controller', () => {
       });
     });
 
-    describe('AttributeEntity fields with pagination', () => {
+    describe('Attribute pagination', () => {
       test('Should get attribute with limit', async () => {
         for (let i = 0; i < 10; i++) {
           await createAttribute(`NAME_${i}`);
@@ -133,7 +133,7 @@ describe('Attribute Controller', () => {
       });
     });
 
-    describe('AttributeEntity fields with type', () => {
+    describe('Attribute with type', () => {
       test('Should get with registry type', async () => {
         const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
         const parent = await createAttribute('NAME').withType(AttributeType.POINT);
@@ -192,6 +192,43 @@ describe('Attribute Controller', () => {
         expect(res.body[0].id).toBe('NAME');
         expect(res.body[0].type).toBe('FILE');
         expect(res.body[0].collection).toBe('PREVIEW');
+      });
+    });
+
+    describe('Attribute with filter', () => {
+      test('Should get with type filter', async () => {
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        const parent = await createAttribute('LOCATION').withType(AttributeType.POINT);
+        await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
+        await createAttribute('NAME');
+        await createAttribute('NAME');
+
+        const res = await request(app.getHttpServer())
+          .get('/settings/attribute?filter[type][eq]=STRING')
+          .expect(200);
+
+        expect(res.body).toHaveLength(1);
+        expect(res.body[0].id).toBe('NAME');
+        expect(res.body[0].type).toBe('STRING');
+      });
+
+      test('Should get with type list filter', async () => {
+        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+        const parent = await createAttribute('LOCATION').withType(AttributeType.POINT);
+        await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
+        await createAttribute('NAME');
+
+        const collection = await Object.assign(new CollectionEntity(), {id: 'PREVIEW'}).save();
+        const parent1 = await createAttribute('FILE').withType(AttributeType.FILE);
+        await Object.assign(new AttributeAsFileEntity(), {collection, parent: parent1}).save();
+
+        const res = await request(app.getHttpServer())
+          .get('/settings/attribute?filter[type][in]=STRING;FILE')
+          .expect(200);
+
+        expect(res.body).toHaveLength(2);
+        expect(res.body[0].id).toBe('NAME');
+        expect(res.body[1].id).toBe('FILE');
       });
     });
   });
@@ -319,5 +356,4 @@ describe('Attribute Controller', () => {
       expect(list.body[0].flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
     });
   });
-
 });
