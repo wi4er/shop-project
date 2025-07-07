@@ -41,7 +41,7 @@ export class AttributeAsInstanceEntity
 
   @OneToOne(
     type => AttributeEntity,
-    attr => attr.asDirectory,
+    attr => attr.asPoint,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

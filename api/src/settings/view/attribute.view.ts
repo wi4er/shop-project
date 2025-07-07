@@ -12,7 +12,7 @@ export class AttributeView {
     this.type = item.type;
     this.version = item.version;
 
-    this.directory = item.asDirectory?.directory?.id ?? null;
+    this.directory = item.asPoint?.directory?.id ?? null;
     if (item.type === AttributeType.ELEMENT) {
       this.block = item.asElement.block.id;
     } else if (item.type === AttributeType.SECTION) {

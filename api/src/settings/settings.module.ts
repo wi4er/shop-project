@@ -19,6 +19,15 @@ import { AttributeAsSectionEntity } from './model/attribute/attribute-as-section
 import { AttributeAsElementEntity } from './model/attribute/attribute-as-element.entity';
 import { AttributeAsFileEntity } from './model/attribute/attribute-as-file.entity';
 import { AttributeAsInstanceEntity } from './model/attribute/attribute-as-instance.entity';
+import { FieldController } from './controller/field/field.controller';
+import { FieldEntity } from './model/field/field.entity';
+import { Field2flagEntity } from './model/field/field2flag.entity';
+import { Field4stringEntity } from './model/field/field4string.entity';
+import { FieldAsStringEntity } from './model/field/field-as-string.entity';
+import { FieldAsPointEntity } from './model/field/field-as-point.entity';
+import { FieldAsElementEntity } from './model/field/field-as-element.entity';
+import { FieldAsSectionEntity } from './model/field/field-as-section.entity';
+import { FieldAsFileEntity } from './model/field/field-as-file.entity';
 
 @Module({
   imports: [
@@ -27,6 +36,10 @@ import { AttributeAsInstanceEntity } from './model/attribute/attribute-as-instan
       AttributeAsPointEntity, AttributeAsSectionEntity, AttributeAsElementEntity, AttributeAsFileEntity, AttributeAsInstanceEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       FlagEntity, Flag2flagEntity, Flag4stringEntity,
+      FieldEntity,
+      Field2flagEntity,
+      Field4stringEntity,
+      FieldAsStringEntity, FieldAsPointEntity, FieldAsElementEntity, FieldAsSectionEntity, FieldAsFileEntity,
       ConfigurationEntity,
     ]),
   ],
@@ -37,6 +50,7 @@ import { AttributeAsInstanceEntity } from './model/attribute/attribute-as-instan
     LangController,
     FlagController,
     ConfigurationController,
+    FieldController,
   ],
 })
 export class SettingsModule {

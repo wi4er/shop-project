@@ -7,7 +7,7 @@ import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.ser
 import { Form } from '../../app/model/form/form';
 
 @Component({
-  selector: 'app-form-form',
+  selector: 'app-feedback-feedback',
   templateUrl: './form-form.component.html',
   styleUrls: ['./form-form.component.css']
 })

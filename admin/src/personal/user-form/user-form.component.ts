@@ -9,7 +9,7 @@ import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-personal-form',
+  selector: 'app-personal-feedback',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css'],
 })

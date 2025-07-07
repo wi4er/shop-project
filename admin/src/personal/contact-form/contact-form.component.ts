@@ -8,7 +8,7 @@ import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-contact-form',
+  selector: 'app-contact-feedback',
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.css'],
 })

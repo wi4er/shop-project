@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { ElementEntity } from '../../app/model/content/element.entity';
 import { ElementInput } from '../../app/model/content/element.input';
@@ -7,9 +7,10 @@ import { CollectionEntity } from '../../app/model/storage/collection.entity';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
+import { ElementHistoryComponent } from '../element-history/element-history.component';
 
 @Component({
-  selector: 'app-element-form',
+  selector: 'app-element-feedback',
   templateUrl: './element-form.component.html',
   styleUrls: ['./element-form.component.css'],
 })
@@ -44,6 +45,7 @@ export class ElementFormComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ElementFormComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: { id: string, block: number } | null,
     private apiService: ApiService,
     private attributeValueService: AttributeValueService,
@@ -161,6 +163,25 @@ export class ElementFormComponent implements OnInit {
     }
 
     this.sendItem().then(() => this.dialogRef.close());
+  }
+
+
+
+  /**
+   *
+   */
+  openHistory(element: string, attribute: string) {
+    this.dialog.open(
+      ElementHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {
+          id: element,
+          attribute: attribute,
+        },
+      },
+    ).afterClosed();
   }
 
 }

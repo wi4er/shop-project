@@ -34,7 +34,7 @@ export class Directory4pointEntity
   version: number;
 
   @ManyToOne(
-    () => PointEntity,
+    type => PointEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -44,7 +44,7 @@ export class Directory4pointEntity
   point: PointEntity;
 
   @ManyToOne(
-    () => DirectoryEntity,
+    type => DirectoryEntity,
     directory => directory.point,
     {
       onDelete: 'CASCADE',
@@ -55,7 +55,7 @@ export class Directory4pointEntity
   parent: DirectoryEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

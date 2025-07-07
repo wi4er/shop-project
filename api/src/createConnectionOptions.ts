@@ -36,17 +36,12 @@ import { Block2permissionEntity } from './content/model/block/block2permission.e
 import { Block4pointEntity } from './content/model/block/block4point.entity';
 import { Directory4pointEntity } from './registry/model/directory/directory4point.entity';
 import { Point4pointEntity } from './registry/model/point/point4point.entity';
-import { FormEntity } from './form/model/form/form.entity';
-import { Form2flagEntity } from './form/model/form/form2flag.entity';
-import { Form4stringEntity } from './form/model/form/form4string.entity';
-import { FormFieldStringEntity } from './form/model/form/form-field-string.entity';
-import { FormFieldEntity } from './form/model/form/form-field.entity';
-import { FormField2flagEntity } from './form/model/form/form-field2flag.entity';
-import { FormField4stringEntity } from './form/model/form/form-field4string.entity';
-import { FormFieldElementEntity } from './form/model/form/form-field-element.entity';
-import { FormFieldSectionEntity } from './form/model/form/form-field-section.entity';
-import { FormFieldDirectoryEntity } from './form/model/form/form-field-directory.entity';
-import { ResultEntity } from './form/model/result/result.entity';
+import { FormEntity } from './feedback/model/form/form.entity';
+import { Form2flagEntity } from './feedback/model/form/form2flag.entity';
+import { Form2fieldEntity } from './feedback/model/form/form2field.entity';
+import { Form4stringEntity } from './feedback/model/form/form4string.entity';
+import { Form4pointEntity } from './feedback/model/form/form4point.entity';
+import { ResultEntity } from './feedback/model/result/result.entity';
 import { AttributeEntity } from './settings/model/attribute/attribute.entity';
 import { Attribute4stringEntity } from './settings/model/attribute/attribute4string.entity';
 import { Attribute2flagEntity } from './settings/model/attribute/attribute2flag.entity';
@@ -91,6 +86,14 @@ import { Element4InstanceEntity } from './content/model/element/element4instance
 import { Block4descriptionEntity } from './content/model/block/block4description.entity';
 import { Element4descriptionEntity } from './content/model/element/element4description.entity';
 import { AttributeAsInstanceEntity } from './settings/model/attribute/attribute-as-instance.entity';
+import { FieldEntity } from './settings/model/field/field.entity';
+import { Field2flagEntity } from './settings/model/field/field2flag.entity';
+import { Field4stringEntity } from './settings/model/field/field4string.entity';
+import { FieldAsStringEntity } from './settings/model/field/field-as-string.entity';
+import { FieldAsPointEntity } from './settings/model/field/field-as-point.entity';
+import { FieldAsElementEntity } from './settings/model/field/field-as-element.entity';
+import { FieldAsSectionEntity } from './settings/model/field/field-as-section.entity';
+import { FieldAsFileEntity } from './settings/model/field/field-as-file.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -120,6 +123,10 @@ export function createConnectionOptions(): DataSourceOptions {
       Point2flagEntity, Point2logEntity,
       Point4stringEntity, Point4pointEntity,
       FlagEntity, Flag4stringEntity, Flag2flagEntity,
+      FieldEntity,
+      Field2flagEntity,
+      Field4stringEntity,
+      FieldAsStringEntity, FieldAsPointEntity, FieldAsElementEntity, FieldAsSectionEntity, FieldAsFileEntity,
       LangEntity, Lang4stringEntity, Lang2flagEntity,
       ElementEntity, Element2flagEntity, Element2sectionEntity, Element2imageEntity,
       Element4elementEntity, Element4sectionEntity, Element4stringEntity, Element4pointEntity, Element4fileEntity,
@@ -130,9 +137,9 @@ export function createConnectionOptions(): DataSourceOptions {
       BlockEntity,
       Block4stringEntity, Block4pointEntity, Block4fileEntity, Block4descriptionEntity,
       Block2permissionEntity, Block2flagEntity,
-      FormEntity, Form2flagEntity, Form4stringEntity,
-      FormFieldEntity, FormField2flagEntity, FormField4stringEntity,
-      FormFieldStringEntity, FormFieldElementEntity, FormFieldSectionEntity, FormFieldDirectoryEntity,
+      FormEntity,
+      Form2flagEntity, Form2fieldEntity,
+      Form4stringEntity, Form4pointEntity,
       ResultEntity,
       DocumentEntity, Document2flagEntity, Document4stringEntity,
       InstanceEntity,

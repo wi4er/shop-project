@@ -22,7 +22,7 @@ export class AttributeController {
 
   relations = {
     string: {attribute: true, lang: true},
-    asDirectory: {directory: true},
+    asPoint: {directory: true},
     asSection: {block: true},
     asElement: {block: true},
     asFile: {collection: true},

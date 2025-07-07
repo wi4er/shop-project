@@ -7,7 +7,7 @@ import { RegistryModule } from './registry/registry.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { createConnectionOptions } from './createConnectionOptions';
-import { FormModule } from './form/form.module';
+import { FeedbackModule } from './feedback/feedback.module';
 import { ExceptionModule } from './exception/exception.module';
 import * as cors from 'cors';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
@@ -32,7 +32,7 @@ import { CheckPermissionGuard } from './personal/guard/check-permission.guard';
     StorageModule,
     RegistryModule,
     CommonModule,
-    FormModule,
+    FeedbackModule,
     ExceptionModule,
     SettingsModule,
     DocumentModule,

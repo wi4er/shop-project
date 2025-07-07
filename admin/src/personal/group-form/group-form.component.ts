@@ -7,7 +7,7 @@ import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-personal-group-form',
+  selector: 'app-personal-group-feedback',
   templateUrl: './group-form.component.html',
   styleUrls: ['./group-form.component.css'],
 })

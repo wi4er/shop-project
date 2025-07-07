@@ -75,7 +75,10 @@
 
     <mat-tab-group dynamicHeight>
       <mat-tab label="Attributes">
-        <app-attribute-edit [edit]="editAttributes"></app-attribute-edit>
+        <app-attribute-edit
+          [edit]="editAttributes"
+          [onHistory]="openHistory.bind(this, id)"
+        ></app-attribute-edit>
       </mat-tab>
 
       <mat-tab label="Images">

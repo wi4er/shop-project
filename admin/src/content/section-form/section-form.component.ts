@@ -8,7 +8,7 @@ import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.ser
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-section-form',
+  selector: 'app-section-feedback',
   templateUrl: './section-form.component.html',
   styleUrls: ['./section-form.component.css']
 })

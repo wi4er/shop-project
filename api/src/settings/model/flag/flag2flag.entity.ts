@@ -32,7 +32,7 @@ export class Flag2flagEntity
   version: number;
 
   @ManyToOne(
-    () => FlagEntity,
+    type => FlagEntity,
     flag => flag.flag,
     {
       onDelete: 'CASCADE',
@@ -43,7 +43,7 @@ export class Flag2flagEntity
   parent: FlagEntity;
 
   @ManyToOne(
-    () => FlagEntity,
+    type => FlagEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

@@ -22,10 +22,10 @@ describe('AttributeEntity as instance entity', () => {
 
       const inst = await repo.findOne({
         where: {id: 'LOCATION'},
-        relations: {asDirectory: {directory: true}},
+        relations: {asPoint: {directory: true}},
       });
 
-      expect(inst.asDirectory.directory.id).toBe('CITY')
+      expect(inst.asPoint.directory.id).toBe('CITY')
     });
   });
 });

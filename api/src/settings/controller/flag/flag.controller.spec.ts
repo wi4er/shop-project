@@ -160,6 +160,7 @@ describe('Flag Controller', () => {
     });
 
     test('Should get flag count', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FLAG, method: AccessMethod.ALL}).save();
       for (let i = 0; i < 10; i++) {
         await createFlag(`flag_${i}`);
       }

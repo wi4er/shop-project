@@ -3,6 +3,15 @@
     {{ attribute.id }}
 
     <button
+      mat-button
+      type="button"
+      *ngIf="onHistory"
+      (click)="onHistory(attribute.id)"
+    >
+      <mat-icon>timeline</mat-icon>
+    </button>
+
+    <button
       matSuffix
       type="button"
       mat-button

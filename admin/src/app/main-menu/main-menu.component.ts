@@ -62,7 +62,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'category',
       }, {
         title: 'Form',
-        link: '/form',
+        link: '/feedback',
         icon: 'input',
       }, {
         title: 'Directories',

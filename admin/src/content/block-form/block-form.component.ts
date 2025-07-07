@@ -8,7 +8,7 @@ import { FlagValueService } from '../../edit/flag-value/flag-value.service';
 import { PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-block-form',
+  selector: 'app-block-feedback',
   templateUrl: './block-form.component.html',
   styleUrls: ['./block-form.component.css'],
 })

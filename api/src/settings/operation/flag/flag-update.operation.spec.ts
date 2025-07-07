@@ -103,28 +103,6 @@ describe('Flag updating', () => {
       expect(res.body.iconSvg).toBe('SOME');
     });
 
-    test('Should update id only', async () => {
-      await createFlag('OLD');
-
-      const res = await request(app.getHttpServer())
-        .patch('/settings/flag/OLD')
-        .send({id: 'NEW'})
-        .expect(200);
-
-      expect(res.body.id).toBe('NEW');
-    });
-
-    test('Shouldn`t update id only without access', async () => {
-      await createFlag('OLD');
-
-      const res = await request(app.getHttpServer())
-        .patch('/settings/flag/OLD')
-        .send({id: 'NEW'})
-        .expect(200);
-
-      expect(res.body.id).toBe('NEW');
-    });
-
     test('Should change id', async () => {
       await createFlag('OLD');
 

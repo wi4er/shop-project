@@ -7,7 +7,7 @@ import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-collection-form',
+  selector: 'app-collection-feedback',
   templateUrl: './collection-form.component.html',
   styleUrls: ['./collection-form.component.css'],
 })

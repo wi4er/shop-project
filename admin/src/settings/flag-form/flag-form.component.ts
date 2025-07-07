@@ -8,7 +8,7 @@ import icons from './icons';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-flag-form',
+  selector: 'app-flag-feedback',
   templateUrl: './flag-form.component.html',
   styleUrls: ['./flag-form.component.css'],
 })

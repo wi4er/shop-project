@@ -27,7 +27,7 @@ export enum AttributeType {
 }
 
 @Component({
-  selector: 'app-attribute-form',
+  selector: 'app-attribute-feedback',
   templateUrl: './attribute-form.component.html',
   styleUrls: ['./attribute-form.component.css'],
 })

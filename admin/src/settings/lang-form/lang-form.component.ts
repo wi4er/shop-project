@@ -7,7 +7,7 @@ import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 
 @Component({
-  selector: 'app-lang-form',
+  selector: 'app-lang-feedback',
   templateUrl: './lang-form.component.html',
   styleUrls: ['./lang-form.component.css'],
 })

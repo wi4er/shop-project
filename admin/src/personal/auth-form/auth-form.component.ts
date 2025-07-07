@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../app/service/user.service';
 
 @Component({
-  selector: 'app-auth-form',
+  selector: 'app-auth-feedback',
   templateUrl: './auth-form.component.html',
   styleUrls: ['./auth-form.component.css']
 })

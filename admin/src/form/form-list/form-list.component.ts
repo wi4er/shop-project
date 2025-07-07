@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { StringifiableRecord } from 'query-string/base';
 
 @Component({
-  selector: 'app-form-list',
+  selector: 'app-feedback-list',
   templateUrl: './form-list.component.html',
   styleUrls: ['./form-list.component.css']
 })

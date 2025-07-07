@@ -22,9 +22,12 @@ export class AttributeEditComponent implements OnInit {
   @Input()
   edit: AttributeEdit = {};
 
+  @Input()
+  onHistory?: (attribute: string) => void;
+
   constructor(
-    private apiService: ApiService,
     private dialog: MatDialog,
+    private apiService: ApiService,
   ) {
   }
 
@@ -203,6 +206,5 @@ export class AttributeEditComponent implements OnInit {
     }
   }
 
-  protected readonly FormControl = FormControl;
 
 }

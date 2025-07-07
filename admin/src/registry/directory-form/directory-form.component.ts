@@ -8,7 +8,7 @@ import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.ser
 import { PermissionEdit, PermissionValueService } from '../../edit/permission-value/permission-value.service';
 
 @Component({
-  selector: 'app-registry-form',
+  selector: 'app-registry-feedback',
   templateUrl: './directory-form.component.html',
   styleUrls: ['./directory-form.component.css'],
 })

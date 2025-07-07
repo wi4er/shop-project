@@ -8,7 +8,7 @@ import { PointInput } from '../../app/model/registry/point.input';
 import { Point } from '../../app/model/registry/point';
 
 @Component({
-  selector: 'app-point-form',
+  selector: 'app-point-feedback',
   templateUrl: './point-form.component.html',
   styleUrls: ['./point-form.component.css']
 })

@@ -53,7 +53,7 @@ const routes: Routes = [{
   path: 'form',
   component: FormListComponent,
 }, {
-  path: 'form/:id',
+  path: 'feedback/:id',
   component: ResultListComponent,
 }, {
   path: 'document',

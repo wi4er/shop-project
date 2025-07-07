@@ -87,7 +87,7 @@ export class AttributeEntity extends BaseEntity
     type => AttributeAsPointEntity,
     asDir => asDir.parent,
   )
-  asDirectory: AttributeAsPointEntity;
+  asPoint: AttributeAsPointEntity;
 
   @OneToOne(
     type => AttributeAsElementEntity,
