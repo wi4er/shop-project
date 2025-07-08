@@ -11,6 +11,7 @@ import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
 import { DocumentView } from '../../view/document.view';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 @Controller('bundle/document')
 export class DocumentController {
@@ -18,7 +19,8 @@ export class DocumentController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
-  };
+    field: {field: true},
+  } as FindOptionsRelations<DocumentEntity>;
 
   constructor(
     @InjectEntityManager()

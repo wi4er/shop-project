@@ -1,27 +1,26 @@
+import { WithFieldEntity } from '../model/with/with-field.entity';
 import { BaseEntity, EntityManager } from 'typeorm';
-import { WithFlagEntity } from '../model/with/with-flag.entity';
-import { CommonFlagEntity } from '../model/common/common-flag.entity';
-import { FlagEntity } from '../../settings/model/flag/flag.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { WithFlagInput } from '../input/with-flag.input';
+import { FieldEntity } from '../../settings/model/field/field.entity';
+import { CommonFieldEntity } from '../model/common/common-field.entity';
 
-export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
+export class FieldValueOperation<T extends WithFieldEntity<BaseEntity>> {
 
   constructor(
     private transaction: EntityManager,
-    private entity: new() => CommonFlagEntity<T>,
+    private entity: new() => CommonFieldEntity<T>,
   ) {
   }
 
   /**
    *
    */
-  private async checkFlag(id: string): Promise<FlagEntity> {
+  private async checkField(id: string): Promise<FieldEntity> {
     return WrongDataException.assert(
       await this.transaction
-        .getRepository(FlagEntity)
+        .getRepository(FieldEntity)
         .findOne({where: {id}}),
-      `Flag with id >> ${id} << not found!`,
+      `Field with id >> ${id} << not found!`
     );
   }
 
@@ -29,7 +28,7 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
    *
    */
   async save(beforeItem: T, input: string[]) {
-    const current: Array<string> = beforeItem.flag?.map(it => it.flag.id) ?? [];
+    const current: Array<string> = beforeItem.field?.map(it => it.field.id) ?? [];
 
     for (const item of input ?? []) {
       if (current.includes(item)) {
@@ -37,7 +36,7 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
       } else {
         const inst = new this.entity();
         inst.parent = beforeItem;
-        inst.flag = await this.checkFlag(item);
+        inst.field = await this.checkField(item);
 
         await this.transaction.save(inst)
           .catch(err => {
@@ -50,7 +49,7 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
       await this.transaction
         .delete(this.entity, {
           parent: beforeItem,
-          flag: item,
+          field: item,
         })
         .catch(err => {
           throw new WrongDataException(err.detail);

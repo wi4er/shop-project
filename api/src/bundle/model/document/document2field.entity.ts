@@ -1,28 +1,27 @@
-import {
-  BaseEntity, Check,
-  Entity, ManyToOne, PrimaryGeneratedColumn,
-} from 'typeorm';
-import { FormEntity } from './form.entity';
+import { BaseEntity, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { DocumentEntity } from './document.entity';
 import { FieldEntity } from '../../../settings/model/field/field.entity';
 import { CommonFieldEntity } from '../../../common/model/common/common-field.entity';
 
-@Entity('feedback-form2field')
-export class Form2fieldEntity
+@Entity('bundle-document2field')
+@Index(['parent', 'field'], {unique: true})
+export class Document2fieldEntity
   extends BaseEntity
-  implements CommonFieldEntity<FormEntity> {
+  implements CommonFieldEntity<DocumentEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(
-    type => FormEntity,
+    type => DocumentEntity,
+    document => document.field,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       nullable: false,
     },
   )
-  parent: FormEntity;
+  parent: DocumentEntity;
 
   @ManyToOne(
     type => FieldEntity,

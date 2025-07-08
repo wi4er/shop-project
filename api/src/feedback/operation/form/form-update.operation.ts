@@ -7,11 +7,14 @@ import { FormInput } from '../../input/form/form.input';
 import { filterAttributes } from '../../../common/service/filter-attributes';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
+import { FieldValueOperation } from '../../../common/operation/field-value.operation';
+import { Form2fieldEntity } from '../../model/form/form2field.entity';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class FormUpdateOperation {
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
   }
 
@@ -20,7 +23,7 @@ export class FormUpdateOperation {
    */
   private async checkForm(id: string): Promise<FormEntity> {
     return NoDataException.assert(
-      await this.manager
+      await this.transaction
         .getRepository(FormEntity)
         .findOne({
           where: {id},
@@ -37,15 +40,22 @@ export class FormUpdateOperation {
    *
    */
   async save(id: string, input: FormInput): Promise<string> {
-    const beforeItem = await this.checkForm(id);
-    beforeItem.id = input.id;
+    try {
+      await this.transaction.update(FormEntity, {id}, {
+        id: WrongDataException.assert(input.id, 'Form id expected'),
+      });
+    } catch (err) {
+      throw new WrongDataException(err.message);
+    }
 
+    const beforeItem = await this.checkForm(input.id);
     await beforeItem.save();
 
-    await new FlagValueOperation(this.manager, Form2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.transaction, Form2flagEntity).save(beforeItem, input.flag);
+    await new FieldValueOperation(this.transaction, Form2fieldEntity).save(beforeItem, input.field);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Form4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, Form4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

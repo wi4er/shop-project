@@ -20,6 +20,7 @@ export class FormController {
   relations = {
     string: {attribute: true, lang: true},
     flag: {flag: true},
+    field: {field: true},
   } as FindOptionsRelations<FormEntity>;
 
   constructor(

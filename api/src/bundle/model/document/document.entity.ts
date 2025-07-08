@@ -10,6 +10,7 @@ import { WithStringEntity } from '../../../common/model/with/with-string.entity'
 import { Document2flagEntity } from './document2flag.entity';
 import { Document4stringEntity } from './document4string.entity';
 import { InstanceEntity } from '../instance/instance.entity';
+import { Document2fieldEntity } from './document2field.entity';
 
 @Entity('bundle-bundle')
 export class DocumentEntity
@@ -52,5 +53,11 @@ export class DocumentEntity
     flag => flag.parent,
   )
   flag: Document2flagEntity[];
+
+  @OneToMany(
+    type => Document2fieldEntity,
+    field => field.parent,
+  )
+  field: Document2fieldEntity[];
 
 }

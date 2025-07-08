@@ -20,18 +20,6 @@ export class Form2flagEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
     type => FormEntity,
     form => form.flag,

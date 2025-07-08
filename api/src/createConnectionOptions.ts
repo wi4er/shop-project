@@ -94,6 +94,7 @@ import { FieldAsPointEntity } from './settings/model/field/field-as-point.entity
 import { FieldAsElementEntity } from './settings/model/field/field-as-element.entity';
 import { FieldAsSectionEntity } from './settings/model/field/field-as-section.entity';
 import { FieldAsFileEntity } from './settings/model/field/field-as-file.entity';
+import { Document2fieldEntity } from './bundle/model/document/document2field.entity';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -141,7 +142,9 @@ export function createConnectionOptions(): DataSourceOptions {
       Form2flagEntity, Form2fieldEntity,
       Form4stringEntity, Form4pointEntity,
       ResultEntity,
-      DocumentEntity, Document2flagEntity, Document4stringEntity,
+      DocumentEntity,
+      Document2flagEntity, Document2fieldEntity,
+      Document4stringEntity,
       InstanceEntity,
       FileEntity, File2flagEntity, File4stringEntity,
       CollectionEntity, Collection2flagEntity, Collection4stringEntity,

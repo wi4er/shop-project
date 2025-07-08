@@ -18,7 +18,8 @@ export class FormView {
         lang: str.lang?.id,
       })),
     ];
-    this.flag = item.flag.map(fl => fl.flag.id);
+    this.flag = item.flag.map(it => it.flag.id);
+    this.field = item.field.map(it => it.field.id);
   }
 
   @ApiProperty()
@@ -49,5 +50,8 @@ export class FormView {
 
   @ApiProperty()
   flag: Array<string>;
+
+  @ApiProperty()
+  field: Array<string>;
 
 }

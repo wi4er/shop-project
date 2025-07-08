@@ -1,24 +1,28 @@
-import {
-  BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity, Index, ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
-} from 'typeorm';
-import { PointEntity } from '../../../registry/model/point/point.entity';
-import { ElementEntity } from './element.entity';
+import { BaseEntity, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { DocumentEntity } from './document.entity';
 import { CommonPointEntity } from '../../../common/model/common/common-point.entity';
+import { PointEntity } from '../../../registry/model/point/point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
-@Entity('content-element4point')
-@Index(['point', 'attribute', 'parent'], {unique: true})
-export class Element4pointEntity
+@Entity('bundle-document4point')
+@Index(['parent', 'point', 'attribute'], {unique: true})
+export class Document4pointEntity
   extends BaseEntity
-  implements CommonPointEntity<ElementEntity> {
+  implements CommonPointEntity<DocumentEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(
+    type => DocumentEntity,
+    document => document.flag,
+    {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      nullable: false,
+    },
+  )
+  parent: DocumentEntity;
 
   @ManyToOne(
     type => PointEntity,
@@ -29,17 +33,6 @@ export class Element4pointEntity
     },
   )
   point: PointEntity;
-
-  @ManyToOne(
-    type => ElementEntity,
-    element => element.point,
-    {
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-      nullable: false,
-    },
-  )
-  parent: ElementEntity;
 
   @ManyToOne(
     type => AttributeEntity,

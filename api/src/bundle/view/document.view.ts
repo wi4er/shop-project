@@ -3,13 +3,11 @@ import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { StringAttributeView } from '../../common/view/attribute/string-attribute.view';
 import { PointAttributeView } from '../../common/view/attribute/point-attribute.view';
 
-
 export class DocumentView {
 
   constructor(item: DocumentEntity) {
-
     this.id = item.id;
-    this.created_at =  item.created_at.toISOString();
+    this.created_at = item.created_at.toISOString();
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
 
@@ -20,7 +18,8 @@ export class DocumentView {
         lang: str.lang?.id,
       })),
     ];
-    this.flag = item.flag.map(fl => fl.flag.id);
+    this.field = item.field.map(it => it.field.id);
+    this.flag = item.flag.map(it => it.flag.id);
   }
 
   @ApiProperty()
@@ -51,5 +50,8 @@ export class DocumentView {
 
   @ApiProperty()
   flag: Array<string>;
+
+  @ApiProperty()
+  field: Array<string>;
 
 }

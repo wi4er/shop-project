@@ -9,11 +9,14 @@ import { Document4stringEntity } from './model/document/document4string.entity';
 import { DocumentController } from './controller/document/document.controller';
 import { InstanceController } from './controller/instance/instance.controller';
 import { InstanceEntity } from './model/instance/instance.entity';
+import { Document2fieldEntity } from './model/document/document2field.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      DocumentEntity, Document2flagEntity, Document4stringEntity,
+      DocumentEntity,
+      Document2flagEntity, Document2fieldEntity,
+      Document4stringEntity,
       InstanceEntity,
       AttributeEntity,
       LangEntity,

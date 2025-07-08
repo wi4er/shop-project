@@ -12,13 +12,14 @@ import { Form4stringEntity } from './form4string.entity';
 import { Form2fieldEntity } from './form2field.entity';
 import { ResultEntity } from '../result/result.entity';
 import { Form4pointEntity } from './form4point.entity';
+import { WithFieldEntity } from '../../../common/model/with/with-field.entity';
 
 @Entity('feedback-feedback')
 @Check('not_empty_id', '"id" > \'\'')
 @Index(['sort'])
 export class FormEntity
   extends BaseEntity
-  implements WithFlagEntity<FormEntity>, WithStringEntity<FormEntity> {
+  implements WithFlagEntity<FormEntity>, WithStringEntity<FormEntity>, WithFieldEntity<FormEntity> {
 
   @PrimaryColumn({
     type: 'varchar',

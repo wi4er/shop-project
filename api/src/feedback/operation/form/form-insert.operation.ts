@@ -6,6 +6,9 @@ import { FormInput } from '../../input/form/form.input';
 import { filterAttributes } from '../../../common/service/filter-attributes';
 import { FlagValueOperation } from '../../../common/operation/flag-value.operation';
 import { StringValueOperation } from '../../../common/operation/attribute/string-value.operation';
+import { FieldValueOperation } from '../../../common/operation/field-value.operation';
+import { Form2fieldEntity } from '../../model/form/form2field.entity';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class FormInsertOperation {
 
@@ -19,13 +22,17 @@ export class FormInsertOperation {
 
   /**
    *
-   * @param input
    */
   async save(input: FormInput): Promise<string> {
     this.created.id = input.id;
-    await this.manager.save(this.created);
+
+    await this.manager.save(this.created)
+      .catch(err => {
+        throw new WrongDataException(err.message);
+      });
 
     await new FlagValueOperation(this.manager, Form2flagEntity).save(this.created, input.flag);
+    await new FieldValueOperation(this.manager, Form2fieldEntity).save(this.created, input.field);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Form4stringEntity).save(this.created, pack.string);
