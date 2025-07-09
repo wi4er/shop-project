@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 
 @Component({
@@ -11,7 +11,6 @@ export class FlagEditComponent implements OnInit {
 
   loading = true;
 
-  @Input()
   list: FlagEntity[] = []
 
   @Input()

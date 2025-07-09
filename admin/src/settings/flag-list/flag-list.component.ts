@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../model/flag.entity';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';

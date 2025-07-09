@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FlagFormComponent } from '../../settings/flag-form/flag-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 import { FlagSettingsComponent } from '../../settings/flag-settings/flag-settings.component';
 
 @Component({

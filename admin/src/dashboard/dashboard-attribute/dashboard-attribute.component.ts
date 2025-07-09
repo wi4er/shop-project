@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AttributeFormComponent } from '../../settings/attribute-form/attribute-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { AttributeSettingsComponent } from '../../settings/attribute-settings/attribute-settings.component';
 
 @Component({

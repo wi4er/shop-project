@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { AttributeStringEdit } from '../attribute-value/attribute-value.service';
 import { FormControl } from '@angular/forms';
-import { LangEntity } from '../../app/model/settings/lang.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({

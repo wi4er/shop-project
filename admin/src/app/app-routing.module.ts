@@ -6,8 +6,8 @@ import { LangListComponent } from '../settings/lang-list/lang-list.component';
 import { AttributeListComponent } from '../settings/attribute-list/attribute-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ContentPageComponent } from './content-page/content-page.component';
-import { FormListComponent } from '../form/form-list/form-list.component';
-import { ResultListComponent } from '../form/result-list/result-list.component';
+import { FormListComponent } from '../feedback/form-list/form-list.component';
+import { ResultListComponent } from '../feedback/result-list/result-list.component';
 import { PermissionListComponent } from '../personal/permission-list/permission-list.component';
 import { UserPageComponent } from './user-page/user-page.component';
 import { DocumentListComponent } from '../bundle/document-list/document-list.component';
@@ -16,8 +16,8 @@ import { BlockListComponent } from '../content/block-list/block-list.component';
 import { StoragePageComponent } from './storage-page/storage-page.component';
 import { CollectionPageComponent } from './collection-page/collection-page.component';
 import { DashboardTileComponent } from '../dashboard/dashboard-tile/dashboard-tile.component';
-import { PointListComponent } from '../registry/point-list/point-list.component';
 import { PointPageComponent } from './point-page/point-page.component';
+import { FieldListComponent } from '../settings/field-list/field-list.component';
 
 const routes: Routes = [{
   path: '',
@@ -50,16 +50,19 @@ const routes: Routes = [{
   path: 'attribute',
   component: AttributeListComponent,
 }, {
+  path: 'field',
+  component: FieldListComponent,
+}, {
   path: 'form',
   component: FormListComponent,
 }, {
-  path: 'feedback/:id',
+  path: 'form/:id',
   component: ResultListComponent,
 }, {
   path: 'document',
   component: DocumentListComponent,
 }, {
-  path: 'bundle/:id',
+  path: 'document/:id',
   component: DocumentPageComponent,
 }, {
   path: 'storage',

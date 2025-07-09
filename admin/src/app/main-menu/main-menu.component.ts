@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiEntity, ApiService } from '../service/api.service';
 import { BlockEntity } from '../model/content/block.entity';
-import { Form } from '../model/form/form';
+import { FormEntity } from '../../feedback/model/form.entity';
 import { CollectionEntity } from '../model/storage/collection.entity';
 import { StringAttributeValue } from '../model/common/string-attribute-value';
 import { CommonAttributeValue } from '../model/common/common-attribute-value';
@@ -62,7 +62,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'category',
       }, {
         title: 'Form',
-        link: '/feedback',
+        link: '/form',
         icon: 'input',
       }, {
         title: 'Directories',
@@ -70,7 +70,7 @@ export class MainMenuComponent implements OnInit {
         icon: 'folder',
       }, {
         title: 'Documents',
-        link: '/bundle',
+        link: '/document',
         icon: 'notes',
       }, {
         title: 'Storage',
@@ -88,6 +88,10 @@ export class MainMenuComponent implements OnInit {
         title: 'Attributes',
         link: '/attribute',
         icon: 'display_settings',
+      }, {
+        title: 'Fields',
+        link: '/field',
+        icon: 'format_list_bulleted',
       }, {
         title: 'Flags',
         link: '/flag',
@@ -153,7 +157,7 @@ export class MainMenuComponent implements OnInit {
         }
       });
 
-    this.apiService.fetchList<Form>(ApiEntity.FORM)
+    this.apiService.fetchList<FormEntity>(ApiEntity.FORM)
       .then(list => {
         if (list.length > 0) {
           this.form.title = 'Forms';

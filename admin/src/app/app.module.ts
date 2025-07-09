@@ -34,6 +34,8 @@ import { PersonalPopupComponent } from './personal-popup/personal-popup.componen
 import { DirectoryModule } from '../registry/directory.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { PointPageComponent } from './point-page/point-page.component';
+import { FeedbackModule } from '../feedback/feedback.module';
+import { BundleModule } from '../bundle/bundle.module';
 
 @NgModule({
   declarations: [
@@ -48,9 +50,15 @@ import { PointPageComponent } from './point-page/point-page.component';
     PointPageComponent,
   ],
   imports: [
-    BrowserModule,
     DashboardModule,
     FormsModule,
+    ContentModule,
+    DirectoryModule,
+    PersonalModule,
+    StorageModule,
+    BrowserModule,
+    FeedbackModule,
+    BundleModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -71,10 +79,6 @@ import { PointPageComponent } from './point-page/point-page.component';
     MatRadioModule,
     MatCheckboxModule,
     ReactiveFormsModule,
-    ContentModule,
-    DirectoryModule,
-    PersonalModule,
-    StorageModule,
   ],
   providers: [],
   exports: [

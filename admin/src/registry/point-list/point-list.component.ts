@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent } from '@angular/material/paginator';
-import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { DirectoryEntity } from '../../app/model/registry/directory.entity';
 import { PointSettingsComponent } from '../point-settings/point-settings.component';
 import { PointFormComponent } from '../point-form/point-form.component';

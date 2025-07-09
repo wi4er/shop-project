@@ -28,6 +28,10 @@ import { LangHistoryComponent } from './lang-history/lang-history.component';
 import { AttributeSettingsComponent } from './attribute-settings/attribute-settings.component';
 import { FlagSettingsComponent } from './flag-settings/flag-settings.component';
 import { LangSettingsComponent } from './lang-settings/lang-settings.component';
+import { FieldListComponent } from './field-list/field-list.component';
+import { FieldFormComponent } from './field-form/field-form.component';
+import { FieldSettingsComponent } from './field-settings/field-settings.component';
+import { FieldHistoryComponent } from './field-history/field-history.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,10 @@ import { LangSettingsComponent } from './lang-settings/lang-settings.component';
     AttributeSettingsComponent,
     FlagSettingsComponent,
     LangSettingsComponent,
+    FieldListComponent,
+    FieldFormComponent,
+    FieldSettingsComponent,
+    FieldHistoryComponent,
   ],
   imports: [
     CommonModule,

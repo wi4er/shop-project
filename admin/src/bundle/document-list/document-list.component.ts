@@ -1,48 +1,145 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { Observable } from 'rxjs';
-import { Document } from '../../app/model/document';
+import { DocumentEntity } from '../model/document.entity';
 import { DocumentFormComponent } from '../document-form/document-form.component';
-import { Router } from '@angular/router';
-import { StringifiableRecord } from 'query-string/base';
+import { SelectionModel } from '@angular/cdk/collections';
+import { FlagEntity } from '../../settings/model/flag.entity';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateService } from '../../app/service/date.service';
+import { PageEvent } from '@angular/material/paginator';
+import { DocumentHistoryComponent } from '../document-history/document-history.component';
+import { DocumentSettringsComponent } from '../document-settrings/document-settrings.component';
 
 @Component({
   selector: 'app-bundle-list',
   templateUrl: './document-list.component.html',
   styleUrls: ['./document-list.component.css']
 })
-export class DocumentListComponent {
+export class DocumentListComponent implements OnInit {
+
+  totalCount: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
+  selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
   list: { [key: string]: string }[] = [];
   activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  totalCount: number = 0;
+  flagList: Array<FlagEntity> = [];
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
-    private router: Router,
+    public sanitizer: DomSanitizer,
+    private messageBar: MatSnackBar,
+    public dateService: DateService,
   ) {
-  }
-
-  ngOnInit(): void {
-  }
-
-  fetchList(args: StringifiableRecord) {
-    this.apiService.fetchList<Document>(ApiEntity.DOCUMENT, args)
-      .then(list => this.setData(list));
-
-    this.apiService.countData(ApiEntity.DOCUMENT)
-      .then(count => this.totalCount = count);
   }
 
   /**
    *
-   * @param data
-   * @private
    */
-  private setData(data: Document[]) {
+  ngOnInit(): void {
+    Promise.all([
+      this.apiService.fetchList<FlagEntity>(ApiEntity.FLAG),
+      this.refreshData(),
+    ]).then(([flagList]) => {
+      this.flagList = flagList;
+    });
+  }
+
+  /**
+   *
+   */
+  isAllSelected() {
+    return this.selection.selected.length === this.list.length;
+  }
+
+  /**
+   *
+   */
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.list);
+    }
+  }
+
+  /**
+   *
+   */
+  changePage(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    this.refreshData();
+  }
+
+  /**
+   *
+   */
+  getColumns() {
+    return [
+      'select',
+      'action',
+      'flags',
+      'created_at',
+      'updated_at',
+      ...this.columns,
+    ];
+  }
+
+  /**
+   *
+   */
+  getFlagsIcon(id: string) {
+    const list = this.activeFlags[id];
+    const icons: Array<{
+      icon: string | null,
+      title: string,
+      color: string | null,
+    }> = [];
+
+    for (const flag of this.flagList) {
+      if (list.includes(flag.id) && flag.icon) {
+        icons.push({
+          icon: flag.icon,
+          title: flag.id,
+          color: flag.color,
+        });
+      }
+    }
+
+    return icons;
+  }
+
+  /**
+   *
+   */
+  async refreshData() {
+    return Promise.all([
+      this.apiService.fetchList<DocumentEntity>(
+        ApiEntity.DOCUMENT,
+        {
+          limit: this.pageSize,
+          offset: this.currentPage * this.pageSize,
+        },
+      ),
+      this.apiService.countData(ApiEntity.DOCUMENT),
+    ]).then(([data, count]) => {
+      this.setData(data);
+      this.totalCount = count;
+      this.selection.clear();
+    });
+  }
+
+  /**
+   *
+   */
+  private setData(data: DocumentEntity[]) {
     const col = new Set<string>();
     this.activeFlags = {};
     this.list = [];
@@ -55,8 +152,12 @@ export class DocumentListComponent {
       };
 
       for (const it of item.attribute) {
-        col.add('property_' + it.attribute);
-        line['property_' + it.attribute] = it.string;
+        col.add('attribute_' + it.attribute);
+        if ('string' in it) {
+          line['attribute_' + it.attribute] = it.string;
+        } else if ('from' in it) {
+          line['attribute_' + it.attribute] = it.from + ' - ' + it.to;
+        }
       }
 
       this.activeFlags[item.id] = item.flag;
@@ -64,48 +165,99 @@ export class DocumentListComponent {
       this.list.push(line);
     }
 
-    this.columns = ['select', 'action', 'moveto', 'id', 'created_at', 'updated_at', ...col];
+    this.columns = [ 'id', ...col ];
   }
 
-  addItem(): Observable<undefined> {
-    const dialog = this.dialog.open(
+  /**
+   *
+   */
+  addItem() {
+    this.dialog.open(
       DocumentFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
       },
-    );
-
-    return dialog.afterClosed();
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
-  updateItem(id: number): Observable<undefined> {
-    const dialog = this.dialog.open(
+  /**
+   *
+   */
+  updateItem(id: number) {
+    this.dialog.open(
       DocumentFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
         data: {id},
       },
-    );
-
-    return dialog.afterClosed();
+    ).afterClosed().subscribe(() => this.refreshData());
   }
 
-  goNext(id: string) {
-    this.router.navigate(
-      ['/document', id],
-      {},
-    );
+  /**
+   *
+   */
+  toggleFlag(id: string, flag: string) {
+    const list: Array<string> = [...this.activeFlags[id]];
+
+    const index = this.activeFlags[id].indexOf(flag);
+    if (~index) {
+      list.splice(index, 1);
+    } else {
+      list.push(flag);
+    }
+
+    this.apiService.patchData(ApiEntity.DOCUMENT, id, {flag: list})
+      .then(() => {
+        this.messageBar.open(`Changing flag ${flag} for ${id}`, 'close', {duration: 3000});
+        return this.refreshData();
+      });
   }
 
-  toggleFlag(id: number, flag: string) {
-  }
-
+  /**
+   *
+   */
   async deleteList() {
+    const list = this.selection.selected.map(item => item['id']);
+
+    this.apiService.deleteList(ApiEntity.DOCUMENT, list)
+      .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
   deleteItem(id: string) {
+    this.apiService.deleteList(ApiEntity.DOCUMENT, [id])
+      .then(() => this.refreshData());
   }
 
+  /**
+   *
+   */
+  openSettings() {
+    this.dialog.open(
+      DocumentSettringsComponent,
+      {
+        width: '500px',
+        panelClass: 'wrapper',
+        data: {},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
+
+  /**
+   *
+   */
+  openHistory(id: string) {
+    this.dialog.open(
+      DocumentHistoryComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper',
+        data: {id},
+      },
+    ).afterClosed().subscribe(() => this.refreshData());
+  }
 }

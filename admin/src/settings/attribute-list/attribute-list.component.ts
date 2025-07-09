@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AttributeFormComponent } from '../attribute-form/attribute-form.component';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { AttributeEntity } from '../model/attribute.entity';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../model/flag.entity';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateService } from '../../app/service/date.service';
 import { AttributeHistoryComponent } from '../attribute-history/attribute-history.component';
@@ -154,7 +154,7 @@ export class AttributeListComponent implements OnInit {
       };
 
       for (const it of item.attribute) {
-        col.add('property_' + it.attribute);
+        col.add('attribute_' + it.attribute);
         if ('string' in it) {
           line['attribute_' + it.attribute] = it.string;
         } else if ('from' in it) {

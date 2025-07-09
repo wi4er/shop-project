@@ -2,7 +2,6 @@ import { BaseEntity, EntityManager, IsNull } from 'typeorm';
 import { CommonPermissionEntity } from '../model/common/common-permission.entity';
 import { GroupEntity } from '../../personal/model/group/group.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { WithPermissionInput } from '../input/with-permission.input';
 import { WithPermissionEntity } from '../model/with/with-permission.entity';
 import { PermissionMethod } from '../../permission/model/permission-method';
 import * as process from 'node:process';
@@ -34,12 +33,18 @@ export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>
    *
    */
   private async checkAdminGroup(input:  PermissionValueInput[]) {
-    if (!process.env['ADMIN_GROUP']) return;
+    const admin = process.env['ADMIN_GROUP'];
+
+    if (!admin) return;
 
    for (const item of input) {
-
+     if (
+       item.group === admin
+       && item.method === PermissionMethod.ALL
+     ) return;
    }
 
+   input.push({group: admin, method: PermissionMethod.ALL});
   }
 
   /**
@@ -47,6 +52,8 @@ export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>
    */
   async save(beforeItem: T, input:  PermissionValueInput[]) {
     const current: { [key: string]: Array<PermissionMethod> } = {};
+
+    await this.checkAdminGroup(input);
 
     for (const item of beforeItem.permission ?? []) {
       const {id = ''} = item.group ?? {};
@@ -79,6 +86,8 @@ export class PermissionValueOperation<T extends WithPermissionEntity<BaseEntity>
           parent: beforeItem,
           method: method,
           group: group || IsNull(),
+        }).catch(err => {
+          throw new WrongDataException(err.detail);
         });
       }
     }

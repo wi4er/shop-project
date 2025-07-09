@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ContactEntity } from '../../app/model/personal/contact.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Component({
   selector: 'app-contact-edit',

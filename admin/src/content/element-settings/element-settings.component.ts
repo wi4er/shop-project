@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AttributeEntity } from '../../app/model/settings/attribute.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { FormControl } from '@angular/forms';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Component({
   selector: 'app-element-settings',

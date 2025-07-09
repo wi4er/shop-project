@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../../settings/model/flag.entity';
 
 @Component({
   selector: 'app-item-menu',

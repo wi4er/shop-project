@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FlagEntity } from '../../app/model/settings/flag.entity';
+import { FlagEntity } from '../model/flag.entity';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { FlagInput } from '../../app/model/settings/flag.input';
+import { FlagInput } from '../model/flag.input';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import icons from './icons';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';

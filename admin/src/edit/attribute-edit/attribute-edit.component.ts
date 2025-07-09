@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AttributeEntity } from '../../app/model/settings/attribute.entity';
-import { LangEntity } from '../../app/model/settings/lang.entity';
+import { AttributeEntity } from '../../settings/model/attribute.entity';
+import { LangEntity } from '../../settings/model/lang.entity';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
 import { AttributeEdit, AttributeStringEdit } from '../attribute-value/attribute-value.service';
 import { FormControl, FormGroup } from '@angular/forms';

@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { DocumentInput } from '../../app/model/document.input';
+import { DocumentInput } from '../model/document.input';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
-import { Document } from '../../app/model/document';
+import { DocumentEntity } from '../model/document.entity';
+import { FieldEdit } from '../../feedback/form-form/form-form.component';
+import { FieldValueService } from '../../edit/field-value/field-value.service';
 
 @Component({
   selector: 'app-bundle-feedback',
@@ -13,11 +15,14 @@ import { Document } from '../../app/model/document';
 })
 export class DocumentFormComponent implements OnInit {
 
+  loading = true;
+
   id: string = '';
   created_at: string = '';
   updated_at: string = '';
 
   editAttributes: AttributeEdit = {};
+  editFields: FieldEdit = {};
   editFlags: FlagEdit = {};
 
   constructor(
@@ -26,7 +31,7 @@ export class DocumentFormComponent implements OnInit {
     private apiService: ApiService,
     private attributeValueService: AttributeValueService,
     private flagValueService: FlagValueService,
-
+    private fieldValueService: FieldValueService,
   ) {
     if (data?.id) this.id = String(data.id);
   }
@@ -36,22 +41,28 @@ export class DocumentFormComponent implements OnInit {
    */
   ngOnInit(): void {
     if (this.data?.id) {
-      this.apiService.fetchItem<Document>(ApiEntity.DOCUMENT, this.id)
+      this.apiService.fetchItem<DocumentEntity>(ApiEntity.DOCUMENT, this.id)
         .then(res => {
           this.toEdit(res);
+
+          this.loading = false;
         });
+    } else {
+      this.loading = false;
     }
   }
 
   /**
    *
    */
-  toEdit(item: Document) {
+  toEdit(item: DocumentEntity) {
+    this.id = item.id;
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
     this.editAttributes = this.attributeValueService.toEdit(item.attribute);
     this.editFlags = this.flagValueService.toEdit(item.flag);
+    this.editFields = this.fieldValueService.toEdit(item.field);
   }
 
   /**
@@ -59,26 +70,33 @@ export class DocumentFormComponent implements OnInit {
    */
   toInput(): DocumentInput {
     return {
-      id: +this.id,
+      id: this.id,
       attribute: this.attributeValueService.toInput(this.editAttributes),
       flag: this.flagValueService.toInput(this.editFlags),
+      field: this.fieldValueService.toInput(this.editFields),
     };
+  }
+
+  sendItem(): Promise<string> {
+    if (this.data?.id) {
+      return this.apiService.putData<DocumentInput>(
+        ApiEntity.DOCUMENT,
+        this.data.id,
+        this.toInput(),
+      );
+    } else {
+      return this.apiService.postData<DocumentInput>(
+        ApiEntity.DOCUMENT,
+        this.toInput(),
+      );
+    }
   }
 
   /**
    *
    */
   saveItem() {
-    if (this.data?.id) {
-
-    } else {
-      this.apiService.postData<DocumentInput>(
-        ApiEntity.DOCUMENT,
-        this.toInput(),
-      ).then(() => {
-        this.dialogRef.close()
-      });
-    }
+    this.sendItem().then(() => this.dialogRef.close());
   }
 
 }

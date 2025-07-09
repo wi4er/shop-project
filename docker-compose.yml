@@ -70,5 +70,6 @@ services:
   cache:
     image: redis:alpine
     container_name: shop-project-cache
+    restart: always
     ports:
-      - "6379:6379"
+      - "6379:6379"cd

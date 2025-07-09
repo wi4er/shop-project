@@ -27,6 +27,7 @@ import { PointEditComponent } from './point-edit/point-edit.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StringEditComponent } from './string-edit/string-edit.component';
 import { DescriptionEditComponent } from './description-edit/description-edit.component';
+import { FieldEditComponent } from './field-edit/field-edit.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { DescriptionEditComponent } from './description-edit/description-edit.co
     PointEditComponent,
     StringEditComponent,
     DescriptionEditComponent,
+    FieldEditComponent,
   ],
   imports: [
     CommonModule,
@@ -73,6 +75,7 @@ import { DescriptionEditComponent } from './description-edit/description-edit.co
     BlockEditComponent,
     DirectoryEditComponent,
     CollectionEditComponent,
+    FieldEditComponent,
   ],
 })
 export class EditModule {

@@ -1,0 +1,9 @@
+<section *ngIf="!loading">
+  <mat-checkbox
+    *ngFor="let flag of list"
+    [(ngModel)]="edit[flag.id]"
+  >
+    {{ flag.id }}
+  </mat-checkbox>
+</section>
+

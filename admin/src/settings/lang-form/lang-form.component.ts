@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { LangEntity } from '../../app/model/settings/lang.entity';
+import { LangEntity } from '../model/lang.entity';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiEntity, ApiService } from '../../app/service/api.service';
-import { LangInput } from '../../app/model/settings/lang.input';
+import { LangInput } from '../model/lang.input';
 import { AttributeEdit, AttributeValueService } from '../../edit/attribute-value/attribute-value.service';
 import { FlagEdit, FlagValueService } from '../../edit/flag-value/flag-value.service';
 

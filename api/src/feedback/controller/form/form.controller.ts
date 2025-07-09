@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { FormEntity } from '../../model/form/form.entity';
@@ -13,6 +13,7 @@ import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
+import { FormPatchOperation } from '../../operation/form/form-patch.operation';
 
 @Controller('feedback/form')
 export class FormController {
@@ -91,6 +92,24 @@ export class FormController {
   ) {
     return this.entityManager.transaction(
       trans => new FormUpdateOperation(this.entityManager).save(id, input)
+        .then(id => trans.getRepository(FormEntity).findOne({
+          where: {id},
+          relations: this.relations,
+        })),
+    ).then(item => new FormView(item));
+  }
+
+  @Patch(':id')
+  @CheckId(FormEntity)
+  @CheckAccess(AccessTarget.FORM, AccessMethod.PUT)
+  async patchItem(
+    @Param('id')
+      id: string,
+    @Body()
+      input: FormInput,
+  ) {
+    return this.entityManager.transaction(
+      trans => new FormPatchOperation(this.entityManager).save(id, input)
         .then(id => trans.getRepository(FormEntity).findOne({
           where: {id},
           relations: this.relations,
