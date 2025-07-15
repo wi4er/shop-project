@@ -13,8 +13,9 @@ import { Form2fieldEntity } from './form2field.entity';
 import { ResultEntity } from '../result/result.entity';
 import { Form4pointEntity } from './form4point.entity';
 import { WithFieldEntity } from '../../../common/model/with/with-field.entity';
+import { Form2logEntity } from './form2log.entity';
 
-@Entity('feedback-feedback')
+@Entity('feedback-form')
 @Check('not_empty_id', '"id" > \'\'')
 @Index(['sort'])
 export class FormEntity
@@ -43,6 +44,12 @@ export class FormEntity
   sort: number = 100;
 
   @OneToMany(
+    type => ResultEntity,
+    result => result.form,
+  )
+  result: ResultEntity[];
+
+  @OneToMany(
     type => Form2flagEntity,
     flag => flag.parent,
   )
@@ -55,10 +62,10 @@ export class FormEntity
   field: Form2fieldEntity[];
 
   @OneToMany(
-    type => ResultEntity,
-    result => result.form,
+    type => Form2logEntity,
+    point => point.parent,
   )
-  result: ResultEntity[];
+  log: Form2logEntity[];
 
   @OneToMany(
     type => Form4stringEntity,

@@ -37,7 +37,7 @@ export class AttributePatchOperation {
     const beforeItem = await this.checkAttribute(id);
 
     if (input.id) await this.transaction.update(AttributeEntity, {id}, {id: input.id});
-    if (input.flag) await new FlagValueOperation(this.transaction, Attribute2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Attribute2flagEntity, input.flag);
 
     return input.id ? input.id : beforeItem.id;
   }

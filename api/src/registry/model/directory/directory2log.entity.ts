@@ -2,7 +2,7 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  DeleteDateColumn, Entity,
+  Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,8 +20,8 @@ export class Directory2logEntity
   @CreateDateColumn()
   created_at: Date;
 
-  @DeleteDateColumn()
-  deleted_at: Date | null;
+  @Column()
+  version: number;
 
   @ManyToOne(
     type => DirectoryEntity,
@@ -35,10 +35,7 @@ export class Directory2logEntity
   parent: DirectoryEntity;
 
   @Column()
-  field: string;
-
-  @Column()
-  operation: string;
+  value: string;
 
   @Column()
   from: string;

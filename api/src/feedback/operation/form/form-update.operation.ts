@@ -10,6 +10,9 @@ import { StringValueOperation } from '../../../common/operation/attribute/string
 import { FieldValueOperation } from '../../../common/operation/field-value.operation';
 import { Form2fieldEntity } from '../../model/form/form2field.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { FormLogInsertOperation } from '../log/form-log-insert.operation';
+import { Form2logEntity } from '../../model/form/form2log.entity';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 
 export class FormUpdateOperation {
 
@@ -28,9 +31,9 @@ export class FormUpdateOperation {
         .findOne({
           where: {id},
           relations: {
-            string: {attribute: true},
+            string: {attribute: true, lang: true},
             flag: {flag: true},
-          },
+          } as FindOptionsRelations<FormEntity>,
         }),
       `Form with id >> ${id} << not found!`,
     );
@@ -49,9 +52,20 @@ export class FormUpdateOperation {
     }
 
     const beforeItem = await this.checkForm(input.id);
-    await beforeItem.save();
+    if (id !== input.id) {
+      await new FormLogInsertOperation(this.transaction).save(beforeItem, {
+        version: beforeItem.version,
+        field: `field.ID`,
+        from: id,
+        to: input.id,
+      });
+    }
 
-    await new FlagValueOperation(this.transaction, Form2flagEntity).save(beforeItem, input.flag);
+
+    const flagsOperation = new FlagValueOperation(this.transaction, beforeItem);
+    await flagsOperation.save(Form2flagEntity, input.flag);
+    await flagsOperation.log(Form2logEntity, input.flag);
+
     await new FieldValueOperation(this.transaction, Form2fieldEntity).save(beforeItem, input.field);
 
     const pack = filterAttributes(input.attribute);

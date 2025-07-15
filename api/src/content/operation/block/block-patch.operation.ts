@@ -40,7 +40,7 @@ export class BlockPatchOperation {
     if (input.id) await this.transaction.update(BlockEntity, {id}, {id: input.id});
 
     const beforeItem = await this.checkBlock(input.id ? input.id : id);
-    if (input.flag) await new FlagValueOperation(this.transaction, Block2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Block2flagEntity, input.flag);
 
     return  input.id ? input.id : beforeItem.id;
   }

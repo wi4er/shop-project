@@ -48,7 +48,7 @@ export class FieldUpdateOperation {
 
     const beforeItem = await this.checkField(input.id);
 
-    await new FlagValueOperation(this.manager, Field2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.manager, beforeItem).save(Field2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Field4stringEntity).save(beforeItem, pack.string);

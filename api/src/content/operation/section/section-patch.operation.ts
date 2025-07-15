@@ -44,7 +44,7 @@ export class SectionPatchOperation {
 
     const beforeItem = await this.checkSection(id);
 
-    if (input.flag) await new FlagValueOperation(this.manager, Section2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.manager, beforeItem).save(Section2flagEntity, input.flag);
 
     return beforeItem.id;
   }

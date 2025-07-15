@@ -1,20 +1,16 @@
 import {
-  BaseEntity,
-  Column,
+  BaseEntity, Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 import { CommonLogEntity } from '../../../common/model/common/common-log.entity';
-import { PointEntity } from './point.entity';
+import { FormEntity } from './form.entity';
 
-@Entity('registry-pont2log')
-export class Point2logEntity
+@Entity('feedback-form2log')
+export class Form2logEntity
   extends BaseEntity
-  implements CommonLogEntity<PointEntity> {
+  implements CommonLogEntity<FormEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,17 +18,11 @@ export class Point2logEntity
   @CreateDateColumn()
   created_at: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
+  @Column()
   version: number;
 
   @ManyToOne(
-    type => PointEntity,
+    type => FormEntity,
     point => point.log,
     {
       onDelete: 'CASCADE',
@@ -40,18 +30,15 @@ export class Point2logEntity
       nullable: false,
     },
   )
-  parent: PointEntity;
+  parent: FormEntity;
 
   @Column()
   value: string;
 
-  @Column()
-  operation: string;
-
-  @Column()
+  @Column({nullable: true})
   from: string;
 
-  @Column()
+  @Column({nullable: true})
   to: string;
 
 }

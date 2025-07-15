@@ -26,7 +26,7 @@ describe('Point to registry-log entity', () => {
       const inst = new Point2logEntity();
 
       inst.parent = parent;
-      inst.field = 'attribute.NAME';
+      inst.value = 'attribute.NAME';
       inst.operation = 'CHANGE';
       inst.from = 'OLD';
       inst.to = 'NEW';

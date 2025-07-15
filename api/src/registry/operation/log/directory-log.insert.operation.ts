@@ -29,8 +29,7 @@ export class DirectoryLogInsertOperation {
 
     const inst = new Directory2logEntity();
     inst.parent = created;
-    inst.operation = 'UPDATE';
-    inst.field = 'id';
+    inst.value = 'id';
     inst.from = data.from;
     inst.to = data.to;
 

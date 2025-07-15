@@ -19,18 +19,6 @@ export class Form4stringEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @Column()
   string: string;
 

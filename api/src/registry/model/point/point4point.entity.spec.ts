@@ -7,14 +7,14 @@ import { PointEntity } from './point.entity';
 import { Point4pointEntity } from './point4point.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
-describe('Point2point entity', () => {
+describe('Point to point entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Point2point fields', () => {
+  describe('Point to point fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Point4pointEntity);
       const list = await repo.find();

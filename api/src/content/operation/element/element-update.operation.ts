@@ -86,7 +86,7 @@ export class ElementUpdateOperation {
     const beforeItem = await this.checkElement(input.id);
 
     await new ImageValueOperation(this.transaction, Element2imageEntity).save(beforeItem, input.image);
-    await new FlagValueOperation(this.transaction, Element2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.transaction, beforeItem).save(Element2flagEntity, input.flag);
     await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);

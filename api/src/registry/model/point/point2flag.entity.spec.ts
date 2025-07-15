@@ -6,17 +6,14 @@ import { PointEntity } from './point.entity';
 import { Point2flagEntity } from './point2flag.entity';
 import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
-describe('Point2Flag entity', () => {
+describe('Point to flag entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Point2Flag fields', () => {
+  describe('Point to flag fields', () => {
     test('Should create', async () => {
       const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
       const parent = await Object.assign(new PointEntity(), {id: 'London', directory}).save();

@@ -25,7 +25,7 @@ export class DocumentInsertOperation {
   async save(input: DocumentInput): Promise<string> {
     await this.manager.save(this.created);
 
-    await new FlagValueOperation(this.manager, Document2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(Document2flagEntity, input.flag);
     await new FieldValueOperation(this.manager, Document2fieldEntity).save(this.created, input.field);
 
     const pack = filterAttributes(input.attribute);

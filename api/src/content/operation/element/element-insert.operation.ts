@@ -61,7 +61,7 @@ export class ElementInsertOperation {
     }
 
     await new ImageValueOperation(this.transaction, Element2imageEntity).save(this.created, input.image);
-    await new FlagValueOperation(this.transaction, Element2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.transaction, this.created).save(Element2flagEntity, input.flag);
     await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(this.created, input.permission);
 
     const pack = filterAttributes(input.attribute);

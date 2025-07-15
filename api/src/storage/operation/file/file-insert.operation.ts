@@ -14,7 +14,7 @@ export class FileInsertOperation {
   created: FileEntity;
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
     this.created = new FileEntity();
   }
@@ -24,7 +24,7 @@ export class FileInsertOperation {
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
     return WrongDataException.assert(
-      await this.manager
+      await this.transaction
         .getRepository(CollectionEntity)
         .findOne({where: {id}}),
       `Collection with id >> ${id} << not found!`,
@@ -43,15 +43,15 @@ export class FileInsertOperation {
     this.created.path = input.path;
 
     try {
-      await this.manager.insert(FileEntity, this.created);
+      await this.transaction.insert(FileEntity, this.created);
     } catch (err) {
       throw new WrongDataException(err);
     }
 
-    await new FlagValueOperation(this.manager, File2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.transaction, this.created).save(File2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, File4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.transaction, File4stringEntity).save(this.created, pack.string);
 
     return this.created.id;
   }

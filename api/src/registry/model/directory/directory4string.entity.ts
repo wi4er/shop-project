@@ -1,11 +1,9 @@
 import {
   BaseEntity,
   Column,
-  CreateDateColumn, DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { DirectoryEntity } from './directory.entity';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
@@ -19,18 +17,6 @@ export class Directory4stringEntity
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
 
   @Column()
   string: string;

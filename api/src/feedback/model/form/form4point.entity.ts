@@ -17,18 +17,6 @@ export class Form4pointEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
     type => PointEntity,
     {

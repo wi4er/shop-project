@@ -36,7 +36,7 @@ export class FormPatchOperation {
     const beforeItem = await this.checkForm(id);
 
     if (input.id) await this.transaction.update(FormEntity, {id}, {id: input.id});
-    if (input.flag) await new FlagValueOperation(this.transaction, Form2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Form2flagEntity, input.flag);
 
     return input.id ? input.id : beforeItem.id;
   }

@@ -11,7 +11,7 @@ import { StringValueOperation } from '../../../common/operation/attribute/string
 export class CollectionUpdateOperation {
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
   }
 
@@ -20,7 +20,7 @@ export class CollectionUpdateOperation {
    */
   private async checkCollection(id: string): Promise<CollectionEntity> {
     return NoDataException.assert(
-      await this.manager
+      await this.transaction
         .getRepository(CollectionEntity)
         .findOne({
           where: {id},
@@ -42,10 +42,10 @@ export class CollectionUpdateOperation {
 
     await beforeItem.save();
 
-    await new FlagValueOperation(this.manager, Collection2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.transaction, beforeItem).save(Collection2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Collection4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, Collection4stringEntity).save(beforeItem, pack.string);
 
     return beforeItem.id;
   }

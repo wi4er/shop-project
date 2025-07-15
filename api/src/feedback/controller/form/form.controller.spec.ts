@@ -15,7 +15,7 @@ import { AccessEntity } from '../../../personal/model/access/access.entity';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 
-describe('FormController', () => {
+describe('Form Controller', () => {
   let source: DataSource;
   let app: INestApplication;
 
@@ -29,12 +29,11 @@ describe('FormController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-
   function createForm(id: string) {
 
   }
 
-  describe('Form fields', () => {
+  describe('Form properties', () => {
     test('Should get empty list', async () => {
       await Object.assign(new AccessEntity(), {method: AccessMethod.GET, target: AccessTarget.FORM}).save();
 

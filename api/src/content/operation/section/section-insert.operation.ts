@@ -64,7 +64,7 @@ export class SectionInsertOperation {
       throw new WrongDataException(err.message);
     }
 
-    await new FlagValueOperation(this.manager, Section2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(Section2flagEntity, input.flag);
     await new ImageValueOperation(this.manager, Section2imageEntity).save(this.created, input.image);
     await new PermissionValueOperation(this.manager, Section2permissionEntity).save(this.created, input.permission);
 

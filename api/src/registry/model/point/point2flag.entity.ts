@@ -1,10 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from './point.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
@@ -18,18 +15,6 @@ export class Point2flagEntity
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
-  version: number;
 
   @ManyToOne(
     type => PointEntity,

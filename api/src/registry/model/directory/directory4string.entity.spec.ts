@@ -6,17 +6,14 @@ import { Directory4stringEntity } from './directory4string.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { LangEntity } from '../../../settings/model/lang/lang.entity';
 
-describe('DirectoryEntity string attribute entity', () => {
+describe('Directory to string attribute entity', () => {
   let source: DataSource;
 
-  beforeAll(async () => {
-    source = await createConnection(createConnectionOptions());
-  });
-
+  beforeAll(async () => source = await createConnection(createConnectionOptions()));
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('DirectoryString fields', () => {
+  describe('Directory to string fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(Directory4stringEntity);
       const list = await repo.find();
@@ -64,7 +61,7 @@ describe('DirectoryEntity string attribute entity', () => {
     });
   });
 
-  describe('DirectoryEntity with string', () => {
+  describe('Directory with string', () => {
     test('Should create registry with string', async () => {
       const repo = source.getRepository(DirectoryEntity);
       const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();

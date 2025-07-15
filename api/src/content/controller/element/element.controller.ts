@@ -127,15 +127,15 @@ export class ElementController {
   @Get()
   async getList(
     @CurrentGroups()
-      group: string[],
+    group: string[],
     @Query('filter')
-      filter?: ElementFilterInput,
+    filter?: ElementFilterInput,
     @Query('sort')
-      sort?: ElementOrder[],
+    sort?: ElementOrder[],
     @Query('offset')
-      offset?: number,
+    offset?: number,
     @Query('limit')
-      limit?: number,
+    limit?: number,
   ): Promise<ElementView[]> {
     return this.elementRepo.find({
       where: {
@@ -155,9 +155,9 @@ export class ElementController {
   @Get('count')
   async getCount(
     @CurrentGroups()
-      group: string[],
+    group: string[],
     @Query('filter')
-      filter?: ElementFilterInput,
+    filter?: ElementFilterInput,
   ): Promise<{ count: number }> {
     return this.elementRepo.count({
       where: {
@@ -180,7 +180,7 @@ export class ElementController {
   })
   async getItem(
     @Param('id')
-      id: string,
+    id: string,
   ): Promise<ElementView> {
     return this.elementRepo.findOne({
       where: {id},
@@ -196,7 +196,7 @@ export class ElementController {
   })
   async addItem(
     @Body()
-      input: ElementInput,
+    input: ElementInput,
   ): Promise<ElementView> {
     return this.entityManager.transaction(
       trans => new ElementInsertOperation(trans).save(input)
@@ -217,9 +217,9 @@ export class ElementController {
   })
   async updateItem(
     @Param('id')
-      id: string,
+    id: string,
     @Body()
-      input: ElementInput,
+    input: ElementInput,
   ): Promise<ElementView> {
     return this.entityManager.transaction(
       trans => new ElementUpdateOperation(trans).save(id, input)
@@ -240,9 +240,9 @@ export class ElementController {
   })
   async updateField(
     @Param('id')
-      id: string,
+    id: string,
     @Body()
-      input: ElementInput,
+    input: ElementInput,
   ): Promise<ElementView> {
     return this.entityManager.transaction(
       trans => new ElementPatchOperation(trans).save(id, input)
@@ -258,7 +258,7 @@ export class ElementController {
   @CheckPermission(Element2permissionEntity, PermissionMethod.DELETE)
   async deleteItem(
     @Param('id')
-      id: string,
+    id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
       async trans => new ElementDeleteOperation(trans).save([id]),

@@ -37,7 +37,7 @@ export class LangPatchOperation {
     const beforeItem = await this.checkLang(id);
 
     if (input.id) await this.transaction.update(LangEntity, {id}, {id: input.id});
-    if (input.flag) await new FlagValueOperation(this.transaction, Lang2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Lang2flagEntity, input.flag);
 
     return input.id ? input.id : beforeItem.id;
   }

@@ -87,7 +87,7 @@ export class SectionUpdateOperation {
 
     const beforeItem = await this.checkSection(input.id);
 
-    await new FlagValueOperation(this.manager, Section2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.manager, beforeItem).save(Section2flagEntity, input.flag);
     await new ImageValueOperation(this.manager, Section2imageEntity).save(beforeItem, input.image);
     await new PermissionValueOperation(this.manager, Section2permissionEntity).save(beforeItem, input.permission);
 

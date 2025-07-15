@@ -13,6 +13,7 @@ import { AccessEntity } from '../../../personal/model/access/access.entity';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { FieldEntity } from '../../../settings/model/field/field.entity';
+import { Form2flagEntity } from '../../model/form/form2flag.entity';
 
 describe('Form update', () => {
   let source: DataSource;
@@ -51,6 +52,55 @@ describe('Form update', () => {
         .expect(200);
 
       expect(inst.body.id).toBe('UPDATED');
+    });
+
+    test('Shouldn`t without id', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+
+      await request(app.getHttpServer())
+        .put('/feedback/form/ORDER')
+        .send({})
+        .expect(400);
+    });
+
+    test('Shouldn`t update to blank id', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+
+      await request(app.getHttpServer())
+        .put('/feedback/form/ORDER')
+        .send({id: ''})
+        .expect(400);
+    });
+  });
+
+  describe('Form version update ', () => {
+    test('Should update version', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+      await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/feedback/form/ORDER')
+        .send({id: 'ORDER'})
+        .expect(200);
+
+      expect(inst.body.version).toBe(2);
+    });
+
+    test('Should update from flag', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+      const parent = await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+      const flag = await Object.assign(new FlagEntity(), {id: 'BEFORE'}).save();
+      await Object.assign(new FlagEntity(), {id: 'AFTER'}).save();
+      await Object.assign(new Form2flagEntity(), {parent, flag}).save();
+
+      const inst = await request(app.getHttpServer())
+        .put('/feedback/form/ORDER')
+        .send({id: 'ORDER', flag: ['AFTER']})
+        .expect(200);
+
+      expect(inst.body.version).toBe(2);
     });
   });
 
@@ -132,6 +182,67 @@ describe('Form update', () => {
         .expect(200);
 
       expect(inst.body.field).toEqual(['DATA']);
+    });
+  });
+
+  describe('Form update with logs', () => {
+    describe('Form update with property logs', () => {
+      test('Shouldn`t log without flag update', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        await Object.assign(new FormEntity(), {id: 'OLD'}).save();
+
+        const inst = await request(app.getHttpServer())
+          .put('/feedback/form/OLD')
+          .send({id: 'NEW'})
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/NEW')
+          .expect(200);
+
+        console.log(log.body);
+
+        expect(log.body).toHaveLength(1);
+      });
+    });
+
+    describe('Form update with flag logs', () => {
+      test('Shouldn`t log without flag update', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        const parent = await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+        const flag = await Object.assign(new FlagEntity(), {id: 'FLAG'}).save();
+        await Object.assign(new Form2flagEntity(), {parent, flag}).save();
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/ORDER')
+          .send({id: 'ORDER', flag: ['FLAG']})
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/ORDER')
+          .expect(200);
+
+        expect(log.body).toHaveLength(0);
+      });
+
+      test('Should log flag update', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        const parent = await Object.assign(new FormEntity(), {id: 'ORDER'}).save();
+        const flag = await Object.assign(new FlagEntity(), {id: 'BEFORE'}).save();
+        await Object.assign(new FlagEntity(), {id: 'AFTER'}).save();
+        await Object.assign(new Form2flagEntity(), {parent, flag}).save();
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/ORDER')
+          .send({id: 'ORDER', flag: ['AFTER']})
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/ORDER')
+          .expect(200);
+
+        expect(log.body).toHaveLength(2);
+      });
     });
   });
 });

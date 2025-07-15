@@ -32,7 +32,7 @@ export class ContactInsertOperation {
         throw new WrongDataException(err.detail);
       });
 
-    await new FlagValueOperation(this.trans, Contact2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.trans, this.created).save(Contact2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.trans, Contact4stringEntity).save(this.created, pack.string);

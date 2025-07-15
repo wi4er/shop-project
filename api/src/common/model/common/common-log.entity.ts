@@ -5,8 +5,8 @@ export interface CommonLogEntity<T extends BaseEntity>
 
   parent: T;
 
-  field: string;
-  operation: string;
+  version: number;
+  value: string;
 
   from: string;
   to: string;

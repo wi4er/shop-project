@@ -45,7 +45,7 @@ export class UserUpdateOperation {
     beforeItem.login = WrongDataException.assert(input.login, 'UserEntity login expected');
     await this.trans.save(beforeItem);
 
-    await new FlagValueOperation(this.trans, User2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.trans, beforeItem).save(User2flagEntity, input.flag);
     await new User2userContactUpdateOperation(this.trans).save(beforeItem, input);
 
     const pack = filterAttributes(input.attribute);

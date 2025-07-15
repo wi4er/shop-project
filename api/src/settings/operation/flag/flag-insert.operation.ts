@@ -33,7 +33,7 @@ export class FlagInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    await new FlagValueOperation(this.manager, Flag2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(Flag2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Flag4stringEntity).save(this.created, pack.string);

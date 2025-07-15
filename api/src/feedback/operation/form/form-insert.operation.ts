@@ -31,7 +31,7 @@ export class FormInsertOperation {
         throw new WrongDataException(err.message);
       });
 
-    await new FlagValueOperation(this.manager, Form2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(Form2flagEntity, input.flag);
     await new FieldValueOperation(this.manager, Form2fieldEntity).save(this.created, input.field);
 
     const pack = filterAttributes(input.attribute);

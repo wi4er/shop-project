@@ -3,13 +3,13 @@ import { WithFlagEntity } from '../model/with/with-flag.entity';
 import { CommonFlagEntity } from '../model/common/common-flag.entity';
 import { FlagEntity } from '../../settings/model/flag/flag.entity';
 import { WrongDataException } from '../../exception/wrong-data/wrong-data.exception';
-import { WithFlagInput } from '../input/with-flag.input';
+import { CommonLogEntity } from '../model/common/common-log.entity';
 
 export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
 
   constructor(
     private transaction: EntityManager,
-    private entity: new() => CommonFlagEntity<T>,
+    private beforeItem?: T,
   ) {
   }
 
@@ -28,15 +28,18 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
   /**
    *
    */
-  async save(beforeItem: T, input: string[]) {
-    const current: Array<string> = beforeItem.flag?.map(it => it.flag.id) ?? [];
+  async save(
+    entity: new() => CommonFlagEntity<T>,
+    input: string[]
+  ) {
+    const current: Array<string> = this.beforeItem.flag?.map(it => it.flag.id) ?? [];
 
     for (const item of input ?? []) {
       if (current.includes(item)) {
         current.splice(current.indexOf(item), 1);
       } else {
-        const inst = new this.entity();
-        inst.parent = beforeItem;
+        const inst = new entity();
+        inst.parent = this.beforeItem;
         inst.flag = await this.checkFlag(item);
 
         await this.transaction.save(inst)
@@ -48,8 +51,8 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
 
     for (const item of current) {
       await this.transaction
-        .delete(this.entity, {
-          parent: beforeItem,
+        .delete(entity, {
+          parent: this.beforeItem,
           flag: item,
         })
         .catch(err => {
@@ -58,4 +61,43 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
     }
   }
 
+  /**
+   *
+   */
+  async log(
+    entity: new() => CommonLogEntity<T>,
+    input: string[]
+  ) {
+    const current : Array<string> = this.beforeItem.flag?.map(it => it.flag.id) ?? [];
+
+    for (const item of input ?? []) {
+      if (current.includes(item)) {
+        current.splice(current.indexOf(item), 1);
+      } else {
+        const inst = new entity();
+        inst.parent = this.beforeItem;
+        inst.value = `flag.${item}`
+        inst.from = null;
+        inst.to = item;
+
+        await this.transaction.save(inst)
+          .catch(err => {
+            throw new WrongDataException(err.detail);
+          });
+      }
+    }
+
+    for (const item of current) {
+      const inst = new entity();
+      inst.parent = this.beforeItem;
+      inst.value = `flag.${item}`
+      inst.from = item;
+      inst.to = null;
+
+      await this.transaction.save(inst)
+        .catch(err => {
+          throw new WrongDataException(err.detail);
+        });
+    }
+  }
 }

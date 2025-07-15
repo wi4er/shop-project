@@ -51,7 +51,7 @@ export class DocumentUpdateOperation {
       throw new WrongDataException(err.message);
     }
 
-    await new FlagValueOperation(this.transaction, Document2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.transaction, beforeItem).save(Document2flagEntity, input.flag);
     await new FieldValueOperation(this.transaction, Document2fieldEntity).save(beforeItem, input.field);
 
     const pack = filterAttributes(input.attribute);

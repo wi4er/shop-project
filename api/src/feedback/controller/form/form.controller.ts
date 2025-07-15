@@ -12,7 +12,6 @@ import { CheckAccess } from '../../../personal/guard/check-access.guard';
 import { AccessTarget } from '../../../personal/model/access/access-target';
 import { AccessMethod } from '../../../personal/model/access/access-method';
 import { CheckId } from '../../../common/guard/check-id.guard';
-import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { FormPatchOperation } from '../../operation/form/form-patch.operation';
 
 @Controller('feedback/form')
@@ -36,9 +35,9 @@ export class FormController {
   @CheckAccess(AccessTarget.FORM, AccessMethod.GET)
   async getList(
     @Query('offset')
-      offset?: number,
+    offset?: number,
     @Query('limit')
-      limit?: number,
+    limit?: number,
   ) {
     return this.formRepo.find({
       relations: this.relations,
@@ -58,7 +57,7 @@ export class FormController {
   @CheckAccess(AccessTarget.FORM, AccessMethod.GET)
   async getItem(
     @Param('id')
-      id: string,
+    id: string,
   ) {
     return this.formRepo.findOne({
       where: {id},
@@ -70,7 +69,7 @@ export class FormController {
   @CheckAccess(AccessTarget.FORM, AccessMethod.POST)
   async addItem(
     @Body()
-      input: FormInput,
+    input: FormInput,
   ) {
     return this.entityManager.transaction(
       trans => new FormInsertOperation(this.entityManager).save(input)
@@ -86,9 +85,9 @@ export class FormController {
   @CheckAccess(AccessTarget.FORM, AccessMethod.PUT)
   async updateItem(
     @Param('id')
-      id: string,
+    id: string,
     @Body()
-      input: FormInput,
+    input: FormInput,
   ) {
     return this.entityManager.transaction(
       trans => new FormUpdateOperation(this.entityManager).save(id, input)
@@ -104,9 +103,9 @@ export class FormController {
   @CheckAccess(AccessTarget.FORM, AccessMethod.PUT)
   async patchItem(
     @Param('id')
-      id: string,
+    id: string,
     @Body()
-      input: FormInput,
+    input: FormInput,
   ) {
     return this.entityManager.transaction(
       trans => new FormPatchOperation(this.entityManager).save(id, input)
@@ -122,7 +121,7 @@ export class FormController {
   @CheckAccess(AccessTarget.FORM, AccessMethod.DELETE)
   deleteItem(
     @Param('id')
-      id: string,
+    id: string,
   ): Promise<string[]> {
     return this.entityManager.transaction(
       trans => new FormDeleteOperation(this.entityManager).save([id]),

@@ -4,7 +4,7 @@ import { createConnectionOptions } from '../../../createConnectionOptions';
 import { PointEntity } from './point.entity';
 import { DirectoryEntity } from '../directory/directory.entity';
 
-describe('Value entity', () => {
+describe('Point entity', () => {
   let source: DataSource;
 
   beforeAll(async () => {
@@ -13,7 +13,7 @@ describe('Value entity', () => {
 
   beforeEach(() => source.synchronize(true));
 
-  describe('Value fields', () => {
+  describe('Point fields', () => {
     test('Should get empty list', async () => {
       const repo = source.getRepository(PointEntity);
       const list = await repo.find();
@@ -66,7 +66,7 @@ describe('Value entity', () => {
     });
   });
 
-  describe('Value with registry', () => {
+  describe('Point with registry', () => {
     test('Should add value with registry', async () => {
       const repo = source.getRepository(PointEntity);
 
@@ -80,7 +80,7 @@ describe('Value entity', () => {
     });
   });
 
-  describe('Value deletion', () => {
+  describe('Point deletion', () => {
     test('Should delete value after registry deletion', async () => {
       const repo = source.getRepository(DirectoryEntity);
 

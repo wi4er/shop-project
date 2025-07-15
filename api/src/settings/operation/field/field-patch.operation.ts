@@ -42,7 +42,7 @@ export class FieldPatchOperation {
 
     const beforeItem = await this.checkField(input.id ? input.id : id);
 
-    if (input.flag) await new FlagValueOperation(this.transaction, Field2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Field2flagEntity, input.flag);
     if (input.attribute) {
       const pack = filterAttributes(input.attribute);
       await new StringValueOperation(this.transaction, Field4stringEntity).save(beforeItem, pack.string);

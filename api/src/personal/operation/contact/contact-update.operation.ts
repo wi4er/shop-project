@@ -44,7 +44,7 @@ export class ContactUpdateOperation {
 
     await this.trans.save(beforeItem);
 
-    await new FlagValueOperation(this.trans, Contact2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.trans, beforeItem).save(Contact2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.trans, Contact4stringEntity).save(beforeItem, pack.string);

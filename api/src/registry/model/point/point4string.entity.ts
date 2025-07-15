@@ -1,11 +1,9 @@
 import {
   BaseEntity,
   Column,
-  CreateDateColumn, DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from './point.entity';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
@@ -20,23 +18,11 @@ export class Point4stringEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null
-
-  @VersionColumn()
-  version: number;
-
   @Column()
   string: string;
 
   @ManyToOne(
-    () => PointEntity,
+    type => PointEntity,
     directory => directory.string,
     {
       onDelete: 'CASCADE',
@@ -47,7 +33,7 @@ export class Point4stringEntity
   parent: PointEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -57,7 +43,7 @@ export class Point4stringEntity
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

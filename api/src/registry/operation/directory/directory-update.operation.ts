@@ -63,7 +63,7 @@ export class DirectoryUpdateOperation {
         to: input.id,
       });
     }
-    await new FlagValueOperation(this.transaction, Directory2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.transaction, beforeItem).save(Directory2flagEntity, input.flag);
     await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);

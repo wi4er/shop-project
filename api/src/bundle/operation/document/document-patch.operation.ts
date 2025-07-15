@@ -44,7 +44,7 @@ export class DocumentPatchOperation {
 
     await beforeItem.save();
 
-    if (input.flag) await new FlagValueOperation(this.manager, Document2flagEntity).save(beforeItem, input.flag);
+    if (input.flag) await new FlagValueOperation(this.manager, beforeItem ).save(Document2flagEntity, input.flag);
     if (input.field) await new FieldValueOperation(this.manager, Document2fieldEntity).save(beforeItem, input.field);
 
     if (input.attribute) {

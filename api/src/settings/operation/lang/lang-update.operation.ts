@@ -48,7 +48,7 @@ export class LangUpdateOperation {
 
     const beforeItem = await this.checkLang(input.id);
 
-    await new FlagValueOperation(this.transaction, Lang2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.transaction, beforeItem).save(Lang2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.transaction, Lang4stringEntity).save(beforeItem, pack.string);

@@ -1,11 +1,8 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { CommonPointEntity } from '../../../common/model/common/common-point.entity';
 import { PointEntity } from '../point/point.entity';
@@ -20,18 +17,6 @@ export class Directory4pointEntity
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
 
   @ManyToOne(
     type => PointEntity,

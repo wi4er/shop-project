@@ -30,7 +30,7 @@ export class LangInsertOperation {
       throw new WrongDataException(err.message)
     }
 
-    await new FlagValueOperation(this.manager, Lang2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(Lang2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Lang4stringEntity).save(this.created, pack.string);

@@ -30,7 +30,7 @@ export class CollectionInsertOperation {
       throw new WrongDataException(err.message);
     }
 
-    await new FlagValueOperation(this.transaction, Collection2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.transaction, this.created).save(Collection2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.transaction, Collection4stringEntity).save(this.created, pack.string);

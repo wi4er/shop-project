@@ -6,6 +6,7 @@ import { PointAttributeView } from '../../common/view/attribute/point-attribute.
 export class FormView {
 
   constructor(item: FormEntity) {
+
     this.id = item.id;
     this.created_at = item.created_at.toISOString();
     this.updated_at = item.updated_at.toISOString();

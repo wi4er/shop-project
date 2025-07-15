@@ -29,8 +29,7 @@ export class RegistryLogController {
       id: item.id,
       createdAt: item.created_at.toISOString(),
       directory: item.parent.id,
-      field: item.field,
-      operation: item.operation,
+      field: item.value,
       from: item.from,
       to: item.to,
     };

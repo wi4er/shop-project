@@ -25,12 +25,12 @@ export class FieldInsertOperation {
     this.created.id = input.id;
 
     try {
-      await this.manager.insert(FieldEntity, this.created)
-    } catch(err) {
-      throw new WrongDataException(err.message)
+      await this.manager.insert(FieldEntity, this.created);
+    } catch (err) {
+      throw new WrongDataException(err.message);
     }
 
-    await new FlagValueOperation(this.manager, Field2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(Field2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.manager, Field4stringEntity).save(this.created, pack.string);

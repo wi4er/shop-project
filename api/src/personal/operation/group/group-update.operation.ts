@@ -42,7 +42,7 @@ export class GroupUpdateOperation {
 
     await this.trans.save(beforeItem);
 
-    await new FlagValueOperation(this.trans, Group2flagEntity).save(beforeItem, input.flag);
+    await new FlagValueOperation(this.trans, beforeItem).save(Group2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
     await new StringValueOperation(this.trans, Group4stringEntity).save(beforeItem, pack.string);

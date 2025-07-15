@@ -25,7 +25,7 @@ export class UserInsertOperation {
 
     await this.manager.save(this.created);
 
-    await new FlagValueOperation(this.manager, User2flagEntity).save(this.created, input.flag);
+    await new FlagValueOperation(this.manager, this.created).save(User2flagEntity, input.flag);
     await new User2userContactInsertOperation(this.manager).save(this.created, input);
     await new User2userGroupInsertOperation(this.manager).save(this.created, input);
 
