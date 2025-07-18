@@ -1,42 +1,27 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn
-} from "typeorm";
-import { GroupEntity } from "./group.entity";
-import { CommonFlagEntity } from "../../../common/model/common/common-flag.entity";
+} from 'typeorm';
+import { GroupEntity } from './group.entity';
+import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
 import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 
 @Entity('personal-group2flag')
-@Index([ 'parent', 'flag' ], { unique: true })
+@Index(['parent', 'flag'], {unique: true})
 export class Group2flagEntity
   extends BaseEntity
-  implements CommonFlagEntity<GroupEntity>
-{
+  implements CommonFlagEntity<GroupEntity> {
 
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => GroupEntity,
+    type => GroupEntity,
     user => user.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

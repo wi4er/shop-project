@@ -63,7 +63,7 @@ describe('Attribute update', () => {
       await createAttribute('NAME');
 
       const item = await request(app.getHttpServer())
-        .delete('/attribute/NAME')
+        .delete('/settings/attribute/NAME')
         .expect(200);
 
       expect(item.body).toEqual(['NAME']);
@@ -74,7 +74,7 @@ describe('Attribute update', () => {
         .withAccess(null);
 
       await request(app.getHttpServer())
-        .delete('/attribute/NAME')
+        .delete('/settings/attribute/NAME')
         .expect(403);
     });
 
@@ -97,7 +97,7 @@ describe('Attribute update', () => {
       await createAttribute('NAME');
 
       await request(app.getHttpServer())
-        .delete('/attribute/WRONG')
+        .delete('/settings/attribute/WRONG')
         .expect(404);
     });
   });

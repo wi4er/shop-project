@@ -90,9 +90,9 @@ describe('Flag Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('flag_0');
-      expect(res.body[1].id).toBe('flag_1');
-      expect(res.body[2].id).toBe('flag_2');
+      expect(res.body[0].id).toBe('flag_9');
+      expect(res.body[1].id).toBe('flag_8');
+      expect(res.body[2].id).toBe('flag_7');
     });
 
     test('Should get flag with offset', async () => {
@@ -105,7 +105,7 @@ describe('Flag Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('flag_9');
+      expect(res.body[0].id).toBe('flag_0');
     });
   });
 
@@ -214,11 +214,10 @@ describe('Flag Controller', () => {
       await Object.assign(new Flag2flagEntity(), {parent, flag}).save();
 
       const list = await request(app.getHttpServer())
-        .get('/settings/flag')
+        .get('/settings/flag/ACTIVE')
         .expect(200);
 
-      expect(list.body).toHaveLength(2);
-      expect(list.body[0].flag).toEqual(['FLAG']);
+      expect(list.body.flag).toEqual(['FLAG']);
     });
 
     test('Should get flag with multi flags', async () => {
@@ -229,10 +228,10 @@ describe('Flag Controller', () => {
       }
 
       const list = await request(app.getHttpServer())
-        .get('/settings/flag')
+        .get('/settings/flag/ACTIVE')
         .expect(200);
 
-      expect(list.body[0].flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
+      expect(list.body.flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
     });
   });
 });

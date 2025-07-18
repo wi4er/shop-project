@@ -25,11 +25,6 @@ describe('Document string attribute entity', () => {
       inst.string = 'VALUE';
       inst.lang = lang;
       await inst.save();
-
-      expect(inst.created_at).toBeDefined();
-      expect(inst.updated_at).toBeDefined();
-      expect(inst.deleted_at).toBeNull();
-      expect(inst.version).toBe(1);
     });
 
     test('Should create without lang', async () => {

@@ -36,7 +36,7 @@ export class FlagInsertOperation {
     await new FlagValueOperation(this.manager, this.created).save(Flag2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Flag4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, this.created).save(Flag4stringEntity, pack.string);
 
     return this.created.id;
   }

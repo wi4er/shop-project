@@ -42,6 +42,10 @@ export class ContactController {
   ) {
     return this.contactRepo.find({
       relations: this.relations,
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));

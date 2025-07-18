@@ -1,11 +1,9 @@
 import {
   BaseEntity,
-  CreateDateColumn, DeleteDateColumn,
   Entity,
   Index,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { PointEntity } from '../../../registry/model/point/point.entity';
@@ -21,29 +19,18 @@ export class User4pointEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => PointEntity,
+    type => PointEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   point: PointEntity;
 
   @ManyToOne(
-    () => UserEntity,
+    type => UserEntity,
     user => user.point,
     {
       onDelete: 'CASCADE',
@@ -54,7 +41,7 @@ export class User4pointEntity
   parent: UserEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

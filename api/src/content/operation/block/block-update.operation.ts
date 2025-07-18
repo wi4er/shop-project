@@ -62,7 +62,7 @@ export class BlockUpdateOperation {
     await new FlagValueOperation(this.transaction, beforeItem).save(Block2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Block4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Block4stringEntity , pack.string);
     await new PointValueOperation(this.transaction, Block4pointEntity).save(beforeItem, pack.point);
     await new DescriptionValueOperation(this.transaction, Block4descriptionEntity).save(beforeItem, pack.description);
 

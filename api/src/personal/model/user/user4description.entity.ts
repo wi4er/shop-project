@@ -1,41 +1,28 @@
 import {
   BaseEntity,
   Column,
-  CreateDateColumn, DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('personal-user4description')
-export class User4descriptionEntity extends BaseEntity {
+export class User4descriptionEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
-  version: number;
-
   @Column({
-    type: 'text'
+    type: 'text',
   })
   description: string;
 
   @ManyToOne(
-    () => UserEntity,
+    type => UserEntity,
     user => user.description,
     {
       onDelete: 'CASCADE',
@@ -46,7 +33,7 @@ export class User4descriptionEntity extends BaseEntity {
   parent: UserEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -56,7 +43,7 @@ export class User4descriptionEntity extends BaseEntity {
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

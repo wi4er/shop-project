@@ -55,12 +55,11 @@ export class FormUpdateOperation {
     if (id !== input.id) {
       await new FormLogInsertOperation(this.transaction).save(beforeItem, {
         version: beforeItem.version,
-        field: `field.ID`,
+        value: `property.ID`,
         from: id,
         to: input.id,
       });
     }
-
 
     const flagsOperation = new FlagValueOperation(this.transaction, beforeItem);
     await flagsOperation.save(Form2flagEntity, input.flag);
@@ -69,7 +68,9 @@ export class FormUpdateOperation {
     await new FieldValueOperation(this.transaction, Form2fieldEntity).save(beforeItem, input.field);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Form4stringEntity).save(beforeItem, pack.string);
+    const stringsOperation = new StringValueOperation(this.transaction, beforeItem)
+    await stringsOperation.save(Form4stringEntity, pack.string);
+    await stringsOperation.log(Form2logEntity, pack.string);
 
     return beforeItem.id;
   }

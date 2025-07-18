@@ -25,7 +25,6 @@ describe('Lang Controller', () => {
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -82,9 +81,9 @@ describe('Lang Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('LANG_0');
-      expect(res.body[1].id).toBe('LANG_1');
-      expect(res.body[2].id).toBe('LANG_2');
+      expect(res.body[0].id).toBe('LANG_9');
+      expect(res.body[1].id).toBe('LANG_8');
+      expect(res.body[2].id).toBe('LANG_7');
     });
 
     test('Should get lang with offset', async () => {
@@ -97,8 +96,8 @@ describe('Lang Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(7);
-      expect(res.body[0].id).toBe('LANG_3');
-      expect(res.body[6].id).toBe('LANG_9');
+      expect(res.body[0].id).toBe('LANG_6');
+      expect(res.body[6].id).toBe('LANG_0');
     });
   });
 
@@ -188,18 +187,17 @@ describe('Lang Controller', () => {
       ).save();
       await Object.assign(
         new Lang4stringEntity(),
-        {parent: lang1, attribute, lang: lang2, string: 'English'},
+        {parent: lang1, attribute, lang: lang2, string: 'German'},
       ).save();
 
       const res = await request(app.getHttpServer())
-        .get('/settings/lang')
+        .get('/settings/lang/EN')
         .expect(200);
 
-      expect(res.body).toHaveLength(2);
-      expect(res.body[0].attribute[0].lang).toBe('EN');
-      expect(res.body[0].attribute[0].string).toBe('English');
-      expect(res.body[0].attribute[1].lang).toBe('GR');
-      expect(res.body[0].attribute[1].string).toBe('English');
+      expect(res.body.attribute[0].lang).toBe('EN');
+      expect(res.body.attribute[0].string).toBe('English');
+      expect(res.body.attribute[1].lang).toBe('GR');
+      expect(res.body.attribute[1].string).toBe('German');
     });
   });
 

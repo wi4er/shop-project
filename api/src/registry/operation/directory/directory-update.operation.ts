@@ -67,7 +67,7 @@ export class DirectoryUpdateOperation {
     await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Directory4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Directory4stringEntity, pack.string);
     await new PointValueOperation(this.transaction, Directory4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;

@@ -1,11 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, JoinColumn, ManyToOne, OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
 import { AttributeEntity } from './attribute.entity';
@@ -17,18 +13,6 @@ export class AttributeAsPointEntity
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
 
   @ManyToOne(
     type => DirectoryEntity,

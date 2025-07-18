@@ -15,7 +15,7 @@ export class GroupView {
     this.created_at = item.created_at.toISOString();
     this.updated_at = item.updated_at.toISOString();
     this.version = item.version;
-    this.parent = item.parent?.id;
+    this.parent = item.parent?.id ?? null;
     this.attribute = [
       ...item.string.map(str => ({
         string: str.string,

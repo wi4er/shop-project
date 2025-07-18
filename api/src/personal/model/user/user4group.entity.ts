@@ -1,39 +1,26 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn, Entity, ManyToOne,
+  Entity, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { GroupEntity } from '../group/group.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 
 @Entity('personal-user4group')
-export class User4groupEntity extends BaseEntity {
+export class User4groupEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
 
   @ManyToOne(
     type => GroupEntity,
     group => group.user,
     {
-      nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      nullable: false,
     },
   )
   group: GroupEntity;
@@ -50,7 +37,7 @@ export class User4groupEntity extends BaseEntity {
   parent: UserEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

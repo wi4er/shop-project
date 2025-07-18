@@ -1,10 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { BlockEntity } from './block.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
@@ -19,30 +16,19 @@ export class Block2flagEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => BlockEntity,
+    type => BlockEntity,
     block => block.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: BlockEntity;
 
   @ManyToOne(
-    () => FlagEntity,
+    type => FlagEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

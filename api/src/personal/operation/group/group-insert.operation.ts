@@ -42,7 +42,7 @@ export class GroupInsertOperation {
     await new FlagValueOperation(this.trans, this.created).save(Group2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.trans, Group4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.trans, this.created).save(Group4stringEntity, pack.string);
 
     return this.created.id;
   }

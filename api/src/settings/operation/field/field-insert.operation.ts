@@ -33,7 +33,7 @@ export class FieldInsertOperation {
     await new FlagValueOperation(this.manager, this.created).save(Field2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Field4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, this.created).save(Field4stringEntity, pack.string);
 
     return this.created.id;
   }

@@ -18,7 +18,6 @@ import { FileEntity } from '../../../storage/model/file/file.entity';
 import { Section2imageEntity } from '../../model/section/section2image.entity';
 import { Section2permissionEntity } from '../../model/section/section2permission.entity';
 import { PermissionMethod } from '../../../permission/model/permission-method';
-import { GroupEntity } from '../../../personal/model/group/group.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 
@@ -41,11 +40,10 @@ describe('Section controller', () => {
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Content section getting', () => {
+  describe('Content section list', () => {
     test('Should get empty section list', async () => {
       const list = await request(app.getHttpServer())
         .get('/content/section')
@@ -100,19 +98,20 @@ describe('Section controller', () => {
         new SectionEntity(),
         {id: 'PARENT', block: 'BLOCK'},
       ).save();
-      await Object.assign(
+      await Object.assign(new Section2permissionEntity(), {parent, method: PermissionMethod.ALL}).save();
+
+      const child = await Object.assign(
         new SectionEntity(),
         {id: 'CHILD', block: 'BLOCK', parent},
       ).save();
+      await Object.assign(new Section2permissionEntity(), {parent: child, method: PermissionMethod.ALL}).save();
 
-      const list = await request(app.getHttpServer())
-        .get('/content/section')
+      const item = await request(app.getHttpServer())
+        .get('/content/section/CHILD')
         .expect(200);
 
-      expect(list.body).toHaveLength(2);
-      expect(list.body[0].id).toBe('PARENT');
-      expect(list.body[1].id).toBe('CHILD');
-      expect(list.body[1].parent).toBe('PARENT');
+      expect(item.body.id).toBe('CHILD');
+      expect(item.body.parent).toBe('PARENT');
     });
 
     test('Should get with limit', async () => {
@@ -129,9 +128,9 @@ describe('Section controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(3);
-      expect(list.body[0].id).toBe('SECTION_00');
-      expect(list.body[1].id).toBe('SECTION_01');
-      expect(list.body[2].id).toBe('SECTION_02');
+      expect(list.body[0].id).toBe('SECTION_09');
+      expect(list.body[1].id).toBe('SECTION_08');
+      expect(list.body[2].id).toBe('SECTION_07');
     });
 
     test('Should get with offset', async () => {
@@ -149,8 +148,10 @@ describe('Section controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(4);
-      expect(list.body[0].id).toBe('SECTION_06');
-      expect(list.body[3].id).toBe('SECTION_09');
+      expect(list.body[0].id).toBe('SECTION_03');
+      expect(list.body[1].id).toBe('SECTION_02');
+      expect(list.body[2].id).toBe('SECTION_01');
+      expect(list.body[3].id).toBe('SECTION_00');
     });
   });
 

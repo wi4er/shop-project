@@ -68,6 +68,10 @@ export class DirectoryController {
           method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       relations: this.relations,
       take: limit,
       skip: offset,

@@ -60,7 +60,11 @@ export class FormLogController {
       .where('form.parentId = :formId', {formId})
       .groupBy('form.version');
 
-    this.addOrder(sort, query);
+    if (sort) {
+      this.addOrder(sort, query);
+    } else {
+      query.addOrderBy('version', 'ASC');
+    }
 
     const list = await query.take(limit)
       .skip(offset)
@@ -68,7 +72,10 @@ export class FormLogController {
 
     const logList = await this.logRepo.find({
       relations: this.relations,
-      where: {version: In(list.map(it => it.version))},
+      where: {
+        parent: {id: formId},
+        version: In(list.map(it => it.version))
+      },
       order: {version: sort?.['version'] ?? 'ASC'},
     }).then(list => {
       return list.reduce((acc, item) => {
@@ -79,6 +86,21 @@ export class FormLogController {
     });
 
     return Array.from(logList.values()).map(value => new LogView(value));
+  }
+
+  @Get(':formId/count')
+  async getCount(
+    @Param('formId')
+    formId: string,
+  ) {
+    const query = await this.logRepo.createQueryBuilder('form')
+      .select('form.version', 'version')
+      .addSelect('COUNT(form.id)', 'count')
+      .where('form.parentId = :formId', {formId})
+      .groupBy('form.version')
+      .getRawMany();
+
+    return {count: query.length};
   }
 
 }

@@ -21,11 +21,6 @@ describe('Document2Flag entity', () => {
       inst.flag = flag;
       inst.parent = parent;
       await inst.save();
-
-      expect(inst.created_at).toBeDefined();
-      expect(inst.updated_at).toBeDefined();
-      expect(inst.deleted_at).toBeNull();
-      expect(inst.version).toBe(1);
     });
 
     test('Shouldn`t ad with same flag and parent', async () => {

@@ -1,11 +1,9 @@
 import {
   BaseEntity,
-  CreateDateColumn, DeleteDateColumn,
   Entity,
   Index,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { FlagEntity } from './flag.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
@@ -18,18 +16,6 @@ export class Flag2flagEntity
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
-  version: number;
 
   @ManyToOne(
     type => FlagEntity,

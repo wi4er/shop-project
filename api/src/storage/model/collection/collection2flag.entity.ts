@@ -1,10 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn, Entity, Index, ManyToOne,
+  Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
 import { CollectionEntity } from './collection.entity';
@@ -19,32 +16,22 @@ export class Collection2flagEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => CollectionEntity,
+    type => CollectionEntity,
     file => file.flag,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: CollectionEntity;
 
   @ManyToOne(
-    () => FlagEntity,
+    type => FlagEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

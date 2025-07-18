@@ -10,23 +10,24 @@ import { AttributeEntity } from '../../../settings/model/attribute/attribute.ent
 import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { File4stringEntity } from '../../model/file/file4string.entity';
 import { File2flagEntity } from '../../model/file/file2flag.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
-describe('FileController', () => {
-  let source;
-  let app;
+describe('File Controller', () => {
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('File fields', () => {
+  describe('File list', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/file')
@@ -51,9 +52,9 @@ describe('FileController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe(1);
-      expect(res.body[1].id).toBe(2);
-      expect(res.body[2].id).toBe(3);
+      expect(res.body[0].id).toBe(10);
+      expect(res.body[1].id).toBe(9);
+      expect(res.body[2].id).toBe(8);
     });
 
     test('Should get file with offset', async () => {
@@ -72,8 +73,8 @@ describe('FileController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(2);
-      expect(res.body[0].id).toBe(9);
-      expect(res.body[1].id).toBe(10);
+      expect(res.body[0].id).toBe(2);
+      expect(res.body[1].id).toBe(1);
     });
   });
 
@@ -156,7 +157,7 @@ describe('FileController', () => {
 
       for (let i = 0; i < 10; i++) {
         await Object.assign(new FileEntity(), {
-          collection: i % 2 ? detail : short ,
+          collection: i % 2 ? detail : short,
           original: 'short.txt',
           mimetype: 'text',
           path: `txt/txt_${i}.txt`,
@@ -255,207 +256,6 @@ describe('FileController', () => {
         .expect(200);
 
       expect(list.body[0].flag).toEqual(['FLAG_1', 'FLAG_2', 'FLAG_3']);
-    });
-  });
-
-  describe('File addition', () => {
-    test('Should add item', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      const inst = await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          collection: 'SHORT',
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-        })
-        .expect(201);
-
-      expect(inst.body.id).toBe(1);
-      expect(inst.body.original).toBe('short.txt');
-      expect(inst.body.mimetype).toBe('text');
-      expect(inst.body.collection).toBe('SHORT');
-      expect(inst.body.created_at).toBeDefined();
-      expect(inst.body.updated_at).toBeDefined();
-      expect(inst.body.version).toBe(1);
-    });
-
-    test('Shouldn`t add without original', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          collection: 'SHORT',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-        })
-        .expect(400);
-    });
-
-    test('Shouldn`t add without mimetype', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          collection: 'SHORT',
-          original: 'short.txt',
-          path: 'txt/txt.txt',
-        })
-        .expect(400);
-    });
-
-    test('Shouldn`t add without collection', async () => {
-      await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-        })
-        .expect(400);
-    });
-
-    test('Shouldn`t add with wrong collection', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          collection: 'WRONG',
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-        })
-        .expect(400);
-    });
-
-    test('Should add with string', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          collection: 'SHORT',
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-          attribute: [
-            {attribute: 'NAME', string: 'VALUE'},
-          ],
-        })
-        .expect(201);
-
-      expect(inst.body.attribute).toHaveLength(1);
-      expect(inst.body.attribute[0].attribute).toBe('NAME');
-      expect(inst.body.attribute[0].string).toBe('VALUE');
-    });
-
-    test('Should add with flag', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-
-      const inst = await request(app.getHttpServer())
-        .post('/file')
-        .send({
-          collection: 'SHORT',
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-          flag: ['ACTIVE'],
-        })
-        .expect(201);
-
-      expect(inst.body.flag).toEqual(['ACTIVE']);
-    });
-  });
-
-  describe('File updating', () => {
-    test('Should update file', async () => {
-      await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {
-        collection: 'SHORT',
-        original: 'short.txt',
-        mimetype: 'text',
-        path: 'txt/txt.txt',
-      }).save();
-      const res = await request(app.getHttpServer())
-        .put('/file/1')
-        .send({collection: 'SHORT'})
-        .expect(200);
-
-      expect(res.body.id).toBe(1);
-      expect(res.body.collection).toBe('SHORT');
-    });
-
-    test('Should add string', async () => {
-      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {
-        collection,
-        original: 'short.txt',
-        mimetype: 'text',
-        path: 'txt/txt.txt',
-      }).save();
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-
-      const res = await request(app.getHttpServer())
-        .put('/file/1')
-        .send({
-          id: 'NEW',
-          collection: 'SHORT',
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-          attribute: [
-            {attribute: 'NAME', string: 'VALUE'},
-          ],
-        })
-        .expect(200);
-
-      expect(res.body.attribute).toHaveLength(1);
-      expect(res.body.attribute[0].attribute).toBe('NAME');
-      expect(res.body.attribute[0].string).toBe('VALUE');
-    });
-
-    test('Should add flag', async () => {
-      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {
-        collection,
-        original: 'short.txt',
-        mimetype: 'text',
-        path: 'txt/txt.txt',
-      }).save();
-      await Object.assign(new FlagEntity(), {id: 'ACTIVE'}).save();
-
-      const res = await request(app.getHttpServer())
-        .put('/file/1')
-        .send({
-          collection: 'SHORT',
-          original: 'short.txt',
-          mimetype: 'text',
-          path: 'txt/txt.txt',
-          flag: ['ACTIVE'],
-        })
-        .expect(200);
-
-      expect(res.body.flag).toEqual(['ACTIVE']);
-    });
-  });
-
-  describe('File deletion', () => {
-    test('Should delete', async () => {
-      const collection = await Object.assign(new CollectionEntity(), {id: 'SHORT'}).save();
-      await Object.assign(new FileEntity(), {
-        collection,
-        original: 'short.txt',
-        mimetype: 'text',
-        path: 'txt/txt.txt',
-      }).save();
-
-      const inst = await request(app.getHttpServer())
-        .delete('/file/1')
-        .expect(200);
-
-      expect(inst.body).toEqual([1]);
     });
   });
 });

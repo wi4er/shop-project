@@ -1,11 +1,9 @@
 import {
   BaseEntity,
   Column,
-  CreateDateColumn, DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
@@ -20,33 +18,22 @@ export class User4stringEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @Column()
   string: string;
 
   @ManyToOne(
-    () => UserEntity,
+    type => UserEntity,
     user => user.string,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: UserEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -56,7 +43,7 @@ export class User4stringEntity
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

@@ -14,7 +14,7 @@ export class DocumentInsertOperation {
   created: DocumentEntity;
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
     this.created = new DocumentEntity();
   }
@@ -23,13 +23,13 @@ export class DocumentInsertOperation {
    *
    */
   async save(input: DocumentInput): Promise<string> {
-    await this.manager.save(this.created);
+    await this.transaction.save(this.created);
 
-    await new FlagValueOperation(this.manager, this.created).save(Document2flagEntity, input.flag);
-    await new FieldValueOperation(this.manager, Document2fieldEntity).save(this.created, input.field);
+    await new FlagValueOperation(this.transaction, this.created).save(Document2flagEntity, input.flag);
+    await new FieldValueOperation(this.transaction, Document2fieldEntity).save(this.created, input.field);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Document4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.transaction, this.created).save(Document4stringEntity, pack.string);
 
     return this.created.id;
   }

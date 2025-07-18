@@ -19,23 +19,11 @@ export class Section4stringEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @Column()
   string: string;
 
   @ManyToOne(
-    () => SectionEntity,
+    type => SectionEntity,
     section => section.string,
     {
       onDelete: 'CASCADE',
@@ -46,7 +34,7 @@ export class Section4stringEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -56,7 +44,7 @@ export class Section4stringEntity
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

@@ -12,7 +12,7 @@ import { PointEntity } from '../../../registry/model/point/point.entity';
 import { Element4pointEntity } from '../../model/element/element4point.entity';
 import { SectionEntity } from '../../model/section/section.entity';
 import { Element2sectionEntity } from '../../model/element/element2section.entity';
-import { AttributeEntity, AttributeType } from '../../../settings/model/attribute/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 import { UserEntity } from '../../../personal/model/user/user.entity';
 import { GroupEntity } from '../../../personal/model/group/group.entity';
@@ -26,7 +26,6 @@ import { FileEntity } from '../../../storage/model/file/file.entity';
 import { DataSource } from 'typeorm/data-source/DataSource';
 import { INestApplication } from '@nestjs/common';
 import { Element4descriptionEntity } from '../../model/element/element4description.entity';
-import { Element4IntervalEntity } from '../../model/element/element4interval.entity';
 import { Element4counterEntity } from '../../model/element/element4counter.entity';
 
 describe('Element Controller', () => {
@@ -204,8 +203,8 @@ describe('Element Controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(5);
-      expect(list.body[0].id).toBe('ELEMENT_5');
-      expect(list.body[4].id).toBe('ELEMENT_9');
+      expect(list.body[0].id).toBe('ELEMENT_4');
+      expect(list.body[4].id).toBe('ELEMENT_0');
     });
 
     test('Should get list with limit', async () => {
@@ -220,8 +219,8 @@ describe('Element Controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(2);
-      expect(list.body[0].id).toBe('ELEMENT_0');
-      expect(list.body[1].id).toBe('ELEMENT_1');
+      expect(list.body[0].id).toBe('ELEMENT_9');
+      expect(list.body[1].id).toBe('ELEMENT_8');
     });
   });
 
@@ -418,7 +417,7 @@ describe('Element Controller', () => {
         expect(list.body[0].attribute[0].attribute).toBe('NAME');
       });
 
-      test('Should get elements list with properties and limit', async () => {
+      test('Should get elements list with attributes and limit', async () => {
         const cookie = await createSession();
         const block = await new BlockEntity().save();
         const attribute1 = await Object.assign(new AttributeEntity(), {id: 'NAME_1'}).save();
@@ -429,11 +428,6 @@ describe('Element Controller', () => {
           const parent = await createElement(`ELEMENT_${i.toString().padStart(2, '0')}`)
             .withBlock(block);
 
-          await Object.assign(
-            new Element2permissionEntity(),
-            {parent, group: 1, method: PermissionMethod.ALL},
-          ).save();
-
           await Object.assign(new Element4stringEntity(), {parent, attribute: attribute1, string: 'VALUE'}).save();
           await Object.assign(new Element4stringEntity(), {parent, attribute: attribute2, string: 'VALUE'}).save();
           await Object.assign(new Element4stringEntity(), {parent, attribute: attribute3, string: 'VALUE'}).save();
@@ -441,13 +435,12 @@ describe('Element Controller', () => {
 
         const list = await request(app.getHttpServer())
           .get('/content/element?limit=3')
-          .set('cookie', cookie)
           .expect(200);
 
         expect(list.body).toHaveLength(3);
-        expect(list.body[0].id).toBe('ELEMENT_01');
-        expect(list.body[1].id).toBe('ELEMENT_02');
-        expect(list.body[2].id).toBe('ELEMENT_03');
+        expect(list.body[0].id).toBe('ELEMENT_10');
+        expect(list.body[1].id).toBe('ELEMENT_09');
+        expect(list.body[2].id).toBe('ELEMENT_08');
       });
 
       test('Should get elements with string filter', async () => {
@@ -550,8 +543,8 @@ describe('Element Controller', () => {
 
         expect(list.body).toHaveLength(2);
         expect(list.body[0].section).toHaveLength(2);
-        expect(list.body[0].section[0]).toBe('1');
-        expect(list.body[0].section[1]).toBe('2');
+        expect(list.body[0].section[0]).toBe('2');
+        expect(list.body[0].section[1]).toBe('1');
       });
     });
 

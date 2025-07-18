@@ -4,6 +4,9 @@ import { FlagValueOperation } from '../../../common/operation/flag-value.operati
 import { FormEntity } from '../../model/form/form.entity';
 import { Form2flagEntity } from '../../model/form/form2flag.entity';
 import { FormInput } from '../../input/form/form.input';
+import { FormLogInsertOperation } from '../log/form-log-insert.operation';
+import { Form2logEntity } from '../../model/form/form2log.entity';
+import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
 
 export class FormPatchOperation {
   constructor(
@@ -32,13 +35,34 @@ export class FormPatchOperation {
   /**
    *
    */
-  async save(id: string, input: FormInput): Promise<string> {
-    const beforeItem = await this.checkForm(id);
+  async save(
+    id: string,
+    input: FormInput,
+  ): Promise<string> {
+    if (input.id) {
+      await this.transaction.update(FormEntity, {id}, {id: input.id});
+    } else {
+      await this.transaction.update(FormEntity, {id}, {id});
+    }
 
-    if (input.id) await this.transaction.update(FormEntity, {id}, {id: input.id});
-    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Form2flagEntity, input.flag);
+    const beforeItem = await this.checkForm(input.id ? input.id : id);
 
-    return input.id ? input.id : beforeItem.id;
+    if (input.id && input.id !== id) {
+      await new FormLogInsertOperation(this.transaction).save(beforeItem, {
+        version: beforeItem.version,
+        value: `property.ID`,
+        from: id,
+        to: input.id,
+      });
+    }
+
+    if (input.flag) {
+      const flagsOperation = new FlagValueOperation(this.transaction, beforeItem);
+      await flagsOperation.save(Form2flagEntity, input.flag);
+      await flagsOperation.log(Form2logEntity, input.flag);
+    }
+
+    return input.id ? input.id : id;
   }
 
 }

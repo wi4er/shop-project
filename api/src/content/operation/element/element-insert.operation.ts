@@ -65,7 +65,7 @@ export class ElementInsertOperation {
     await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(this.created, input.permission);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Element4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.transaction, this.created).save(Element4stringEntity, pack.string);
     await new DescriptionValueOperation(this.transaction, Element4descriptionEntity).save(this.created, pack.description);
     await new IntervalValueOperation(this.transaction, Element4IntervalEntity).save(this.created, pack.interval);
     await new PointValueOperation(this.transaction, Element4pointEntity).save(this.created, pack.point);

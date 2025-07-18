@@ -1,14 +1,10 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn, Entity, Index, ManyToOne,
+  Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 import { CommonImageEntity } from '../../../common/model/common/common-image.entity';
 import { UserEntity } from './user.entity';
-import { ElementEntity } from '../../../content/model/element/element.entity';
 import { FileEntity } from '../../../storage/model/file/file.entity';
 
 @Entity('personal-user2image')
@@ -20,23 +16,12 @@ export class User2imageEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => UserEntity,
+    type => UserEntity,
     user => user.image,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
@@ -46,6 +31,7 @@ export class User2imageEntity
     type => FileEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

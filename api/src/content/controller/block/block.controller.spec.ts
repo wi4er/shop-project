@@ -9,7 +9,7 @@ import { Block2flagEntity } from '../../model/block/block2flag.entity';
 import { DirectoryEntity } from '../../../registry/model/directory/directory.entity';
 import { PointEntity } from '../../../registry/model/point/point.entity';
 import { Block4pointEntity } from '../../model/block/block4point.entity';
-import { AttributeEntity, AttributeType } from '../../../settings/model/attribute/attribute.entity';
+import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { Block2permissionEntity } from '../../model/block/block2permission.entity';
@@ -124,7 +124,7 @@ describe('Block Controller', () => {
       expect(list.body[0].id).toBe('BLOCK');
     });
 
-    test('Should get block list with access', async () => {
+    test('Should get block list with permission', async () => {
       for (let i = 0; i < 10; i++) {
         await createBlock(`BLOCK_${i}`).withPermission(i % 2 ? PermissionMethod.READ : null);
       }
@@ -134,11 +134,11 @@ describe('Block Controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(5);
-      expect(list.body[0].id).toBe('BLOCK_1');
-      expect(list.body[1].id).toBe('BLOCK_3');
+      expect(list.body[0].id).toBe('BLOCK_9');
+      expect(list.body[1].id).toBe('BLOCK_7');
       expect(list.body[2].id).toBe('BLOCK_5');
-      expect(list.body[3].id).toBe('BLOCK_7');
-      expect(list.body[4].id).toBe('BLOCK_9');
+      expect(list.body[3].id).toBe('BLOCK_3');
+      expect(list.body[4].id).toBe('BLOCK_1');
     });
 
     test('Should get block with limit', async () => {
@@ -151,10 +151,10 @@ describe('Block Controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(4);
-      expect(list.body[0].id).toBe('BLOCK_0');
-      expect(list.body[1].id).toBe('BLOCK_1');
-      expect(list.body[2].id).toBe('BLOCK_2');
-      expect(list.body[3].id).toBe('BLOCK_3');
+      expect(list.body[0].id).toBe('BLOCK_9');
+      expect(list.body[1].id).toBe('BLOCK_8');
+      expect(list.body[2].id).toBe('BLOCK_7');
+      expect(list.body[3].id).toBe('BLOCK_6');
     });
 
     test('Should get block with offset', async () => {
@@ -167,11 +167,11 @@ describe('Block Controller', () => {
         .expect(200);
 
       expect(list.body).toHaveLength(5);
-      expect(list.body[0].id).toBe('BLOCK_5');
-      expect(list.body[1].id).toBe('BLOCK_6');
-      expect(list.body[2].id).toBe('BLOCK_7');
-      expect(list.body[3].id).toBe('BLOCK_8');
-      expect(list.body[4].id).toBe('BLOCK_9');
+      expect(list.body[0].id).toBe('BLOCK_4');
+      expect(list.body[1].id).toBe('BLOCK_3');
+      expect(list.body[2].id).toBe('BLOCK_2');
+      expect(list.body[3].id).toBe('BLOCK_1');
+      expect(list.body[4].id).toBe('BLOCK_0');
     });
   });
 
@@ -254,7 +254,7 @@ describe('Block Controller', () => {
     });
   });
 
-  describe('Content with attributes', () => {
+  describe('Content block with attributes', () => {
     describe('Content element with strings', () => {
       test('Should get block with string', async () => {
         const parent = await createBlock('BLOCK');

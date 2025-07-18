@@ -8,7 +8,7 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { GroupEntity } from '../../model/group/group.entity';
 import { User2groupEntity } from '../../model/user/user2group.entity';
 
-describe('AuthController', () => {
+describe('Auth Controller', () => {
   let source: DataSource;
   let app;
 
@@ -23,7 +23,7 @@ describe('AuthController', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('UserEntity auth', () => {
+  describe('User auth', () => {
     test('Should auth', async () => {
       await Object.assign(new UserEntity(), {
         id: 'USER',

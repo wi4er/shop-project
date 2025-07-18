@@ -1,10 +1,7 @@
 import {
   BaseEntity, Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
 import { AttributeEntity } from '../attribute/attribute.entity';
@@ -18,18 +15,6 @@ export class Field4stringEntity
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
-  version: number;
 
   @Column()
   string: string;
@@ -56,7 +41,7 @@ export class Field4stringEntity
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

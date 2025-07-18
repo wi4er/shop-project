@@ -1,10 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from '../../../registry/model/point/point.entity';
 import { ElementEntity } from './element.entity';

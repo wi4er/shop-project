@@ -69,6 +69,10 @@ export class AttributeController {
       where: {
         ...(filter ? this.toWhere(filter) : {}),
       },
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       relations: this.relations,
       take: limit,
       skip: offset,

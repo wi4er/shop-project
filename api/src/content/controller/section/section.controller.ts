@@ -91,13 +91,13 @@ export class SectionController {
   @Get()
   async getList(
     @Query('filter')
-      filter?: SectionFilterInput,
+    filter?: SectionFilterInput,
     @Query('sort')
-      sort?: SectionOrderInput[],
+    sort?: SectionOrderInput[],
     @Query('offset')
-      offset?: number,
+    offset?: number,
     @Query('limit')
-      limit?: number,
+    limit?: number,
   ): Promise<SectionView[]> {
     const where = {};
 
@@ -111,7 +111,10 @@ export class SectionController {
 
     return this.sectionRepo.find({
       where,
-      order: sort ? this.toOrder(sort) : null,
+      order: sort ? this.toOrder(sort) : {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       relations: this.relations,
       take: limit,
       skip: offset,
@@ -121,7 +124,7 @@ export class SectionController {
   @Get('count')
   async getCount(
     @Query('filter')
-      filter?: SectionFilterInput,
+    filter?: SectionFilterInput,
   ): Promise<{ count: number }> {
     const where = {};
 
@@ -147,7 +150,7 @@ export class SectionController {
   @CheckPermission(Section2permissionEntity, PermissionMethod.READ)
   async getItem(
     @Param('id')
-      id: string,
+    id: string,
   ): Promise<SectionView> {
     return this.sectionRepo.findOne({
       where: {id},
@@ -163,7 +166,7 @@ export class SectionController {
   @Post()
   async addItem(
     @Body()
-      input: SectionInput,
+    input: SectionInput,
   ): Promise<SectionView> {
     return this.entityManager.transaction(
       trans => new SectionInsertOperation(trans).save(input)
@@ -184,9 +187,9 @@ export class SectionController {
   @CheckPermission(Section2permissionEntity, PermissionMethod.WRITE)
   async updateItem(
     @Param('id')
-      id: string,
+    id: string,
     @Body()
-      input: SectionInput,
+    input: SectionInput,
   ): Promise<SectionView> {
     return this.entityManager.transaction(
       trans => new SectionUpdateOperation(trans).save(id, input)
@@ -207,9 +210,9 @@ export class SectionController {
   @CheckPermission(Section2permissionEntity, PermissionMethod.WRITE)
   async updateFields(
     @Param('id')
-      id: string,
+    id: string,
     @Body()
-      input: SectionInput,
+    input: SectionInput,
   ): Promise<SectionView> {
     return this.entityManager.transaction(
       trans => new SectionPatchOperation(trans).save(id, input)
@@ -225,7 +228,7 @@ export class SectionController {
   @CheckPermission(Section2permissionEntity, PermissionMethod.DELETE)
   async deleteItem(
     @Param('id')
-      id: string,
+    id: string,
   ): Promise<number[]> {
     return this.entityManager.transaction(
       async trans => new SectionDeleteOperation(trans).save([id]),

@@ -13,7 +13,7 @@ import { Document4stringEntity } from '../../model/document/document4string.enti
 export class DocumentPatchOperation {
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
   }
 
@@ -22,7 +22,7 @@ export class DocumentPatchOperation {
    */
   private async checkDocument(id: string): Promise<DocumentEntity> {
     return NoDataException.assert(
-      await this.manager
+      await this.transaction
         .getRepository(DocumentEntity)
         .findOne({
           where: {id},
@@ -44,12 +44,12 @@ export class DocumentPatchOperation {
 
     await beforeItem.save();
 
-    if (input.flag) await new FlagValueOperation(this.manager, beforeItem ).save(Document2flagEntity, input.flag);
-    if (input.field) await new FieldValueOperation(this.manager, Document2fieldEntity).save(beforeItem, input.field);
+    if (input.flag) await new FlagValueOperation(this.transaction, beforeItem ).save(Document2flagEntity, input.flag);
+    if (input.field) await new FieldValueOperation(this.transaction, Document2fieldEntity).save(beforeItem, input.field);
 
     if (input.attribute) {
       const pack = filterAttributes(input.attribute);
-      await new StringValueOperation(this.manager, Document4stringEntity).save(beforeItem, pack.string);
+      await new StringValueOperation(this.transaction, beforeItem).save(Document4stringEntity, pack.string);
     }
 
     return beforeItem.id;

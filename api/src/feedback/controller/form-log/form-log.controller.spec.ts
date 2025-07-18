@@ -22,7 +22,7 @@ describe('Form Log Controller', () => {
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Form log with properties', () => {
+  describe('Form log list', () => {
     test('Should get empty list', async () => {
       await Object.assign(new FormEntity(), {id: 'FORM'}).save();
 
@@ -107,5 +107,24 @@ describe('Form Log Controller', () => {
 
       expect(res2.body.map(it => it.version)).toEqual([5, 4, 3, 2, 1]);
     });
+  });
+
+  describe('Form log count', () => {
+    test('Should get log count', async () => {
+      const parent = await Object.assign(new FormEntity(), {id: 'FORM'}).save();
+
+      for (let i = 0; i < 10; i++) {
+        await Object.assign(
+          new Form2logEntity(),
+          {parent, version: i % 5 + 1, value: 'property.id', from: '1', to: '2'} as Form2logEntity,
+        ).save();
+      }
+
+      const res = await request(app.getHttpServer())
+        .get('/feedback/form-log/FORM/count')
+        .expect(200);
+
+      expect(res.body).toEqual({count: 5});
+    })
   });
 });

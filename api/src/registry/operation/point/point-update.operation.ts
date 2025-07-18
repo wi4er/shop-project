@@ -67,7 +67,7 @@ export class PointUpdateOperation {
     await new FlagValueOperation(this.transaction, beforeItem).save(Point2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Point4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Point4stringEntity, pack.string);
     await new PointValueOperation(this.transaction, Point4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;

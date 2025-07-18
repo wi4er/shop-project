@@ -41,6 +41,10 @@ export class FormController {
   ) {
     return this.formRepo.find({
       relations: this.relations,
+      order: {
+        sort: 'desc',
+        updated_at: 'DESC',
+      },
       take: limit,
       skip: offset,
     }).then(list => list.map(item => new FormView(item)));

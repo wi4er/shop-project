@@ -8,7 +8,6 @@ describe('ElementEntity entity', () => {
   let source: DataSource;
 
   beforeAll(async () => source = await createConnection(createConnectionOptions()));
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 

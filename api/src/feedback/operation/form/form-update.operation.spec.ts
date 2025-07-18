@@ -200,8 +200,6 @@ describe('Form update', () => {
           .get('/feedback/form-log/NEW')
           .expect(200);
 
-        console.log(log.body);
-
         expect(log.body).toHaveLength(1);
       });
     });
@@ -241,7 +239,155 @@ describe('Form update', () => {
           .get('/feedback/form-log/ORDER')
           .expect(200);
 
+        expect(log.body[0].items).toHaveLength(2);
+        expect(log.body[0].items).toContainEqual({value: 'flag.AFTER', from: null, to: 'AFTER'});
+        expect(log.body[0].items).toContainEqual({value: 'flag.BEFORE', from: 'BEFORE', to: null});
+      });
+    });
+
+    describe('Form update with string logs', () => {
+      test('Should log string attribute addition', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
+        await request(app.getHttpServer())
+          .post('/feedback/form')
+          .send({
+            id: 'ORDER',
+          })
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/ORDER')
+          .send({
+            id: 'ORDER',
+            attribute: [{attribute: 'NAME', string: 'VALUE'}],
+          })
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/ORDER')
+          .expect(200);
+
         expect(log.body).toHaveLength(2);
+        expect(log.body[0].version).toBe(1);
+        expect(log.body[0].items[0].value).toBe('property.ID');
+        expect(log.body[1].version).toBe(2);
+        expect(log.body[1].items[0].value).toBe('attribute.NAME');
+      });
+
+      test('Should log string attribute update', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
+        await request(app.getHttpServer())
+          .post('/feedback/form')
+          .send({
+            id: 'ORDER',
+            attribute: [{attribute: 'NAME', string: 'OLD'}],
+          })
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/ORDER')
+          .send({
+            id: 'ORDER',
+            attribute: [{attribute: 'NAME', string: 'UPDATE'}],
+          })
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/ORDER')
+          .expect(200);
+
+        expect(log.body).toHaveLength(2);
+        expect(log.body[0].version).toBe(1);
+        expect(log.body[0].items[0].value).toBe('property.ID');
+        expect(log.body[1].version).toBe(2);
+        expect(log.body[1].items[0]).toEqual(
+          {value: 'attribute.NAME', from: 'OLD', to: 'UPDATE'},
+        );
+      });
+
+      test('Should log string attribute multi update', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+
+        await request(app.getHttpServer())
+          .post('/feedback/form')
+          .send({
+            id: 'ORDER',
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE_1'},
+              {attribute: 'NAME', string: 'VALUE_2'},
+            ],
+          })
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/ORDER')
+          .send({
+            id: 'ORDER',
+            attribute: [
+              {attribute: 'NAME', string: 'VALUE_1'},
+              {attribute: 'NAME', string: 'VALUE_3'},
+              {attribute: 'NAME', string: 'VALUE_4'},
+            ],
+          })
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/ORDER')
+          .expect(200);
+
+        expect(log.body).toHaveLength(2);
+        expect(log.body[1].items[0]).toEqual({value: 'attribute.NAME', from: 'VALUE_2', to: 'VALUE_3'});
+        expect(log.body[1].items[1]).toEqual({value: 'attribute.NAME', from: null, to: 'VALUE_4'});
+      });
+
+      test('Shouldn`t log string attribute without change', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await Object.assign(new FormEntity(), {id: 'DATA'}).save();
+        await Object.assign(new Form4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/DATA')
+          .send({
+            id: 'DATA',
+            attribute: [{attribute: 'NAME', string: 'VALUE'}],
+          })
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/DATA')
+          .expect(200);
+
+        expect(log.body).toHaveLength(0);
+      });
+
+      test('Should log string attribute removal', async () => {
+        await Object.assign(new AccessEntity(), {target: AccessTarget.FORM, method: AccessMethod.ALL}).save();
+        const attribute = await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
+        const parent = await Object.assign(new FormEntity(), {id: 'DATA'}).save();
+        await Object.assign(new Form4stringEntity(), {parent, attribute, string: 'VALUE'}).save();
+
+        await request(app.getHttpServer())
+          .put('/feedback/form/DATA')
+          .send({
+            id: 'DATA',
+            attribute: [],
+          })
+          .expect(200);
+
+        const log = await request(app.getHttpServer())
+          .get('/feedback/form-log/DATA')
+          .expect(200);
+
+        expect(log.body[0].version).toBe(2);
+        expect(log.body[0].items[0]).toEqual(
+          {value: 'attribute.NAME', from: 'VALUE', to: null},
+        );
       });
     });
   });

@@ -20,18 +20,6 @@ export class Field2flagEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date | null;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
     type => FieldEntity,
     field => field.flag,

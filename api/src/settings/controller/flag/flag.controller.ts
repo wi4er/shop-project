@@ -44,6 +44,10 @@ export class FlagController {
   ) {
     const list = await this.flagRepo.find({
       relations: this.relations,
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       take: limit,
       skip: offset,
     });

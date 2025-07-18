@@ -5,7 +5,7 @@ import { FormEntity } from '../../model/form/form.entity';
 export interface FormLogData {
 
   version: number;
-  field: string;
+  value: string;
   from: string;
   to: string;
 
@@ -30,7 +30,7 @@ export class FormLogInsertOperation {
   ) {
     this.created.parent = created;
     this.created.version = created.version;
-    this.created.value = 'id';
+    this.created.value = data.value;
     this.created.from = data.from;
     this.created.to = data.to;
 

@@ -77,6 +77,7 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
         const inst = new entity();
         inst.parent = this.beforeItem;
         inst.value = `flag.${item}`
+        inst.version = this.beforeItem.version;
         inst.from = null;
         inst.to = item;
 
@@ -90,6 +91,7 @@ export class FlagValueOperation<T extends WithFlagEntity<BaseEntity>> {
     for (const item of current) {
       const inst = new entity();
       inst.parent = this.beforeItem;
+      inst.version = this.beforeItem.version;
       inst.value = `flag.${item}`
       inst.from = item;
       inst.to = null;

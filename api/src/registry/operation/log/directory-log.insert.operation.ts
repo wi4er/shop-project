@@ -30,6 +30,7 @@ export class DirectoryLogInsertOperation {
     const inst = new Directory2logEntity();
     inst.parent = created;
     inst.value = 'id';
+    inst.version = created.version;
     inst.from = data.from;
     inst.to = data.to;
 

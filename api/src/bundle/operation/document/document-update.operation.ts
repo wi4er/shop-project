@@ -55,7 +55,7 @@ export class DocumentUpdateOperation {
     await new FieldValueOperation(this.transaction, Document2fieldEntity).save(beforeItem, input.field);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Document4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Document4stringEntity, pack.string);
 
     return beforeItem.id;
   }

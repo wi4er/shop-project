@@ -88,13 +88,14 @@ describe('Document updating', () => {
   });
 
   describe('Document update with strings', () => {
-    test('Should update with string', async () => {
+    test('Should update add string attribute value', async () => {
       await createDocument('DOCUMENT');
       await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
 
       const inst = await request(app.getHttpServer())
         .put('/bundle/document/DOCUMENT')
         .send({
+          id: 'DOCUMENT',
           attribute: [{attribute: 'NAME', string: 'VALUE'}],
         })
         .expect(200);

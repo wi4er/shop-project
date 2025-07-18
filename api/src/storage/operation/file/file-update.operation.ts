@@ -59,7 +59,7 @@ export class FileUpdateOperation {
     await new FlagValueOperation(this.manager, beforeItem).save(File2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, File4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, beforeItem).save(File4stringEntity, pack.string);
 
     return beforeItem.id;
   }

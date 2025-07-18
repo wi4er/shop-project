@@ -68,168 +68,164 @@ describe('Attribute Controller', () => {
     });
   }
 
-  describe('Attribute fields', () => {
-    describe('Attribute list', () => {
-      test('Should get empty list', async () => {
-        await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
+  describe('Attribute list', () => {
+    test('Should get empty list', async () => {
+      await Object.assign(new AccessEntity(), {target: AccessTarget.ATTRIBUTE, method: AccessMethod.GET}).save();
 
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(200);
 
-        expect(res.body).toHaveLength(0);
-      });
-
-      test('Shouldn`t get list without access', async () => {
-        await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(403);
-      });
-
-      test('Should get list', async () => {
-        for (let i = 0; i < 10; i++) {
-          await createAttribute(`ATTR_${i}`);
-        }
-
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(200);
-
-        expect(res.body).toHaveLength(10);
-        expect(res.body[0].id).toBe('ATTR_0');
-        expect(res.body[0].type).toBe('STRING');
-        expect(res.body[9].id).toBe('ATTR_9');
-        expect(res.body[9].type).toBe('STRING');
-      });
+      expect(res.body).toHaveLength(0);
     });
 
-    describe('Attribute pagination', () => {
-      test('Should get attribute with limit', async () => {
-        for (let i = 0; i < 10; i++) {
-          await createAttribute(`NAME_${i}`);
-        }
-
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute?limit=5')
-          .expect(200);
-
-        expect(res.body).toHaveLength(5);
-        expect(res.body[0].id).toBe('NAME_0');
-        expect(res.body[4].id).toBe('NAME_4');
-      });
-
-      test('Should get attribute with offset', async () => {
-        for (let i = 0; i < 10; i++) {
-          await createAttribute(`NAME_${i}`);
-        }
-
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute?offset=5')
-          .expect(200);
-
-        expect(res.body).toHaveLength(5);
-        expect(res.body[0].id).toBe('NAME_5');
-        expect(res.body[4].id).toBe('NAME_9');
-      });
+    test('Shouldn`t get list without access', async () => {
+      await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(403);
     });
 
-    describe('Attribute with type', () => {
-      test('Should get with registry type', async () => {
-        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-        const parent = await createAttribute('NAME').withType(AttributeType.POINT);
-        await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
+    test('Should get list', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createAttribute(`ATTR_${i}`);
+      }
 
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(200);
 
-        expect(res.body).toHaveLength(1);
-        expect(res.body[0].id).toBe('NAME');
-        expect(res.body[0].type).toBe('POINT');
-        expect(res.body[0].directory).toBe('CITY');
-      });
+      expect(res.body).toHaveLength(10);
+      expect(res.body[0].id).toBe('ATTR_9');
+      expect(res.body[9].id).toBe('ATTR_0');
+    });
+  });
 
-      test('Should get with element type', async () => {
-        const block = await new BlockEntity('BLOCK').save();
-        const parent = await createAttribute('NAME').withType(AttributeType.ELEMENT);
-        await Object.assign(new AttributeAsElementEntity(), {block, parent}).save();
+  describe('Attribute pagination', () => {
+    test('Should get attribute with limit', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createAttribute(`NAME_${i}`);
+      }
 
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute?limit=5')
+        .expect(200);
 
-        expect(res.body).toHaveLength(1);
-        expect(res.body[0].id).toBe('NAME');
-        expect(res.body[0].type).toBe('ELEMENT');
-        expect(res.body[0].block).toBe('BLOCK');
-      });
-
-      test('Should get with section type', async () => {
-        const block = await new BlockEntity('BLOCK').save();
-        const parent = await createAttribute('NAME').withType(AttributeType.SECTION);
-        await Object.assign(new AttributeAsSectionEntity(), {block, parent}).save();
-
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(200);
-
-        expect(res.body).toHaveLength(1);
-        expect(res.body[0].id).toBe('NAME');
-        expect(res.body[0].type).toBe('SECTION');
-        expect(res.body[0].block).toBe('BLOCK');
-      });
-
-      test('Should get with file type', async () => {
-        const collection = await Object.assign(new CollectionEntity(), {id: 'PREVIEW'}).save();
-        const parent = await createAttribute('NAME').withType(AttributeType.FILE);
-        await Object.assign(new AttributeAsFileEntity(), {collection, parent}).save();
-
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute')
-          .expect(200);
-
-        expect(res.body).toHaveLength(1);
-        expect(res.body[0].id).toBe('NAME');
-        expect(res.body[0].type).toBe('FILE');
-        expect(res.body[0].collection).toBe('PREVIEW');
-      });
+      expect(res.body).toHaveLength(5);
+      expect(res.body[0].id).toBe('NAME_9');
+      expect(res.body[4].id).toBe('NAME_5');
     });
 
-    describe('Attribute with filter', () => {
-      test('Should get with type filter', async () => {
-        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-        const parent = await createAttribute('LOCATION').withType(AttributeType.POINT);
-        await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
-        await createAttribute('NAME');
-        await createAttribute('NAME');
+    test('Should get attribute with offset', async () => {
+      for (let i = 0; i < 10; i++) {
+        await createAttribute(`NAME_${i}`);
+      }
 
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute?filter[type][eq]=STRING')
-          .expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute?offset=5')
+        .expect(200);
 
-        expect(res.body).toHaveLength(1);
-        expect(res.body[0].id).toBe('NAME');
-        expect(res.body[0].type).toBe('STRING');
-      });
+      expect(res.body).toHaveLength(5);
+      expect(res.body[0].id).toBe('NAME_4');
+      expect(res.body[4].id).toBe('NAME_0');
+    });
+  });
 
-      test('Should get with type list filter', async () => {
-        const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
-        const parent = await createAttribute('LOCATION').withType(AttributeType.POINT);
-        await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
-        await createAttribute('NAME');
+  describe('Attribute with type', () => {
+    test('Should get with registry type', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const parent = await createAttribute('NAME').withType(AttributeType.POINT);
+      await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
 
-        const collection = await Object.assign(new CollectionEntity(), {id: 'PREVIEW'}).save();
-        const parent1 = await createAttribute('FILE').withType(AttributeType.FILE);
-        await Object.assign(new AttributeAsFileEntity(), {collection, parent: parent1}).save();
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(200);
 
-        const res = await request(app.getHttpServer())
-          .get('/settings/attribute?filter[type][in]=STRING;FILE')
-          .expect(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('NAME');
+      expect(res.body[0].type).toBe('POINT');
+      expect(res.body[0].directory).toBe('CITY');
+    });
 
-        expect(res.body).toHaveLength(2);
-        expect(res.body[0].id).toBe('NAME');
-        expect(res.body[1].id).toBe('FILE');
-      });
+    test('Should get with element type', async () => {
+      const block = await new BlockEntity('BLOCK').save();
+      const parent = await createAttribute('NAME').withType(AttributeType.ELEMENT);
+      await Object.assign(new AttributeAsElementEntity(), {block, parent}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(200);
+
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('NAME');
+      expect(res.body[0].type).toBe('ELEMENT');
+      expect(res.body[0].block).toBe('BLOCK');
+    });
+
+    test('Should get with section type', async () => {
+      const block = await new BlockEntity('BLOCK').save();
+      const parent = await createAttribute('NAME').withType(AttributeType.SECTION);
+      await Object.assign(new AttributeAsSectionEntity(), {block, parent}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(200);
+
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('NAME');
+      expect(res.body[0].type).toBe('SECTION');
+      expect(res.body[0].block).toBe('BLOCK');
+    });
+
+    test('Should get with file type', async () => {
+      const collection = await Object.assign(new CollectionEntity(), {id: 'PREVIEW'}).save();
+      const parent = await createAttribute('NAME').withType(AttributeType.FILE);
+      await Object.assign(new AttributeAsFileEntity(), {collection, parent}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute')
+        .expect(200);
+
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('NAME');
+      expect(res.body[0].type).toBe('FILE');
+      expect(res.body[0].collection).toBe('PREVIEW');
+    });
+  });
+
+  describe('Attribute with filter', () => {
+    test('Should get with type filter', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const parent = await createAttribute('LOCATION').withType(AttributeType.POINT);
+      await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
+      await createAttribute('NAME');
+      await createAttribute('NAME');
+
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute?filter[type][eq]=STRING')
+        .expect(200);
+
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].id).toBe('NAME');
+      expect(res.body[0].type).toBe('STRING');
+    });
+
+    test('Should get with type list filter', async () => {
+      const directory = await Object.assign(new DirectoryEntity(), {id: 'CITY'}).save();
+      const parent = await createAttribute('LOCATION').withType(AttributeType.POINT);
+      await Object.assign(new AttributeAsPointEntity(), {directory, parent}).save();
+      await createAttribute('NAME');
+
+      const collection = await Object.assign(new CollectionEntity(), {id: 'PREVIEW'}).save();
+      const parent1 = await createAttribute('FILE').withType(AttributeType.FILE);
+      await Object.assign(new AttributeAsFileEntity(), {collection, parent: parent1}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/settings/attribute?filter[type][in]=STRING;FILE')
+        .expect(200);
+
+      expect(res.body).toHaveLength(2);
+      expect(res.body[0].id).toBe('FILE');
+      expect(res.body[1].id).toBe('NAME');
     });
   });
 

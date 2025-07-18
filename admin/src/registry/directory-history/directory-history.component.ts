@@ -27,7 +27,7 @@ export class DirectoryHistoryComponent implements OnInit {
     if (data?.id) {
       this.directory = data.id;
     } else {
-      throw new Error('DirectoryEntity id expected!');
+      throw new Error('Directory id expected!');
     }
   }
 

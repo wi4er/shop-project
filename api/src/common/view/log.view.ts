@@ -9,6 +9,7 @@ export class LogView {
       this.version = item.version;
 
       this.items.push({
+        value: item.value,
         from: item.from,
         to: item.to,
       });
@@ -19,6 +20,7 @@ export class LogView {
   version: number;
 
   items: Array<{
+    value: string,
     from: string,
     to: string,
   }> = [];

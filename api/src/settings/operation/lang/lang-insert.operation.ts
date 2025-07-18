@@ -33,7 +33,7 @@ export class LangInsertOperation {
     await new FlagValueOperation(this.manager, this.created).save(Lang2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Lang4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, this.created).save(Lang4stringEntity, pack.string);
 
     return this.created.id;
   }

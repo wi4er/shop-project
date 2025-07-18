@@ -9,15 +9,17 @@ import { LangEntity } from '../../../settings/model/lang/lang.entity';
 import { Collection4stringEntity } from '../../model/collection/collection4string.entity';
 import { FlagEntity } from '../../../settings/model/flag/flag.entity';
 import { Collection2flagEntity } from '../../model/collection/collection2flag.entity';
+import { DataSource } from 'typeorm/data-source/DataSource';
+import { INestApplication } from '@nestjs/common';
 
-describe('CollectionController', () => {
-  let source;
-  let app;
+describe('Collection Controller', () => {
+  let source: DataSource;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();
-    app.init();
+    await app.init();
 
     source = await createConnection(createConnectionOptions());
   });
@@ -44,9 +46,9 @@ describe('CollectionController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('COL_0');
-      expect(res.body[1].id).toBe('COL_1');
-      expect(res.body[2].id).toBe('COL_2');
+      expect(res.body[0].id).toBe('COL_9');
+      expect(res.body[1].id).toBe('COL_8');
+      expect(res.body[2].id).toBe('COL_7');
     });
 
     test('Should get file with offset', async () => {
@@ -59,8 +61,8 @@ describe('CollectionController', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(2);
-      expect(res.body[0].id).toBe('COL_8');
-      expect(res.body[1].id).toBe('COL_9');
+      expect(res.body[0].id).toBe('COL_1');
+      expect(res.body[1].id).toBe('COL_0');
     });
   });
 

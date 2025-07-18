@@ -38,10 +38,6 @@ describe('Form for point entity', () => {
 
       expect(inst.id).toBe(1);
       expect(inst.point.id).toBe('ITEM');
-      expect(inst.created_at).toBeDefined();
-      expect(inst.updated_at).toBeDefined();
-      expect(inst.deleted_at).toBeNull();
-      expect(inst.version).toBe(1);
     });
   });
 });

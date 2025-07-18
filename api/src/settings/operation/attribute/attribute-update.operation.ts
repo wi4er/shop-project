@@ -72,7 +72,7 @@ export class AttributeUpdateOperation {
     await new FlagValueOperation(this.transaction, beforeItem).save(Attribute2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Attribute4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Attribute4stringEntity, pack.string);
 
     return beforeItem.id;
   }

@@ -90,7 +90,7 @@ export class ElementUpdateOperation {
     await new PermissionValueOperation(this.transaction, Element2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Element4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Element4stringEntity, pack.string);
     await new DescriptionValueOperation(this.transaction, Element4descriptionEntity).save(beforeItem, pack.description);
     await new IntervalValueOperation(this.transaction, Element4IntervalEntity).save(beforeItem, pack.interval);
     await new PointValueOperation(this.transaction, Element4pointEntity).save(beforeItem, pack.point);

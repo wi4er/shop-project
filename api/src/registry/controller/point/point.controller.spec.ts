@@ -27,7 +27,6 @@ describe('Point Controller', () => {
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
@@ -38,7 +37,7 @@ describe('Point Controller', () => {
     return parent;
   }
 
-  describe('Point fields', () => {
+  describe('Point list', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/registry/point')
@@ -82,9 +81,9 @@ describe('Point Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('NAME_0');
-      expect(res.body[1].id).toBe('NAME_1');
-      expect(res.body[2].id).toBe('NAME_2');
+      expect(res.body[0].id).toBe('NAME_9');
+      expect(res.body[1].id).toBe('NAME_8');
+      expect(res.body[2].id).toBe('NAME_7');
     });
 
     test('Should get point with offset', async () => {
@@ -99,8 +98,8 @@ describe('Point Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(7);
-      expect(res.body[0].id).toBe('NAME_3');
-      expect(res.body[6].id).toBe('NAME_9');
+      expect(res.body[0].id).toBe('NAME_6');
+      expect(res.body[6].id).toBe('NAME_0');
     });
   });
 
@@ -233,14 +232,13 @@ describe('Point Controller', () => {
         await Object.assign(new Point4pointEntity(), {parent, attribute, point}).save();
 
         const list = await request(app.getHttpServer())
-          .get('/registry/point')
+          .get('/registry/point/LONDON')
           .expect(200);
 
-        expect(list.body).toHaveLength(2);
-        expect(list.body[0].id).toBe('LONDON');
-        expect(list.body[0].attribute).toHaveLength(1);
-        expect(list.body[0].attribute[0].point).toBe('PARIS');
-        expect(list.body[0].attribute[0].directory).toBe('CITY');
+        expect(list.body.id).toBe('LONDON');
+        expect(list.body.attribute).toHaveLength(1);
+        expect(list.body.attribute[0].point).toBe('PARIS');
+        expect(list.body.attribute[0].directory).toBe('CITY');
       });
     });
   });

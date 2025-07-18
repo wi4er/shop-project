@@ -9,13 +9,15 @@ import { StringValueOperation } from '../../../common/operation/attribute/string
 import { FieldValueOperation } from '../../../common/operation/field-value.operation';
 import { Form2fieldEntity } from '../../model/form/form2field.entity';
 import { WrongDataException } from '../../../exception/wrong-data/wrong-data.exception';
+import { Form2logEntity } from '../../model/form/form2log.entity';
+import { FormLogInsertOperation } from '../log/form-log-insert.operation';
 
 export class FormInsertOperation {
 
   created: FormEntity;
 
   constructor(
-    private manager: EntityManager,
+    private transaction: EntityManager,
   ) {
     this.created = new FormEntity();
   }
@@ -26,16 +28,25 @@ export class FormInsertOperation {
   async save(input: FormInput): Promise<string> {
     this.created.id = input.id;
 
-    await this.manager.save(this.created)
+    await this.transaction.save(this.created)
       .catch(err => {
         throw new WrongDataException(err.message);
       });
 
-    await new FlagValueOperation(this.manager, this.created).save(Form2flagEntity, input.flag);
-    await new FieldValueOperation(this.manager, Form2fieldEntity).save(this.created, input.field);
+    await new FormLogInsertOperation(this.transaction).save(this.created, {
+      version: this.created.version,
+      value: `property.ID`,
+      from: null,
+      to: input.id,
+    });
+
+    await new FlagValueOperation(this.transaction, this.created).save(Form2flagEntity, input.flag);
+    await new FieldValueOperation(this.transaction, Form2fieldEntity).save(this.created, input.field);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Form4stringEntity).save(this.created, pack.string);
+    const stringsOperation = new StringValueOperation(this.transaction, this.created);
+    await stringsOperation.save(Form4stringEntity, pack.string);
+    await stringsOperation.log(Form2logEntity, pack.string);
 
     return this.created.id;
   }

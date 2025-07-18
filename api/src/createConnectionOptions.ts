@@ -96,6 +96,7 @@ import { FieldAsSectionEntity } from './settings/model/field/field-as-section.en
 import { FieldAsFileEntity } from './settings/model/field/field-as-file.entity';
 import { Document2fieldEntity } from './bundle/model/document/document2field.entity';
 import { Form2logEntity } from './feedback/model/form/form2log.entity';
+import { CreateAdmin1752761724697 } from './migrations/1752761724697-CreateAdmin';
 
 export function createConnectionOptions(): DataSourceOptions {
   return {
@@ -151,6 +152,10 @@ export function createConnectionOptions(): DataSourceOptions {
       CollectionEntity, Collection2flagEntity, Collection4stringEntity,
     ],
     subscribers: [],
-    migrations: [],
+    migrations: [
+      CreateAdmin1752761724697,
+    ],
+    migrationsTableName: "phi_migrations",
+    migrationsRun: true,
   };
 }

@@ -15,6 +15,7 @@ export enum ApiEntity {
   POINT = 'registry/point',
   DIRECTORY_LOG = 'registry/log/directory',
   FORM = 'feedback/form',
+  FORM_LOG = 'feedback/form-log',
   RESULT = 'feedback/result',
   DOCUMENT = 'bundle/document',
   COLLECTION = 'collection',

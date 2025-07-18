@@ -78,9 +78,9 @@ describe('Form Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('form_0');
-      expect(res.body[1].id).toBe('form_1');
-      expect(res.body[2].id).toBe('form_2');
+      expect(res.body[0].id).toBe('form_9');
+      expect(res.body[1].id).toBe('form_8');
+      expect(res.body[2].id).toBe('form_7');
     });
 
     test('Should get form with offset', async () => {
@@ -94,7 +94,7 @@ describe('Form Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('form_9');
+      expect(res.body[0].id).toBe('form_0');
     });
   });
 

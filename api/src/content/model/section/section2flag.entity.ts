@@ -1,10 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { SectionEntity } from './section.entity';
 import { CommonFlagEntity } from '../../../common/model/common/common-flag.entity';
@@ -19,20 +16,8 @@ export class Section2flagEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => SectionEntity,
+    type => SectionEntity,
     section => section.flag,
     {
       onDelete: 'CASCADE',
@@ -43,7 +28,7 @@ export class Section2flagEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => FlagEntity,
+    type => FlagEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

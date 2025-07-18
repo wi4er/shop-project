@@ -1,13 +1,9 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { FileEntity } from '../../../storage/model/file/file.entity';
-import { ElementEntity } from '../element/element.entity';
 import { AttributeEntity } from '../../../settings/model/attribute/attribute.entity';
 import { BlockEntity } from './block.entity';
 
@@ -19,41 +15,32 @@ export class Block4fileEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => FileEntity,
+    type => FileEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   file: FileEntity;
 
   @ManyToOne(
-    () => BlockEntity,
+    type => BlockEntity,
     block => block.file,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   parent: BlockEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )

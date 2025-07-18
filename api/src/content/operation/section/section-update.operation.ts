@@ -92,7 +92,7 @@ export class SectionUpdateOperation {
     await new PermissionValueOperation(this.manager, Section2permissionEntity).save(beforeItem, input.permission);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Section4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, beforeItem).save(Section4stringEntity, pack.string);
     await new PointValueOperation(this.manager, Section4pointEntity).save(beforeItem, pack.point);
 
     return beforeItem.id;

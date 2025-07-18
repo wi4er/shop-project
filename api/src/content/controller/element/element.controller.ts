@@ -145,7 +145,10 @@ export class ElementController {
           method: In([PermissionMethod.READ, PermissionMethod.ALL]),
         },
       },
-      order: sort ? this.toOrder(sort) : null,
+      order: sort ? this.toOrder(sort) : {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       relations: this.relations,
       take: limit,
       skip: offset,

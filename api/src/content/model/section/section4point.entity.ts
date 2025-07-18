@@ -1,10 +1,7 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
 } from 'typeorm';
 import { PointEntity } from '../../../registry/model/point/point.entity';
 import { SectionEntity } from './section.entity';
@@ -20,20 +17,8 @@ export class Section4pointEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => PointEntity,
+    type => PointEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -43,7 +28,7 @@ export class Section4pointEntity
   point: PointEntity;
 
   @ManyToOne(
-    () => SectionEntity,
+    type => SectionEntity,
     element => element.point,
     {
       onDelete: 'CASCADE',
@@ -54,7 +39,7 @@ export class Section4pointEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

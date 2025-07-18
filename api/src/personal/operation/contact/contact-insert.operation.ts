@@ -35,7 +35,7 @@ export class ContactInsertOperation {
     await new FlagValueOperation(this.trans, this.created).save(Contact2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.trans, Contact4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.trans, this.created).save(Contact4stringEntity, pack.string);
 
     return this.created.id;
   }

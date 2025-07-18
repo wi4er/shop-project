@@ -40,7 +40,7 @@ export class DirectoryInsertOperation {
     await new PermissionValueOperation(this.transaction, Directory2permissionEntity).save(this.created, input.permission);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Directory4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.transaction, this.created).save(Directory4stringEntity, pack.string);
     await new PointValueOperation(this.transaction, Directory4pointEntity).save(this.created, pack.point);
 
     return this.created.id;

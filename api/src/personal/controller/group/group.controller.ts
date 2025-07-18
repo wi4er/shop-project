@@ -36,6 +36,9 @@ export class GroupController {
   ) {
     return this.groupRepo.find({
       relations: this.relations,
+      order: {
+        updated_at: 'DESC',
+      },
       take: limit,
       skip: offset,
     }).then(list => list.map(item => new GroupView(item)));

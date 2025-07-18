@@ -25,10 +25,6 @@ describe('Point to flag entity', () => {
       await inst.save();
 
       expect(inst.id).toBe(1);
-      expect(inst.created_at).toBeDefined();
-      expect(inst.updated_at).toBeDefined();
-      expect(inst.deleted_at).toBe(null);
-      expect(inst.version).toBe(1);
       expect(inst.flag.id).toBe('ACTIVE');
       expect(inst.parent.id).toBe('London');
     });

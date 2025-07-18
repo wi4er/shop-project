@@ -41,6 +41,10 @@ export class FieldController {
   ) {
     return this.fieldRepo.find({
       relations: this.relations,
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       take: limit,
       skip: offset,
     }).then(list => list.map(item => new FieldView(item)));

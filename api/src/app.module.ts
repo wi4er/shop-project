@@ -71,6 +71,9 @@ import { CheckPermissionGuard } from './personal/guard/check-permission.guard';
 })
 export class AppModule {
 
+  /**
+   *
+   */
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(redisPermission())

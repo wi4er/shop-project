@@ -51,7 +51,7 @@ export class FileInsertOperation {
     await new FlagValueOperation(this.transaction, this.created).save(File2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, File4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.transaction, this.created).save(File4stringEntity, pack.string);
 
     return this.created.id;
   }

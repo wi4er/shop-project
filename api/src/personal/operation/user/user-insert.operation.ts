@@ -30,7 +30,7 @@ export class UserInsertOperation {
     await new User2userGroupInsertOperation(this.manager).save(this.created, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, User4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, this.created).save(User4stringEntity, pack.string);
 
     return this.created.id;
   }

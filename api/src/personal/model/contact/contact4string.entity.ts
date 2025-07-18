@@ -1,10 +1,7 @@
 import {
   BaseEntity, Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn
 } from 'typeorm';
 import { CommonStringEntity } from '../../../common/model/common/common-string.entity';
 import { ContactEntity } from './contact.entity';
@@ -19,23 +16,11 @@ export class Contact4stringEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @Column()
   string: string;
 
   @ManyToOne(
-    () => ContactEntity,
+    type => ContactEntity,
     contact => contact.string,
     {
       onDelete: 'CASCADE',
@@ -46,7 +31,7 @@ export class Contact4stringEntity
   parent: ContactEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -56,7 +41,7 @@ export class Contact4stringEntity
   attribute: AttributeEntity;
 
   @ManyToOne(
-    () => LangEntity,
+    type => LangEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

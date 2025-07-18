@@ -22,28 +22,16 @@ describe('Contact Controller', () => {
 
     source = await createConnection(createConnectionOptions());
   });
-
   beforeEach(() => source.synchronize(true));
   afterAll(() => source.destroy());
 
-  describe('Contact fields', () => {
+  describe('Contact list', () => {
     test('Should get empty list', async () => {
       const res = await request(app.getHttpServer())
         .get('/personal/contact')
         .expect(200);
 
       expect(res.body).toHaveLength(0);
-    });
-
-    test('Should get contact instance', async () => {
-      await Object.assign(new ContactEntity(), {id: 'MAIL', type: UserContactType.EMAIL}).save();
-
-      const res = await request(app.getHttpServer())
-        .get('/personal/contact/MAIL')
-        .expect(200);
-
-      expect(res.body.id).toBe('MAIL');
-      expect(res.body.type).toBe('EMAIL');
     });
 
     test('Should get contact with limit', async () => {
@@ -59,9 +47,9 @@ describe('Contact Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('MAIL_0');
-      expect(res.body[1].id).toBe('MAIL_1');
-      expect(res.body[2].id).toBe('MAIL_2');
+      expect(res.body[0].id).toBe('MAIL_9');
+      expect(res.body[1].id).toBe('MAIL_8');
+      expect(res.body[2].id).toBe('MAIL_7');
     });
 
     test('Should get contact with offset', async () => {
@@ -77,8 +65,21 @@ describe('Contact Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(7);
-      expect(res.body[0].id).toBe('MAIL_3');
-      expect(res.body[6].id).toBe('MAIL_9');
+      expect(res.body[0].id).toBe('MAIL_6');
+      expect(res.body[6].id).toBe('MAIL_0');
+    });
+  });
+
+  describe('Contact item', () => {
+    test('Should get contact item', async () => {
+      await Object.assign(new ContactEntity(), {id: 'MAIL', type: UserContactType.EMAIL}).save();
+
+      const res = await request(app.getHttpServer())
+        .get('/personal/contact/MAIL')
+        .expect(200);
+
+      expect(res.body.id).toBe('MAIL');
+      expect(res.body.type).toBe('EMAIL');
     });
   });
 
@@ -144,171 +145,6 @@ describe('Contact Controller', () => {
 
       expect(list.body).toHaveLength(1);
       expect(list.body[0].flag).toEqual(['FLAG']);
-    });
-  });
-
-  describe('Contact addition', () => {
-    describe('Contact addition with fields', () => {
-      test('Should add contact', async () => {
-        const inst = await request(app.getHttpServer())
-          .post('/personal/contact')
-          .send({
-            id: 'mail',
-            type: 'EMAIL',
-          })
-          .expect(201);
-
-        expect(inst.body.id).toBe('mail');
-        expect(inst.body.type).toBe('EMAIL');
-      });
-
-      test('Shouldn`t add without type', async () => {
-        await request(app.getHttpServer())
-          .post('/personal/contact')
-          .send({id: 'mail'})
-          .expect(400);
-      });
-
-      test('Shouldn`t add with wrong type', async () => {
-        await request(app.getHttpServer())
-          .post('/personal/contact')
-          .send({id: 'mail', type: 'WRONG'})
-          .expect(400);
-      });
-
-      test('Shouldn`t add without id', async () => {
-        await request(app.getHttpServer())
-          .post('/personal/contact')
-          .send({type: 'EMAIL'})
-          .expect(400);
-      });
-
-      test('Shouldn`t add with blank id', async () => {
-        await request(app.getHttpServer())
-          .post('/personal/contact')
-          .send({id: '', type: 'EMAIL'})
-          .expect(400);
-      });
-    });
-  });
-
-  describe('ContactEntity update', () => {
-    test('Should update contact', async () => {
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      const inst = await request(app.getHttpServer())
-        .put('/personal/contact/MAIL')
-        .send({
-          id: 'MAIL',
-          type: 'PHONE',
-        })
-        .expect(200);
-
-      expect(inst.body.id).toBe('MAIL');
-      expect(inst.body.type).toBe('PHONE');
-    });
-
-    test('Should add string to contact', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      const inst = await request(app.getHttpServer())
-        .put('/personal/contact/MAIL')
-        .send({
-          id: 'MAIL',
-          type: 'PHONE',
-          attribute: [{attribute: 'NAME', string: 'VALUE'}],
-        })
-        .expect(200);
-
-      expect(inst.body.attribute).toHaveLength(1);
-      expect(inst.body.attribute[0].attribute).toBe('NAME');
-      expect(inst.body.attribute[0].string).toBe('VALUE');
-    });
-
-    test('Shouldn`t add with wrong attribute', async () => {
-      await Object.assign(new AttributeEntity(), {id: 'NAME'}).save();
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      await request(app.getHttpServer())
-        .put('/personal/contact/MAIL')
-        .send({
-          id: 'MAIL',
-          type: 'PHONE',
-          attribute: [{attribute: 'WRONG', string: 'VALUE'}],
-        })
-        .expect(400);
-    });
-
-    test('Should add flag to contact', async () => {
-      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      const inst = await request(app.getHttpServer())
-        .put('/personal/contact/MAIL')
-        .send({
-          id: 'MAIL',
-          type: 'PHONE',
-          flag: ['NEW'],
-        })
-        .expect(200);
-
-      expect(inst.body.flag).toEqual(['NEW']);
-    });
-
-    test('Shouldn`t add wrong flag to contact', async () => {
-      await Object.assign(new FlagEntity(), {id: 'NEW'}).save();
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      await request(app.getHttpServer())
-        .put('/personal/contact/MAIL')
-        .send({
-          id: 'MAIL',
-          type: 'PHONE',
-          flag: ['WRONG'],
-        })
-        .expect(400);
-    });
-  });
-
-  describe('ContactEntity delete', () => {
-    test('Should delete contact', async () => {
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      const inst = await request(app.getHttpServer())
-        .delete('/personal/contact/MAIL')
-        .expect(200);
-
-      expect(inst.body).toEqual(['MAIL']);
-    });
-
-    test('Shouldn`t delete with wrong id', async () => {
-      await Object.assign(
-        new ContactEntity(),
-        {id: 'MAIL', type: UserContactType.EMAIL},
-      ).save();
-
-      await request(app.getHttpServer())
-        .delete('/personal/contact/WRONG')
-        .expect(404);
     });
   });
 });

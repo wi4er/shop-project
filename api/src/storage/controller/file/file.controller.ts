@@ -77,6 +77,9 @@ export class FileController {
       where: {
         ...(filter ? this.toWhere(filter) : {}),
       },
+      order: {
+        updated_at: 'DESC'
+      },
       relations: this.relations,
       take: limit,
       skip: offset,

@@ -146,7 +146,8 @@ export class FormListComponent implements OnInit {
 
     for (const item of data) {
       const line: { [key: string]: string } = {
-        'id': String(item.id),
+        id: String(item.id),
+        version: String(item.version),
         created_at: item.created_at,
         updated_at: item.updated_at,
       };
@@ -165,7 +166,7 @@ export class FormListComponent implements OnInit {
       this.list.push(line);
     }
 
-    this.columns = [ 'id', ...col ];
+    this.columns = [ 'id', 'version', ...col ];
   }
 
   /**

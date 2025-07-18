@@ -41,7 +41,7 @@ export class BlockInsertOperation {
     await new FlagValueOperation(this.manager, this.created).save(Block2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Block4stringEntity).save(this.created, pack.string);
+    await new StringValueOperation(this.manager, this.created).save(Block4stringEntity, pack.string);
     await new PointValueOperation(this.manager, Block4pointEntity).save(this.created, pack.point);
     await new DescriptionValueOperation(this.manager, Block4descriptionEntity).save(this.created, pack.description);
 

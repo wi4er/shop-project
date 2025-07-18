@@ -8,6 +8,7 @@ import { CollectionUpdateOperation } from '../../operation/collection/collection
 import { CollectionDeleteOperation } from '../../operation/collection/collection-delete.operation';
 import { CollectionInput } from '../../input/collection/collection.input';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { CollectionView } from '../../view/collection.view';
 
 @Controller('collection')
 export class CollectionController {
@@ -26,20 +27,7 @@ export class CollectionController {
   }
 
   toView(item: CollectionEntity) {
-    return {
-      id: item.id,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-      version: item.version,
-      attribute: [
-        ...item.string.map(str => ({
-          string: str.string,
-          attribute: str.attribute.id,
-          lang: str.lang?.id,
-        })),
-      ],
-      flag: item.flag.map(fl => fl.flag.id),
-    };
+    return new CollectionView(item);
   }
 
   @Get()
@@ -51,6 +39,9 @@ export class CollectionController {
   ) {
     return this.colRepo.find({
       relations: this.relations,
+      order: {
+        updated_at: 'DESC'
+      },
       take: limit,
       skip: offset,
     }).then(list => list.map(this.toView));

@@ -1,32 +1,18 @@
 import {
   BaseEntity,
-  CreateDateColumn,
-  DeleteDateColumn, Entity, Index, ManyToOne,
+  Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { GroupEntity } from '../group/group.entity';
 
 @Entity('personal-user2group')
 @Index(['group', 'parent'], {unique: true})
-export class User2groupEntity extends BaseEntity {
+export class User2groupEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
 
   @ManyToOne(
     type => GroupEntity,

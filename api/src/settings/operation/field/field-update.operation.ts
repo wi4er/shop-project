@@ -51,7 +51,7 @@ export class FieldUpdateOperation {
     await new FlagValueOperation(this.manager, beforeItem).save(Field2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Field4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, beforeItem).save(Field4stringEntity, pack.string);
 
     return beforeItem.id;
   }

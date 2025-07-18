@@ -22,6 +22,8 @@ describe('Section deletion', () => {
     return parent;
   }
 
+  beforeEach(() => source.synchronize(true));
+  afterAll(() => source.destroy());
   beforeAll(async () => {
     const moduleBuilder = await Test.createTestingModule({imports: [AppModule]}).compile();
     app = moduleBuilder.createNestApplication();

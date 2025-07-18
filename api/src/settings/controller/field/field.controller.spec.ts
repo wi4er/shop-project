@@ -96,9 +96,9 @@ describe('Field Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].id).toBe('field_0');
-      expect(res.body[1].id).toBe('field_1');
-      expect(res.body[2].id).toBe('field_2');
+      expect(res.body[0].id).toBe('field_9');
+      expect(res.body[1].id).toBe('field_8');
+      expect(res.body[2].id).toBe('field_7');
     });
 
     test('Should get flag with offset', async () => {
@@ -111,7 +111,7 @@ describe('Field Controller', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(1);
-      expect(res.body[0].id).toBe('field_9');
+      expect(res.body[0].id).toBe('field_0');
     });
   });
 

@@ -74,6 +74,10 @@ export class PointController {
           },
         },
       },
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       relations: this.relations,
       take: limit,
       skip: offset,

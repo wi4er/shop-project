@@ -91,7 +91,7 @@ describe('Element updating', () => {
     }), operations);
   }
 
-  describe('Content element fields update', () => {
+  describe('Content element property update', () => {
     test('Should update item', async () => {
       const block = await new BlockEntity('BLOCK').save();
       const parent = await createElement().withBlock(block);
@@ -273,7 +273,7 @@ describe('Element updating', () => {
     });
   });
 
-  describe('Content element string update', () => {
+  describe('Content element for string update', () => {
     test('Should add string', async () => {
       const block = await new BlockEntity('BLOCK').save();
       await createElement('ELEMENT').withBlock(block);
@@ -363,7 +363,7 @@ describe('Element updating', () => {
     });
   });
 
-  describe('Content element description update', () => {
+  describe('Content element for description update', () => {
     test('Should add description', async () => {
       const block = await new BlockEntity('BLOCK').save();
       await createElement('ELEMENT').withBlock(block);
@@ -452,7 +452,7 @@ describe('Element updating', () => {
     });
   });
 
-  describe('Content element interval update', () => {
+  describe('Content element for interval update', () => {
     test('Should add interval', async () => {
       const block = await new BlockEntity('BLOCK').save();
       await createElement('ELEMENT').withBlock(block);
@@ -561,7 +561,7 @@ describe('Element updating', () => {
     });
   });
 
-  describe('Content element point update', () => {
+  describe('Content element for point update', () => {
     test('Should add point', async () => {
       const block = await new BlockEntity('BLOCK').save();
       await createElement('ELEMENT').withBlock(block);
@@ -626,7 +626,7 @@ describe('Element updating', () => {
     });
   });
 
-  describe('Content element counter update', () => {
+  describe('Content element for counter update', () => {
     test('Should add counter', async () => {
       const block = await new BlockEntity('BLOCK').save();
       await createElement('ELEMENT').withBlock(block);
@@ -649,7 +649,7 @@ describe('Element updating', () => {
     });
   });
 
-  describe('Content element element update', () => {
+  describe('Content element for element update', () => {
     test('Should add element', async () => {
       const block = await new BlockEntity('BLOCK').save();
       await createElement('ELEMENT').withBlock(block);

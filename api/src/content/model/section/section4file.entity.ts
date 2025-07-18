@@ -18,29 +18,18 @@ export class Section4fileEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
-
   @ManyToOne(
-    () => FileEntity,
+    type => FileEntity,
     {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       nullable: false,
     },
   )
   file: FileEntity;
 
   @ManyToOne(
-    () => SectionEntity,
+    type => SectionEntity,
     section => section.file,
     {
       onDelete: 'CASCADE',
@@ -51,7 +40,7 @@ export class Section4fileEntity
   parent: SectionEntity;
 
   @ManyToOne(
-    () => AttributeEntity,
+    type => AttributeEntity,
     {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

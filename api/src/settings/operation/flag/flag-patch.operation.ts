@@ -44,7 +44,7 @@ export class FlagPatchOperation {
     if (input.flag) await new FlagValueOperation(this.transaction, beforeItem).save(Flag2flagEntity, input.flag);
     if (input.attribute) {
       const pack = filterAttributes(input.attribute);
-      await new StringValueOperation(this.transaction, Flag4stringEntity).save(beforeItem, pack.string);
+      await new StringValueOperation(this.transaction, beforeItem).save(Flag4stringEntity, pack.string);
     }
 
     return input.id ? input.id : id;

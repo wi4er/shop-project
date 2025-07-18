@@ -1,32 +1,18 @@
 import {
   BaseEntity, Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity, Index, ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn
 } from "typeorm";
 import { ContactEntity } from "../contact/contact.entity";
 import { UserEntity } from "./user.entity";
 
 @Entity('personal-user2contact')
 @Index([ 'contact', 'value' ], { unique: true })
-export class User2contactEntity extends BaseEntity {
+export class User2contactEntity
+  extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
-
-  @VersionColumn()
-  version: number;
 
   @Column()
   value: string;
@@ -34,8 +20,9 @@ export class User2contactEntity extends BaseEntity {
   @ManyToOne(
     type => ContactEntity,
     {
-      nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      nullable: false,
     },
   )
   contact: ContactEntity;
@@ -44,8 +31,9 @@ export class User2contactEntity extends BaseEntity {
     type => UserEntity,
     user => user.contact,
     {
-      nullable: false,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      nullable: false,
     },
   )
   parent: UserEntity;

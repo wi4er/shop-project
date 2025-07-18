@@ -41,6 +41,10 @@ export class LangController {
   ) {
     return this.langRepo.find({
       relations: this.relations,
+      order: {
+        sort: 'DESC',
+        updated_at: 'DESC',
+      },
       take: limit,
       skip: offset,
     }).then(list => list.map(item => new LangView(item)));

@@ -45,7 +45,7 @@ export class CollectionUpdateOperation {
     await new FlagValueOperation(this.transaction, beforeItem).save(Collection2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.transaction, Collection4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.transaction, beforeItem).save(Collection4stringEntity, pack.string);
 
     return beforeItem.id;
   }

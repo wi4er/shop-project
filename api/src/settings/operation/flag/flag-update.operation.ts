@@ -54,7 +54,7 @@ export class FlagUpdateOperation {
     await new FlagValueOperation(this.manager, beforeItem).save(Flag2flagEntity, input.flag);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.manager, Flag4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.manager, beforeItem).save(Flag4stringEntity, pack.string);
 
     return beforeItem.id;
   }

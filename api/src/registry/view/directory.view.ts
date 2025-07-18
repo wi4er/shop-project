@@ -57,7 +57,6 @@ export class DirectoryView {
     | PointAttributeView
   >;
 
-
   @ApiProperty()
   flag: Array<string>;
 

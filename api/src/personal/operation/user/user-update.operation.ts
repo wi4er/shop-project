@@ -49,7 +49,7 @@ export class UserUpdateOperation {
     await new User2userContactUpdateOperation(this.trans).save(beforeItem, input);
 
     const pack = filterAttributes(input.attribute);
-    await new StringValueOperation(this.trans, User4stringEntity).save(beforeItem, pack.string);
+    await new StringValueOperation(this.trans, beforeItem).save(User4stringEntity, pack.string);
 
     return beforeItem.id;
   }
